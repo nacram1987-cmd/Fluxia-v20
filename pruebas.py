@@ -178,6 +178,8 @@ async def main(tmp):
         print('\n▶ Compartidos estilo Tricount')
         nav, ctx, pg, err = await abrir(p, {"id": "tricount", "name": "Nacho", "onboardingSkipped": True, "newUser": False}, fecha='2026-09-22T10:00:00')
         await pg.evaluate("goToTab('compartidos')")
+        campos = await pg.evaluate("[...document.querySelectorAll('#tcGasto .tc-input, #compPersona')].filter(i=>i.offsetParent).map(i=>[i.id, i.offsetHeight, parseFloat(getComputedStyle(i).fontSize)])")
+        ok('los campos del formulario son grandes (≥44 px, letra ≥16 px)', all(h >= 44 and f >= 16 for _, h, f in campos), str(campos))
         await pg.evaluate("""(()=>{const s=document.getElementById('compPersona'); s.value='__nueva__'; s.dispatchEvent(new Event('change'));
             const n=document.getElementById('compPersonaNueva'); n.value='Ana'; n.dispatchEvent(new Event('input'));})()""")
         opciones = await pg.evaluate("[...document.getElementById('compQuienPago').options].map(o=>o.text)")
@@ -216,6 +218,81 @@ async def main(tmp):
         await pg.wait_for_timeout(300)
         ok('borrar un reembolso recalcula el saldo (−9 €)', await neto() == -9)
         ok('y la caja vuelve a −20 €', await pg.evaluate("liquidacionesImpactoMes('septiembre')") == -20)
+        ok('sin errores JavaScript', not err, '; '.join(err[:2]))
+        await nav.close()
+
+        print('\n▶ Compartidos: gastos antiguos y rescate')
+        viejos = [{"id": "v1", "concepto": "Costilla", "persona": "", "fecha": "2026-08-17", "sentido": "me_deben", "tipo": "normal", "importeInicial": 10, "liquidaciones": []}]
+        perdido = [{"id": "p1", "concepto": "Cena perdida", "persona": "Ana", "fecha": "2026-09-10", "sentido": "me_deben", "tipo": "normal", "importeInicial": 25, "liquidaciones": []}]
+        extra = ("if(!localStorage.getItem('__sembrado')){localStorage.setItem('__sembrado','1');"
+                 "localStorage.setItem('fluxia_user_rescate__planRescate_v2_compartidos', %r);"
+                 "localStorage.setItem('fluxia_cuenta_v1', JSON.stringify({email:'yo@x.com'}));"
+                 "localStorage.setItem('fluxia_nube_snapshot_yo@x.com', %r);"
+                 "localStorage.setItem('fluxia_nube_snapshot_otro@x.com', %r);}") % (
+            json.dumps(viejos), json.dumps({"snapshot": {"compartidos": viejos + perdido}}),
+            json.dumps({"snapshot": {"compartidos": [dict(perdido[0], id='ajeno', concepto='De otro')]}}))
+        nav, ctx, pg, err = await abrir_con_bloqueo(p, {"id": "rescate", "name": "Nacho", "onboardingSkipped": True, "newUser": False}, init_extra=extra)
+        await pg.evaluate("(()=>{const b=document.getElementById('bloqueo'); if(b) b.remove(); goToTab('compartidos');})()")
+        await pg.wait_for_timeout(400)
+        ok('un gasto sin persona sigue visible («Sin asignar»)', await pg.evaluate("tcEventosPersona('Sin asignar').length") == 1 and
+           await pg.evaluate("document.getElementById('compPendientesView').innerText.includes('Sin asignar')"))
+        ok('«Sin asignar» no sale en «Con quién»', await pg.evaluate("![...document.getElementById('compPersona').options].some(o=>o.text==='Sin asignar')"))
+        ok('avisa de gastos que estaban en copias y ya no están', 'Hay 1 gasto' in await pg.evaluate("document.getElementById('tcAvisoRescate').innerText"))
+        await pg.evaluate("abrirRescateCompartidos(false)"); await pg.wait_for_timeout(300)
+        lista = await pg.evaluate("document.getElementById('tcRecLista') ? document.getElementById('tcRecLista').innerText : ''")
+        ok('ofrece recuperar solo lo perdido de este usuario', 'Cena perdida' in lista and 'De otro' not in lista, lista)
+        await pg.evaluate("tcRecuperarSeleccionados()"); await pg.wait_for_timeout(300)
+        ok('recuperar devuelve el gasto y su saldo', await pg.evaluate("saldoNetoConPersona('Ana').neto") == 25)
+        await pg.reload(wait_until='domcontentloaded'); await pg.wait_for_timeout(2500)
+        await pg.evaluate("(()=>{const b=document.getElementById('bloqueo'); if(b) b.remove(); goToTab('compartidos');})()")
+        ok('lo recuperado sobrevive a recargar', await pg.evaluate("gastosCompartidos.some(g=>g.concepto==='Cena perdida')"))
+        await pg.evaluate("""(()=>{const e=tcEventosPersona('Ana'); const i=e.findIndex(x=>x.tipo==='gasto'); document.querySelector('#compPendientesView [data-tcdel="'+i+'"]').click();})()""")
+        await pg.wait_for_timeout(300)
+        await pg.evaluate("(()=>{const b=[...document.querySelectorAll('#modalOverlay button')].find(x=>/Borrar/.test(x.textContent)); if(b) b.click();})()")
+        await pg.wait_for_timeout(300)
+        ok('un gasto borrado a propósito no se ofrece como perdido', await pg.evaluate("document.getElementById('tcAvisoRescate').innerText") == '')
+        ok('sin errores JavaScript', not err, '; '.join(err[:2]))
+        await nav.close()
+
+        print('\n▶ Compartidos: varias personas, repartos y recordatorios')
+        nav, ctx, pg, err = await abrir(p, {"id": "grupos", "name": "Nacho", "onboardingSkipped": True, "newUser": False}, fecha='2026-09-22T10:00:00')
+        await pg.evaluate("goToTab('compartidos')")
+        async def rellenar(persona, concepto, importe, paga='yo', modo='iguales', evento='', extras=(), valores=None):
+            await pg.evaluate("""([per,c,i,p,m,e,ex,val])=>{const s=document.getElementById('compPersona');
+                if([...s.options].some(o=>o.value===per)){s.value=per;} else {s.value='__nueva__'; s.dispatchEvent(new Event('change')); const x=document.getElementById('compPersonaNueva'); x.value=per; x.dispatchEvent(new Event('input'));}
+                s.dispatchEvent(new Event('change')); ex.forEach(n=>tcAnadirFilaPersona(n));
+                document.getElementById('compConcepto').value=c; const imp=document.getElementById('compImporte'); imp.value=i; imp.dispatchEvent(new Event('input'));
+                const md=document.getElementById('tcModoReparto'); md.value=m; md.dispatchEvent(new Event('change'));
+                if(val){ const v=[...document.querySelectorAll('#tcPartLista .tc-part-val')]; val.forEach((x,k)=>{ v[k].value=x; }); imp.dispatchEvent(new Event('input')); }
+                const q=document.getElementById('compQuienPago'); q.value=p; q.dispatchEvent(new Event('change')); document.getElementById('tcEvento').value=e;}""",
+                [persona, concepto, importe, paga, modo, evento, list(extras), valores])
+        anadir = lambda: pg.evaluate("document.getElementById('btnAddCompartido').click()")
+        neto = lambda n: pg.evaluate("(n)=>saldoNetoConPersona(n).neto", n)
+        await rellenar('Ana', 'Hotel', '90', evento='Viaje', extras=['Marta']); await anadir()
+        ok('pago yo 90 € entre 3 → Ana y Marta me deben 30 €', await neto('Ana') == 30 and await neto('Marta') == 30)
+        await rellenar('Ana', 'Gasolina', '60', paga='x0', evento='Viaje', extras=['Marta']); await anadir()
+        ok('pagó Marta 60 € entre 3 → yo le debo 20 € (saldo +10 €)', await neto('Marta') == 10 and await neto('Ana') == 30)
+        await rellenar('Ana', 'Cena', '50', modo='importes', valores=['30', '15'])
+        ok('por importes: avisa si no cuadra', 'Faltan 5,00' in await pg.evaluate("document.getElementById('compRepartoInfo').innerText"))
+        n = await pg.evaluate("gastosCompartidos.length"); await anadir()
+        ok('y no lo añade', await pg.evaluate("gastosCompartidos.length") == n)
+        await rellenar('Ana', 'Cena', '50', modo='importes', valores=['35', '15']); await anadir()
+        ok('por importes 35/15 → Ana +35 €', await neto('Ana') == 65)
+        await rellenar('Ana', 'Compra', '100', modo='porcentaje', valores=['70', '30'])
+        await pg.focus('#compImporte'); await pg.keyboard.press('Enter'); await pg.wait_for_timeout(200)
+        ok('por porcentaje 70/30 e Intro para añadir → Ana +70 €', await neto('Ana') == 135)
+        await pg.evaluate("document.querySelector('[data-tcchip=\"Viaje\"]').click()")
+        r = await pg.evaluate("document.getElementById('tcEventoResumen').innerText")
+        ok('el grupo resume 2 gastos, 150 € y lo que te deben', '2 gastos' in r and '150,00' in r and '40,00' in r, r)
+        await pg.evaluate("document.querySelector('[data-tcchip=\"\"]').click()")
+        await pg.evaluate("(()=>{const b=document.getElementById('tcBuscar'); b.value='gasolina'; b.dispatchEvent(new Event('input'));})()"); await pg.clock.run_for(300)
+        t = await pg.evaluate("document.getElementById('compPendientesView').innerText")
+        ok('la búsqueda filtra los gastos', 'Gasolina' in t and 'Hotel' not in t)
+        await pg.evaluate("(()=>{const b=document.getElementById('tcBuscar'); b.value=''; b.dispatchEvent(new Event('input'));})()"); await pg.clock.run_for(300)
+        await pg.evaluate("gastosCompartidos.push({id:'viejo',concepto:'Concierto',persona:'Pepe',fecha:'2026-08-20',sentido:'me_deben',tipo:'normal',importeInicial:40,liquidaciones:[]})")
+        t = await pg.evaluate("datosNotificaciones().map(n=>n.titulo)")
+        ok('avisa de cobros con más de 14 días (y no de los recientes)', any('Pepe te debe desde hace' in x for x in t) and not any('Ana te debe desde' in x for x in t), str(t))
+        ok('el recordatorio lleva el total y Bizum', 'me debes 135,00' in await pg.evaluate("tcTextoRecordatorio('Ana')"))
         ok('sin errores JavaScript', not err, '; '.join(err[:2]))
         await nav.close()
 
