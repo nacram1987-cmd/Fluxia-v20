@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: fluxia
+    runtime: node
+    plan: free
+    buildCommand: "echo listo"
+    startCommand: "node server.js"
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Rellena estos valores en Render → Environment (nunca en este archivo)
+      - key: ALLOWED_EMAILS
+        sync: false
+      - key: UPSTASH_REDIS_REST_URL
+        sync: false
+      - key: UPSTASH_REDIS_REST_TOKEN
+        sync: false
+      - key: BREVO_API_KEY
+        sync: false
+      - key: MAIL_FROM
+        sync: false

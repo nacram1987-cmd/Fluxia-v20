@@ -1,0 +1,9 @@
+{
+  "name": "fluxia",
+  "version": "1.7.0",
+  "private": true,
+  "description": "Fluxia — control financiero personal (PWA + API)",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" }
+}
