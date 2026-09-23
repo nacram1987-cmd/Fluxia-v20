@@ -1,0 +1,7 @@
+[build]
+command = "echo 'OK'"
+functions = "netlify/functions"
+
+[[env.production.environment]]
+SUPABASE_URL = "https://kylduzmrfbubeamfrbbr.supabase.co"
+SUPABASE_ANON_KEY = "sb_publishable_5hX9-6JJ7M1JfvmeWZcz5w_U-K1TCaj"
