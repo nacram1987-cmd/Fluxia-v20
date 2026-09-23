@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Fluxia · Finanzas en la Nube</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #fff;
+  color: #333;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+.container { max-width: 500px; margin: 0 auto; padding: 20px; }
+input, button { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+button { background: #1554F0; color: white; border: none; cursor: pointer; font-weight: 600; }
+button:hover { background: #0F3A5C; }
+.datos { background: #f5f5f5; padding: 15px; border-radius: 8px; margin: 15px 0; max-height: 300px; overflow-y: auto; }
+h1 { text-align: center; margin: 20px 0; }
+.status { padding: 10px; border-radius: 8px; margin: 10px 0; text-align: center; font-weight: 600; }
+.success { background: #d4edda; color: #155724; }
+.error { background: #f8d7da; color: #721c24; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🌥️ Fluxia</h1>
+  
+  <div id="loginSection">
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Contraseña" />
+    <button onclick="login()">Entrar</button>
+    <button onclick="signup()" style="background: #10B981;">Crear Cuenta</button>
+  </div>
+
+  <div id="appSection" style="display: none;">
+    <div class="status success">✅ Conectado a Supabase</div>
+    
+    <h3>Añadir Gasto</h3>
+    <input type="text" id="concepto" placeholder="¿Qué? (ej: Comida)" />
+    <input type="number" id="monto" placeholder="¿Cuánto?" step="0.01" />
+    <select id="categoria" style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px;">
+      <option>Comida</option>
+      <option>Transporte</option>
+      <option>Entretenimiento</option>
+      <option>Salud</option>
+      <option>Otro</option>
+    </select>
+    
+    <button onclick="guardarGasto()">➕ Guardar Gasto</button>
+    <button onclick="sincronizar()" style="background: #F59E0B;">🔄 Sincronizar</button>
+    <button onclick="logout()" style="background: #EF4444;">👋 Salir</button>
+
+    <h3>Mis Gastos</h3>
+    <div id="gastosList" class="datos">
+      <p>Cargando...</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// SUPABASE SETUP
+// ============================================================
+
+const SUPABASE_URL = 'https://kylduzmrfbubeamfrbbr.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_5hX9-6JJ7M1JfvmeWZcz5w_U-K1TCaj';
+
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let usuarioActual = null;
+
+// ============================================================
+// INIT
+// ============================================================
+
+window.addEventListener('DOMContentLoaded', async () => {
+  console.log('🚀 Fluxia iniciando...');
+  const sesion = await verificarSesion();
+  if (sesion) {
+    usuarioActual = sesion;
+    mostrarApp();
+    cargarGastos();
+  } else {
+    mostrarLogin();
+  }
+});
+
+// ============================================================
+// AUTH
+// ============================================================
+
+async function verificarSesion() {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    return user;
+  } catch (e) {
+    console.log('No hay sesión:', e);
+    return null;
+  }
+}
+
+async function signup() {
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  
+  if (!email || !password) {
+    alert('❌ Rellena email y contraseña');
+    return;
+  }
+
+  try {
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (error) throw error;
+    alert('✅ Cuenta creada. Ahora haz login');
+  } catch (e) {
+    alert('❌ Error: ' + e.message);
+  }
+}
+
+async function login() {
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  
+  if (!email || !password) {
+    alert('❌ Rellena email y contraseña');
+    return;
+  }
+
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    usuarioActual = data.user;
+    mostrarApp();
+    cargarGastos();
+  } catch (e) {
+    alert('❌ Error: ' + e.message);
+  }
+}
+
+async function logout() {
+  if (confirm('¿Salir de la app?')) {
+    await supabase.auth.signOut();
+    mostrarLogin();
+  }
+}
+
+// ============================================================
+// GASTOS
+// ============================================================
+
+async function guardarGasto() {
+  const concepto = document.getElementById('concepto').value;
+  const monto = parseFloat(document.getElementById('monto').value);
+  const categoria = document.getElementById('categoria').value;
+
+  if (!concepto || !monto) {
+    alert('❌ Rellena concepto y monto');
+    return;
+  }
+
+  // Guardar en localStorage primero (offline-first)
+  const gasto = {
+    id: Date.now(),
+    concepto,
+    monto,
+    categoria,
+    fecha: new Date().toLocaleDateString(),
+    usuario: usuarioActual.email
+  };
+
+  let gastos = JSON.parse(localStorage.getItem('gastos_fluxia') || '[]');
+  gastos.push(gasto);
+  localStorage.setItem('gastos_fluxia', JSON.stringify(gastos));
+
+  // Intentar guardar en Supabase
+  try {
+    const { error } = await supabase.from('gastos').insert([{
+      usuario_id: usuarioActual.id,
+      concepto,
+      monto,
+      categoria,
+      fecha: new Date().toISOString()
+    }]);
+    
+    if (!error) {
+      alert('✅ Gasto guardado en la nube');
+    }
+  } catch (e) {
+    console.log('Supabase offline, guardado localmente:', e);
+    alert('✅ Gasto guardado (sin conexión)');
+  }
+
+  document.getElementById('concepto').value = '';
+  document.getElementById('monto').value = '';
+  cargarGastos();
+}
+
+async function cargarGastos() {
+  let gastos = JSON.parse(localStorage.getItem('gastos_fluxia') || '[]');
+  
+  // Filtrar gastos del usuario actual
+  if (usuarioActual) {
+    gastos = gastos.filter(g => g.usuario === usuarioActual.email);
+  }
+
+  const html = gastos.map(g => `
+    <div style="padding: 10px; background: white; margin: 10px 0; border-radius: 8px; border-left: 4px solid #1554F0;">
+      <strong>${g.concepto}</strong> <br/>
+      <span style="color: #999; font-size: 12px;">${g.fecha} · ${g.categoria}</span><br/>
+      <span style="font-weight: 600; color: #EF4444;">-$${g.monto.toFixed(2)}</span>
+    </div>
+  `).join('');
+
+  document.getElementById('gastosList').innerHTML = html || '<p>No hay gastos aún</p>';
+}
+
+async function sincronizar() {
+  alert('🔄 Sincronizando con Supabase...');
+  
+  const gastos = JSON.parse(localStorage.getItem('gastos_fluxia') || '[]');
+  let sincronizados = 0;
+
+  for (const gasto of gastos) {
+    try {
+      await supabase.from('gastos').insert([{
+        usuario_id: usuarioActual.id,
+        concepto: gasto.concepto,
+        monto: gasto.monto,
+        categoria: gasto.categoria,
+        fecha: gasto.fecha
+      }]);
+      sincronizados++;
+    } catch (e) {
+      console.log('No se pudo sincronizar:', gasto);
+    }
+  }
+
+  alert(`✅ ${sincronizados} gastos sincronizados`);
+  cargarGastos();
+}
+
+// ============================================================
+// UI
+// ============================================================
+
+function mostrarLogin() {
+  document.getElementById('loginSection').style.display = 'block';
+  document.getElementById('appSection').style.display = 'none';
+}
+
+function mostrarApp() {
+  document.getElementById('loginSection').style.display = 'none';
+  document.getElementById('appSection').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
