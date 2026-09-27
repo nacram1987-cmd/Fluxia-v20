@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Fluxia BETA">
+<meta name="application-name" content="Fluxia BETA">
+<meta name="theme-color" content="#0F3A5C">
+<title>Fluxia</title>
+<link rel="icon" type="image/svg+xml" href="fluxia-icon.svg">
+<link rel="apple-touch-icon" href="fluxia-icon.svg">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:linear-gradient(145deg,#eef5ff 0%,#fff 55%,#eaf8f5 100%);color:#1A2433}
+  .box{text-align:center;padding:32px 24px;max-width:340px}
+  .logo{width:76px;height:76px;margin:0 auto 16px;border-radius:20px;overflow:hidden;
+    box-shadow:0 10px 28px rgba(21,84,240,.28)}
+  .logo img{width:100%;height:100%;display:block}
+  b{font-size:1.15rem;letter-spacing:-.02em}
+  p{font-size:.9rem;color:#64748B;line-height:1.45;margin:8px 0 0}
+  .err{color:#E1594F;font-size:.82rem;margin-top:14px;display:none}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="logo"><img src="fluxia-icon.svg" alt="Fluxia"></div>
+  <b>Fluxia</b>
+  <p id="msg">Abriendo la versión estable…</p>
+  <p class="err" id="err"></p>
+</div>
+<script>
+(function () {
+  var FALLBACK = 'index_fluxia_v91.html';
+  var msg = document.getElementById('msg');
+  var err = document.getElementById('err');
+  function go(file) {
+    var q = location.search || '';
+    var h = location.hash || '';
+    location.replace(file + q + h);
+  }
+  function fail(t) {
+    msg.textContent = 'No se pudo abrir la versión estable.';
+    err.style.display = 'block';
+    err.textContent = t + ' · Reintento con ' + FALLBACK + '…';
+    setTimeout(function () { go(FALLBACK); }, 1200);
+  }
+  fetch('fluxia-canal.json', { cache: 'no-store' })
+    .then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function (c) {
+      var f = (c && (c.estable || c.stable || c.file)) || FALLBACK;
+      var v = (c && c.version) ? (' v' + String(c.version).replace(/^v/, '')) : '';
+      msg.textContent = 'Versión estable' + v + '…';
+      go(f);
+    })
+    .catch(function (e) {
+      fail(e && e.message ? e.message : 'Sin fluxia-canal.json');
+    });
+})();
+</script>
+</body>
+</html>
