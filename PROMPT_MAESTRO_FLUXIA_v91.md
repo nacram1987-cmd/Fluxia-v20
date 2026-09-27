@@ -183,3 +183,44 @@ Si el contexto es un grupo/persona (ej. Ana), el selector y etiquetas deben most
 
 v91 refuerza **marca**, **integridad de datos** y **compartidos con partida**.  
 Si ves datos a 0, icono «F» genérico, o nombre sin BETA al instalar: **DETENTE y corrige antes de subir.**
+
+
+---
+
+## ⛔ v91.2 — DATOS A 0 (REGLA ABSOLUTA)
+
+Ocultar/borrar **notificaciones NUNCA** puede llamar a lógica que recargue o vacíe el plan.
+- `ocultarNotificacion` / silencio → solo flags de UI, **sin** `renderAll()` que dispare guardados vacíos.
+- `guardarLS` **bloquea** arrays `[]` si había datos.
+- `FluxiaAntiCero` escanea localStorage y restaura si la UI muestra 0.
+- Toda baja de gasto/ingreso/fijo/compartido → **Papelera 30 días** (`FluxiaPapelera`).
+
+Si el usuario ve 0: Ajustes → «Recuperar datos si aparecen a 0».
+
+
+---
+
+## ⛔ v91.5 — CAUSA RAÍZ «DATOS A 0»
+
+Los datos se guardan como `fluxia_user_<id>__planRescate_v2_*`.  
+Si el perfil activo es otro o `sin-perfil`, la app **lee vacío** aunque los datos existan.
+
+**Reglas:**
+1. `Almacen.getItem` debe buscar en **todos** los prefijos si la clave actual está vacía y migrar.
+2. El remoto **nunca** gana si viene `[]` y local tiene items.
+3. Botón **Recuperar plan si está a 0** en Ajustes.
+4. `FluxiaRecuperarPlan()` al arrancar y al volver a la app.
+
+Checklist: borrar notificaciones, cambiar de pestaña, background 10 min → totales iguales.
+
+
+---
+
+## v91.6 — BORRAR VARIABLE + ATRÁS NUEVO USUARIO
+
+1. Onboarding nuevo usuario: **Atrás/Cancelar** vuelve a la puerta (Crear / Ya tengo) sin atascarse.
+2. Al borrar un gasto variable (manual o banco):
+   - Va a **papelera** (30 días)
+   - Se guarda en `fluxia_gv_borrados_v1` (id, bancoRef, huella)
+   - `aplicarMovs` **no reimporta** ese cargo aunque el banco lo siga enviando o cambies de index
+3. La lista de borrados es del dispositivo (y Almacén si hay nube); sobrevive a actualizaciones de HTML.
