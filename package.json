@@ -1,9 +1,13 @@
 {
-  "name": "fluxia",
-  "version": "1.7.0",
+  "name": "fluxia-push-server",
+  "version": "1.0.0",
   "private": true,
-  "description": "Fluxia — control financiero personal (PWA + API)",
-  "main": "server.js",
+  "type": "module",
+  "engines": { "node": ">=20" },
   "scripts": { "start": "node server.js" },
-  "engines": { "node": ">=18" }
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "web-push": "^3.6.7"
+  }
 }
