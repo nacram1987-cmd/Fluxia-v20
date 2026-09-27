@@ -1,6 +1,6 @@
 {
-  "version": "91.6",
-  "estable": "index_fluxia_v91_6.html",
-  "actualizado": "2026-09-27T21:03:41",
-  "nota": "Atrás en nuevo usuario + gastos borrados no reaparecen del banco"
+  "version": "91.7",
+  "estable": "index_fluxia_v91_7.html",
+  "actualizado": "2026-09-27T21:09:53",
+  "nota": "Arranque: splash → bienvenida. Protege Fluxia solo con sesión real."
 }

@@ -224,3 +224,21 @@ Checklist: borrar notificaciones, cambiar de pestaña, background 10 min → tot
    - Se guarda en `fluxia_gv_borrados_v1` (id, bancoRef, huella)
    - `aplicarMovs` **no reimporta** ese cargo aunque el banco lo siga enviando o cambies de index
 3. La lista de borrados es del dispositivo (y Almacén si hay nube); sobrevive a actualizaciones de HTML.
+
+
+---
+
+## v91.7 — ORDEN DE ARRANQUE (INQUEBRANTABLE)
+
+Tras añadir a pantalla de inicio / abrir app:
+
+1. **Splash** (logo oficial + Fluxia BETA)
+2. **Puerta de bienvenida** (Crear nuevo usuario / Ya tengo un usuario) si no hay sesión real
+3. Onboarding del usuario nuevo (con Atrás)
+4. **Protege Fluxia** (Face ID / clave) **solo** cuando ya hay usuario configurado — nunca en la 1ª visita vacía
+
+```
+❌ JAMÁS abrir con «Protege Fluxia» sin usuario
+✅ Recordar sesión solo tras credenciales / usuario creado
+✅ Siguiente entrada: splash → (bloqueo si está activo) → app
+```
