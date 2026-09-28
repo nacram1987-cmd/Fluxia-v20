@@ -1,7 +1,7 @@
 {
   "version": "92.1",
   "estable": "index_fluxia_v92.1.html",
-  "lab": "index_fluxia_v92_7.html",
-  "actualizado": "2026-09-28T12:52:46",
-  "nota": "LAB v92.7: tras credenciales no vuelve a Bienvenido; VAPID secrets aclarados"
+  "lab": "index_fluxia_v92_9.html",
+  "actualizado": "2026-09-28T13:19:54",
+  "nota": "LAB v92.9: mensaje claro WORKER_ERROR Fluxia-banco"
 }
