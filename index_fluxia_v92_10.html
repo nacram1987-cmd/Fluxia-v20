@@ -5,44 +5,56 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Fluxia BETA v92.10 LAB</title>
 <script>
-/* Fluxia v92.10 LAB · Hotfix bancario sobre v92.9
-   Objetivo: impedir que una respuesta vacía de estado() destruya la última caché
-   local de conexiones bancarias antes de ejecutar el fallback de recuperación.
-   No modifica Supabase ni elimina conexiones del servidor.
+/* Fluxia v92.10 LAB · HOTFIX BANCOS
+   Sobre v92.9. No modifica Supabase ni elimina conexiones.
+   Correcciones:
+   1) Si estado() devuelve 0 y la caché CX está vacía, recuperar desde KNOWN_KEY.
+   2) No permitir que una respuesta vacía sobrescriba una caché buena.
+   3) Pintar bancos conocidos como "Reconectar" aunque la conexión local se haya perdido.
 */
 (function(){
-  'use strict';
-  var CX_KEY='fluxia_banco_conexiones_v1';
-  var KNOWN_KEY='fluxia_bancos_conocidos_v62';
-  try{
-    var originalSetItem=Storage.prototype.setItem;
-    Storage.prototype.setItem=function(key,value){
-      if(this===window.localStorage && key===CX_KEY && String(value)==='[]'){
-        var previous='';
-        try{ previous=localStorage.getItem(CX_KEY)||''; }catch(_){}
-        var knownExists=false;
-        try{ knownExists=localStorage.getItem(KNOWN_KEY)!==null; }catch(_){}
-        /* v92.10: si había conexiones y siguen existiendo los bancos conocidos,
-           una escritura [] solo puede ser la regresión de estado(); se bloquea.
-           La desconexión explícita de "todos" borra KNOWN_KEY antes de escribir []
-           y por tanto queda permitida. */
-        if(previous && previous!=='[]' && knownExists){
-          console.warn('Fluxia v92.10: bloqueo de escritura bancaria vacía para preservar recuperación local.');
-          return;
-        }
-      }
-      return originalSetItem.apply(this,arguments);
-    };
-  }catch(e){
-    console.warn('Fluxia v92.10 hotfix no pudo instalarse:',e);
-  }
+'use strict';
+var CX='fluxia_banco_conexiones_v1', KN='fluxia_bancos_conocidos_v62';
+function read(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function write(k,v){try{localStorage.setItem(k,v);return true;}catch(e){return false;}}
+function parse(v,d){try{var x=JSON.parse(v||'');return x==null?d:x;}catch(e){return d;}}
+function knownList(){
+  var o=parse(read(KN),{}), out=[];
+  if(o && typeof o==='object' && !Array.isArray(o)) Object.keys(o).forEach(function(k){
+    var x=o[k]; if(typeof x==='string') x={banco:x};
+    if(x && x.banco) out.push({id:'known-'+k,banco:x.banco,valido_hasta:null,cuentas:[],error:'',caducado:false,lee_desde:x.corte||null});
+  });
+  return out;
+}
+/* Protección: una escritura [] de la rutina de estado no destruye una copia previa. */
+try{
+ var nativeSet=Storage.prototype.setItem;
+ Storage.prototype.setItem=function(key,value){
+   if(this===window.localStorage && key===CX && String(value)==='[]'){
+     var prev=read(CX), known=knownList();
+     if(prev && prev!=='[]') return;
+     if(known.length) return;
+   }
+   return nativeSet.apply(this,arguments);
+ };
+}catch(e){}
+window.__FLUXIA_V9210_BANK_HOTFIX__={
+ version:'v92.10',
+ known:knownList,
+ restore:function(){
+   var cx=parse(read(CX),[]), kn=knownList();
+   if(Array.isArray(cx)&&cx.length) return cx;
+   if(kn.length){ write(CX,JSON.stringify(kn)); return kn; }
+   return [];
+ }
+};
 })();
 </script>
 </head>
 <body>
 <div style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:28px;text-align:center;color:#0F3A5C">
-  <strong>Fluxia BETA v92.10 LAB</strong>
-  <p style="color:#64748B">Cargando la versión de prueba…</p>
+<strong>Fluxia BETA v92.10 LAB</strong>
+<p style="color:#64748B">Cargando la versión de prueba…</p>
 </div>
 <script>
 (async function(){
@@ -51,42 +63,42 @@
     var r=await fetch(source,{cache:'no-store'});
     if(!r.ok) throw new Error('HTTP '+r.status);
     var html=await r.text();
-    /* Inyectamos el hotfix en el HEAD de v92.9 antes de que sus scripts
-       registren DOMContentLoaded/arranque bancario. */
-    var patch = `<script>
+
+    /* Inyectar antes de los scripts de v92.9. */
+    var patch=`<script>
 (function(){
-  'use strict';
-  var CX_KEY='fluxia_banco_conexiones_v1';
-  var KNOWN_KEY='fluxia_bancos_conocidos_v62';
-  try{
-    var originalSetItem=Storage.prototype.setItem;
-    Storage.prototype.setItem=function(key,value){
-      if(this===window.localStorage && key===CX_KEY && String(value)==='[]'){
-        var previous='';
-        try{ previous=localStorage.getItem(CX_KEY)||''; }catch(_){}
-        var knownExists=false;
-        try{ knownExists=localStorage.getItem(KNOWN_KEY)!==null; }catch(_){}
-        if(previous && previous!=='[]' && knownExists){
-          console.warn('Fluxia v92.10: escritura [] bancaria bloqueada; se conserva la caché para Reconectar.');
-          return;
-        }
-      }
-      return originalSetItem.apply(this,arguments);
-    };
-    window.FLUXIA_VERSION='v92.10';
-  }catch(e){ console.warn('Fluxia v92.10 hotfix:',e); }
+'use strict';
+var CX='fluxia_banco_conexiones_v1', KN='fluxia_bancos_conocidos_v62';
+function p(v,d){try{var x=JSON.parse(v||'');return x==null?d:x}catch(e){return d}}
+function known(){var o=p(localStorage.getItem(KN),{}),a=[];if(o&&typeof o==='object'&&!Array.isArray(o))Object.keys(o).forEach(function(k){var x=o[k];if(typeof x==='string')x={banco:x};if(x&&x.banco)a.push({id:'known-'+k,banco:x.banco,valido_hasta:null,cuentas:[],error:'',caducado:false,lee_desde:x.corte||null})});return a}
+function cx(){var a=p(localStorage.getItem(CX),[]);return Array.isArray(a)?a:[]}
+/* Si v92.9 dejó CX vacío pero conserva KNOWN, reconstruimos la representación de reconexión. */
+try{var old=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(this===localStorage&&k===CX&&String(v)==='[]'){if(cx().length||known().length)return;}return old.apply(this,arguments)}}catch(e){}
+window.__FLUXIA_V9210_RECOVER_BANKS=function(){var a=cx(),k=known();if(a.length)return a;if(k.length){try{localStorage.setItem(CX,JSON.stringify(k))}catch(e){}return k}return []};
+window.FLUXIA_VERSION='v92.10';
 })();
 <\/script>`;
-    html=html.replace('<head>', '<head>'+patch);
-    html=html.replace(/Fluxia BETA v92\.9/g,'Fluxia BETA v92.10 LAB');
-    html=html.replace(/Fluxia BETA v92\.9/g,'Fluxia BETA v92.10 LAB');
-    /* Actualiza referencias visibles de versión sin tocar la lógica funcional. */
-    html=html.replace(/Versión v92/g,'Versión v92.10 LAB');
-    document.open();
-    document.write(html);
-    document.close();
+    html=html.replace('<head>','<head>'+patch);
+
+    /* Reemplazo global: que NO vuelva a aparecer v92.9 en títulos, checklist o ayuda. */
+    html=html.replace(/v92\.9/g,'v92.10 LAB');
+    html=html.replace(/v92\.9/g,'v92.10 LAB');
+    html=html.replace(/Versión v92(?!\.10)/g,'Versión v92.10 LAB');
+
+    /* Reescritura del bloque de estado bancario:
+       si servidor=0, usar también KNOWN_KEY, no solo CX_KEY. */
+    var oldBlock="var cache0=leerConexiones();\n         if(cache0.length){";
+    var newBlock="var cache0=leerConexiones();\n         if(!cache0.length && window.__FLUXIA_V9210_RECOVER_BANKS) cache0=window.__FLUXIA_V9210_RECOVER_BANKS();\n         if(cache0.length){";
+    html=html.split(oldBlock).join(newBlock);
+
+    /* Si hay error de red, mismo fallback. */
+    var oldErr="var cache=leerConexiones();\n       var errTxt=";
+    var newErr="var cache=leerConexiones();\n       if(!cache.length && window.__FLUXIA_V9210_RECOVER_BANKS) cache=window.__FLUXIA_V9210_RECOVER_BANKS();\n       var errTxt=";
+    html=html.split(oldErr).join(newErr);
+
+    document.open();document.write(html);document.close();
   }catch(e){
-    document.body.innerHTML='<div style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:28px;color:#B42318"><strong>No se pudo cargar v92.9</strong><p>'+String(e.message||e)+'</p></div>';
+    document.body.innerHTML='<div style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:28px;color:#B42318"><strong>No se pudo cargar v92.10 LAB</strong><p>'+String(e.message||e)+'</p></div>';
   }
 })();
 </script>
