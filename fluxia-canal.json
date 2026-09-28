@@ -1,6 +1,7 @@
 {
-  "version": "91.7",
-  "estable": "index_fluxia_v91_7.html",
-  "actualizado": "2026-09-27T21:09:53",
-  "nota": "Arranque: splash → bienvenida. Protege Fluxia solo con sesión real."
+  "version": "92.1",
+  "estable": "index_fluxia_v92.1.html",
+  "lab": "index_fluxia_v92_5.html",
+  "actualizado": "2026-09-28T12:11:57",
+  "nota": "LAB v92.5: Bizum→liquidación compartidos sin doble conteo; push SQL+Edge"
 }
