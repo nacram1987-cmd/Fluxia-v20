@@ -1,0 +1,29 @@
+{
+  "fluxia_open_banking_config": {
+    "version": "92.1",
+    "environment": "production",
+    "provider": "psd2_aggregator",
+    "settings": {
+      "consent_lifetime_days": 90,
+      "auto_sync_on_launch": false,
+      "allow_standalone_ios_redirect": true
+    },
+    "connected_institutions": [
+      {
+        "institution_id": "ES_SANDBOX_01",
+        "name": "Banco Simulado / Producción",
+        "status": "ACTIVE",
+        "last_sync": "2026-09-28T19:00:00Z",
+        "accounts": [
+          {
+            "account_id": "ACC_ES99_0000_0000_1234",
+            "iban_masked": "ES99 **** **** 1234",
+            "currency": "EUR",
+            "balance": 1450.50,
+            "type": "CHECKING"
+          }
+        ]
+      }
+    ]
+  }
+}
