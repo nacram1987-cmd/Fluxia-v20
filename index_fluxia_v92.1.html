@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Fluxia · Redirigiendo…</title>
+<script>
+(function () {
+  // Conserva ?code= y &state= del banco
+  var q = location.search || '';
+  var h = location.hash || '';
+  // Versión que sí existe
+  location.replace('index_fluxia_v92_9.html' + q + h);
+})();
+</script>
+</head>
+<body style="font-family:system-ui;padding:24px;text-align:center;color:#334">
+  <p>Volviendo a Fluxia…</p>
+  <p style="font-size:14px;color:#64748b">Si no carga, abre
+    <a id="a" href="index_fluxia_v92_9.html">index_fluxia_v92_9.html</a>
+  </p>
+  <script>
+    document.getElementById('a').href = 'index_fluxia_v92_9.html' + (location.search||'') + (location.hash||'');
+  </script>
+</body>
+</html>
