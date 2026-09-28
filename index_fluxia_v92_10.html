@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fluxia BETA v92.10 LAB</title>
+<script>
+/* Fluxia v92.10 LAB · Hotfix bancario sobre v92.9
+   Objetivo: impedir que una respuesta vacía de estado() destruya la última caché
+   local de conexiones bancarias antes de ejecutar el fallback de recuperación.
+   No modifica Supabase ni elimina conexiones del servidor.
+*/
+(function(){
+  'use strict';
+  var CX_KEY='fluxia_banco_conexiones_v1';
+  var KNOWN_KEY='fluxia_bancos_conocidos_v62';
+  try{
+    var originalSetItem=Storage.prototype.setItem;
+    Storage.prototype.setItem=function(key,value){
+      if(this===window.localStorage && key===CX_KEY && String(value)==='[]'){
+        var previous='';
+        try{ previous=localStorage.getItem(CX_KEY)||''; }catch(_){}
+        var knownExists=false;
+        try{ knownExists=localStorage.getItem(KNOWN_KEY)!==null; }catch(_){}
+        /* v92.10: si había conexiones y siguen existiendo los bancos conocidos,
+           una escritura [] solo puede ser la regresión de estado(); se bloquea.
+           La desconexión explícita de "todos" borra KNOWN_KEY antes de escribir []
+           y por tanto queda permitida. */
+        if(previous && previous!=='[]' && knownExists){
+          console.warn('Fluxia v92.10: bloqueo de escritura bancaria vacía para preservar recuperación local.');
+          return;
+        }
+      }
+      return originalSetItem.apply(this,arguments);
+    };
+  }catch(e){
+    console.warn('Fluxia v92.10 hotfix no pudo instalarse:',e);
+  }
+})();
+</script>
+</head>
+<body>
+<div style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:28px;text-align:center;color:#0F3A5C">
+  <strong>Fluxia BETA v92.10 LAB</strong>
+  <p style="color:#64748B">Cargando la versión de prueba…</p>
+</div>
+<script>
+(async function(){
+  var source='index_fluxia_v92_9.html';
+  try{
+    var r=await fetch(source,{cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    var html=await r.text();
+    /* Inyectamos el hotfix en el HEAD de v92.9 antes de que sus scripts
+       registren DOMContentLoaded/arranque bancario. */
+    var patch = `<script>
+(function(){
+  'use strict';
+  var CX_KEY='fluxia_banco_conexiones_v1';
+  var KNOWN_KEY='fluxia_bancos_conocidos_v62';
+  try{
+    var originalSetItem=Storage.prototype.setItem;
+    Storage.prototype.setItem=function(key,value){
+      if(this===window.localStorage && key===CX_KEY && String(value)==='[]'){
+        var previous='';
+        try{ previous=localStorage.getItem(CX_KEY)||''; }catch(_){}
+        var knownExists=false;
+        try{ knownExists=localStorage.getItem(KNOWN_KEY)!==null; }catch(_){}
+        if(previous && previous!=='[]' && knownExists){
+          console.warn('Fluxia v92.10: escritura [] bancaria bloqueada; se conserva la caché para Reconectar.');
+          return;
+        }
+      }
+      return originalSetItem.apply(this,arguments);
+    };
+    window.FLUXIA_VERSION='v92.10';
+  }catch(e){ console.warn('Fluxia v92.10 hotfix:',e); }
+})();
+<\/script>`;
+    html=html.replace('<head>', '<head>'+patch);
+    html=html.replace(/Fluxia BETA v92\.9/g,'Fluxia BETA v92.10 LAB');
+    html=html.replace(/Fluxia BETA v92\.9/g,'Fluxia BETA v92.10 LAB');
+    /* Actualiza referencias visibles de versión sin tocar la lógica funcional. */
+    html=html.replace(/Versión v92/g,'Versión v92.10 LAB');
+    document.open();
+    document.write(html);
+    document.close();
+  }catch(e){
+    document.body.innerHTML='<div style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:28px;color:#B42318"><strong>No se pudo cargar v92.9</strong><p>'+String(e.message||e)+'</p></div>';
+  }
+})();
+</script>
+</body>
+</html>
