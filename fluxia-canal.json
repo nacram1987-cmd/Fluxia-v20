@@ -1,6 +1,7 @@
 {
-  "version": "92",
-  "estable": "index_fluxia_v92.html",
-  "actualizado": "2026-09-28T07:01:57",
-  "nota": "v92 informe arquitectura: tema sistema, offline-first, IDB, PSD2 note. Lab: este HTML."
+  "version": "92.10",
+  "estable": "index_fluxia_v92.1.html",
+  "lab": "index_fluxia_v92_9.html",
+  "actualizado": "2026-09-28T22:15:00",
+  "nota": "LAB v92.10: lista bancos acepta aspsps de Enable Banking (arreglo Sin bancos)"
 }
