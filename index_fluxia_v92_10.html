@@ -1,106 +1,12 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Fluxia BETA v92.10 LAB</title>
-<script>
-/* Fluxia v92.10 LAB · HOTFIX BANCOS
-   Sobre v92.9. No modifica Supabase ni elimina conexiones.
-   Correcciones:
-   1) Si estado() devuelve 0 y la caché CX está vacía, recuperar desde KNOWN_KEY.
-   2) No permitir que una respuesta vacía sobrescriba una caché buena.
-   3) Pintar bancos conocidos como "Reconectar" aunque la conexión local se haya perdido.
-*/
-(function(){
-'use strict';
-var CX='fluxia_banco_conexiones_v1', KN='fluxia_bancos_conocidos_v62';
-function read(k){try{return localStorage.getItem(k);}catch(e){return null;}}
-function write(k,v){try{localStorage.setItem(k,v);return true;}catch(e){return false;}}
-function parse(v,d){try{var x=JSON.parse(v||'');return x==null?d:x;}catch(e){return d;}}
-function knownList(){
-  var o=parse(read(KN),{}), out=[];
-  if(o && typeof o==='object' && !Array.isArray(o)) Object.keys(o).forEach(function(k){
-    var x=o[k]; if(typeof x==='string') x={banco:x};
-    if(x && x.banco) out.push({id:'known-'+k,banco:x.banco,valido_hasta:null,cuentas:[],error:'',caducado:false,lee_desde:x.corte||null});
-  });
-  return out;
-}
-/* Protección: una escritura [] de la rutina de estado no destruye una copia previa. */
-try{
- var nativeSet=Storage.prototype.setItem;
- Storage.prototype.setItem=function(key,value){
-   if(this===window.localStorage && key===CX && String(value)==='[]'){
-     var prev=read(CX), known=knownList();
-     if(prev && prev!=='[]') return;
-     if(known.length) return;
-   }
-   return nativeSet.apply(this,arguments);
- };
-}catch(e){}
-window.__FLUXIA_V9210_BANK_HOTFIX__={
- version:'v92.10',
- known:knownList,
- restore:function(){
-   var cx=parse(read(CX),[]), kn=knownList();
-   if(Array.isArray(cx)&&cx.length) return cx;
-   if(kn.length){ write(CX,JSON.stringify(kn)); return kn; }
-   return [];
- }
-};
-})();
-</script>
-</head>
-<body>
-<div style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:28px;text-align:center;color:#0F3A5C">
-<strong>Fluxia BETA v92.10 LAB</strong>
-<p style="color:#64748B">Cargando la versión de prueba…</p>
-</div>
-<script>
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Fluxia BETA v92.10 LAB</title><style>html,body{margin:0;height:100%;background:#fff}#boot{font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:32px;text-align:center;color:#0F3A5C}#boot small{display:block;margin-top:8px;color:#64748b}</style></head><body><div id="boot"><strong>Fluxia BETA v92.10 LAB</strong><small>Cargando la versión de laboratorio…</small></div><script>
 (async function(){
-  var source='index_fluxia_v92_9.html';
   try{
-    var r=await fetch(source,{cache:'no-store'});
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    var html=await r.text();
-
-    /* Inyectar antes de los scripts de v92.9. */
-    var patch=`<script>
-(function(){
-'use strict';
-var CX='fluxia_banco_conexiones_v1', KN='fluxia_bancos_conocidos_v62';
-function p(v,d){try{var x=JSON.parse(v||'');return x==null?d:x}catch(e){return d}}
-function known(){var o=p(localStorage.getItem(KN),{}),a=[];if(o&&typeof o==='object'&&!Array.isArray(o))Object.keys(o).forEach(function(k){var x=o[k];if(typeof x==='string')x={banco:x};if(x&&x.banco)a.push({id:'known-'+k,banco:x.banco,valido_hasta:null,cuentas:[],error:'',caducado:false,lee_desde:x.corte||null})});return a}
-function cx(){var a=p(localStorage.getItem(CX),[]);return Array.isArray(a)?a:[]}
-/* Si v92.9 dejó CX vacío pero conserva KNOWN, reconstruimos la representación de reconexión. */
-try{var old=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(this===localStorage&&k===CX&&String(v)==='[]'){if(cx().length||known().length)return;}return old.apply(this,arguments)}}catch(e){}
-window.__FLUXIA_V9210_RECOVER_BANKS=function(){var a=cx(),k=known();if(a.length)return a;if(k.length){try{localStorage.setItem(CX,JSON.stringify(k))}catch(e){}return k}return []};
-window.FLUXIA_VERSION='v92.10';
+    const r=await fetch('https://nacram1987-cmd.github.io/Fluxia-v20/index_fluxia_v92_9.html',{cache:'no-store'}); if(!r.ok) throw new Error('HTTP '+r.status);
+    let h=await r.text();
+    h=h.replace(/Fluxia BETA v92\.9/g,'Fluxia BETA v92.10 LAB');
+    h=h.replace('<title>Fluxia BETA v92.9</title>','<title>Fluxia BETA v92.10 LAB</title>');
+    h=h.replace('</head>',"<script>\n/* FLUXIA v92.10 LAB — BANK RECOVERY PATCH\n   Se ejecuta ANTES del JavaScript original de v92.9.\n   Nunca borra datos ni toca Supabase: solo evita que una respuesta bancaria vacía\n   o incompatible oculte conexiones conocidas del dispositivo.\n*/\n(function(){\n  window.FLUXIA_VERSION='v92.10 LAB';\n  try{document.title='Fluxia BETA v92.10 LAB';}catch(e){}\n  var ORIGINAL_FETCH=window.fetch.bind(window);\n  var URL_BANK='https://kylduzmrfbubeamfrbbr.supabase.co/functions/v1/Fluxia-banco';\n  function norm(n){return String(n||'').trim().toLowerCase();}\n  function readJSON(k){try{var x=JSON.parse(localStorage.getItem(k)||'null');return x;}catch(e){return null;}}\n  function known(){\n    var out=[];\n    var k='fluxia_bancos_conocidos_v62', o=readJSON(k);\n    if(o&&typeof o==='object'&&!Array.isArray(o)) Object.keys(o).forEach(function(x){var v=o[x]; if(v&&v.banco) out.push({banco:v.banco,corte:v.corte||null});});\n    var c=readJSON('fluxia_banco_conexiones_v1');\n    if(Array.isArray(c)) c.forEach(function(v){if(v&&v.banco&&!out.some(function(x){return norm(x.banco)===norm(v.banco)})) out.push(v);});\n    /* Último recurso: localizar objetos persistidos que claramente representan un banco. */\n    try{for(var i=0;i<localStorage.length;i++){var key=localStorage.key(i)||'';if(!/banco|bank|conex/i.test(key))continue;var v=readJSON(key);if(Array.isArray(v))v.forEach(function(x){if(x&&x.banco&&!out.some(function(y){return norm(y.banco)===norm(x.banco)}))out.push(x);});else if(v&&typeof v==='object'&&!Array.isArray(v)&&v.banco&&!out.some(function(y){return norm(y.banco)===norm(v.banco)}))out.push(v);}}catch(e){}\n    return out;\n  }\n  function fallbackConnections(){\n    return known().map(function(x,i){return {id:String(x.id||'local-'+i),banco:x.banco,valido_hasta:x.valido_hasta||null,cuentas:Array.isArray(x.cuentas)?x.cuentas:[],ultima_sync_fondo:x.ultima_sync_fondo||null,ultimo_error:'',caducado:false,lee_desde:x.corte||null,_fluxia_local_recovery:true};});\n  }\n  window.fetch=function(input,init){\n    return ORIGINAL_FETCH(input,init).then(function(resp){\n      try{\n        var url=typeof input==='string'?input:(input&&input.url)||'';\n        if(url!==URL_BANK || !init || !init.body) return resp;\n        var body;try{body=JSON.parse(init.body);}catch(e){return resp;}\n        if(!body || body.accion!=='estado') return resp;\n        return resp.clone().json().then(function(data){\n          var conns= data && Array.isArray(data.conexiones) ? data.conexiones : [];\n          if(conns.length) return resp;\n          var rec=fallbackConnections();\n          if(!rec.length) return resp;\n          data=Object.assign({},data,{conexiones:rec,_fluxia_recovery:'local-known-bank'});\n          return new Response(JSON.stringify(data),{status:resp.status,statusText:resp.statusText,headers:{'Content-Type':'application/json'}});\n        }).catch(function(){return resp;});\n      }catch(e){return resp;}\n    });\n  };\n  function mark(){\n    try{\n      document.querySelectorAll('*').forEach(function(el){\n        if(el.children.length===0 && el.textContent && /Fluxia BETA v92\\.9/.test(el.textContent)) el.textContent=el.textContent.replace(/Fluxia BETA v92\\.9/g,'Fluxia BETA v92.10 LAB');\n        if(el.children.length===0 && el.textContent && /^Versión v92$/.test(el.textContent.trim())) el.textContent='Versión v92.10 LAB';\n      });\n    }catch(e){}\n  }\n  document.addEventListener('DOMContentLoaded',function(){setTimeout(mark,100);setTimeout(mark,1200);});\n})();\n</script>"+'\n</head>');
+    document.open(); document.write(h); document.close();
+  }catch(e){document.getElementById('boot').innerHTML='<strong>No se pudo cargar v92.10 LAB</strong><small>'+String(e.message||e)+'</small>';}
 })();
-<\/script>`;
-    html=html.replace('<head>','<head>'+patch);
-
-    /* Reemplazo global: que NO vuelva a aparecer v92.9 en títulos, checklist o ayuda. */
-    html=html.replace(/v92\.9/g,'v92.10 LAB');
-    html=html.replace(/v92\.9/g,'v92.10 LAB');
-    html=html.replace(/Versión v92(?!\.10)/g,'Versión v92.10 LAB');
-
-    /* Reescritura del bloque de estado bancario:
-       si servidor=0, usar también KNOWN_KEY, no solo CX_KEY. */
-    var oldBlock="var cache0=leerConexiones();\n         if(cache0.length){";
-    var newBlock="var cache0=leerConexiones();\n         if(!cache0.length && window.__FLUXIA_V9210_RECOVER_BANKS) cache0=window.__FLUXIA_V9210_RECOVER_BANKS();\n         if(cache0.length){";
-    html=html.split(oldBlock).join(newBlock);
-
-    /* Si hay error de red, mismo fallback. */
-    var oldErr="var cache=leerConexiones();\n       var errTxt=";
-    var newErr="var cache=leerConexiones();\n       if(!cache.length && window.__FLUXIA_V9210_RECOVER_BANKS) cache=window.__FLUXIA_V9210_RECOVER_BANKS();\n       var errTxt=";
-    html=html.split(oldErr).join(newErr);
-
-    document.open();document.write(html);document.close();
-  }catch(e){
-    document.body.innerHTML='<div style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:28px;color:#B42318"><strong>No se pudo cargar v92.10 LAB</strong><p>'+String(e.message||e)+'</p></div>';
-  }
-})();
-</script>
-</body>
-</html>
+</script></body></html>
