@@ -1,7 +1,7 @@
 {
   "version": "92.1",
   "estable": "index_fluxia_v92.1.html",
-  "lab": "index_fluxia_v92_5.html",
-  "actualizado": "2026-09-28T12:11:57",
-  "nota": "LAB v92.5: Bizum→liquidación compartidos sin doble conteo; push SQL+Edge"
+  "lab": "index_fluxia_v92_6.html",
+  "actualizado": "2026-09-28T12:42:22",
+  "nota": "LAB v92.6: regla nómina mes del plan; VAPID steps in README"
 }
