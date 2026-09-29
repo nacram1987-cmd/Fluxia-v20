@@ -1,13 +1,14 @@
 {
-  "version": "93.1",
+  "version": "93.3",
   "estable": "index_fluxia_v92.1.html",
   "estable_version": "v92.1",
-  "lab": "index_fluxia_v93.1.html",
-  "lab_version": "v93.1",
-  "actualizado": "2026-09-29T11:00:00",
+  "lab": "index_fluxia_v93.3.html",
+  "lab_version": "v93.3",
+  "actualizado": "2026-09-29T16:00:00",
   "enlaces": {
     "estable": "https://nacram1987-cmd.github.io/Fluxia-v20/",
-    "lab": "https://nacram1987-cmd.github.io/Fluxia-v20/index_fluxia_v93.1.html"
+    "lab": "https://nacram1987-cmd.github.io/Fluxia-v20/index_fluxia_v93.3.html"
   },
-  "nota": "LAB v93.1: corrige texto de código, instalación con usuario fantasma, Face ID antes de datos, papelera universal, avisos, checklist solo de la versión. Módulo bancario sin tocar. ESTABLE sin cambios hasta decisión del propietario."
+  "archivos_junto_al_html": ["fluxia-sw.js", "manifest.webmanifest", "fluxia-icon.svg", "fluxia-icon-180.png", "fluxia-icon-192.png", "fluxia-icon-512.png"],
+  "nota": "LAB v93.3: modo sin conexión real (SW), PIN PBKDF2 + bloqueo, CSV CaixaBank, informe de problema, privacidad, pruebas de flujos (39). Módulo bancario sin tocar. ESTABLE sin cambios hasta decisión del propietario."
 }

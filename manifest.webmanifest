@@ -1,27 +1,18 @@
 {
   "name": "Fluxia BETA",
   "short_name": "Fluxia BETA",
-  "start_url": "./index.html",
+  "description": "Tu flujo financiero bajo control",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#0F3A5C",
-  "theme_color": "#0F3A5C",
+  "orientation": "portrait",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0E7C90",
+  "lang": "es",
   "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "apple-touch-icon.png",
-      "sizes": "180x180",
-      "type": "image/png"
-    }
+    { "src": "fluxia-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "fluxia-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "fluxia-icon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "maskable" },
+    { "src": "fluxia-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
   ]
 }

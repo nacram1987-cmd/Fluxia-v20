@@ -1,11 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
-  <defs>
-    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0F3A5C"/>
-      <stop offset="100%" stop-color="#1554F0"/>
-    </linearGradient>
-  </defs>
-  <rect width="180" height="180" rx="40" fill="url(#g)"/>
-  <path d="M 32.4 72 C 51.6 101.7, 70.8 101.7, 90 72 C 109.2 42.3, 128.4 42.3, 147.6 72" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/>
-  <path d="M 32.4 108 C 51.6 78.3, 70.8 78.3, 90 108 C 109.2 137.7, 128.4 137.7, 147.6 108" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity="0.72"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="512" height="512">
+<defs><linearGradient id="dashGrad" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#0F3A5C"/><stop offset="100%" stop-color="#1554F0"/></linearGradient></defs>
+<rect fill="url(#dashGrad)" height="160" rx="36" width="160"/>
+<path d="M 28.8 64 C 45.9 90.4, 62.9 90.4, 80 64 C 97.1 37.6, 114.1 37.6, 131.2 64" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="9"/>
+<path d="M 28.8 96 C 45.9 69.6, 62.9 69.6, 80 96 C 97.1 122.4, 114.1 122.4, 131.2 96" fill="none" opacity="0.72" stroke="#fff" stroke-linecap="round" stroke-width="9"/>
 </svg>

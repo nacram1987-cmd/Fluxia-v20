@@ -52,6 +52,19 @@ try:
     else: avisos.append('No hay BANCO_SHA256.txt (ejecuta con --guardar-hash-banco una vez)')
 except ValueError: fallos.append('No se encuentra el módulo bancario en el HTML')
 
+# 5b) Rutas absolutas «/…» (en GitHub Pages con subcarpeta /Fluxia-v20/ dan 404) — aviso
+abs_ = sorted(set(re.findall(r'(?:src|href)="(/[^/"][^"]*)"', fuera)) | set(re.findall(r"serviceWorker\.register\('(/[^']+)'", s)))
+if abs_: avisos.append('Rutas absolutas que darán 404 bajo subcarpeta: %s' % ', '.join(abs_[:6]))
+
+# 5c) Archivos que deben ir JUNTO al HTML (offline/PWA)
+d = os.path.dirname(os.path.abspath(ruta))
+if "register('./fluxia-sw.js'" in s:
+    for f_ in ('fluxia-sw.js', 'manifest.webmanifest', 'fluxia-icon.svg', 'fluxia-icon-192.png', 'fluxia-icon-512.png'):
+        if not os.path.exists(os.path.join(d, f_)): fallos.append('Falta %s junto al HTML (sin él no hay modo sin conexión)' % f_)
+    if os.path.exists(os.path.join(d, 'fluxia-sw.js')):
+        m_ = re.search(r"const VERSION = '(v[\d.]+)'", open(os.path.join(d, 'fluxia-sw.js'), encoding='utf-8').read())
+        if not m_ or m_.group(1) != ver: fallos.append('fluxia-sw.js VERSION (%s) ≠ versión del HTML (%s)' % (m_ and m_.group(1), ver))
+
 # 6) Canal
 if canal:
     c = json.load(open(canal, encoding='utf-8'))
