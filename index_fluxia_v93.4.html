@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fluxia - Versión 93.4</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#0f172a">
+<style>
+body {
+font-family: system-ui, -apple-system, sans-serif;
+background-color: #0f172a;
+color: #f8fafc;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+height: 100vh;
+margin: 0;
+text-align: center;
+padding: 20px;
+}
+.card {
+background: #1e293b;
+padding: 30px;
+border-radius: 16px;
+box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+max-width: 400px;
+width: 100%;
+}
+h1 { font-size: 1.5rem; margin-bottom: 10px; color: #38bdf8; }
+p { color: #94a3b8; font-size: 0.95rem; line-height: 1.5; }
+.version {
+display: inline-block;
+background: #0284c7;
+color: white;
+padding: 4px 12px;
+border-radius: 20px;
+font-weight: bold;
+margin-top: 15px;
+}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>Fluxia PWA</h1>
+<p>Purgando cachés antiguas y cargando componentes limpios...</p>
+<div class="version">v93.4</div>
+</div>
+<script>
+// Script de limpieza y registro forzoso para romper la caché estancada
+if ('serviceWorker' in navigator) {
+window.addEventListener('load', () => {
+// Paso 1: Limpiar cualquier Service Worker obsoleto de versiones previas
+navigator.serviceWorker.getRegistrations().then((registrations) => {
+for (let registration of registrations) {
+registration.unregister().then((boolean) => {
+if (boolean) {
+console.log('Service Worker antiguo desinstalado correctamente.');
+}
+});
+}
+}).then(() => {
+// Paso 2: Registrar el nuevo Service Worker limpio
+navigator.serviceWorker.register('./fluxia-sw.js')
+.then((registration) => {
+console.log('Nuevo ServiceWorker registrado con éxito:', registration.scope);
+registration.onupdatefound = () => {
+const installingWorker = registration.installing;
+installingWorker.onstatechange = () => {
+if (installingWorker.state === 'installed') {
+if (navigator.serviceWorker.controller) {
+console.log('Nueva versión detectada. Recargando...');
+window.location.reload(true);
+}
+}
+};
+};
+})
+.catch((error) => {
+console.error('Error al registrar el ServiceWorker:', error);
+});
+});
+});
+}
+</script>
+</body>
+</html>
