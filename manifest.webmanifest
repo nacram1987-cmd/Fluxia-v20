@@ -2,7 +2,7 @@
   "name": "Fluxia BETA",
   "short_name": "Fluxia BETA",
   "description": "Tu flujo financiero bajo control",
-  "start_url": "./index_fluxia_v93.9.2.html",
+  "start_url": "./index_fluxia_v93.9.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
