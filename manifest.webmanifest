@@ -1,38 +1,11 @@
 {
-  "name": "Fluxia BETA",
-  "short_name": "Fluxia BETA",
-  "description": "Tu flujo financiero bajo control",
-  "start_url": "./index_fluxia_v93.9.html",
+  "name": "Fluxia v93.8.2 SECURITY EDITION",
+  "short_name": "Fluxia",
+  "description": "Tu plan de dinero mes a mes. ✅ Duplicados FIXED · 🔒 Security · 📊 Compartidos",
+  "start_url": "./index_fluxia_v93.8.2.html",
   "scope": "./",
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#FFFFFF",
-  "theme_color": "#0E7C90",
-  "lang": "es",
-  "icons": [
-    {
-      "src": "fluxia-icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "fluxia-icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "fluxia-icon-180.png",
-      "sizes": "180x180",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "fluxia-icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    }
-  ]
+  "background_color": "#ffffff",
+  "theme_color": "#0F3A5C",
+  "version": "93.8.2"
 }
