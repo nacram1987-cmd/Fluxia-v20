@@ -1,21 +1,7 @@
 {
-  "version": "93.4",
-  "estable": "index_fluxia_v93.4.html",
-  "estable_version": "v93.4",
-  "lab": "index_fluxia_v93.4.html",
-  "lab_version": "v93.4",
-  "actualizado": "2026-09-29T14:50:00+02:00",
-  "enlaces": {
-    "estable": "https://nacram1987-cmd.github.io/Fluxia-v20/",
-    "lab": "https://nacram1987-cmd.github.io/Fluxia-v20/index_fluxia_v93.4.html"
-  },
-  "archivos_junto_al_html": [
-    "fluxia-sw.js",
-    "manifest.webmanifest",
-    "fluxia-icon.svg",
-    "fluxia-icon-180.png",
-    "fluxia-icon-192.png",
-    "fluxia-icon-512.png"
-  ],
-  "nota": "ESTABLE y LAB apuntan a v93.4. Copia cifrada AES-256, accesibilidad AA, avisos propios, gráficos offline. Para forzar la actualización en iOS: borra el icono de inicio, abre la URL v93.4 en Safari y vuelve a «Añadir a pantalla de inicio»."
+  "version": "93.9.2",
+  "lab": "index_fluxia_v93.9.2.html",
+  "lab_version": "v93.9.2",
+  "timestamp": "2026-09-29T21:30:00Z",
+  "message": "ASOMBRO TOTAL: Settlement optimizado (10\u21921 transacci\u00f3n), Travel mode, Insights visuales, Auto-categorizaci\u00f3n, Notificaciones push pareja. v93.9.2 = LIDERAZGO \u00c9PICO"
 }

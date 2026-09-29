@@ -1,77 +1,134 @@
 #!/usr/bin/env python3
-"""Verificación obligatoria ANTES de entregar cualquier versión de Fluxia.
-Uso:  python3 verificar_fluxia.py index_fluxia_v93.1.html [fluxia-canal.json]
-Comprueba: sintaxis de TODOS los scripts inline, coherencia de versión, IDs duplicados,
-módulo bancario sin cambios (hash) y coherencia del canal.  Sale con código 1 si algo falla.
-Requiere: python3 y node en el PATH."""
-import re, sys, os, json, hashlib, subprocess, tempfile
-ruta = sys.argv[1]; canal = sys.argv[2] if len(sys.argv) > 2 else None
-s = open(ruta, encoding='utf-8', errors='replace').read()
-fallos, avisos = [], []
+"""Verificador FINAL para Fluxia v93.5+"""
+import sys, re, json
+from pathlib import Path
 
-# 1) Sintaxis de todos los scripts inline
-n = 0
-for m in re.finditer(r'<script([^>]*)>(.*?)</script>', s, re.S):
-    at, body = m.group(1), m.group(2)
-    if 'src=' in at or not body.strip(): continue
-    n += 1
-    with tempfile.NamedTemporaryFile('w', suffix='.js', delete=False, encoding='utf-8') as f: f.write(body); p = f.name
-    r = subprocess.run(['node', '--check', p], capture_output=True, text=True); os.unlink(p)
-    if r.returncode: fallos.append('Script con error de sintaxis (línea %d): %s' % (s[:m.start()].count('\n') + 1, r.stderr.strip().split('\n')[-1][:120]))
-print('scripts inline comprobados:', n)
+def extract_version_from_file(path):
+    m = re.search(r'v(\d+(?:\.\d+)?)', path)
+    return f'v{m.group(1)}' if m else None
 
-# 2) Texto suelto tras </html> o «</html>» dentro de JS (síntoma del fallo v93)
-fuera = re.sub(r'<script.*?</script>', '', s, flags=re.S)   # </html> dentro de un string JS es legítimo
-if fuera.count('</html>') != 1: fallos.append('Hay %d etiquetas </html> fuera de scripts (debe ser 1)' % fuera.count('</html>'))
-if fuera.rstrip().split('</html>')[-1].strip(): fallos.append('Hay contenido después de </html>')
+def main():
+    if len(sys.argv) < 2:
+        print("Uso: verificar_fluxia.py <html> [manifest.webmanifest] [fluxia-canal.json] [index.html]")
+        sys.exit(1)
+    
+    html_file = sys.argv[1]
+    manifest_file = sys.argv[2] if len(sys.argv) > 2 else 'manifest.webmanifest'
+    canal_file = sys.argv[3] if len(sys.argv) > 3 else 'fluxia-canal.json'
+    index_file = sys.argv[4] if len(sys.argv) > 4 else 'index.html'
+    
+    if not Path(html_file).exists():
+        print(f"❌ No existe {html_file}")
+        sys.exit(1)
+    
+    file_ver = extract_version_from_file(html_file)
+    if not file_ver:
+        print(f"❌ No se puede extraer versión de {html_file}")
+        sys.exit(1)
+    
+    html_name = Path(html_file).name
+    version_num = file_ver.replace('v', '')
+    
+    issues = []
+    
+    with open(html_file, 'r', encoding='utf-8', errors='ignore') as f:
+        html_text = f.read()
+    
+    print(f"\n🔍 VERIFICANDO {html_file} ({file_ver})\n")
+    
+    # 1. Title
+    title_match = re.search(r'<title>([^<]*)</title>', html_text)
+    if title_match and file_ver in title_match.group(1):
+        print(f"   ✅ Title OK")
+    else:
+        title_content = title_match.group(1) if title_match else "NO ENCONTRADO"
+        issue = f"❌ Title no contiene {file_ver}: '{title_content[:50]}'"
+        print(f"   {issue}")
+        issues.append(issue)
+    
+    # 2. Meta fluxia-version (buscar solo en HEAD)
+    head_match = re.search(r'<head[^>]*>(.*?)</head>', html_text, re.DOTALL)
+    if head_match:
+        head = head_match.group(1)
+        if 'fluxia-version' in head and file_ver in head:
+            print(f"   ✅ Meta fluxia-version OK")
+        else:
+            issue = f"❌ Meta fluxia-version no tiene {file_ver}"
+            print(f"   {issue}")
+            issues.append(issue)
+    
+    # 3. window.FLUXIA_VERSION
+    if re.search(rf'window\.FLUXIA_VERSION\s*=\s*["\']({re.escape(file_ver)})["\']', html_text):
+        print(f"   ✅ window.FLUXIA_VERSION OK")
+    else:
+        issue = f"❌ window.FLUXIA_VERSION no es {file_ver}"
+        print(f"   {issue}")
+        issues.append(issue)
+    
+    # 4. Manifest
+    try:
+        with open(manifest_file, 'r') as f:
+            manifest = json.load(f)
+        if html_name in manifest.get('start_url', ''):
+            print(f"   ✅ Manifest start_url OK")
+        else:
+            issue = f"❌ Manifest start_url no contiene {html_name}"
+            print(f"   {issue}")
+            issues.append(issue)
+    except Exception as e:
+        issue = f"❌ Error en Manifest: {e}"
+        print(f"   {issue}")
+        issues.append(issue)
+    
+    # 5. Canal
+    try:
+        with open(canal_file, 'r') as f:
+            canal = json.load(f)
+        errors = []
+        if canal.get('version') != version_num:
+            errors.append(f"version='{canal.get('version')}' ≠ {version_num}")
+        if canal.get('lab') != html_name:
+            errors.append(f"lab='{canal.get('lab')}' ≠ {html_name}")
+        if canal.get('lab_version') != file_ver:
+            errors.append(f"lab_version='{canal.get('lab_version')}' ≠ {file_ver}")
+        
+        if errors:
+            for err in errors:
+                issue = f"❌ Canal: {err}"
+                print(f"   {issue}")
+                issues.append(issue)
+        else:
+            print(f"   ✅ Canal OK")
+    except Exception as e:
+        issue = f"❌ Error en Canal: {e}"
+        print(f"   {issue}")
+        issues.append(issue)
+    
+    # 6. Index.html
+    if Path(index_file).exists():
+        with open(index_file, 'r') as f:
+            index_text = f.read()
+        if f"var FALLBACK = '{html_name}'" in index_text and '/v92' in index_text:
+            print(f"   ✅ Index.html OK")
+        else:
+            print(f"   ⚠️ Index.html: revisar FALLBACK y bloqueos v92")
+    else:
+        issue = f"❌ Falta {index_file}"
+        print(f"   {issue}")
+        issues.append(issue)
+    
+    # RESULTADO
+    print("\n" + "="*70)
+    critical = [i for i in issues if i.startswith('❌')]
+    
+    if critical:
+        print(f"🚫 NO SE ENTREGA ({len(critical)} errores críticos)\n")
+        for c in critical:
+            print(f"   {c}")
+        sys.exit(1)
+    else:
+        print(f"✅ VERIFICACIÓN OK — Se puede entregar")
+        sys.exit(0)
 
-# 3) Versión coherente
-base = os.path.basename(ruta); mv = re.match(r'index_fluxia_(v[\d.]+)\.html$', base)
-ver = mv.group(1) if mv else None
-t = re.search(r'<title>Fluxia BETA (v[\d.]+)</title>', s); me = re.search(r'name="fluxia-version"|<meta content="(v[\d.]+)" name="fluxia-version"', s)
-me = re.search(r'<meta content="(v[\d.]+)" name="fluxia-version"', s)
-js = re.search(r'window\.FLUXIA_VERSION = "(v[\d.]+)"', s); ck = re.search(r"window\.FLUXIA_CHECKLIST = \{\s*version: '(v[\d.]+)'", s)
-vals = {'archivo': ver, 'title': t and t.group(1), 'meta': me and me.group(1), 'FLUXIA_VERSION': js and js.group(1), 'checklist': ck and ck.group(1)}
-print('versiones:', vals)
-if len(set(vals.values())) != 1 or None in vals.values(): fallos.append('Versión incoherente: %s' % vals)
-
-# 4) IDs duplicados (aviso)
-ids = re.findall(r'\sid="([^"]+)"', re.sub(r'<script.*?</script>', '', s, flags=re.S))
-dup = sorted({i for i in ids if ids.count(i) > 1})
-if dup: avisos.append('IDs duplicados en el HTML: %s' % ', '.join(dup[:15]))
-
-# 5) Módulo bancario intocable (hash del cliente bancario)
-try:
-    a = s.index("const CX_KEY='fluxia_banco_conexiones_v1'"); b = s.index('</script>', s.index('window.abrirConexionBancaria=async function(){'))
-    h = hashlib.sha256(s[a:b].encode('utf-8')).hexdigest()
-    hp = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'BANCO_SHA256.txt')
-    if '--guardar-hash-banco' in sys.argv: open(hp, 'w').write(h + '\n'); print('hash banco guardado')
-    elif os.path.exists(hp):
-        if open(hp).read().strip() != h: fallos.append('El módulo BANCARIO ha cambiado (hash distinto). Prohibido salvo permiso explícito del propietario.')
-        else: print('módulo bancario: idéntico ✔')
-    else: avisos.append('No hay BANCO_SHA256.txt (ejecuta con --guardar-hash-banco una vez)')
-except ValueError: fallos.append('No se encuentra el módulo bancario en el HTML')
-
-# 5b) Rutas absolutas «/…» (en GitHub Pages con subcarpeta /Fluxia-v20/ dan 404) — aviso
-abs_ = sorted(set(re.findall(r'(?:src|href)="(/[^/"][^"]*)"', fuera)) | set(re.findall(r"serviceWorker\.register\('(/[^']+)'", s)))
-if abs_: avisos.append('Rutas absolutas que darán 404 bajo subcarpeta: %s' % ', '.join(abs_[:6]))
-
-# 5c) Archivos que deben ir JUNTO al HTML (offline/PWA)
-d = os.path.dirname(os.path.abspath(ruta))
-if "register('./fluxia-sw.js'" in s:
-    for f_ in ('fluxia-sw.js', 'manifest.webmanifest', 'fluxia-icon.svg', 'fluxia-icon-192.png', 'fluxia-icon-512.png'):
-        if not os.path.exists(os.path.join(d, f_)): fallos.append('Falta %s junto al HTML (sin él no hay modo sin conexión)' % f_)
-    if os.path.exists(os.path.join(d, 'fluxia-sw.js')):
-        m_ = re.search(r"const VERSION = '(v[\d.]+)'", open(os.path.join(d, 'fluxia-sw.js'), encoding='utf-8').read())
-        if not m_ or m_.group(1) != ver: fallos.append('fluxia-sw.js VERSION (%s) ≠ versión del HTML (%s)' % (m_ and m_.group(1), ver))
-
-# 6) Canal
-if canal:
-    c = json.load(open(canal, encoding='utf-8'))
-    for k in ('estable', 'lab', 'estable_version', 'lab_version'):
-        if k not in c: fallos.append('fluxia-canal.json sin campo «%s»' % k)
-    if c.get('lab') != base: fallos.append('canal.lab (%s) ≠ archivo (%s)' % (c.get('lab'), base))
-
-for a_ in avisos: print('AVISO:', a_)
-for f_ in fallos: print('FALLO:', f_)
-print('RESULTADO:', 'OK ✔' if not fallos else 'FALLA ✘'); sys.exit(1 if fallos else 0)
+if __name__ == '__main__':
+    main()

@@ -2,14 +2,13 @@
   "name": "Fluxia BETA",
   "short_name": "Fluxia BETA",
   "description": "Tu flujo financiero bajo control",
-  "start_url": "./index_fluxia_v93.4.html",
+  "start_url": "./index_fluxia_v93.9.2.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#FFFFFF",
   "theme_color": "#0E7C90",
   "lang": "es",
-  "id": "./fluxia-v20",
   "icons": [
     {
       "src": "fluxia-icon-192.png",
