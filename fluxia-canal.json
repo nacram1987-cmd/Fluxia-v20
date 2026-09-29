@@ -1,7 +1,13 @@
 {
-  "version": "92.10",
+  "version": "93.1",
   "estable": "index_fluxia_v92.1.html",
-  "lab": "index_fluxia_v92_9.html",
-  "actualizado": "2026-09-28T22:15:00",
-  "nota": "LAB v92.10: lista bancos acepta aspsps de Enable Banking (arreglo Sin bancos)"
+  "estable_version": "v92.1",
+  "lab": "index_fluxia_v93.1.html",
+  "lab_version": "v93.1",
+  "actualizado": "2026-09-29T11:00:00",
+  "enlaces": {
+    "estable": "https://nacram1987-cmd.github.io/Fluxia-v20/",
+    "lab": "https://nacram1987-cmd.github.io/Fluxia-v20/index_fluxia_v93.1.html"
+  },
+  "nota": "LAB v93.1: corrige texto de código, instalación con usuario fantasma, Face ID antes de datos, papelera universal, avisos, checklist solo de la versión. Módulo bancario sin tocar. ESTABLE sin cambios hasta decisión del propietario."
 }
