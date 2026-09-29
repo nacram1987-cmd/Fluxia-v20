@@ -4,13 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Fluxia BETA">
 <meta name="application-name" content="Fluxia BETA">
 <meta name="theme-color" content="#0F3A5C">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Fluxia BETA</title>
 <link rel="icon" type="image/svg+xml" href="fluxia-icon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
 <style>
   *{box-sizing:border-box}
   body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
@@ -29,22 +34,24 @@
 <div class="box">
   <div class="logo"><img src="apple-touch-icon.png" alt="Fluxia" onerror="this.src='fluxia-icon.svg'"></div>
   <b>Fluxia BETA</b>
-  <p id="msg">Abriendo la versión estable…</p>
+  <p id="msg">Abriendo Fluxia…</p>
   <p class="err" id="err"></p>
 </div>
 <script>
 (function () {
-  var FALLBACK = 'index_fluxia_v92.html';
+  /* v93.4 · La raíz siempre abre la versión estable definida en fluxia-canal.json.
+     Fallback duro a v93.4 (nunca a 92.x). */
+  var FALLBACK = 'index_fluxia_v93.4.html';
   var msg = document.getElementById('msg');
   var err = document.getElementById('err');
   function go(file) {
-    location.replace(file + (location.search||'') + (location.hash||''));
+    location.replace(file + (location.search || '') + (location.hash || ''));
   }
   function fail(t) {
-    msg.textContent = 'No se pudo abrir la versión estable.';
+    msg.textContent = 'Abriendo la última versión…';
     err.style.display = 'block';
-    err.textContent = t + ' · Reintento…';
-    setTimeout(function () { go(FALLBACK); }, 900);
+    err.textContent = t;
+    setTimeout(function () { go(FALLBACK); }, 600);
   }
   fetch('fluxia-canal.json', { cache: 'no-store' })
     .then(function (r) {
@@ -53,6 +60,8 @@
     })
     .then(function (c) {
       var f = (c && (c.estable || c.stable || c.file)) || FALLBACK;
+      /* Seguridad: no permitir que el canal redirija a 92.x por error de configuración antigua */
+      if (/v92|_v92|92_9|92\.9|92\.1/i.test(String(f))) f = FALLBACK;
       var v = (c && c.version) ? (' v' + String(c.version).replace(/^v/, '')) : '';
       msg.textContent = 'Versión estable' + v + '…';
       go(f);

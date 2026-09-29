@@ -4415,7 +4415,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 </div>
 <div style="margin:0 0 14px;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--surface);">
 <div style="font-weight:800;font-size:.88rem;color:var(--ink);margin-bottom:6px;">🧪 Laboratorio (solo tú)</div>
-<p style="margin:0 0 10px;font-size:.8rem;color:var(--muted);line-height:1.45;">Esta versión concreta (<b id="fluxiaLabVersionLabel">v92.3</b>). Úsala para probar. <b>No la envíes a invitados</b> mientras sigas cambiando cosas cada día.</p>
+<p style="margin:0 0 10px;font-size:.8rem;color:var(--muted);line-height:1.45;">Esta versión concreta (<b id="fluxiaLabVersionLabel">v93.4</b>). Úsala para probar. <b>No la envíes a invitados</b> mientras sigas cambiando cosas cada día.</p>
 <button id="btnCopiarEnlaceBeta" style="background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%; margin-bottom:8px;" type="button">🔗 Copiar enlace de ESTA versión</button>
 <button id="btnComoInstalarBeta" style="background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%; margin-bottom:8px;" type="button">📲 Cómo instalarla en el móvil</button>
 <button id="btnInstalarPwa" style="display:none;background:var(--brand-1,#1554F0); color:#fff; border:none; border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%;" type="button">⬇️ Instalar Fluxia en este dispositivo</button>
@@ -16731,7 +16731,7 @@ function mostrarOnboardingSeguridad_v69() {
         <button type="button" class="fx-seg-btn-secondary" id="fxSegDetalles">→ Ver detalles de seguridad</button>
       </div>
       <div class="fx-seg-foot">
-        <span class="fx-seg-badge"><i></i> BETA v92</span>
+        <span class="fx-seg-badge"><i></i> BETA v93.4</span>
       </div>
     </div>
   `;
@@ -23822,7 +23822,7 @@ window.FluxiaConfianzaV88 = {
     } catch(e){}
     box.innerHTML = '<div class="fluxia-salud-card"><h3>🩺 Salud Fluxia</h3>' +
       '<div class="fluxia-salud-grid">' +
-      '<div><span>Versión</span><strong>BETA v92.3 LAB</strong></div>' +
+      '<div><span>Versión</span><strong>BETA ' + (window.FLUXIA_VERSION||'v93.4') + '</strong></div>' +
       '<div><span>Bancos</span><strong>' + s.bancos + '</strong></div>' +
       '<div><span>Gastos variables</span><strong>' + s.movimientos + '</strong></div>' +
       '<div><span>Con ref. banco</span><strong>' + s.bancoRefs + '</strong></div>' +
@@ -23863,7 +23863,7 @@ window.FluxiaConfianzaV88 = {
         self.montarPanelSiFalta();
         self.pintarPanelSalud();
         var s = self.estadoSalud();
-        var msg = 'v92.3 · ' + s.movimientos + ' variables · ' + s.bancos + ' banco(s) · dup ' + s.duplicados +
+        var msg = (window.FLUXIA_VERSION||'v93.4') + ' · ' + s.movimientos + ' variables · ' + s.bancos + ' banco(s) · dup ' + s.duplicados +
           (s.corte ? ' · corte ' + s.corte : '');
         if (typeof mostrarToast === 'function') mostrarToast('🩺 ' + msg, 'var(--teal)', 3200);
         else alert(msg);

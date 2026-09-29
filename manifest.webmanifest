@@ -9,6 +9,7 @@
   "background_color": "#FFFFFF",
   "theme_color": "#0E7C90",
   "lang": "es",
+  "id": "./fluxia-v20",
   "icons": [
     {
       "src": "fluxia-icon-192.png",
@@ -34,6 +35,5 @@
       "type": "image/svg+xml",
       "purpose": "any"
     }
-  ],
-  "id": "./fluxia-v20"
+  ]
 }
