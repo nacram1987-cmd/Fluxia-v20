@@ -137,6 +137,40 @@ with sync_playwright() as p:
     inf = pg.evaluate("()=>FluxiaInforme.texto('prueba')")
     check('informe sin importes ni conceptos ni email', all(x not in inf for x in ('Mercadona', 'Nómina', '2000', '2150', 'Ana', '@')), inf[:200]); b.close()
 
+    print('10) Copia cifrada: ida y vuelta, contraseña mala, archivo manipulado')
+    b, ctx, pg = nueva(p); abrir(pg)
+    r = pg.evaluate("""async()=>{
+      const o={}; const antes={m:movimientos.length,i:ingresosItems.length,c:gastosCompartidos.length};
+      const txt=await FluxiaCopiaCifrada.crear('clave-larga-123'); o.esJson=!!JSON.parse(txt).ct; o.sinTextoPlano=!/Mercadona|Nómina|Ana/.test(txt);
+      try{await FluxiaCopiaCifrada.crear('corta');o.corta='NO falló'}catch(e){o.corta=e.message}
+      try{await FluxiaCopiaCifrada.abrir(txt,'clave-equivocada');o.mala='NO falló'}catch(e){o.mala=e.message}
+      const j=JSON.parse(txt); const b=atob(j.ct).split(''); b[10]=String.fromCharCode((b[10].charCodeAt(0)+1)%256); j.ct=btoa(b.join(''));
+      try{await FluxiaCopiaCifrada.abrir(JSON.stringify(j),'clave-larga-123');o.manip='NO falló'}catch(e){o.manip=e.message}
+      try{await FluxiaCopiaCifrada.abrir('esto no es json','x');o.basura='NO falló'}catch(e){o.basura=e.message}
+      // borrar datos y restaurar
+      movimientos=[];window._FLUXIA_PERMITIR_VACIADO_MOVIMIENTOS=true;guardarMovimientos();window._FLUXIA_PERMITIR_VACIADO_MOVIMIENTOS=false;
+      Almacen.setItem('planRescate_v2_ingresos','[]'); Almacen.setItem('planRescate_v2_compartidos','[]');
+      const d=await FluxiaCopiaCifrada.abrir(txt,'clave-larga-123'); o.resumen=FluxiaCopiaCifrada.resumen(d.claves);
+      const n=await FluxiaCopiaCifrada.restaurar(d,{sinRecarga:true}); o.n=n;
+      o.movs=JSON.parse(Almacen.getItem('planRescate_v2_movimientos')).length; o.ings=JSON.parse(Almacen.getItem('planRescate_v2_ingresos')).length; o.comps=JSON.parse(Almacen.getItem('planRescate_v2_compartidos')).length;
+      o.antes=antes; o.hayPrevio=!!localStorage.getItem('fluxia_pre_import_v1_usr-abc');
+      return o}""")
+    check('la copia es JSON cifrado y no contiene texto legible', r['esJson'] and r['sinTextoPlano'], r)
+    check('contraseña corta rechazada', 'al menos 8' in r['corta'], r['corta']); check('contraseña errónea rechazada', 'incorrecta' in r['mala'], r['mala'])
+    check('archivo manipulado rechazado (AES-GCM detecta cambios)', 'incorrecta' in r['manip'] or 'dañado' in r['manip'], r['manip']); check('basura rechazada', 'no es una copia' in r['basura'], r['basura'])
+    check('restaurar devuelve gastos, ingresos y compartidos', r['movs'] == 3 and r['ings'] == 2 and r['comps'] == 4, r)
+    check('se guardó una copia previa para deshacer', r['hayPrevio'])
+    pg.evaluate("()=>goToTab('ajustes')"); pg.wait_for_timeout(1500)
+    check('la tarjeta «Copia cifrada» está en Ajustes → Datos y copias', pg.evaluate("()=>!!document.getElementById('fxCopiaCifradaCard')")); b.close()
+
+    print('11) Avisos propios, contraste y etiquetas')
+    b, ctx, pg = nueva(p); abrir(pg)
+    pg.evaluate("()=>alert('Prueba de aviso')"); pg.wait_for_timeout(300)
+    check('alert() abre el aviso de Fluxia (no el del navegador)', pg.evaluate("()=>!!document.getElementById('fxAvisoOverlay')"))
+    pg.evaluate("()=>goToTab('gastos-variables')"); pg.wait_for_timeout(1200)
+    r = pg.evaluate("()=>({sinEtiqueta:[...document.querySelectorAll('#panel-gastos-variables input,#panel-gastos-variables select')].filter(i=>i.offsetParent&&!i.getAttribute('aria-label')&&!(i.id&&document.querySelector('label[for=\"'+i.id+'\"]'))&&!i.closest('label')).length, wine:getComputedStyle(document.documentElement).getPropertyValue('--wine-ink').trim()})")
+    check('campos de Gastos variables con etiqueta accesible', r['sinEtiqueta'] == 0, r); check('token de texto --wine-ink definido (#B23A32)', r['wine'].lower() == '#b23a32', r); b.close()
+
     print('9) Modo sin conexión (Service Worker real)')
     b, ctx, pg = nueva(p); abrir(pg, 5000)
     pg.wait_for_timeout(2500)

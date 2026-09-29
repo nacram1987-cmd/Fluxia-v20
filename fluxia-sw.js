@@ -4,14 +4,18 @@
      Edge Functions ni ninguna petición POST: el banco y la nube pasan siempre directos a la red.
    - HTML: RED PRIMERO (las versiones nuevas llegan siempre) con copia offline de respaldo.
    - No se guarda nada con ?code= / state= (retorno OAuth del banco). */
-const VERSION = 'v93.3';
+const VERSION = 'v93.4';
 const SHELL = 'fluxia-shell-' + VERSION;
 const RUNTIME = 'fluxia-runtime-v1';
 const CDN = ['cdnjs.cloudflare.com', 'fonts.googleapis.com', 'fonts.gstatic.com', 'cdn.jsdelivr.net'];
 
 self.addEventListener('install', function (e) {
   self.skipWaiting();
-  e.waitUntil(caches.open(SHELL).then(function (c) { return c.addAll(['./', 'fluxia-icon.svg', 'manifest.webmanifest']).catch(function () {}); }));
+  e.waitUntil(Promise.all([
+    caches.open(SHELL).then(function (c) { return c.addAll(['./', 'fluxia-icon.svg', 'manifest.webmanifest']).catch(function () {}); }),
+    /* v93.4: librería de gráficos guardada para que Análisis funcione sin internet */
+    caches.open(RUNTIME).then(function (c) { return fetch('https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js', { mode: 'no-cors' }).then(function (r) { return c.put('https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js', r); }).catch(function () {}); })
+  ]));
 });
 self.addEventListener('activate', function (e) {
   e.waitUntil(caches.keys().then(function (ks) {
