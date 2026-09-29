@@ -1,0 +1,14 @@
+{
+  "version": "93.4",
+  "estable": "index_fluxia_v92.1.html",
+  "estable_version": "v92.1",
+  "lab": "index_fluxia_v93.4.html",
+  "lab_version": "v93.4",
+  "actualizado": "2026-09-29T19:00:00",
+  "enlaces": {
+    "estable": "https://nacram1987-cmd.github.io/Fluxia-v20/",
+    "lab": "https://nacram1987-cmd.github.io/Fluxia-v20/index_fluxia_v93.4.html"
+  },
+  "archivos_junto_al_html": ["fluxia-sw.js", "manifest.webmanifest", "fluxia-icon.svg", "fluxia-icon-180.png", "fluxia-icon-192.png", "fluxia-icon-512.png"],
+  "nota": "LAB v93.4: copia cifrada (AES-256), contraste y accesibilidad AA, avisos propios en lugar de alert(), gráficos sin conexión, 50 pruebas de flujo + auditoría a11y. Módulo bancario sin tocar. ESTABLE sin cambios hasta decisión del propietario."
+}
