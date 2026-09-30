@@ -1,235 +1,209 @@
-╔════════════════════════════════════════════════════════════════════════════╗
-║                     FLUXIA v93.X.X — ENLACES OFICIALES                     ║
-║                                                                            ║
-║  Para usar Fluxia con tus datos reales, amigos y familia                  ║
-╚════════════════════════════════════════════════════════════════════════════╝
+════════════════════════════════════════════════════════════════════
+  FLUXIA ENLACES — v93.8.2 FIXED
+  Canal Estable vs Laboratorio
+════════════════════════════════════════════════════════════════════
 
-📌 IMPORTANTE
+FECHA: 29 Septiembre 2026
+VERSIÓN VIGENTE: v93.8.2 (FIXED)
+STATUS: Production Ready
 
-Este archivo contiene los enlaces OFICIALES a Fluxia.
-Están aquí para que puedas:
-  ✅ Compartir con amigos/familia
-  ✅ Marcar en favoritos
-  ✅ Referenciar en documentación
-  ✅ Distinguir entre versión ESTABLE y versión en DESARROLLO (LAB)
+════════════════════════════════════════════════════════════════════
+🟢 CANAL ESTABLE (Para usuarios finales)
+════════════════════════════════════════════════════════════════════
 
-═══════════════════════════════════════════════════════════════════════════════
+URL ÚNICA Y FIJA:
+https://nacram1987-cmd.github.io/Fluxia-v20/
 
-🔗 ENLACE ESTABLE (Para datos reales)
-════════════════════════════════════════
+✅ Qué es:
+- Link permanente que NUNCA cambia
+- Siempre apunta a la versión más probada
+- Para amigos, inversores, uso real
+- Los datos se guardan en Fluxia y persisten
 
-RECOMENDADO PARA: Usuarios finales, amigos, familia, datos importantes
+✅ Quién usa:
+- Tú (para datos reales)
+- Amigos a los que invites
+- Cualquier usuario final
 
-📌 https://nacram1987-cmd.github.io/Fluxia-v20/
+✅ Cuándo se actualiza:
+- SOLO cuando promocionas una versión a estable
+- Típicamente cada 1-2 semanas
+- NUNCA cambios rotundos o bugs conocidos
 
-Qué es ESTABLE:
-  ✅ Versión comprobada y probada
-  ✅ Sin bugs conocidos bloqueadores
-  ✅ Datos persisten correctamente
-  ✅ Sincronización confiable
-  ✅ Recomendado para dinero real
+✅ Instrucciones de instalación:
 
-Cómo funciona:
-  1. Abres el enlace
-  2. Se redirige automáticamente a versión ESTABLE actual
-  3. Versión actual: v93.8.2 (última probada)
-  4. Si hay actualizaciones: se cargan automático en tu próxima visita
+IPHONE:
+1. Abre Safari y ve a la URL de arriba
+2. Espera a que cargue completamente
+3. Toca el botón Compartir (↑ abajo a la derecha)
+4. Desplaza y selecciona "Añadir a pantalla de inicio"
+5. Dale un nombre (p.ej. "Fluxia") y confirma
+6. ¡Aparecerá como app en tu home!
 
-Características ESTABLE v93.8.2:
-  ✅ HTML limpio (sin duplicados)
-  ✅ Seguridad: 90/100
-  ✅ Gastos/Compartidos: 100% funcional
-  ⚠️  Papelera: En desarrollo (v93.9)
-  ⚠️  Ingresos automático: En desarrollo (v93.9)
+ANDROID:
+1. Abre Chrome y ve a la URL de arriba
+2. Espera a que cargue completamente
+3. Toca el menú (≡ arriba a la derecha)
+4. Selecciona "Instalar aplicación" o "Instalar Fluxia"
+5. Confirma
+6. Se instalará en tu drawer de apps
 
-═══════════════════════════════════════════════════════════════════════════════
+WINDOWS / MAC / LINUX:
+1. Abre en Chrome y ve a la URL
+2. Chrome detectará que es PWA
+3. Verás un ícono de instalación en la barra de direcciones
+4. Haz clic y confirma
+5. Se abrirá como app nativa
 
-🧪 ENLACE LAB (Para testing/desarrollo)
-════════════════════════════════════════
+════════════════════════════════════════════════════════════════════
+🧪 CANAL LABORATORIO (Solo para ti / desarrolladores)
+════════════════════════════════════════════════════════════════════
 
-RECOMENDADO PARA: Desarrolladores, testers, amigos adventurers
+URL CON VERSIÓN CONCRETA:
+https://nacram1987-cmd.github.io/Fluxia-v20/?lab=v93.8.2
 
-📌 https://nacram1987-cmd.github.io/Fluxia-v20/?lab=v93.9-beta
+✅ Qué es:
+- Versión específica para testing
+- Puede tener bugs, features nuevos, cambios radicales
+- No para usuarios finales
+- NO envíes este link a amigos
 
-Qué es LAB:
-  🧪 Versión en desarrollo/pruebas
-  🧪 Puede tener bugs (probablemente)
-  🧪 Features nuevas sin terminar
-  🧪 NO recomendado para datos importantes
-  🧪 Cambia frecuentemente
+✅ Quién usa:
+- Tú (para probar antes de promocionar)
+- Testers (si confían)
+- Desarrolladores
 
-Cómo usar LAB:
-  1. Abre el enlace LAB arriba
-  2. Verás "v93.9-beta" o similar en Settings
-  3. Prueba nuevas features
-  4. Reporta bugs a [CANAL_DISCORD_O_EMAIL]
+✅ Cuándo la cambias:
+- Constantemente (cada día si quieres)
+- Cada vez que quieres probar algo nuevo
+- Sin riesgo de romper el canal estable
 
-Características LAB v93.9-beta:
-  🆕 Papelera recibe archivos (NUEVO)
-  🆕 Ingresos cargan automático (NUEVO)
-  ⚠️  Puede tener otros bugs nuevos
-  ⚠️  Performance sin optimizar
-  ⚠️  NO hacer backup aquí (puede corromperse)
+✅ Flujo de trabajo típico:
 
-═══════════════════════════════════════════════════════════════════════════════
+1. Haces cambios al HTML
+2. Generas index_fluxia_vXX.X.html nuevo
+3. Subes a GitHub repo
+4. Pruebas en lab: ?lab=vXX.X
+5. Cuando está bien: promocionas a estable
+   (cambias fluxia-canal.json para que apunte a esa versión)
+6. Invitados verán el update automáticamente en la URL fija
 
-✅ PARA AMIGOS / FAMILIA
-════════════════════════════════════════
+════════════════════════════════════════════════════════════════════
+🔄 ¿Cómo promocionar versión de Lab a Estable?
+════════════════════════════════════════════════════════════════════
 
-Si quieres compartir Fluxia con alguien:
+1. Haces testing en: https://nacram1987-cmd.github.io/Fluxia-v20/?lab=v93.8.2
+2. Pasó QA 100%
+3. Subes fluxia-canal.json con:
+   {
+     "estable": "index_fluxia_v93.8.2.html"
+   }
+4. Commit & push a GitHub
+5. En ~1 minuto, https://nacram1987-cmd.github.io/Fluxia-v20/ apunta a v93.8.2
+6. Todos ven el update (también los invitados)
 
-OPCIÓN 1: "Usa la versión estable" (recomendado)
-  "He encontrado esta app: https://nacram1987-cmd.github.io/Fluxia-v20/
-   Es gratuita, segura y genial para compartir gastos.
-   Úsala con tus datos reales, funciona perfectamente."
+════════════════════════════════════════════════════════════════════
+💡 Recomendaciones de Uso
+════════════════════════════════════════════════════════════════════
 
-OPCIÓN 2: "Quiero que pruebes conmigo" (si eres dev/adventurous)
-  "Estamos desarrollando Fluxia. ¿Quieres probar la versión beta?
-   LAB: https://nacram1987-cmd.github.io/Fluxia-v20/?lab=v93.9-beta
-   Aviso: puede tener bugs. Reporta cualquier problema."
+COMPARTIR CON AMIGOS / INVERSORES:
+→ SIEMPRE usa ESTABLE: https://nacram1987-cmd.github.io/Fluxia-v20/
+→ Di: "Descarga esta app, es para tu dinero"
 
-═══════════════════════════════════════════════════════════════════════════════
+TRABAJAR EN CAMBIOS NUEVOS:
+→ Usa LAB: ?lab=vXX.X
+→ Prueba sin miedo
+→ Cuando esté listo → promociona a estable
 
-📊 DIFERENCIAS RÁPIDO
+REPORTAR BUGS:
+→ El bug está en estable → fix en lab, luego promociona
+→ El bug está en lab → no afecta a invitados, sigue testando
 
-┌─────────────────────┬──────────────────┬─────────────────────┐
-│ Criterio            │ ESTABLE          │ LAB                 │
-├─────────────────────┼──────────────────┼─────────────────────┤
-│ ¿Probado?           │ ✅ Sí            │ ❌ No               │
-│ ¿Para datos reales? │ ✅ Sí            │ ❌ No (testing)     │
-│ ¿Bugs conocidos?    │ ⚠️ Mínimos       │ 🧪 Esperados        │
-│ ¿Performance?       │ ✅ Optimizado    │ ⚠️ Sin optimizar    │
-│ ¿Nuevo features?    │ ❌ No            │ ✅ Sí               │
-│ ¿Support?           │ ✅ Total         │ ⚠️ Best effort      │
-└─────────────────────┴──────────────────┴─────────────────────┘
+════════════════════════════════════════════════════════════════════
+📊 Versiones Históricas (Referencia)
+════════════════════════════════════════════════════════════════════
 
-═══════════════════════════════════════════════════════════════════════════════
+v93.8.2 (ACTUAL - 29-Sep-2026)
+  ✅ HTML arreglado
+  ✅ Versionado sincronizado
+  ✅ Identidad de marca fija
+  Status: PRODUCTION READY
 
-🆘 PROBLEMAS / BUGS
-════════════════════════════════════════
+v93.8.1 (Anterior - 28-Sep-2026)
+  ⚠️ HTML roto (descontinuado)
 
-Si encuentras un bug:
+v93.8 (Anterior - 27-Sep-2026)
+  ✅ Funcional pero cambios menores
 
-ENLACE ESTABLE (v93.8.2):
-  ✅ Report en: [CANAL_OFICIAL]
-  ✅ El equipo responde en <24h
-  ✅ Fix: v93.9 (en desarrollo ahora)
+════════════════════════════════════════════════════════════════════
+🔧 Troubleshooting
+════════════════════════════════════════════════════════════════════
 
-ENLACE LAB (v93.9-beta):
-  🧪 Es expected que haya bugs
-  🧪 Report para que lo sepamos
-  🧪 Fix: cuando esté lista release
+¿La app no carga?
+→ Limpia cache (Ctrl+Shift+Del → selecciona todo → borrar)
+→ Intenta en incógnito
+→ Abre DevTools (F12) → Console → busca errores rojos
 
-═══════════════════════════════════════════════════════════════════════════════
+¿No aparece "Instalar" en el navegador?
+→ Debe ser HTTPS (GitHub Pages lo es ✓)
+→ Debe ser primera vez (no si ya instalada)
+→ En Safari iPhone: Share → Add to Home Screen
+→ En Chrome Android: Menu → Install (si aparece)
 
-🔄 SINCRONIZACIÓN AUTOMÁTICA
-════════════════════════════════════════
+¿Datos no se sincronizan?
+→ ¿Hay conexión? (puedes ver otro sitio web)
+→ En Ajustes → Nube, ¿está conectado a Supabase?
+→ ¿Es la primera carga? (demora ~2s)
 
-✅ Si usas ESTABLE:
-   • Datos se guardan localmente
-   • Cada 24h busca actualizaciones
-   • Si hay nueva versión: se descarga automático
-   • Tu próxima visita: tendrás la versión nueva
+¿Quiero volver a una versión anterior?
+→ Aún no disponible (fix en v93.9)
+→ Por ahora: importa backup desde Ayuda → Datos
 
-✅ Tus datos NO se pierden:
-   • Se preservan en localStorage
-   • Importables a cualquier versión
-   • Backup automático cada semana
+════════════════════════════════════════════════════════════════════
+📋 Checklist de Distribución
+════════════════════════════════════════════════════════════════════
 
-═══════════════════════════════════════════════════════════════════════════════
+Antes de compartir el enlace ESTABLE:
+  ☐ Pasó QA 100% (check en QA_CERTIFICATION_v93.8.2.txt)
+  ☐ Real Assessment completado (check en REAL_ASSESSMENT_v93.8.2.md)
+  ☐ Release Notes publicado
+  ☐ Versioning sincronizado (6 puntos)
+  ☐ Banco / PSD2 validado
+  ☐ Testeado en iPhone + Android
+  ☐ Zip entregado con documentación
 
-📱 INSTALACIÓN EN MÓVIL
-════════════════════════════════════════
+Cuando compartes:
+  ☐ Usa URL ESTABLE (no lab, no versionada)
+  ☐ Di: "Descarga Fluxia, es gratis y privado"
+  ☐ Explica: "Tus datos se guardan en tu móvil, no en servidores"
+  ☐ Proporciona: Zip con documentación si lo piden
 
-IPHONE (Safari):
-  1. Abre https://nacram1987-cmd.github.io/Fluxia-v20/
-  2. Menú (compartir) → Agregar a pantalla de inicio
-  3. Fluxia aparece como app
-  4. Tócala para abrir
+════════════════════════════════════════════════════════════════════
+📞 Contacto & Soporte
+════════════════════════════════════════════════════════════════════
 
-ANDROID (Chrome):
-  1. Abre https://nacram1987-cmd.github.io/Fluxia-v20/
-  2. Menú (3 puntos) → Instalar app
-  3. Fluxia aparece en tu home
-  4. Tócala para abrir
+¿Algo no funciona?
+→ Revisa: REAL_ASSESSMENT_v93.8.2.md (sección "Limitaciones")
+→ Reporta: Ve a Help → Informar de un problema
 
-═══════════════════════════════════════════════════════════════════════════════
+¿Quieres sugerencias?
+→ Abre GitHub issue en el repo principal
 
-🔐 PRIVACIDAD
-════════════════════════════════════════
+¿Seguridad / privacidad?
+→ Lee: QA_CERTIFICATION_v93.8.2.txt (sección "Seguridad")
 
-✅ Fluxia NO:
-   ❌ Vende tus datos
-   ❌ Envía datos a servidores tracking
-   ❌ Muestra publicidad
-   ❌ Pide contraseña bancaria
-   ❌ Requiere cuenta Fluxia
+════════════════════════════════════════════════════════════════════
 
-✅ Fluxia SÍ:
-   ✅ Guarda TODO en tu dispositivo
-   ✅ Sincroniza solo con Supabase (si configuras)
-   ✅ Encripta datos sensibles (AES-256)
-   ✅ GDPR compliant
+RESUMEN:
 
-═══════════════════════════════════════════════════════════════════════════════
+🟢 Estable (para usuarios finales):
+   https://nacram1987-cmd.github.io/Fluxia-v20/
 
-❓ PREGUNTAS FRECUENTES
-════════════════════════════════════════
+🧪 Lab (para testing):
+   https://nacram1987-cmd.github.io/Fluxia-v20/?lab=v93.8.2
 
-P: ¿Es gratis?
-R: Sí, completamente gratis. Sin sorpresas.
+Version: v93.8.2 FIXED
+Date: 29-Sep-2026
+Status: ✅ READY FOR PRODUCTION
 
-P: ¿Es segura mi información?
-R: Sí, se guarda localmente en tu dispositivo. Encriptada.
-
-P: ¿Puedo perder mis datos?
-R: Unlikely. Hay backup automático. Papelera de recuperación (30 días).
-
-P: ¿Funciona sin internet?
-R: Sí, 100%. Sincroniza cuando hay conexión.
-
-P: ¿Qué pasa si cambio de teléfono?
-R: Exporta tus datos (Settings → Exportar) e importa en nuevo.
-
-P: ¿Soporta múltiples monedas?
-R: Ahora solo EUR (€). Planes futuros para más.
-
-P: ¿Hay versión web?
-R: Sí, la misma URL funciona en navegador desktop.
-
-═══════════════════════════════════════════════════════════════════════════════
-
-📞 CONTACTO / SOPORTE
-════════════════════════════════════════
-
-Bugs / Suggestions:
-  Discord: [CANAL_FLUXIA]
-  Email: soporte@fluxia-app.dev
-  GitHub: github.com/nacram1987/Fluxia-v20
-
-Feature Requests:
-  Discord: #feature-requests
-  Votación comunitaria: [LINK]
-
-═══════════════════════════════════════════════════════════════════════════════
-
-📋 VERSIÓN DE ESTE DOCUMENTO
-
-Documento: ENLACES_CLIENTE.txt
-Versión: 1.0
-Fecha: 29 de Septiembre, 2026
-Aplicable: Fluxia v93.8.2+
-
-├─ ESTABLE: v93.8.2 (actual probada)
-└─ LAB: v93.9-beta (en desarrollo)
-
-═══════════════════════════════════════════════════════════════════════════════
-
-✅ ¡LISTO PARA USAR!
-
-Copia estos enlaces, comparte con amigos, y disfuta de Fluxia.
-
-ESTABLE: https://nacram1987-cmd.github.io/Fluxia-v20/
-LAB:     https://nacram1987-cmd.github.io/Fluxia-v20/?lab=v93.9-beta
-
-═══════════════════════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════════════
