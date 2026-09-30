@@ -1,59 +1,27 @@
-# Fluxia v93.8.2 — SECURITY EDITION
+# Fluxia v93.9-ESTABLE
 
-✅ Production-ready · 🔒 Secure · 📊 Compartidos
+## 🟢 Versión para Producción
 
-## 🚀 Quick Links
+Esta es la versión ESTABLE para usuarios finales.
 
-**For Users:**
-https://nacram1987-cmd.github.io/Fluxia-v20/
+### ✅ Características
+- Datos reales y confiables
+- Sincronización probada
+- Soporte prioritario
+- Sin cambios frecuentes
 
-**For Testing (LAB):**
-https://nacram1987-cmd.github.io/Fluxia-v20/?lab=v93.9-beta
+### 📁 Archivos incluidos
+- `index_fluxia_v93.9_ESTABLE.html` - Aplicación completa
+- `manifest.webmanifest` - Configuración PWA
+- `fluxia-sw.js` - Service Worker
+- `fluxia-icon-*.png` - Iconos en múltiples tamaños
+- `fluxia-canal.json` - Configuración de canal
 
-**See:** ENLACES_CLIENTE.txt for full details
+### 🚀 Desplegar
+Ver `DEPLOYMENT_ESTABLE_LAB.txt` en la carpeta principal.
 
-## 📦 What's Inside
-
-- `index_fluxia_v93.8.2.html` — Production app
-- `manifest.webmanifest` — PWA configuration
-- `js/` — Security modules (encryption, session mgmt)
-- `docs/` — Complete documentation
-- `ENLACES_CLIENTE.txt` — ESTABLE vs LAB links
-- `QA_CERTIFICATION.txt` — Formal QA sign-off
-
-## ✅ Quality Assurance
-
-- ✅ 100% QA audit passed
-- ✅ HTML valid (no duplicates)
-- ✅ Security: 90/100
-- ✅ GDPR + OWASP compliant
-- ✅ Production ready
-
-## 🚨 Known Issues
-
-| Issue | Impact | ETA |
-|-------|--------|-----|
-| Papelera | MEDIA | v93.9 |
-| Ingresos auto | HIGH | v93.9 |
-
-## 📖 Read
-
-- `docs/PROMPT_MAESTRO.md` — Development rules
-- `docs/REAL_ASSESSMENT.md` — Honest evaluation
-- `ENLACES_CLIENTE.txt` — How to share with friends
-
-## 🔗 Deployment
-
-```bash
-1. Deploy index_fluxia_v93.8.2.html
-2. Update fluxia-canal.json → version: 93.8.2
-3. Users auto-update on next visit
+### 🔗 URL de Producción
 ```
-
-## 📊 Status
-
-- Version: 93.8.2
-- Released: 2026-09-29
-- Status: ✅ Stable
-- Next: v93.9 (bugs fixed, estimated Oct 6)
+https://nacram1987-cmd.github.io/Fluxia-v20/index_fluxia_v93.9_ESTABLE.html
+```
 
