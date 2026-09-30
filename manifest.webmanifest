@@ -1,16 +1,36 @@
 {
-  "name": "Fluxia — Dinero para humanos",
-  "short_name": "Fluxia",
-  "description": "App de presupuestos y finanzas personales con compartidos únicos",
-  "start_url": "./index_fluxia_v93.8.2_FINAL.html",
+  "name": "Fluxia BETA",
+  "short_name": "Fluxia BETA",
+  "description": "Tu flujo financiero bajo control",
+  "start_url": "./index_fluxia_v93.9.html",
+  "scope": "./",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#FFFFFF",
   "theme_color": "#0E7C90",
-  "orientation": "portrait-primary",
+  "lang": "es",
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%230E7C90' width='192' height='192'/><text x='96' y='128' font-size='100' fill='white' text-anchor='middle' font-weight='bold' font-family='system-ui'>ƒ</text></svg>",
+      "src": "fluxia-icon-192.png",
       "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "fluxia-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "fluxia-icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "fluxia-icon.svg",
+      "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
     }
