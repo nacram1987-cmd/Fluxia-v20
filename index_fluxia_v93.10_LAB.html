@@ -117,7 +117,7 @@
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="telephone=no" name="format-detection"/>
 <meta content="no" name="msapplication-tap-highlight"/>
-<title>Fluxia BETA v93.10-LAB LAB</title>
+<title>Fluxia BETA v93.10-LAB</title>
 <!-- Fluxia v91 · brand lock · datos jamás a 0 · compartidos saldo inicial · notif suaves · logo alineado · base v90.10 -->
 <script>
 (function(){window.FluxiaNative={isNative:function(){try{return!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())}catch(e){return false}},platform:function(){try{return(window.Capacitor&&Capacitor.getPlatform)?Capacitor.getPlatform():'web'}catch(e){return'web'}}};})();
@@ -412,7 +412,7 @@ window.fluxiaCuandoLibre = function(fn, intentos){
 };
 
 </script>
-<meta content="v93.10 LAB" name="fluxia-version"/>
+<meta content="v93.10-LAB" name="fluxia-version"/>
 <meta content="lab" name="fluxia-channel"/>
 <script>window.FLUXIA_VERSION = "v93.10-LAB";</script>
 <!-- Fluxia QA móvil v43:
@@ -2015,7 +2015,7 @@ header.top #bancoEstadoHeader{margin-top:4px!important;}
 .gv-importe,.mov-importe,.row-importe,.ingreso-importe,.fijo-importe{font-size:0.95rem!important;}
 </style>
 <style id="fluxiaDrawerFix">
-/* v93.10-LAB fix: encabezado (nombre + cerrar sesión) fijo; solo scrollea la lista */
+/* v93.11-LAB fix: encabezado (nombre + cerrar sesión) fijo; solo scrollea la lista */
 .drawer-menu,#drawerMenu{overflow:hidden!important;display:flex!important;flex-direction:column!important;padding-top:0!important;padding-bottom:0!important;}
 #drawerMenu .drawer-header{position:relative!important;top:auto!important;flex:0 0 auto!important;margin:0!important;padding-top:calc(16px + env(safe-area-inset-top))!important;z-index:3!important;}
 #drawerMenu .drawer-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:8px 0 calc(12px + env(safe-area-inset-bottom));}
@@ -3541,7 +3541,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <div style="min-width:0;">
 <div style="font-family:var(--serif); font-weight:700; font-size:1.28rem; line-height:1.15; color:var(--ink,#1A2433); letter-spacing:-0.02em;">Fluxia <span id="fluxiaBetaBadge" style="font-family:var(--sans);font-size:0.62rem;font-weight:800;letter-spacing:0.04em;vertical-align:middle;margin-left:6px;padding:2px 7px;border-radius:999px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid rgba(201,162,39,.35);">BETA</span></div>
 <div id="fluxiaHeaderSub" style="font-size:0.82rem; color:var(--muted); letter-spacing:0.3px; margin-top:2px;">Control absoluto. Flujo perfecto</div>
-<div id="fluxiaVersion" style="font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:3px; opacity:.85;">Versión v93.10</div>
+<div id="fluxiaVersion" style="font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:3px; opacity:.85;">Versión v93.11</div>
 <button class="fx-banco-pill" id="bancoEstadoHeader" onclick="window.abrirConexionBancaria()" style="display:none;" type="button"></button>
 </div>
 </div>
@@ -4456,7 +4456,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <h3 class="section-title" style="margin:0;">Versión</h3>
 <span style="font-size:.68rem;font-weight:800;letter-spacing:.03em;padding:3px 8px;border-radius:999px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid rgba(201,162,39,.35);">BETA</span>
 </div>
-<p class="hint" id="ayudaVersionTxt" style="margin:0 0 14px;font-weight:600;color:var(--ink);">Fluxia BETA v93.10-LAB · datos en este dispositivo</p>
+<p class="hint" id="ayudaVersionTxt" style="margin:0 0 14px;font-weight:600;color:var(--ink);">Fluxia BETA v93.11-LAB · datos en este dispositivo</p>
 <div class="fluxia-empty-guide" style="margin-bottom:14px;text-align:left;">
 <div class="eg-tit" style="margin-bottom:8px;">🚀 Primeros pasos (2 minutos)</div>
 <ol style="margin:0;padding-left:1.2em;font-size:0.84rem;line-height:1.5;color:var(--ink);">
@@ -21748,21 +21748,65 @@ try{
     catch(e){msg(msg1,'❌ '+e.message,'error');}
     btnD.disabled=false;
   });
-  if(window.location.search.includes('code=')){
+  // v93.11 · Retorno del banco (CaixaBank, etc.). Robusto: espera a la sesión, muestra errores del banco,
+  // recuerda code/state si Safari aún no tiene sesión y avisa de volver a la app instalada.
+  (function retornoBanco(){
     const params=new URLSearchParams(window.location.search);
+    const errBanco=params.get('error');
+    const code=params.get('code'), state=params.get('state');
+    let pend=null;try{pend=JSON.parse(localStorage.getItem('fluxia_banco_pendiente')||'null');}catch(_){}
+    if(pend&&Date.now()-pend.t>15*60*1000){pend=null;try{localStorage.removeItem('fluxia_banco_pendiente');}catch(_){}}
+    if(!code&&!errBanco&&!pend)return;
+    function aviso(html,color){
+      let b=document.getElementById('fluxiaRetornoBanco');
+      if(!b){b=document.createElement('div');b.id='fluxiaRetornoBanco';
+        b.style.cssText='position:fixed;left:12px;right:12px;top:calc(12px + env(safe-area-inset-top));z-index:100000;padding:14px 16px;border-radius:14px;font:600 .9rem/1.4 system-ui,sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.25);color:#fff;';
+        document.body.appendChild(b);}
+      b.style.background=color||'#0E7C90';b.innerHTML=html;
+    }
+    function limpiarUrl(){try{window.history.replaceState({},document.title,window.location.pathname);}catch(_){}}
+    if(errBanco&&!code){
+      limpiarUrl();
+      aviso('❌ El banco canceló o rechazó la autorización ('+esc(params.get('error_description')||errBanco)+'). Vuelve a Fluxia y pulsa de nuevo «Conectar».','#B0334A');
+      return;
+    }
+    if(code){ try{localStorage.setItem('fluxia_banco_pendiente',JSON.stringify({code:code,state:state,t:Date.now()}));}catch(_){} limpiarUrl(); pend={code:code,state:state,t:Date.now()}; }
+    async function esperarSesion(){
+      for(let i=0;i<20;i++){
+        try{ if(window.FluxiaNube&&window.FluxiaNube.sesion){const s=await window.FluxiaNube.sesion(); if(s&&s.token)return true;} }catch(_){}
+        await new Promise(function(r){setTimeout(r,500);});
+      }
+      return false;
+    }
     (async()=>{
+      aviso('⏳ Confirmando la conexión con tu banco…');
+      const ok=await esperarSesion();
+      if(!ok){
+        aviso('🔐 Para terminar de conectar el banco, <b>inicia sesión aquí</b> (Ajustes → ☁️ Nube). La conexión se completará sola al entrar.','#B26A00');
+        // reintento automático cuando el usuario inicie sesión
+        const iv=setInterval(async function(){ try{const s=await window.FluxiaNube.sesion(); if(s&&s.token){clearInterval(iv);location.reload();}}catch(_){} },2500);
+        return;
+      }
       try{
-        const conf=await call({accion:'confirmar',code:params.get('code'),state:params.get('state')});
-        window.history.replaceState({},document.title,window.location.pathname);
+        const conf=await call({accion:'confirmar',code:pend.code,state:pend.state});
+        try{localStorage.removeItem('fluxia_banco_pendiente');}catch(_){}
         if(conf&&conf.banco)recordarBanco(conf.banco);
         const todos=((conf&&conf.conexiones)||[]).map(function(c){return c.banco;});
         modal.style.display='flex';
         await estado(true);
         msg(msg1,'✅ '+((conf&&conf.banco)||'Banco')+' conectado'+(todos.length>1?' · Tienes '+todos.length+' bancos a la vez: '+todos.join(' · '):'')+((conf&&conf.sin_cuentas)?' · ⚠️ Sin cuentas: vincula la cuenta de este banco en el panel de Enable Banking («Link accounts») y vuelve a pulsar «Reconectar»':''),(conf&&conf.sin_cuentas)?'error':'ok');
+        const standalone=window.navigator.standalone===true||window.matchMedia('(display-mode: standalone)').matches;
+        aviso('✅ '+esc((conf&&conf.banco)||'Banco')+' conectado.'+(standalone?'':' <b>Cierra esta pestaña de Safari y abre Fluxia desde tu pantalla de inicio</b>: ya aparecerá conectado.'),'#1E9E5A');
         try{await sincronizar({forzar:true});}catch(_){}
-      }catch(e){modal.style.display='flex';msg(msg1,'❌ '+e.message,'error');}
+        setTimeout(function(){var b=document.getElementById('fluxiaRetornoBanco');if(b&&standalone)b.remove();},6000);
+      }catch(e){
+        try{localStorage.removeItem('fluxia_banco_pendiente');}catch(_){}
+        modal.style.display='flex';
+        msg(msg1,'❌ '+e.message,'error');
+        aviso('❌ No se pudo confirmar el banco: '+esc(e.message),'#B0334A');
+      }
     })();
-  }
+  })();
   // Arranque: pintar luz al instante, comprobar estado y sincronizar
   async function autoSync(){
     const e=leerEstado();
@@ -25890,7 +25934,7 @@ header.top{position:sticky;top:0;z-index:50;-webkit-transform:translateZ(0);tran
    Compartidos estilo Tricount, papelera y herramientas de comprobación. NO toca el módulo bancario.
    ═══════════════════════════════════════════════════════════════ */
 window.FLUXIA_CHECKLIST = {
-  version: 'v93.10',
+  version: 'v93.11',
   fecha: '29 Sep 2026',
   items: [
     { t:'feat', n:'CompartidosAI: Reconocedor de nombres', d:'IA que pilla "Café con Marta" automáticamente. Contactos + histórico + fuzzy matching.' },
@@ -25899,7 +25943,7 @@ window.FLUXIA_CHECKLIST = {
     { t:'feat', n:'Análisis predictor', d:'"¿Cuándo se acaba la pasta?" Calcula días hasta 0€, recomendaciones personalizadas.' },
     { t:'feat', n:'Detección de anomalías', d:'"Gasto inusual detectado" Si gastas más de lo normal, avisa y pregunta por qué.' },
     { t:'ui', n:'Notificaciones compartidos', d:'Pareja ve cambios en tiempo real: "Marta agregó café de 5€".' },
-    { t:'arq', n:'Liderazgo en compartidos', d:'v93.10 gana a Splitwise: IA + offline + privacidad + análisis global.' }
+    { t:'arq', n:'Liderazgo en compartidos', d:'v93.11 gana a Splitwise: IA + offline + privacidad + análisis global.' }
   ],
   regresiones: [],
   limites: []
@@ -26478,7 +26522,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 })();
 </script>
 <script>
-/* v93.10 · Notificaciones de cambios bancarios (push up) */
+/* v93.11 · Notificaciones de cambios bancarios (push up) */
 (function(){
   window.FluxiaBancoPush = {
     lastSaldos: {},
@@ -26524,7 +26568,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 </script>
 
 <script>
-/* v93.10 · Supabase mejorado: sincronización multi-dispositivo sin conflictos */
+/* v93.11 · Supabase mejorado: sincronización multi-dispositivo sin conflictos */
 (function(){
   window.FluxiaSync = {
     userId: null,
@@ -26611,7 +26655,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 </script>
 
 <script>
-/* v93.10 · Gráficos con tendencias: qué te queda cada día del mes */
+/* v93.11 · Gráficos con tendencias: qué te queda cada día del mes */
 (function(){
   window.FluxiaChart = {
     diarioDelMes: function(mes, ano){
@@ -26650,7 +26694,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 </script>
 
 <script>
-/* v93.10 · Wizard de bienvenida para primer uso */
+/* v93.11 · Wizard de bienvenida para primer uso */
 (function(){
   window.FluxiaWizard = {
     active: false,
@@ -26688,12 +26732,12 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 </script>
 
 <script>
-/* v93.10 · Exportación inteligente con metadatos y control de duplicados */
+/* v93.11 · Exportación inteligente con metadatos y control de duplicados */
 (function(){
   window.FluxiaExportV2 = {
     generar: function(){
       var datos = {
-        version: 'v93.10',
+        version: 'v93.11',
         timestamp: new Date().toISOString(),
         deviceId: localStorage.getItem('fluxia_device_id'),
         checksum: null,
@@ -26722,7 +26766,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
         var datos = JSON.parse(jsonStr);
         
         // Validar metadatos
-        if (datos.version !== 'v93.10'){
+        if (datos.version !== 'v93.11'){
           fxAviso('⚠️ Exportación de versión ' + datos.version + '. Puede haber incompatibilidades.', 'warning');
         }
         
@@ -26770,7 +26814,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 </script>
 
 <script>
-/* v93.10 · Monitor inteligente de sincronización bancaria (resuelve HUB046) */
+/* v93.11 · Monitor inteligente de sincronización bancaria (resuelve HUB046) */
 (function(){
   window.FluxiaBancoMonitor = {
     estado: 'idle',  // idle, sincronizando, limiteAlcanzado, error, recuperado
@@ -26950,7 +26994,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 </script>
 
 <script>
-/* v93.10 · Dashboard de estado de sincronización bancaria en Ajustes */
+/* v93.11 · Dashboard de estado de sincronización bancaria en Ajustes */
 (function(){
   window.FluxiaBancoDashboard = {
     mostrar: function(containerId){
@@ -27001,7 +27045,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 </script>
 
 <script>
-/* v93.10 · Reconocedor de nombres con IA (Compartidos) */
+/* v93.11 · Reconocedor de nombres con IA (Compartidos) */
 (function(){
   window.CompartidosAI = {
     contactos: [],
@@ -27203,7 +27247,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 </script>
 
 <script>
-/* v93.10 · Split inteligente y cálculo de deudas */
+/* v93.11 · Split inteligente y cálculo de deudas */
 (function(){
   window.CompartidosCalculator = {
     
@@ -27290,7 +27334,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 </script>
 
 <script>
-/* v93.10 · Análisis predictor (¿cuándo se acaba?) */
+/* v93.11 · Análisis predictor (¿cuándo se acaba?) */
 (function(){
   window.FluxiaPredictor = {
     
@@ -27371,7 +27415,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 })();
 
 // ═══════════════════════════════════════════════════════════════════════
-// 🔄 INGRESOS AUTOMÁTICOS DESDE BANCO (v93.10-LAB)
+// 🔄 INGRESOS AUTOMÁTICOS DESDE BANCO (v93.11-LAB)
 // ═══════════════════════════════════════════════════════════════════════
 
 
@@ -27563,7 +27607,7 @@ function obtenerTransaccionesBanco() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-// 🗑️  PAPELERA UNIVERSAL (v93.10-LAB)
+// 🗑️  PAPELERA UNIVERSAL (v93.11-LAB)
 // ═══════════════════════════════════════════════════════════════════════
 
 function agregarALaPapelera(tipo, datos, fecha) {
@@ -27656,7 +27700,7 @@ if (typeof sincronizarIngresosDelBanco !== 'undefined') {
     sincronizarIngresosDelBanco();
     limpiarPapeleraExpirada();
   }, 5 * 60 * 1000);
-  console.log('✅ Sincronización automática iniciada (v93.10-LAB)');
+  console.log('✅ Sincronización automática iniciada (v93.11-LAB)');
 }
 </script>
 </html>

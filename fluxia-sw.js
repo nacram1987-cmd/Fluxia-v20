@@ -4,7 +4,7 @@
      Edge Functions ni ninguna petición POST: el banco y la nube pasan siempre directos a la red.
    - HTML: RED PRIMERO (las versiones nuevas llegan siempre) con copia offline de respaldo.
    - No se guarda nada con ?code= / state= (retorno OAuth del banco). */
-const VERSION = 'v93.4';
+const VERSION = 'v93.10';
 const SHELL = 'fluxia-shell-' + VERSION;
 const RUNTIME = 'fluxia-runtime-v1';
 const CDN = ['cdnjs.cloudflare.com', 'fonts.googleapis.com', 'fonts.gstatic.com', 'cdn.jsdelivr.net'];
