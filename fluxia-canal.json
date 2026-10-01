@@ -1,7 +1,8 @@
 {
-  "version": "94.3",
+  "app": "Fluxia",
   "lab": "index.html",
-  "lab_version": "v94.3-LAB",
-  "timestamp": "2026-10-01T12:00:00Z",
-  "message": "v94.3-LAB: ciclos financieros (gasto + entrada en cuentas distintas); enlace automático de gastos variables a fijos; solo pregunta si es débil (match imperfecto)."
+  "lab_version": "v94.4-LAB",
+  "stable": "index.html",
+  "stable_version": "v93.10-ESTABLE",
+  "timestamp": "2026-10-01T14:09:00Z"
 }

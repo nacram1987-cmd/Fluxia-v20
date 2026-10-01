@@ -1,30 +1,87 @@
-# Fluxia v94.3-LAB
+# Fluxia BETA v94.4-LAB
 
-Base: v94.2-LAB. Servidor (Fluxia-banco): SIN CAMBIOS.
+## Cambios principales en v94.4
 
-## Qué cambia
+### 1. **Ingresos Arrastrados**
+Los ingresos cobrados en el mes anterior (como la nómina de septiembre) ahora:
+- Se mantienen en memoria para el mes actual
+- Aparecen como "ya cobrados" sin duplicarse
+- No vuelven a pedirse al banco
+- Se enlazan automáticamente si coinciden con previstos
 
-1. **Ciclos financieros automáticos**: detecta cuando un gasto se financia con entradas en otra cuenta (ej: -500 Caixa, +500 Revolut). **No pregunta si es exacto; solo pregunta si es débil.**
+**Módulo:** `arrastrarIngresosCobrados()` + `ARRASTRADOS_KEY` localStorage
 
-2. **Ligadura automática de gastos fijos**:
-   - Salida variable con mismo nombre + importe = se enlaza automáticamente, fijo se marca pagado
-   - Múltiples salidas que suman el importe del fijo = se enlazan todas, fijo pagado
-   - Nombre parecido pero importe distinto = se pregunta UNA vez
-   - Tu caso: "Préstamo puente Ana" 2.600 € + salidas (-500, -500, -600) = se enlaza automático
+### 2. **Enlace Automático de Puentes Manuales**
+Si creas un puente manualmente (ej: "Préstamo Ana 2.600 €"):
+- Fluxia detecta automáticamente sus movimientos en el mes
+- Si entradas + salidas relacionadas cuadran (±10%), las enlaza todas
+- El ciclo se marca como "pagado" sin preguntar
+- Si no cuadra, queda pendiente para revisar
 
-3. **Mucho menos que preguntar**: solo dudas reales (nombre ≠ importe distinto). Lo que cuadra exacto, automático y sin molestias.
+**Módulo:** `enlazarPuenteManualAuto()` + `enlazarTodosPuentesAuto()`
 
-## Casos que resuelve (universal)
+### 3. **Ciclos Excluidos del Total**
+Los movimientos marcados como `cicloDe` (ciclo, puente o traspaso):
+- Ya NO cuentan en el total de ingresos
+- Desaparecen del total de dinero real
+- Siguen siendo editables, pero no distorsionan el saldo
 
-- **Tu Mycard**: gasto -4.880 + traspasos Revolut (~4.880) = ciclo, sin preguntar
-- **Tu Puente Ana**: salidas a Ana que suman el fijo = se enlaza, fijo pagado
-- Alquiler: entrada +1.200, salida -1.200 a dueño = ciclo exacto, automático
-- Cuota coche: salida -450 "Banco Tal cuota" vs fijo 450 € = enlace automático
-- Inversión: -10.000 gasto + 10.000 inversión acción = ciclo automático
+**Cambio:** `ingresosDe()` filtra `!it.cicloDe`
 
-## Archivos
-- `index.html` = la app · `index_fluxia_v94.3_LAB.html` = misma (para referencia)
-- Resto: manifest, canal, sw, iconos, TS (sin cambios), PROMPT_MAESTRO_v94.3
+### 4. **Ejecución de Hooks ANTES de detectarCiclos**
+En cada sincronización:
+1. Procesa ingresos del banco
+2. **Arrastra ingresos del mes anterior** (v94.4)
+3. **Enlaza puentes manuales automáticamente** (v94.4)
+4. Detecta ciclos entre gastos/ingresos
+5. Calcula totales reales
 
-## Pruebas
-Sintaxis 73 scripts · ingresos 19/19 · fijos 15/15 · clasificación 39/39 · ciclos (módulo estructuralmente OK).
+## Impacto en Octubre de 2026 (usuario Nacho)
+
+| Concepto | v94.3 | v94.4 | Cambio |
+|----------|-------|-------|--------|
+| Nómina Sept (arrastrada) | ✓ (1x) | ✓ (1x) | Sigue visible, no duplica |
+| Nómina (Real Banco) | ✗ | ✗ | No vuelve a pedir |
+| Pensión | ✓ | ✓ | Enlazada a previsto |
+| Puente Ana (2.600€) | ❌ Dudoso | ✅ Auto | Enlazado -500/-1000/+1800/+700 |
+| Mycard Ciclo | ❌ Dudoso | ✅ Auto | Enlazado Revolut -4880 |
+| Total Ingresos REAL | ❌ 4.583€ | ✅ 2.856€ | Correcto sin ciclos |
+
+## Tests Incluidos
+
+- `test_ingresos.js`: 19/19 ✅
+- `test_fijos.js`: 15/15 ✅
+- `test_clasif.js`: 39/39 ✅
+- `test_ciclos.js`: ✅ v94.3 ciclos
+- `test_v944.js`: ✅ v94.4 features
+
+## Versiones Coherentes
+
+- `window.FLUXIA_VERSION`: `v94.4-LAB`
+- `<title>`: Fluxia BETA v94.4-LAB
+- `manifest.webmanifest`: start_url ./index.html
+- `fluxia-canal.json`: lab_version v94.4-LAB
+- `fluxia-sw.js`: VERSION v94.3 (sin cambios, heredado)
+
+## Archivos Modificados
+
+- `index.html` (renombrado desde `index_fluxia_v94.4_LAB.html`)
+- `manifest.webmanifest` (actualizado)
+- `fluxia-canal.json` (nuevo)
+- Todos los módulos anteriores intactos (v94.3 ciclos, v94.2 clasificación, v94.0 ingresos)
+
+## Deployar a GitHub
+
+1. Descargar `fluxia_v94.4_LAB.zip`
+2. Extraer en repo `Fluxia-v20/`
+3. Reemplazar: `index.html`, `manifest.webmanifest`, `fluxia-sw.js`, `fluxia-canal.json`
+4. Commit: "v94.4-LAB: ingresos arrastrados, enlaces automáticos de puentes, ciclos excluidos"
+5. Push
+
+## Notas
+
+- SIN CAMBIOS en Edge Function (Fluxia-banco-index.ts)
+- Backward compatible con v94.3
+- Puentes manuales (Excel) enlacen automáticamente si cuadran
+- Ingresos "fantasma" no duplican, solo se arrastran si ya cobrados
+
