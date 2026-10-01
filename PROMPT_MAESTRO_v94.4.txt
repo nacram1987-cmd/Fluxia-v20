@@ -1,0 +1,123 @@
+# PROMPT_MAESTRO v94.4 · Reglas No Negociables
+
+## PRINCIPIO #0: CADA ENTREGA = NÚMERO DE VERSIÓN NUEVO
+v94.3 → v94.4 → v94.5... NUNCA reutilizar un número aunque solo cambie un byte.
+**Motivo:** Trazabilidad total, evitar confusiones con backups/recuperación.
+
+## PRINCIPIO #1: VERSIONADO COINCIDE EN TODO
+Estos 5 campos DEBEN SER IDÉNTICOS en cada entrega:
+1. Nombre archivo HTML: `index_fluxia_vX.X_LAB.html`
+2. window.FLUXIA_VERSION: `"vX.X-LAB"`
+3. <title>: `Fluxia BETA vX.X-LAB`
+4. fluxia-sw.js VERSION: `'vX.X'` (heredado, puede estar fuera de sync)
+5. fluxia-canal.json lab_version: `"vX.X-LAB"`
+6. README versión en título
+
+**Excepción:** Si fluxia-sw.js no se toca, puede quedar vX.X-1. Es aceptable.
+
+## PRINCIPIO #2: manifest Y canal SIEMPRE CORRECTOS
+- `manifest.webmanifest`: `"start_url": "./index.html"`
+- `fluxia-canal.json`:
+  ```json
+  {
+    "lab": "index.html",
+    "lab_version": "vX.X-LAB",
+    "timestamp": "ISO8601"
+  }
+  ```
+
+## PRINCIPIO #3: SIEMPRE ENTREGAR EN ZIP
+ZIP contiene EXACTAMENTE estos archivos (orden alfabético):
+1. `Fluxia-banco-index.ts` (Edge Function si hay cambios)
+2. `COPY_TO_SUPABASE.txt` (instrucciones si hay cambios TS)
+3. `PROMPT_MAESTRO_vX.X.txt` (este archivo)
+4. `README.md` (changelog + guía rápida)
+5. `fluxia-canal.json` (nuevo, actualizado)
+6. `fluxia-icon-180.png`, `fluxia-icon-192.png`, `fluxia-icon-512.png`, `fluxia-icon.svg`
+7. `fluxia-sw.js` (service worker, puede tener VERSION vX.X-1)
+8. `index.html` (copia sin sufijo de `index_fluxia_vX.X_LAB.html`)
+9. `index_fluxia_vX.X_LAB.html` (fuente, para referencia)
+10. `manifest.webmanifest` (actualizado)
+
+ZIP nombre: `fluxia_vX.X_LAB.zip`
+
+## PRINCIPIO #4: SI HAY .TS NUEVO → COPY_TO_SUPABASE.txt
+Si SIN CAMBIOS en Fluxia-banco-index.ts:
+```
+SIN CAMBIOS. NO VOLVER A DESPLEGAR.
+Hash: [SHA256 primeros 16 chars]
+```
+
+Si CON CAMBIOS:
+```
+COPY TO SUPABASE EDGE FUNCTION
+Project: kylduzmrfbubeamfrbbr
+Function: Fluxia-banco
+Archivo: Fluxia-banco-index.ts
+```
+
+## PRINCIPIO #5: PRUEBAS EJECUTADAS, NO ADIVINAS
+Sintaxis + suites funcionales SIEMPRE:
+- `syntax.py`: 0 errores
+- `test_ingresos.js`: 19/19 ✅
+- `test_fijos.js`: 15/15 ✅
+- `test_clasif.js`: 39/39 ✅
+- `test_ciclos.js`: ✅ v94.X ciclos
+- `test_vX_X.js`: features nuevas
+
+Reportar: "RESULTADO: ✅ vX.X OK" o detallar qué NO se probó.
+
+## PRINCIPIO #6: NO PEDIR CONSOLA/DEVTOOLS
+Usuario en iPhone. TODO diagnóstico DENTRO de la app.
+- Panel "🔍 ¿No ves un ingreso?" para movimientos dudosos
+- Banner "🔗 Ciclos financieros" para confirmaciones
+- Alertas en-app para cambios detectados
+
+## PRINCIPIO #7: QUIRÚRGICOS
+Cambios exact-match, sin reescrituras amplias.
+- Usar `str_replace()` o scripts Python con assertions
+- Cada patch debe ser independiente y verificable
+- NO tocar líneas que no sean target
+
+## PRINCIPIO #8: REGLAS DE v94.4 ESPECÍFICAS
+
+### Ingresos Arrastrados
+- Función: `arrastrarIngresosCobrados(mesActual, mesPrevio)`
+- Storage: `ARRASTRADOS_KEY = 'fluxia_arrastrados_v94'`
+- Lógica: Buscar ingresos cobrados en mes anterior (pagadoEl ≠ null), copiar con nuevo ID
+- Hook: En `sincronizar()`, ANTES de `detectarCiclos()`
+- No duplicar: Verificar si ya existe en array de arrastrados
+
+### Enlace Automático de Puentes
+- Función: `enlazarPuenteManualAuto(puente, movimientos)`
+- Lógica: Para cada puente (tipo='puente', origen='excel'):
+  1. Buscar salidas que coincidan (nombre similar, ±5% importe)
+  2. Buscar entradas que coincidan
+  3. Si sumaEntradas - sumaSalidas ≈ 0 (±10%), enlazar TODO
+  4. Marcar movimientos con `cicloDe = puente.id`
+- Hook: En `sincronizar()`, ANTES de `detectarCiclos()`
+
+### Exclusión de Ciclos del Total
+- Cambio: `ingresosDe(mes)` filtra `!it.cicloDe`
+- Resultado: Totales automáticamente excluyen ciclos
+- NO rompe ingresos manuales (Excel) que NO sean ciclos
+
+## PRINCIPIO #9: NO ROMPER v94.3
+v94.4 es ADITIVO:
+- Módulos anteriores (ciclos, clasificación) intactos
+- Cambios solo en `ingresosDe()` y hooks de sync
+- Backward compatible (usuario puede downgrade sin perder datos)
+
+## CHECKLIST v94.4
+
+- [ ] README.md con changelog
+- [ ] PROMPT_MAESTRO_v94.4.txt (este)
+- [ ] Versiones coherentes (5 campos = vX.X)
+- [ ] manifest.webmanifest correcto
+- [ ] fluxia-canal.json con versión nueva
+- [ ] Sintaxis 0 errores
+- [ ] Suites 19+15+39+1 + nuevas = 100%
+- [ ] ZIP con 10 archivos
+- [ ] Testeo en iPhone si es posible
+- [ ] Readme con impacto esperado (ej: total octubre = 2.856€)
+
