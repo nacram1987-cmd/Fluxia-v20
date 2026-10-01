@@ -1,8 +1,14 @@
 /**
  * Fluxia-banco · Edge Function (Supabase / Deno)
- * Compatible con cliente Fluxia v92.x / v93.x
- * Versión: original v92.10 + UN solo arreglo en la acción "saldos"
- * (devuelve saldo, total y avisos en el formato que lee el cliente).
+ * Compatible con cliente Fluxia v92.x / v93.x / v94.x
+ * 
+ * Versión: v92.10 (ESTABLE) + v94.12 QUIRÚRGICO
+ * v94.12: cliente envía blacklist ampliada; servidor sigue filtrando por id
+ * 
+ * v94.7.4: Añade chequeo de blacklist de movimientos borrados por usuario
+ * v94.9: CaixaBank — al consultar estado se refresca la sesión EB antes de
+ *   marcar caducado; si la sesión sigue viva se recuperan cuentas; mensajes
+ *   claros de sesión muerta vs HUB046; ping reporta versión v94.9.
  *
  * Secrets necesarios en Supabase → Edge Functions → Secrets:
  *   EB_APP_ID        → Application ID de Enable Banking (kid del JWT)
@@ -488,25 +494,76 @@ async function accionConfirmar(body: any, userId: string, sb: any) {
 }
 
 async function accionEstado(_body: any, userId: string, sb: any) {
+  // v94.9: antes de declarar caducado, intentar refrescar cuentas desde la sesión EB.
+  // CaixaBank a veces deja cuentas[] vacío en BD tras inactividad aunque la sesión
+  // siga viva; Revolut suele mantener cuentas. Un GET /sessions/{id} recupera uids.
   const all = await listSesiones(sb, userId);
-  const conexiones = all
-    .filter((r: any) => !String(r.session_id).startsWith("pending:"))
-    .map((r: any) => {
-      const conn = conexionFromRow(r);
-      // v94.7.2: Detectar CaixaBank sin cuentas → sesión caducada
-      // (Enable Banking cierra la sesión silenciosamente tras inactividad)
-      if (
-        String(r.banco || "").toLowerCase().includes("caixa") &&
-        (!conn.cuentas || conn.cuentas.length === 0) &&
-        !conn.caducado
-      ) {
-        conn.caducado = true;
+  const conexiones: any[] = [];
+  for (const r0 of all) {
+    if (String(r0.session_id).startsWith("pending:")) continue;
+    let r = r0;
+    const sinCuentas =
+      !(Array.isArray(r.cuentas) && r.cuentas.length) &&
+      !(Array.isArray(r.account_uids) && r.account_uids.length);
+    // Intentar refresco si: sin cuentas, o banco tipo Caixa, o caducado por fecha
+    const esCaixa = String(r.banco || "").toLowerCase().includes("caixa");
+    const vto = r.valido_hasta ? new Date(r.valido_hasta) : null;
+    const porFecha = vto ? vto.getTime() < Date.now() : false;
+    if (sinCuentas || esCaixa || porFecha) {
+      try {
+        const refreshed = await refreshCuentasDesdeSesion(r, sb);
+        if (refreshed && (refreshed.cuentas?.length || refreshed.account_uids?.length)) {
+          r = refreshed;
+          // sesión viva: limpiar error previo de "sin cuentas"
+          if (r.ultimo_error && /sin cuentas|session|caduc/i.test(String(r.ultimo_error))) {
+            try {
+              await sb
+                .from("fluxia_banco_sesiones")
+                .update({ ultimo_error: null, updated_at: new Date().toISOString() })
+                .eq("id", r.id);
+              r.ultimo_error = null;
+            } catch (_) { /* ignore */ }
+          }
+        }
+      } catch (e: any) {
+        const msg = String(e?.message || e || "");
+        // Sesión realmente muerta en Enable Banking
+        if (/session|not found|expired|invalid|unauthorized|401|403/i.test(msg)) {
+          try {
+            await sb
+              .from("fluxia_banco_sesiones")
+              .update({
+                ultimo_error: "Sesión bancaria caducada. Pulsa Reconectar (1 min).",
+                updated_at: new Date().toISOString(),
+              })
+              .eq("id", r.id);
+            r.ultimo_error = "Sesión bancaria caducada. Pulsa Reconectar (1 min).";
+          } catch (_) { /* ignore */ }
+        }
       }
-      return conn;
-    });
+    }
+    const conn = conexionFromRow(r);
+    // Solo marcar caducado si: fecha pasada O (sigue sin cuentas tras refresco)
+    const sigueSin =
+      !(conn.cuentas && conn.cuentas.length) &&
+      !(Array.isArray(r.account_uids) && r.account_uids.length);
+    if (!conn.caducado && sigueSin) {
+      // Tras refresco fallido: caducado (Caixa u otro)
+      conn.caducado = true;
+      if (!conn.ultimo_error) {
+        conn.ultimo_error =
+          "Sin cuentas vinculadas o sesión cerrada por el banco. Reconectar.";
+      }
+    }
+    // Si recuperamos cuentas, caducado solo por fecha real
+    if (conn.cuentas && conn.cuentas.length && !porFecha) {
+      conn.caducado = false;
+    }
+    conexiones.push(conn);
+  }
   return {
     success: true,
-    conectado: conexiones.length > 0,
+    conectado: conexiones.some((c) => !c.caducado && (c.cuentas || []).length > 0),
     conexiones,
     nBancos: conexiones.length,
   };
@@ -550,6 +607,9 @@ function friendlyEbError(msg: string) {
   const s = String(msg || "");
   if (/HUB046|Allowed number of accesses exceeded/i.test(s)) {
     return "HUB046: el banco ha limitado las consultas de este consentimiento. Espera unas horas o reconecta una sola vez.";
+  }
+  if (/session.*(not found|expired|invalid)|invalid session|unauthorized|401/i.test(s)) {
+    return "Sesión bancaria caducada o cerrada por el banco. Pulsa Reconectar (no pierdes movimientos ya apuntados).";
   }
   return s;
 }
@@ -616,7 +676,7 @@ async function accionMovimientos(body: any, userId: string, sb: any) {
   const activas = all.filter(
     (r: any) => !String(r.session_id).startsWith("pending:"),
   );
-  const movimientos: any[] = [];
+  let movimientos: any[] = [];
   const errores: string[] = [];
   const cortes: Record<string, string> = {};
   const porBanco: Record<string, number> = {};
@@ -636,6 +696,21 @@ async function accionMovimientos(body: any, userId: string, sb: any) {
       })
       .eq("id", row.id);
   }
+
+  // ═══════════════════════════════════════════════════════════════════════════════════
+  // v94.7.4 QUIRÚRGICO: Filtrar movimientos contra blacklist
+  // ═══════════════════════════════════════════════════════════════════════════════════
+  const blacklist = new Set((body.blacklist || []).filter(Boolean));
+  if (blacklist.size > 0) {
+    const antes = movimientos.length;
+    movimientos = movimientos.filter(m => !blacklist.has(m.id));
+    const filtrados = antes - movimientos.length;
+    if (filtrados > 0) {
+      // Log silencioso (para debug si fuera necesario)
+      console.log(`[v94.7.4] Filtrados ${filtrados} movimientos borrados en cliente`);
+    }
+  }
+  // ═══════════════════════════════════════════════════════════════════════════════════
 
   // Importante: NO usar la clave "error" si hay movimientos (el cliente hace throw si data.error).
   // Los avisos de un banco (HUB046) van en avisos / errorFondo.
@@ -840,7 +915,7 @@ Deno.serve(async (req) => {
       case "acceso_quitar":
         return json(await accionAccesoQuitar());
       case "ping":
-        return json({ success: true, pong: true, version: "fluxia-banco-v92.10" });
+        return json({ success: true, pong: true, version: "fluxia-banco-v94.12" });
       default:
         return err("Acción desconocida: " + accion);
     }
@@ -849,3 +924,7 @@ Deno.serve(async (req) => {
     return err(e?.message || String(e), 500);
   }
 });
+
+// ═══════════════════════════════════════════════════════════════════════════════════════════════
+// SHA256 v94.9-LAB: 90c4b1b702262b10
+// ═══════════════════════════════════════════════════════════════════════════════════════════════
