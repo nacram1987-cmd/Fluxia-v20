@@ -1,7 +1,7 @@
 {
-  "version": "94.0",
+  "version": "94.3",
   "lab": "index.html",
-  "lab_version": "v94.0-LAB",
-  "timestamp": "2026-10-01T10:57:00Z",
-  "message": "v94.0-LAB: ingresos bancarios automáticos en todas las cuentas (mes anterior → hoy), sin duplicar; gastos con el mismo importe que un fijo → pregunta (fijo / otro gasto / duplicado)."
+  "lab_version": "v94.3-LAB",
+  "timestamp": "2026-10-01T12:00:00Z",
+  "message": "v94.3-LAB: ciclos financieros (gasto + entrada en cuentas distintas); enlace automático de gastos variables a fijos; solo pregunta si es débil (match imperfecto)."
 }

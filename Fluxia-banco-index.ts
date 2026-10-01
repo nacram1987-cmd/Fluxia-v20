@@ -1,12 +1,14 @@
 /**
  * Fluxia-banco · Edge Function (Supabase / Deno)
- * Compatible con cliente Fluxia v92.x
+ * Compatible con cliente Fluxia v92.x / v93.x
+ * Versión: original v92.10 + UN solo arreglo en la acción "saldos"
+ * (devuelve saldo, total y avisos en el formato que lee el cliente).
  *
  * Secrets necesarios en Supabase → Edge Functions → Secrets:
- *   EB_APP_ID          → Application ID de Enable Banking (kid del JWT)
- *   EB_APP_SECRET      → Clave privada RSA PEM (la que subiste a Enable Banking)
- *   EB_REDIRECT_URL    → URL de retorno (ej. https://nacram1987-cmd.github.io/...)
- *   SUPABASE_URL       → (automático en Edge)
+ *   EB_APP_ID        → Application ID de Enable Banking (kid del JWT)
+ *   EB_APP_SECRET    → Clave privada RSA PEM (la que subiste a Enable Banking)
+ *   EB_REDIRECT_URL  → URL de retorno (ej. https://nacram1987-cmd.github.io/...)
+ *   SUPABASE_URL     → (automático en Edge)
  *   SUPABASE_SERVICE_ROLE_KEY → (o SUPABASE_ANON_KEY + políticas; mejor service role)
  *
  * Tabla SQL (ejecutar una vez en SQL Editor si no existe):
@@ -32,6 +34,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const EB_API = "https://api.enablebanking.com";
+
 const CORS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
@@ -51,6 +54,7 @@ function err(msg: string, status = 400) {
 }
 
 // ── JWT RS256 para Enable Banking ──────────────────────────────────────────
+
 function pemToArrayBuffer(pem: string): ArrayBuffer {
   const b64 = pem
     .replace(/-----BEGIN [^-]+-----/g, "")
@@ -91,7 +95,6 @@ async function ebJwt(): Promise<string> {
       secret +
       "\n-----END PRIVATE KEY-----";
   }
-
   const key = await crypto.subtle.importKey(
     "pkcs8",
     pemToArrayBuffer(secret),
@@ -99,7 +102,6 @@ async function ebJwt(): Promise<string> {
     false,
     ["sign"],
   );
-
   const header = { typ: "JWT", alg: "RS256", kid: appId };
   const now = Math.floor(Date.now() / 1000);
   const payload = {
@@ -151,6 +153,7 @@ async function ebFetch(
 }
 
 // ── Supabase admin + usuario del JWT ───────────────────────────────────────
+
 function sbAdmin() {
   const url = Deno.env.get("SUPABASE_URL") || "";
   const key =
@@ -176,6 +179,7 @@ async function userFromReq(req: Request) {
 }
 
 // ── Helpers de dominio ─────────────────────────────────────────────────────
+
 function hoyISO() {
   return new Date().toISOString().slice(0, 10);
 }
@@ -240,20 +244,17 @@ function mapMov(t: any, banco: string) {
     t.debtor_name ||
     t.counterpart_name ||
     "";
-
   const id =
     t.entry_reference ||
     t.transaction_id ||
     t.transactionId ||
     t.id ||
     `${banco}|${fecha}|${importe}|${String(concepto).slice(0, 40)}`;
-
   const pendiente = !!(
     t.status &&
     String(t.status).toUpperCase() !== "BOOK" &&
     String(t.status).toUpperCase() !== "BOOKED"
   );
-
   return {
     id: String(id),
     fecha,
@@ -301,6 +302,7 @@ function conexionFromRow(row: any) {
 }
 
 // ── Acciones ───────────────────────────────────────────────────────────────
+
 async function accionBancos() {
   // Lista ASPSPs España
   const data = await ebFetch("/aspsps?country=ES");
@@ -326,7 +328,6 @@ async function accionBancos() {
 async function accionIniciar(body: any, userId: string, sb: any) {
   const banco = String(body.banco || body.name || body.aspsp || "").trim();
   if (!banco) throw new Error("Indica el banco");
-
   const redirect =
     Deno.env.get("EB_REDIRECT_URL") ||
     body.redirect_url ||
@@ -405,7 +406,6 @@ async function accionIniciar(body: any, userId: string, sb: any) {
     redirect_url: redirect,
     psu_type: "personal",
   };
-
   const auth = await ebFetch("/auth", { method: "POST", body: authBody });
   const url = auth.url || auth.authorization_url;
   if (!url) throw new Error("Enable Banking no devolvió URL de autorización");
@@ -425,7 +425,6 @@ async function accionConfirmar(body: any, userId: string, sb: any) {
     method: "POST",
     body: { code },
   });
-
   const sessionId = session.session_id || session.sessionId;
   if (!sessionId) throw new Error("No se pudo crear la sesión bancaria");
 
@@ -493,7 +492,6 @@ async function accionEstado(_body: any, userId: string, sb: any) {
   const conexiones = all
     .filter((r: any) => !String(r.session_id).startsWith("pending:"))
     .map(conexionFromRow);
-
   return {
     success: true,
     conectado: conexiones.length > 0,
@@ -655,10 +653,27 @@ async function accionBandeja(body: any, userId: string, sb: any) {
   );
 }
 
+// Orden de preferencia del saldo por cuenta (Enable Banking devuelve varios tipos por cuenta):
+// primero el saldo contabilizado, luego el disponible. Solo se usa UNO por cuenta
+// para que el total no cuente dos veces el mismo dinero.
+const PREF_SALDO = ["CLBD", "ITBD", "ITAV", "CLAV", "XPCD"];
+
+function elegirSaldo(balances: any[]) {
+  const tipo = (b: any) =>
+    String(b.balance_type || b.type || "").toUpperCase();
+  for (const t of PREF_SALDO) {
+    const hit = balances.find((b: any) => tipo(b) === t);
+    if (hit) return hit;
+  }
+  return balances[0];
+}
+
 async function accionSaldos(_body: any, userId: string, sb: any) {
   const all = await listSesiones(sb, userId);
   const saldos: any[] = [];
   const errores: string[] = [];
+  const total: Record<string, number> = {};
+
   for (const row0 of all) {
     if (String(row0.session_id).startsWith("pending:")) continue;
     let row = row0;
@@ -672,31 +687,43 @@ async function accionSaldos(_body: any, userId: string, sb: any) {
         const data = await ebFetch(
           `/accounts/${encodeURIComponent(uid)}/balances`,
         );
-        const balances = data.balances || data || [];
-        for (const b of Array.isArray(balances) ? balances : [balances]) {
-          const amt = b.balance_amount || b.balanceAmount || b.amount || {};
-          saldos.push({
-            banco: row.banco,
-            cuenta: uid,
-            nombre: (row.cuentas || []).find((x: any) => x.uid === uid)?.nombre || "",
-            iban: (row.cuentas || []).find((x: any) => x.uid === uid)?.iban || "",
-            tipo: b.balance_type || b.type || "expected",
-            importe: Number(String(amt.amount ?? 0).replace(",", ".")),
-            moneda: amt.currency || "EUR",
-          });
-        }
+        const raw = data.balances || data || [];
+        const balances = (Array.isArray(raw) ? raw : [raw]).filter(Boolean);
+        if (!balances.length) continue;
+        const b = elegirSaldo(balances);
+        const amt = b.balance_amount || b.balanceAmount || b.amount || {};
+        let importe = Number(String(amt.amount ?? 0).replace(",", "."));
+        if (!isFinite(importe)) continue;
+        const ind = String(b.credit_debit_indicator || "").toUpperCase();
+        if (ind === "DBIT" || ind === "DEBIT") importe = -Math.abs(importe);
+        const moneda = amt.currency || "EUR";
+        const cuenta = (row.cuentas || []).find((x: any) => x.uid === uid);
+        saldos.push({
+          banco: row.banco,
+          cuenta: uid,
+          nombre: cuenta?.nombre || "",
+          iban: cuenta?.iban || "",
+          tipo: b.balance_type || b.type || "expected",
+          // El cliente Fluxia lee "saldo"; "importe" se mantiene por compatibilidad
+          saldo: importe,
+          importe,
+          moneda,
+        });
+        total[moneda] = Math.round(((total[moneda] || 0) + importe) * 100) / 100;
       } catch (e: any) {
         errores.push(row.banco + ": " + friendlyEbError(e?.message || String(e)));
       }
     }
   }
-  const avisos = errores.length ? errores.join(" · ") : null;
+
   return {
     success: true,
     saldos,
-    avisos,
-    errorFondo: avisos,
-    ...(saldos.length === 0 && errores.length ? { error: avisos } : {}),
+    total,
+    // El cliente espera una LISTA en "avisos" (hace avisos.join)
+    avisos: errores,
+    errorFondo: errores.length ? errores.join(" · ") : null,
+    ...(saldos.length === 0 && errores.length ? { error: errores.join(" · ") } : {}),
   };
 }
 
@@ -736,6 +763,7 @@ async function accionAccesoQuitar() {
 }
 
 // ── Entry ──────────────────────────────────────────────────────────────────
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { status: 204, headers: CORS });

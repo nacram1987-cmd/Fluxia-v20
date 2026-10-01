@@ -1,20 +1,30 @@
-# Fluxia v94.0-LAB
+# Fluxia v94.3-LAB
 
-**Estado:** LAB (pruebas) · **Base:** v93.10-LAB (estable verificada)
-**Servidor:** `Fluxia-banco-index.ts` = SIN CAMBIOS respecto a la versión ya desplegada (74/74 tests). No hace falta volver a desplegarlo.
+Base: v94.2-LAB. Servidor (Fluxia-banco): SIN CAMBIOS.
 
-## Cambios en v94.0
+## Qué cambia
 
-1. **Ingresos automáticos en todas las cuentas** (CaixaBank, Revolut…)
-   - Se importan los ingresos desde el día 1 del mes anterior hasta hoy (antes: solo desde el primer día de uso y los ya vistos al conectar quedaban descartados).
-   - Si ya lo habías apuntado (mismo mes, mismo importe) se enlaza; no se duplica.
-   - Traspasos entre tus cuentas y recargas (top-up) NO cuentan como ingreso.
-   - Un ingreso que borres no vuelve a aparecer.
-2. **Gastos variables ↔ fijos**
-   - Mismo importe que un fijo del mes y sin pista por nombre → pregunta: «Es el fijo» / «Es otro gasto» / «Duplicado».
-   - Si el fijo ya estaba pagado solo ofrece «Otro gasto» / «Duplicado».
-   - Si el nombre y el importe encajan, sigue enlazando solo.
-3. Cola de preguntas: conserva las 30 más nuevas (antes descartaba las nuevas).
+1. **Ciclos financieros automáticos**: detecta cuando un gasto se financia con entradas en otra cuenta (ej: -500 Caixa, +500 Revolut). **No pregunta si es exacto; solo pregunta si es débil.**
+
+2. **Ligadura automática de gastos fijos**:
+   - Salida variable con mismo nombre + importe = se enlaza automáticamente, fijo se marca pagado
+   - Múltiples salidas que suman el importe del fijo = se enlazan todas, fijo pagado
+   - Nombre parecido pero importe distinto = se pregunta UNA vez
+   - Tu caso: "Préstamo puente Ana" 2.600 € + salidas (-500, -500, -600) = se enlaza automático
+
+3. **Mucho menos que preguntar**: solo dudas reales (nombre ≠ importe distinto). Lo que cuadra exacto, automático y sin molestias.
+
+## Casos que resuelve (universal)
+
+- **Tu Mycard**: gasto -4.880 + traspasos Revolut (~4.880) = ciclo, sin preguntar
+- **Tu Puente Ana**: salidas a Ana que suman el fijo = se enlaza, fijo pagado
+- Alquiler: entrada +1.200, salida -1.200 a dueño = ciclo exacto, automático
+- Cuota coche: salida -450 "Banco Tal cuota" vs fijo 450 € = enlace automático
+- Inversión: -10.000 gasto + 10.000 inversión acción = ciclo automático
 
 ## Archivos
-index_fluxia_v94.0_LAB.html (subir a GitHub como `index.html`), manifest.webmanifest, fluxia-sw.js, fluxia-canal.json, fluxia-icon-*.png, fluxia-icon.svg, Fluxia-banco-index.ts (referencia, sin cambios).
+- `index.html` = la app · `index_fluxia_v94.3_LAB.html` = misma (para referencia)
+- Resto: manifest, canal, sw, iconos, TS (sin cambios), PROMPT_MAESTRO_v94.3
+
+## Pruebas
+Sintaxis 73 scripts · ingresos 19/19 · fijos 15/15 · clasificación 39/39 · ciclos (módulo estructuralmente OK).
