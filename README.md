@@ -1,63 +1,16 @@
-# Fluxia BETA v94.7-LAB · Changelog
+# Fluxia v94.7.5-LAB
 
-## ✅ Qué se ha arreglado en v94.7
+## Qué arregla
+1. **Botón «Sin cuenta»**: no hacía nada porque `fxConfirmar` no devuelve valor (el código la usaba como sí/no). Ahora pide doble confirmación, guarda una copia automática previa (deshacer en Ajustes → Copia cifrada) y empieza a cero. Ya no hay flag que bloquee la carga de lo que apuntes después.
+2. **Mismo defecto en 2 botones más**: «Cerrar sesión de la nube» y «Desconectar todos los bancos».
+3. **Ingresos con fecha futura (la pensión)**: nunca figuran como cobrados hasta que llegue la fecha o los vea el banco. Se muestra «Pendiente · cobro previsto 24 oct».
+4. **Restaurar copia**: todos los botones aceptan el `.fluxia` cifrado (piden contraseña). Antes el importador antiguo lo rechazaba. Al restaurar espera a la sincronización con la nube antes de recargar.
+5. **Gastos borrados no vuelven del banco**: ahora sí (filtro por ID de banco en el único punto de entrada). En v94.7.3 no funcionaba.
 
-### 🔴 CRÍTICO: Botón "Sin cuenta" funciona correctamente
-- **Problema v94.6:** El botón "Sin cuenta" no hacía nada; el usuario veía los datos previos aunque clickease "sin cuenta".
-- **Solución v94.7:** Nueva función `resetearTodoParaSinCuenta()` que:
-  - Vacía TODOS los arrays de datos (ingresos, gastos, movimientos, etc.)
-  - Guarda arrays vacíos en localStorage
-  - Pone un flag en sessionStorage para evitar recargas accidentales
-  - Se llama automáticamente cuando se clickea "Sin cuenta"
+## Edge Function
+SIN CAMBIOS respecto a v94.7.2. Si desplegaste los TS «v94.7.4» de la conversación, vuelve a desplegar el `Fluxia-banco-index.ts` de este ZIP.
 
-### 🔒 Flag de sesión para "Sin cuenta"
-- Se utiliza `sessionStorage` en lugar de `localStorage`, lo que significa que:
-  - Si el usuario selecciona "Sin cuenta" y cierra la app, al reabrirla se cargará normalmente (sin el flag)
-  - Durante la misma sesión, los datos se mantienen limpios
-
-### 🧪 Modificación de `cargarTodo()`
-- Ahora verifica el flag de "sin cuenta" **ANTES** de cargar cualquier dato de localStorage
-- Si está activo el flag, inicializa todo a arrays vacíos y sale
-- Esto garantiza que no haya fugas de datos previos
-
----
-
-## 📋 Cambios técnicos
-
-### Nueva función en index.html (después de `cargarTodo()`):
-```javascript
-function resetearTodoParaSinCuenta(){
-  // Vacía todos los arrays
-  ingresosItems = [];
-  gastosFijosItems = [];
-  financiaciones = [];
-  // ... etc
-}
-```
-
-### Modificación de `skipPlan()` (línea ~2761):
-Se llama `resetearTodoParaSinCuenta()` al clickear "Sin cuenta"
-
-### Modificación de `cargarTodo()` (línea ~6316):
-Chequea sessionStorage al inicio
-
----
-
-## ✅ Pendiente a resolver (v94.8+)
-
-1. **Huchas/disponible (NEUTRAL):** Pendiente implementar lógica de rescate + reposición
-2. **Movimiento de tarjeta (15€):** Agregar detalles (banco, fecha)
-3. **CaixaBank sin diagnóstico:** Edge Function debe retornar estado
-4. **Ingresos futuros:** No contar hasta fecha de cobro real
-
----
-
-## 🚀 Instalación
-
-1. Descarga `fluxia_v94.7_LAB.zip`
-2. Extrae y reemplaza archivos
-3. Abre https://tu-dominio/index.html?v=v94.7-LAB
-
----
-
-**v94.7-LAB** · 2026-10-01 18:45 UTC
+## Pendiente
+- Unificar visualmente las tarjetas de copia/cuenta de Ajustes en una sola.
+- Misma regla de fecha futura para gastos fijos.
+- No probado en iPhone real (solo pruebas automáticas).

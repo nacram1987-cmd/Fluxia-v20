@@ -2,9 +2,9 @@
   "app": "Fluxia",
   "version": "94.7",
   "lab": "index.html",
-  "lab_version": "v94.7.3-LAB",
+  "lab_version": "v94.7.5-LAB",
   "stable": "index.html",
   "stable_version": "v93.10-ESTABLE",
-  "timestamp": "2026-10-01T19:05:00Z",
-  "message": "v94.7.3-LAB: Edge Function detecta CaixaBank caducado (sesión expirada). Cliente muestra ⚠️ + botón Reconectar. Auditoría de movimientos con 15€ PayPal identificados."
+  "timestamp": "2026-10-01T19:15:31Z",
+  "message": "v94.7.5-LAB: Sin cuenta funciona; cobros con fecha futura no cuentan como cobrados; una sola puerta de restaurar (admite .fluxia cifrado); borrados no vuelven del banco."
 }
