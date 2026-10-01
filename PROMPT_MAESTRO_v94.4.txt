@@ -4,27 +4,80 @@
 v94.3 → v94.4 → v94.5... NUNCA reutilizar un número aunque solo cambie un byte.
 **Motivo:** Trazabilidad total, evitar confusiones con backups/recuperación.
 
-## PRINCIPIO #1: VERSIONADO COINCIDE EN TODO
-Estos 5 campos DEBEN SER IDÉNTICOS en cada entrega:
-1. Nombre archivo HTML: `index_fluxia_vX.X_LAB.html`
-2. window.FLUXIA_VERSION: `"vX.X-LAB"`
-3. <title>: `Fluxia BETA vX.X-LAB`
-4. fluxia-sw.js VERSION: `'vX.X'` (heredado, puede estar fuera de sync)
-5. fluxia-canal.json lab_version: `"vX.X-LAB"`
-6. README versión en título
+## PRINCIPIO #1: VERSIONADO COINCIDE EN TODO (EXHAUSTIVO)
+**CRÍTICO:** Hay 8 lugares donde la versión DEBE aparecer. SIN EXCEPCIONES.
 
-**Excepción:** Si fluxia-sw.js no se toca, puede quedar vX.X-1. Es aceptable.
+### Lugares OBLIGATORIOS en index.html:
+1. `<title>Fluxia BETA vX.X-LAB</title>` 
+2. `<meta content="vX.X-LAB" name="fluxia-version"/>`
+3. `<script>window.FLUXIA_VERSION = "vX.X-LAB";</script>`
+4. `<div id="fluxiaVersion">Versión vX.X-LAB</div>` (LO QUE VE EL USUARIO)
+5. `<b id="fluxiaLabVersionLabel">vX.X-LAB</b>` (panel de versión)
 
-## PRINCIPIO #2: manifest Y canal SIEMPRE CORRECTOS
-- `manifest.webmanifest`: `"start_url": "./index.html"`
-- `fluxia-canal.json`:
-  ```json
-  {
-    "lab": "index.html",
-    "lab_version": "vX.X-LAB",
-    "timestamp": "ISO8601"
-  }
-  ```
+### En otros archivos:
+6. Nombre archivo: `index_fluxia_vX.X_LAB.html`
+7. `manifest.webmanifest`: `"name": "Fluxia BETA vX.X-LAB"`
+8. `fluxia-canal.json`: `"lab_version": "vX.X-LAB"`
+
+**Verificación automática ANTES de empaquetar:**
+```bash
+grep -o 'v[0-9][0-9]\.[0-9]-LAB\|v[0-9][0-9]\.[0-9][0-9]-LAB' index.html | sort | uniq
+# Resultado esperado: TODOS deben ser vX.X-LAB (mismo número)
+# Si hay dos versiones distintas → ERROR, no empaquetar
+```
+
+**Excepción ÚNICA:** Si fluxia-sw.js no se toca, puede quedar vX.X-1. Es aceptable.
+Pero NUNCA en index.html, manifest, ni canal.json.
+
+## PRINCIPIO #2: manifest Y canal.json SIEMPRE ACTUALIZADOS A VERSION NUEVA
+**OBLIGATORIO EN CADA ENTREGA.** Estos archivos definen qué versión descarga el cliente.
+
+### manifest.webmanifest
+**SIEMPRE actualizar:**
+```json
+{
+  "name": "Fluxia BETA vX.X-LAB",
+  "short_name": "Fluxia",
+  "start_url": "./index.html",
+  ...
+}
+```
+Si no cambias el `name`, el cliente no sabe que hay versión nueva.
+
+### fluxia-canal.json
+**SIEMPRE actualizar (es el CONTROL DE VERSIONES de la app):**
+```json
+{
+  "app": "Fluxia",
+  "lab": "index.html",
+  "lab_version": "vX.X-LAB",
+  "stable": "index.html",
+  "stable_version": "vX-1.X-ESTABLE",
+  "timestamp": "ISO8601"
+}
+```
+- `lab_version` = la versión LAB que GitHub Pages va a descargar
+- Si no cambia, el cliente cree que sigue en v94.3
+
+**REGLA DE ORO:** Si olvidas actualizar manifest y canal.json, el usuario seguirá en la versión anterior aunque hayas subido los archivos.
+
+## PRINCIPIO #2.5: VERIFICACIÓN AUTOMÁTICA DE VERSIONES (OBLIGATORIA)
+**ANTES de cualquier ZIP o entrega, ejecutar esto:**
+
+```bash
+echo "=== BÚSQUEDA DE TODAS LAS VERSIONES EN index.html ===" 
+grep -n "v94\|v93\|v95\|v96" index.html | grep -E "title|VERSION|fluxiaVersion|fluxiaLabVersionLabel|meta content" | sort -u
+
+echo "=== BÚSQUEDA POR PATRÓN ===" 
+grep -oE "v[0-9]{2}\.[0-9]-LAB|v[0-9]{2}\.[0-9]{2}-LAB" index.html | sort | uniq -c
+
+echo "=== SI APARECEN DOS VERSIONES DIFERENTES: DETENER ===" 
+echo "ERROR: Hay múltiples versiones. Verificar todos los puntos de PRINCIPIO #1"
+```
+
+**JAMÁS empaquetar si esto encuentra más de una versión diferente.**
+
+---
 
 ## PRINCIPIO #3: SIEMPRE ENTREGAR EN ZIP
 ZIP contiene EXACTAMENTE estos archivos (orden alfabético):
@@ -102,22 +155,82 @@ Cambios exact-match, sin reescrituras amplias.
 - Resultado: Totales automáticamente excluyen ciclos
 - NO rompe ingresos manuales (Excel) que NO sean ciclos
 
+## PRINCIPIO #8.5: LECCIÓN DE v94.4 (QUÉ NUNCA VOLVER A HACER)
+
+**En v94.4 ocurrió esto:**
+- Cambié `<title>` a v94.4-LAB ✓
+- Cambié `window.FLUXIA_VERSION` a v94.4-LAB ✓
+- Cambié `<meta>` a v94.4-LAB ✓
+- PERO NO cambié `<div id="fluxiaVersion">` (quedó en v93.11) ❌
+- PERO NO cambié `<b id="fluxiaLabVersionLabel">` (quedó en v92.3) ❌
+
+**Resultado:** GitHub Pages mostraba v94.4, pero el iPhone veía v93.11 en la pantalla.
+
+**Causa:** Cambios manuales sin buscar TODAS las referencias de versión.
+
+**Solución implementada en este PROMPT:**
+1. PRINCIPIO #2.5: Script de verificación automática ANTES de empaquetar
+2. Checklist que lista los 8 lugares (no 5)
+3. PRIMER PASO: grep para encontrar todas las versiones
+
+**JAMÁS volver a ocurrir porque:**
+- Script grep busca TODAS las versiones automáticamente
+- Si encuentra dos números diferentes → ERROR, no empaquetar
+- Esto valida ANTES de ZIP, no DESPUÉS
+
+---
+
 ## PRINCIPIO #9: NO ROMPER v94.3
 v94.4 es ADITIVO:
 - Módulos anteriores (ciclos, clasificación) intactos
 - Cambios solo en `ingresosDe()` y hooks de sync
 - Backward compatible (usuario puede downgrade sin perder datos)
 
-## CHECKLIST v94.4
+## CHECKLIST ANTES DE ENTREGAR
 
-- [ ] README.md con changelog
-- [ ] PROMPT_MAESTRO_v94.4.txt (este)
-- [ ] Versiones coherentes (5 campos = vX.X)
-- [ ] manifest.webmanifest correcto
-- [ ] fluxia-canal.json con versión nueva
-- [ ] Sintaxis 0 errores
-- [ ] Suites 19+15+39+1 + nuevas = 100%
-- [ ] ZIP con 10 archivos
-- [ ] Testeo en iPhone si es posible
-- [ ] Readme con impacto esperado (ej: total octubre = 2.856€)
+### 🔴 PRIMER PASO (BLOQUEANTE): VERIFICACIÓN DE VERSIONES
+```bash
+# Ejecutar ESTO como primera cosa:
+grep -oE "v[0-9]{2}\.[0-9]{1,2}-LAB" index.html | sort | uniq -c
+```
+**Debe haber UNA SOLA línea. Si aparecen dos versiones → STOP, arreglar**
+- [ ] Resultado: todas las versiones = vX.X-LAB (idénticas)
+- [ ] Si alguna dice vX.X-1-LAB o diferente: DETENER y arreglar
+- [ ] Verificar: `<title>`, `window.FLUXIA_VERSION`, `fluxiaVersion`, `fluxiaLabVersionLabel`, `<meta content>`
+
+### ⚠️ CRÍTICO (sin estos, el usuario no actualiza):
+- [ ] index.html: `<title>Fluxia BETA vX.X-LAB</title>`
+- [ ] index.html: `window.FLUXIA_VERSION = "vX.X-LAB"`
+- [ ] index.html: `<meta content="vX.X-LAB" name="fluxia-version"/>`
+- [ ] index.html: `<div id="fluxiaVersion">Versión vX.X-LAB</div>` (LO QUE VE EL USUARIO)
+- [ ] index.html: `<b id="fluxiaLabVersionLabel">vX.X-LAB</b>`
+- [ ] manifest.webmanifest: `"name": "Fluxia BETA vX.X-LAB"` (NO vX.X-1-LAB)
+- [ ] fluxia-canal.json: `"lab_version": "vX.X-LAB"` (NO vX.X-1-LAB)
+- [ ] fluxia-canal.json: timestamp actualizado (ISO 8601)
+
+### ✅ VERSIONES COHERENTES:
+- [x] window.FLUXIA_VERSION = "v94.4-LAB" en index.html
+- [x] <title>Fluxia BETA v94.4-LAB</title>
+- [x] Nombre ZIP = fluxia_v94.4_LAB.zip
+- [x] Nombre archivo fuente = index_fluxia_v94.4_LAB.html
+- [x] README.md con v94.4 en título
+
+### 🧪 PRUEBAS:
+- [x] syntax.py: 0 errores
+- [x] test_ingresos.js: 19/19 ✅
+- [x] test_fijos.js: 15/15 ✅
+- [x] test_clasif.js: 39/39 ✅
+- [x] test_ciclos.js: ✅
+- [x] test_v944.js: ✅ (features nuevas)
+
+### 📦 ZIP:
+- [x] 13 archivos (verificar con `unzip -l`)
+- [x] PROMPT_MAESTRO_v94.4.txt incluido
+- [x] README.md incluido
+- [x] Todos los PNGs, SVG, TS incluidos
+
+### 📋 DOCUMENTACIÓN:
+- [x] COPY_TO_SUPABASE.txt con estado TS
+- [x] README.md con changelog y tabla de impacto
+- [x] Changelog detalla cambios respecto a v94.3
 
