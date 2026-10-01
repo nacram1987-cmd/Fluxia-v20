@@ -1,10 +1,8 @@
 {
   "app": "Fluxia",
-  "version": "94.7",
   "lab": "index.html",
-  "lab_version": "v94.7.5-LAB",
+  "lab_version": "v94.8-LAB",
   "stable": "index.html",
   "stable_version": "v93.10-ESTABLE",
-  "timestamp": "2026-10-01T19:15:31Z",
-  "message": "v94.7.5-LAB: Sin cuenta funciona; cobros con fecha futura no cuentan como cobrados; una sola puerta de restaurar (admite .fluxia cifrado); borrados no vuelven del banco."
+  "timestamp": "2026-10-01T19:50:00Z"
 }

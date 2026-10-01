@@ -1,45 +1,12 @@
 {
-  "name": "Fluxia BETA v94.7.5-LAB",
+  "name": "Fluxia BETA v94.8-LAB",
   "short_name": "Fluxia",
-  "description": "PWA de control financiero personal",
   "start_url": "./index.html",
-  "scope": "/Fluxia-v20/",
   "display": "standalone",
-  "theme_color": "#1e88e5",
-  "background_color": "#ffffff",
-  "orientation": "portrait-primary",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0E7C90",
+  "lang": "es",
   "icons": [
-    {
-      "src": "./fluxia-icon-180.png",
-      "sizes": "180x180",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "./fluxia-icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "./fluxia-icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "./fluxia-icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "./fluxia-icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    }
-  ],
-  "categories": ["finance"]
+    { "src": "fluxia-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
 }
