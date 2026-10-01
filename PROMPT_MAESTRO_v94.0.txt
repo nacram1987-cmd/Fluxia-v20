@@ -1,0 +1,107 @@
+═══════════════════════════════════════════════════════════════════════════════
+PROMPT_MAESTRO v94.0-LAB · REGLAS NO NEGOCIABLES
+═══════════════════════════════════════════════════════════════════════════════
+
+PRINCIPIO #1: VERSIONADO SIEMPRE COINCIDE
+────────────────────────────────────────────────────────────────────────────────
+Nombre archivo = window.FLUXIA_VERSION = <meta content> = <title> = fluxia-sw.js VERSION
+Ejemplo: index_fluxia_v94.0_LAB.html → window.FLUXIA_VERSION = "v94.0-LAB"
+
+PRINCIPIO #2: manifest Y canal SIEMPRE APUNTAN A LA VERSIÓN NUEVA
+────────────────────────────────────────────────────────────────────────────────
+• manifest.webmanifest: "start_url": "./index.html" (la nueva, sin número)
+• fluxia-canal.json: "lab": "index.html", "lab_version": "vX.X-LAB"
+Si subes v95.0, ambos apuntan a index.html (la nueva v95.0).
+
+PRINCIPIO #3: SIEMPRE ENTREGAR EN ZIP
+────────────────────────────────────────────────────────────────────────────────
+ZIP contiene:
+  ✓ index_fluxia_vX.X_LAB.html (renombrado a index.html dentro del ZIP)
+  ✓ manifest.webmanifest (apunta a index.html)
+  ✓ fluxia-canal.json (apunta a index.html + versión nueva)
+  ✓ fluxia-sw.js (VERSION = 'vX.X')
+  ✓ fluxia-icon-*.png, fluxia-icon.svg
+  ✓ README.md (cambios en vX.X)
+  ✓ PROMPT_MAESTRO_vX.X.txt (ESTE ARCHIVO, reglas de desarrollo)
+  ✓ Fluxia-banco-index.ts (referencia: SIN CAMBIOS / CON CAMBIOS según lo nuevo)
+
+PRINCIPIO #4: SI HAY .ts NUEVO → COPIAR ENLACE DIRECTO
+────────────────────────────────────────────────────────────────────────────────
+Si el ZIP contiene un Fluxia-banco-index.ts con cambios:
+  1. Crear archivo COPY_TO_SUPABASE.txt con TODO el código (seleccionable)
+  2. Instrucciones: Supabase → Edge Functions → Fluxia-banco → Code → Pegar TODO
+
+Si Fluxia-banco-index.ts = sin cambios:
+  Incluir nota: "Edge Function: SIN CAMBIOS. NO VOLVER A DESPLEGAR."
+
+═══════════════════════════════════════════════════════════════════════════════
+ESTRUCTURA DEL REPOSITORIO GITHUB (nacram1987-cmd/Fluxia-v20)
+═══════════════════════════════════════════════════════════════════════════════
+
+Raíz:
+  index.html                           ← SIEMPRE la versión NUEVA (v94.0, v95.0…)
+  manifest.webmanifest                 ← SIEMPRE apunta a ./index.html
+  fluxia-canal.json                    ← SIEMPRE apunta a index.html + versión nueva
+  fluxia-sw.js                         ← VERSION = 'vX.X' actual
+  fluxia-icon-*.png, fluxia-icon.svg   ← Sin cambios
+  Fluxia-banco-index.ts                ← (si hay cambios de servidor)
+  
+Archivos viejos (referencia):
+  index_fluxia_v93.10_LAB.html
+  index_fluxia_v93.9_ESTABLE.html
+  etc.
+
+═══════════════════════════════════════════════════════════════════════════════
+CHECKLIST AL CREAR UN ZIP NUEVO
+═══════════════════════════════════════════════════════════════════════════════
+
+◻ Nombre archivo HTML = vX.X (ej. v94.0-LAB)
+◻ window.FLUXIA_VERSION = "vX.X-LAB" (igual que nombre)
+◻ <title> = Fluxia BETA vX.X-LAB
+◻ <meta content="vX.X-LAB" name="fluxia-version">
+◻ fluxia-sw.js: VERSION = 'vX.X'
+◻ manifest.webmanifest: start_url = "./index.html" (SIN sufijo _vX.X)
+◻ fluxia-canal.json: lab = "index.html", lab_version = "vX.X-LAB"
+◻ fluxia-canal.json: timestamp = fecha/hora actual UTC
+◻ README.md: describe cambios en vX.X
+◻ PROMPT_MAESTRO_vX.X.txt: incluido en ZIP
+◻ Si hay .ts nuevo: COPY_TO_SUPABASE.txt con código completo
+◻ Si .ts sin cambios: nota diciendo "SIN CAMBIOS"
+◻ 19/19 tests de ingresos ✅
+◻ 15/15 tests de fijos ✅
+◻ 73 scripts, 0 errores de sintaxis ✅
+
+═══════════════════════════════════════════════════════════════════════════════
+AL SUBIR A GITHUB
+═══════════════════════════════════════════════════════════════════════════════
+
+1. index.html ← SiemPRE la nueva versión (renombrado del ZIP)
+2. manifest.webmanifest ← actualizado
+3. fluxia-sw.js ← actualizado
+4. fluxia-canal.json ← actualizado
+5. Fluxia-banco-index.ts ← si hay cambios (+ COPY_TO_SUPABASE.txt)
+
+Las versiones antiguas (index_fluxia_v93.10_LAB.html, etc.) quedan de referencia pero
+NO se tocan. Solo se sube la NUEVA y se reemplaza index.html.
+
+═══════════════════════════════════════════════════════════════════════════════
+AL DESPLEGAR EN SUPABASE
+═══════════════════════════════════════════════════════════════════════════════
+
+Supabase → Edge Functions → Fluxia-banco → Code:
+  • Si .ts tiene cambios: pegar TODO el contenido de COPY_TO_SUPABASE.txt → Deploy
+  • Si .ts sin cambios: NO HACER NADA. Solo actualizar Secrets si es necesario.
+
+═══════════════════════════════════════════════════════════════════════════════
+v94.0-LAB: CAMBIOS INCLUIDOS
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Ingresos: importa todas las cuentas (mes anterior → hoy)
+✅ Sin duplicar si ya lo apuntaste
+✅ Gastos con mismo importe que un fijo → pregunta
+✅ Botones: Es el fijo / Es otro gasto / Duplicado
+✅ Cola: conserva 30 más nuevos
+✅ Tests: 19 ingresos ✅ · 15 fijos ✅
+
+Servidor (Fluxia-banco-index.ts): SIN CAMBIOS
+═══════════════════════════════════════════════════════════════════════════════

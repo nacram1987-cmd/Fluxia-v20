@@ -117,7 +117,7 @@
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="telephone=no" name="format-detection"/>
 <meta content="no" name="msapplication-tap-highlight"/>
-<title>Fluxia BETA v93.10-LAB</title>
+<title>Fluxia BETA v94.0-LAB</title>
 <!-- Fluxia v91 · brand lock · datos jamás a 0 · compartidos saldo inicial · notif suaves · logo alineado · base v90.10 -->
 <script>
 (function(){window.FluxiaNative={isNative:function(){try{return!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())}catch(e){return false}},platform:function(){try{return(window.Capacitor&&Capacitor.getPlatform)?Capacitor.getPlatform():'web'}catch(e){return'web'}}};})();
@@ -412,9 +412,9 @@ window.fluxiaCuandoLibre = function(fn, intentos){
 };
 
 </script>
-<meta content="v93.10-LAB" name="fluxia-version"/>
+<meta content="v94.0-LAB" name="fluxia-version"/>
 <meta content="lab" name="fluxia-channel"/>
-<script>window.FLUXIA_VERSION = "v93.10-LAB";</script>
+<script>window.FLUXIA_VERSION = "v94.0-LAB";</script>
 <!-- Fluxia QA móvil v43:
   [ ] Header: fecha + meses alineados en todas las pestañas
   [ ] Menú ☰ completo (scroll) y por encima del header
@@ -20433,7 +20433,7 @@ window.FluxiaBancoFijos = (function(){
   function leerReglas(){ try{ return JSON.parse(localStorage.getItem(REGLAS_KEY)||'{}')||{}; }catch(e){ return {}; } }
   function guardarReglas(r){ try{ localStorage.setItem(REGLAS_KEY, JSON.stringify(r||{})); }catch(e){} }
   function leerPend(){ try{ var a=JSON.parse(localStorage.getItem(PEND_KEY)||'[]'); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
-  function guardarPend(a){ try{ localStorage.setItem(PEND_KEY, JSON.stringify((a||[]).slice(-30))); }catch(e){} }
+  function guardarPend(a){ try{ localStorage.setItem(PEND_KEY, JSON.stringify((a||[]).slice(0,30))); }catch(e){} }
 
   function mesDeFecha(fecha){
     try{ if (typeof mesFromFechaISO==='function') return mesFromFechaISO(fecha); }catch(e){}
@@ -20515,7 +20515,7 @@ window.FluxiaBancoFijos = (function(){
     }
   }
 
-  function encolarSugerencia(gastoMov, candidato){
+  function encolarSugerencia(gastoMov, candidato, modo){
     var pend = leerPend().filter(function(x){ return x && x.movId !== gastoMov.id; });
     pend.unshift({
       movId: gastoMov.id,
@@ -20525,22 +20525,60 @@ window.FluxiaBancoFijos = (function(){
       fijoId: candidato.fijo.id,
       fijoNombre: candidato.fijo.nombre,
       score: candidato.score,
+      modo: modo || 'nombre',
+      fijoPagado: !!candidato.fijo.pagadoEl,
       ts: Date.now()
     });
     guardarPend(pend);
   }
 
   /** Tras crear un gasto desde el banco: auto-vínculo o sugerencia */
+  // v94 · fijo del mes con el MISMO importe (±0,05 €) que el gasto del banco
+  function fijoMismoImporte(gasto){
+    var imp = Number(gasto.importe)||0; if (!(imp>0)) return null;
+    var mes = mesDeFecha(gasto.fecha); if (!mes) return null;
+    var lst = fijosDelMes(mes).filter(function(f){ var fi=Number(f.importe)||0; return fi>0 && Math.abs(fi-imp)<=0.05; });
+    if (!lst.length) return null;
+    lst.sort(function(a,b){ return ((a.pagadoEl?1:0)-(b.pagadoEl?1:0)) || (scoreFijo(gasto.concepto,imp,b)-scoreFijo(gasto.concepto,imp,a)); });
+    return lst[0];
+  }
+
   function procesarGastoBanco(gastoMov){
     if (!gastoMov || !gastoMov.concepto) return { tipo:'ninguno' };
     var cand = mejorFijo(gastoMov.concepto, Number(gastoMov.importe)||0, gastoMov.fecha);
-    if (!cand) return { tipo:'ninguno' };
-    if (cand.auto){
+    if (cand && cand.auto){
       aplicarVinculo(gastoMov, cand.fijo, gastoMov.fecha);
       return { tipo:'auto', fijo: cand.fijo, score: cand.score };
     }
+    if (cand && !cand.fijo.pagadoEl){
+      encolarSugerencia(gastoMov, cand);
+      return { tipo:'sugerencia', fijo: cand.fijo, score: cand.score };
+    }
+    // v94 · sin pista clara por nombre pero mismo importe que un fijo → preguntar (fijo / otro gasto / duplicado)
+    var igual = fijoMismoImporte(gastoMov);
+    if (igual){
+      encolarSugerencia(gastoMov, { fijo: igual, score: 0 }, 'importe');
+      return { tipo:'pregunta', fijo: igual };
+    }
+    if (!cand) return { tipo:'ninguno' };
     encolarSugerencia(gastoMov, cand);
     return { tipo:'sugerencia', fijo: cand.fijo, score: cand.score };
+  }
+
+  // v94 · el usuario dice que es un duplicado de algo ya apuntado → se retira el gasto del banco
+  function duplicarPendiente(movId){
+    var pend = leerPend();
+    var item = pend.find(function(x){ return x.movId === movId; });
+    try{
+      if (typeof movimientos!=='undefined' && Array.isArray(movimientos)){
+        var i = movimientos.findIndex(function(m){ return m && m.id === movId; });
+        if (i >= 0){ movimientos.splice(i,1); guardarMovimientos(); }
+      }
+    }catch(e){}
+    try{ renderGastosVariables(); renderFijos(); renderKPIs(); renderHero(); }catch(e){}
+    if (item && typeof mostrarToast==='function') mostrarToast('♻️ «'+item.concepto+'» retirado como duplicado','var(--teal)',3200);
+    guardarPend(pend.filter(function(x){ return x.movId !== movId; }));
+    pintarBanner();
   }
 
   function confirmarPendiente(movId){
@@ -20581,18 +20619,22 @@ window.FluxiaBancoFijos = (function(){
     var pend = leerPend().slice(0,3);
     if (!pend.length){ box.style.display='none'; box.innerHTML=''; return; }
     box.style.display='block';
-    box.innerHTML = '<div style="font-weight:700;margin-bottom:8px;color:var(--ink);">📌 ¿Son gastos fijos?</div>' +
+    box.innerHTML = '<div style="font-weight:700;margin-bottom:8px;color:var(--ink);">📌 Revisa estos pagos</div>' +
       pend.map(function(it){
         return '<div style="padding:8px 0;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;">' +
           '<div style="flex:1;min-width:140px;"><b>'+String(it.concepto||'').replace(/</g,'&lt;')+'</b> · '+(typeof eur==='function'?eur(it.importe,2):(it.importe+' €'))+
-          '<div style="font-size:.78rem;color:var(--muted);">Parece: <b>'+String(it.fijoNombre||'').replace(/</g,'&lt;')+'</b></div></div>' +
+          '<div style="font-size:.78rem;color:var(--muted);">'+(it.modo==='importe'?'Mismo importe que el fijo':'Parece:')+' <b>'+String(it.fijoNombre||'').replace(/</g,'&lt;')+'</b>'+(it.modo==='importe'&&it.fijoPagado?' (ya pagado)':'')+'</div></div>' +
           '<div style="display:flex;gap:6px;">' +
-          '<button type="button" data-bf-ok="'+String(it.movId).replace(/"/g,'&quot;')+'" style="border:none;background:var(--teal);color:#fff;border-radius:10px;padding:8px 12px;font-weight:700;font-size:.78rem;cursor:pointer;">Sí, es fijo</button>' +
-          '<button type="button" data-bf-no="'+String(it.movId).replace(/"/g,'&quot;')+'" style="border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 12px;font-weight:600;font-size:.78rem;cursor:pointer;">No</button>' +
+          ((it.modo==='importe'&&it.fijoPagado)?'':'<button type="button" data-bf-ok="'+String(it.movId).replace(/"/g,'&quot;')+'" style="border:none;background:var(--teal);color:#fff;border-radius:10px;padding:8px 12px;font-weight:700;font-size:.78rem;cursor:pointer;">'+(it.modo==='importe'?'📌 Es el fijo':'Sí, es fijo')+'</button>') +
+          '<button type="button" data-bf-no="'+String(it.movId).replace(/"/g,'&quot;')+'" style="border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 12px;font-weight:600;font-size:.78rem;cursor:pointer;">'+(it.modo==='importe'?'🧾 Es otro gasto':'No')+'</button>' +
+          (it.modo==='importe'?'<button type="button" data-bf-dup="'+String(it.movId).replace(/"/g,'&quot;')+'" style="border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 12px;font-weight:600;font-size:.78rem;cursor:pointer;">♻️ Duplicado</button>':'') +
           '</div></div>';
       }).join('');
     box.querySelectorAll('[data-bf-ok]').forEach(function(btn){
       btn.onclick = function(){ confirmarPendiente(btn.getAttribute('data-bf-ok')); };
+    });
+    box.querySelectorAll('[data-bf-dup]').forEach(function(btn){
+      btn.onclick = function(){ duplicarPendiente(btn.getAttribute('data-bf-dup')); };
     });
     box.querySelectorAll('[data-bf-no]').forEach(function(btn){
       btn.onclick = function(){ descartarPendiente(btn.getAttribute('data-bf-no')); };
@@ -20602,7 +20644,7 @@ window.FluxiaBancoFijos = (function(){
   document.addEventListener('DOMContentLoaded', function(){ setTimeout(pintarBanner, 1200); });
   setTimeout(pintarBanner, 2500);
 
-  return { procesarGastoBanco: procesarGastoBanco, pintarBanner: pintarBanner, confirmarPendiente: confirmarPendiente, descartarPendiente: descartarPendiente };
+  return { procesarGastoBanco: procesarGastoBanco, pintarBanner: pintarBanner, confirmarPendiente: confirmarPendiente, descartarPendiente: descartarPendiente, duplicarPendiente: duplicarPendiente };
 })();
 </script>
 <!-- v48 CONEXIÓN BANCARIA (Enable Banking) · HTML + JS + CSS -->
@@ -21443,6 +21485,12 @@ window.FluxiaBancoFijos = (function(){
   // Desde el primer día con v67: ningún ingreso anterior entra (evita duplicar lo que ya apuntaste)
   function corteIngresos(){let c=null;try{c=localStorage.getItem(ING_CORTE_KEY);if(!c){c=hoyISO_();localStorage.setItem(ING_CORTE_KEY,c);}}catch(_){c=c||hoyISO_();}return c;}
   corteIngresos();
+  // v94 · Ventana de ingresos: del día 1 del mes ANTERIOR a hoy (antes: solo desde el primer día de uso → la nómina nunca entraba)
+  function inicioVentanaIng(){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-01';}
+  // v94 · Ingresos del banco ya procesados (aunque luego los borres, no vuelven)
+  const ING_VISTOS_KEY='fluxia_banco_ing_vistos_v94';
+  function ingVistos(){try{const a=JSON.parse(localStorage.getItem(ING_VISTOS_KEY)||'[]');return new Set(Array.isArray(a)?a:[]);}catch(_){return new Set();}}
+  function ingMarcarVisto(id){try{const s=ingVistos();s.add(String(id));localStorage.setItem(ING_VISTOS_KEY,JSON.stringify(Array.from(s).slice(-1500)));}catch(_){}}
   function listaIngresos(){try{return (typeof ingresosItems!=='undefined'&&Array.isArray(ingresosItems))?ingresosItems:null;}catch(_){return null;}}
   function esIngresoPropio(m,imp,fecha,lista){
     const bancos=leerConexiones().map(function(c){return c.banco;}).filter(Boolean);
@@ -21458,12 +21506,10 @@ window.FluxiaBancoFijos = (function(){
     });
   }
   function procesarIngreso(m,imp,fecha,lista){
-    // v93.10 · Permite ingresos detectados (esIngreso=true) incluso sin ingresosAuto() activado
-    const esIngresoDetectado = m && m.esIngreso === true;
-    if((!ingresosAuto()&&!esIngresoDetectado)||m.pendiente)return null;
+    if(!ingresosAuto()||m.pendiente)return null;
     const L=listaIngresos(); if(!L)return null;
-    if(fecha<corteIngresos())return null;
-    const cb=m.banco?corteDeBanco(m.banco):null; if(cb&&fecha<cb)return null;
+    if(fecha<inicioVentanaIng())return null;                 // v94: ventana mes anterior → hoy (todas las cuentas)
+    if(ingVistos().has(String(m.id)))return null;            // v94: ya procesado antes (aunque lo borraras)
     if(L.some(function(x){return x&&x.bancoRef===m.id;}))return null;
     if(esIngresoPropio(m,imp,fecha,lista))return 'interno';
     const mesBanco=(typeof mesFromFechaISO==='function')?mesFromFechaISO(fecha):null; if(!mesBanco)return null;
@@ -21486,8 +21532,7 @@ window.FluxiaBancoFijos = (function(){
     }catch(_nE){}
     // 1) Ya lo tenías previsto (±10 %, mínimo 50 €) → se marca cobrado con el importe real
     //    Busca en el mes del plan Y en el mes del banco (nómina a caballo entre meses)
-    // v93.10 · Busca previsto si importe >= 50 O si es detectado automáticamente
-    if(importe>=50 || esIngresoDetectado){
+    if(importe>=50){
       const mesesBusca = mes === mesBanco ? [mes] : [mes, mesBanco];
       const cand=L.filter(function(x){
         return x&&mesesBusca.indexOf(x.mes)>=0&&!x.pagadoEl&&x.tipo!=='puente'&&!x.bancoRef&&Number(x.importe)>0&&Math.abs(Number(x.importe)-importe)<=Math.max(Number(x.importe)*0.10, 30);
@@ -21507,16 +21552,18 @@ window.FluxiaBancoFijos = (function(){
         return {tipo:'cobrado',it:it};
       }
     }
-    // v93.10 · Si no hay previsto que coincida pero es detectado (esIngresoDetectado), continuar sin devolver null
-    if(!esIngresoDetectado && importe<50)return null;
-    
+    // v94 · Ya lo apuntaste tú (mismo mes, mismo importe ±0,50 €, sin enlazar) → se enlaza, no se duplica
+    {
+      const _mb = mes === mesBanco ? [mes] : [mes, mesBanco];
+      const ya = L.find(function(x){return x&&!x.bancoRef&&x.tipo!=='puente'&&_mb.indexOf(x.mes)>=0&&Number(x.importe)>0&&Math.abs(Number(x.importe)-importe)<=0.5;});
+      if(ya){ ya.bancoRef=m.id; if(!ya.pagadoEl) ya.pagadoEl=fecha; if(esNomina) ya.esNomina=true; return {tipo:'cobrado',it:ya}; }
+    }
     // 2) Ingreso nuevo, ya cobrado
     let concepto=(m.contraparte&&m.contraparte.length>1?m.contraparte:m.concepto)||'Ingreso';
     try{if(typeof formatTexto==='function')concepto=formatTexto(concepto);}catch(_){}
     if (esNomina && concepto && !/n[oó]mina/i.test(concepto)) concepto = 'Nómina · ' + concepto;
     const nuevo={id:(typeof uid==='function'?uid():('b'+Date.now()+Math.random().toString(36).slice(2,6))),mes:mes,concepto:String(concepto).slice(0,80),importe:importe,tipo:'normal',origen:'banco',banco:m.banco||'',bancoRef:m.id,pagadoEl:fecha};
     if (esNomina) nuevo.esNomina = true;
-    if (m.esIngreso) nuevo.esIngreso = true; // v93.10 · marca como ingreso detectado automáticamente
     if (mes !== mesBanco) nuevo.mesBanco = mesBanco;
     L.push(nuevo);
     return {tipo:'nuevo',it:nuevo};
@@ -21539,7 +21586,7 @@ window.FluxiaBancoFijos = (function(){
           return;
         }
       }catch(_ig){}
-      if(ids.has(m.id)){skipId++;return;}
+      if(ids.has(m.id)&&!(Number(m.importe)>0)){skipId++;return;} // v94: los ingresos se deciden por ingVistos/bancoRef, no por ids del corte
       if(listaMovs().some(x=>x&&x.bancoRef===m.id)){ids.add(m.id);skipId++;return;}
       const imp=Number(m.importe);
       if(!(imp<0)){ // v67: ingresos
@@ -21562,6 +21609,7 @@ window.FluxiaBancoFijos = (function(){
               mostrarToast('💶 Nómina → '+(r.it.mes||'')+(r.it.mesBanco && r.it.mesBanco!==r.it.mes ? ' (banco: '+r.it.mesBanco+')' : ''),'var(--teal)',3600);
           }catch(_){}
         }
+        if(r)ingMarcarVisto(m.id); // v94
         ids.add(m.id);return;
       }
       const importe=Math.round(Math.abs(imp)*100)/100;
@@ -21649,6 +21697,8 @@ window.FluxiaBancoFijos = (function(){
         else if(e.ultimaSync){const d=new Date(e.ultimaSync);d.setDate(d.getDate()-2);desde=d.toISOString().slice(0,10);}
         else{const d=new Date();d.setDate(d.getDate()-3);desde=d.toISOString().slice(0,10);}
         try{var _c=leerCorte(); if(_c&&_c.fecha&&desde<_c.fecha)desde=_c.fecha;}catch(_e){}
+        // v94 · los ingresos se piden desde el mes anterior (los gastos siguen protegidos por el corte en aplicarMovs)
+        try{ if(ingresosAuto()){ var _vi=inicioVentanaIng(); if(_vi<desde)desde=_vi; } }catch(_e){}
         const res=await call({accion:'movimientos',desde:desde});
         aplicarCortes(res.cortes);
         todos=todos.concat(res.movimientos||[]);
