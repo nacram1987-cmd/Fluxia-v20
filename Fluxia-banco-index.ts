@@ -491,7 +491,19 @@ async function accionEstado(_body: any, userId: string, sb: any) {
   const all = await listSesiones(sb, userId);
   const conexiones = all
     .filter((r: any) => !String(r.session_id).startsWith("pending:"))
-    .map(conexionFromRow);
+    .map((r: any) => {
+      const conn = conexionFromRow(r);
+      // v94.7.2: Detectar CaixaBank sin cuentas → sesión caducada
+      // (Enable Banking cierra la sesión silenciosamente tras inactividad)
+      if (
+        String(r.banco || "").toLowerCase().includes("caixa") &&
+        (!conn.cuentas || conn.cuentas.length === 0) &&
+        !conn.caducado
+      ) {
+        conn.caducado = true;
+      }
+      return conn;
+    });
   return {
     success: true,
     conectado: conexiones.length > 0,
