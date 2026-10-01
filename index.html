@@ -21458,7 +21458,9 @@ window.FluxiaBancoFijos = (function(){
     });
   }
   function procesarIngreso(m,imp,fecha,lista){
-    if(!ingresosAuto()||m.pendiente)return null;
+    // v93.10 · Permite ingresos detectados (esIngreso=true) incluso sin ingresosAuto() activado
+    const esIngresoDetectado = m && m.esIngreso === true;
+    if((!ingresosAuto()&&!esIngresoDetectado)||m.pendiente)return null;
     const L=listaIngresos(); if(!L)return null;
     if(fecha<corteIngresos())return null;
     const cb=m.banco?corteDeBanco(m.banco):null; if(cb&&fecha<cb)return null;
@@ -21484,7 +21486,8 @@ window.FluxiaBancoFijos = (function(){
     }catch(_nE){}
     // 1) Ya lo tenías previsto (±10 %, mínimo 50 €) → se marca cobrado con el importe real
     //    Busca en el mes del plan Y en el mes del banco (nómina a caballo entre meses)
-    if(importe>=50){
+    // v93.10 · Busca previsto si importe >= 50 O si es detectado automáticamente
+    if(importe>=50 || esIngresoDetectado){
       const mesesBusca = mes === mesBanco ? [mes] : [mes, mesBanco];
       const cand=L.filter(function(x){
         return x&&mesesBusca.indexOf(x.mes)>=0&&!x.pagadoEl&&x.tipo!=='puente'&&!x.bancoRef&&Number(x.importe)>0&&Math.abs(Number(x.importe)-importe)<=Math.max(Number(x.importe)*0.10, 30);
@@ -21504,12 +21507,16 @@ window.FluxiaBancoFijos = (function(){
         return {tipo:'cobrado',it:it};
       }
     }
+    // v93.10 · Si no hay previsto que coincida pero es detectado (esIngresoDetectado), continuar sin devolver null
+    if(!esIngresoDetectado && importe<50)return null;
+    
     // 2) Ingreso nuevo, ya cobrado
     let concepto=(m.contraparte&&m.contraparte.length>1?m.contraparte:m.concepto)||'Ingreso';
     try{if(typeof formatTexto==='function')concepto=formatTexto(concepto);}catch(_){}
     if (esNomina && concepto && !/n[oó]mina/i.test(concepto)) concepto = 'Nómina · ' + concepto;
     const nuevo={id:(typeof uid==='function'?uid():('b'+Date.now()+Math.random().toString(36).slice(2,6))),mes:mes,concepto:String(concepto).slice(0,80),importe:importe,tipo:'normal',origen:'banco',banco:m.banco||'',bancoRef:m.id,pagadoEl:fecha};
     if (esNomina) nuevo.esNomina = true;
+    if (m.esIngreso) nuevo.esIngreso = true; // v93.10 · marca como ingreso detectado automáticamente
     if (mes !== mesBanco) nuevo.mesBanco = mesBanco;
     L.push(nuevo);
     return {tipo:'nuevo',it:nuevo};

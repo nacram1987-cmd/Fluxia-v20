@@ -1,7 +1,7 @@
 {
   "version": "93.10",
-  "lab": "index.html",
+  "lab": "index_fluxia_v93.10_LAB.html",
   "lab_version": "v93.10-LAB",
-  "timestamp": "2026-09-30T21:34:00Z",
-  "message": "v93.10-LAB: HTML limpio, menú fijo, retorno bancario robusto. LISTO PARA INSTALAR."
+  "timestamp": "2026-09-30T15:00:00Z",
+  "message": "v93.10-LAB: HTML limpio (sin duplicado ni residuo), cabecera menú fija, retorno bancario robusto (CaixaBank)."
 }
