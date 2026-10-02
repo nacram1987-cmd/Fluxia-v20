@@ -1,3 +1,22 @@
-SIN CAMBIOS. NO VOLVER A DESPLEGAR.
-Hash: n/a (sin TS en esta entrega)
-Motivo: CaixaBank reconexión requiere revisar Edge Function; no se ha tocado el TS.
+COPY TO SUPABASE EDGE FUNCTION  (OBLIGATORIO en v94.30: el .ts CAMBIA)
+Project: kylduzmrfbubeamfrbbr
+Function: Fluxia-banco
+Archivo: Fluxia-banco-index.ts
+
+Hash SHA256 (primeros 16): c4d30337d63fbbc7
+Versión: fluxia-banco-v94.30
+
+PASOS:
+1. Supabase → Edge Functions → Fluxia-banco → editar / desplegar
+2. Pegar el contenido completo de Fluxia-banco-index.ts
+3. Deploy
+4. Probar: accion ping → debe devolver version "fluxia-banco-v94.30"
+
+CAMBIOS QUIRÚRGICOS sobre v94.26 (no reescritura):
+- ebFetch: si la petición trae presente:true, envía Psu-Ip-Address y Psu-User-Agent
+  (IP real y navegador del iPhone). Enable Banking: el tope de ~4 consultas/día es para
+  accesos SIN el usuario delante.
+- Si el banco rechaza esas cabeceras (PSU_HEADER_*), repite UNA vez sin ellas (como antes).
+- HUB046/429 NUNCA se reintenta.
+- Con usuario presente no se salta la consulta por HUB046 de hoy (movimientos y saldos).
+- Lo automático (sin presente:true) funciona exactamente igual que v94.26.
