@@ -1,10 +1,11 @@
 {
   "app": "Fluxia",
   "lab": "index.html",
-  "lab_version": "v94.45-LAB",
+  "lab_version": "v94.46-LAB",
   "stable": "index.html",
-  "stable_version": "v94.38-ESTABLE",
-  "timestamp": "2026-10-02T22:10:00Z",
+  "stable_version": "v94.46-ESTABLE",
+  "timestamp": "2026-10-03T01:30:00Z",
   "banco_ts_hash": "c4d30337d63fbbc7",
-  "banco_ts_version": "fluxia-banco-v94.30"
+  "banco_ts_version": "fluxia-banco-v94.30",
+  "note": "ESTABLE promovida desde v94.45 tras bancos estables en iPhone"
 }

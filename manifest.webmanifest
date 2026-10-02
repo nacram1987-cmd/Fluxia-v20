@@ -1,10 +1,10 @@
 {
-  "name": "Fluxia BETA v94.45-LAB",
+  "name": "Fluxia BETA v94.46",
   "short_name": "Fluxia",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#FFFCF7",
-  "theme_color": "#C4783B",
+  "background_color": "#F4FBFC",
+  "theme_color": "#0E7C90",
   "lang": "es",
   "icons": [
     { "src": "fluxia-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
