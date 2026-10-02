@@ -1,17 +1,12 @@
 {
-  "name": "Fluxia BETA v94.28-LAB",
+  "name": "Fluxia BETA v94.30-LAB",
   "short_name": "Fluxia",
-  "description": "Tu control financiero",
-  "start_url": "index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#FFFFFF",
   "theme_color": "#0E7C90",
+  "lang": "es",
   "icons": [
-    {
-      "src": "fluxia-icon.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    }
+    { "src": "fluxia-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
   ]
 }
