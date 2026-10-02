@@ -1,9 +1,9 @@
 {
   "app": "Fluxia",
   "lab": "index.html",
-  "lab_version": "v94.38-LAB",
+  "lab_version": "v94.39-LAB",
   "stable": "index.html",
-  "stable_version": "v94.37-ESTABLE",
-  "timestamp": "2026-10-02T18:30:00Z",
-  "note": "v94.37 marcada como ESTABLE de referencia; LAB sigue en v94.38 con fixes papelera/heroes"
+  "stable_version": "v94.38-ESTABLE",
+  "timestamp": "2026-10-02T19:00:00Z",
+  "note": "A partir de v94.38 la línea ESTABLE es la base hasta nuevo aviso. LAB = pulido."
 }
