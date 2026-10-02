@@ -14,3 +14,8 @@
 
 ## Importante
 Si en pantalla ves v94.23, **no tienes esta build**. Sube el zip y abre `?v=v94.26-LAB`.
+
+
+## Edge Function v94.26 (desplegar)
+Ver COPY_TO_SUPABASE.txt
+Ping → version fluxia-banco-v94.26
