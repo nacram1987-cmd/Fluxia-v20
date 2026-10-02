@@ -1,9 +1,8 @@
 {
   "app": "Fluxia",
   "lab": "index.html",
-  "lab_version": "v94.40-LAB",
+  "lab_version": "v94.41-LAB",
   "stable": "index.html",
   "stable_version": "v94.38-ESTABLE",
-  "timestamp": "2026-10-02T19:15:00Z",
-  "note": "ESTABLE = v94.38 hasta nuevo aviso. LAB = pulido visual elegante."
+  "timestamp": "2026-10-02T19:25:00Z"
 }
