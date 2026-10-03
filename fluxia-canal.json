@@ -1,23 +1,25 @@
 {
   "canal": "LAB",
-  "version": "v94.80-LAB",
-  "lab_version": "v94.80-LAB",
+  "version": "v94.81-LAB",
+  "lab_version": "v94.81-LAB",
   "stable_version": "v94.46-ESTABLE",
-  "timestamp": "2026-10-03T20:00:00Z",
+  "timestamp": "2026-10-03T21:30:00Z",
   "maintenance": false,
-  "update_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index.html?v=v94.80-LAB",
+  "update_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index.html?v=v94.81-LAB",
   "features": {
-    "mes_selector_unificado": {
-      "enabled": true,
-      "ubicacion": "todas_pestanas",
-      "color": "#8B6914 -> #6B5312",
-      "posicion": "sticky",
-      "scope": "global"
-    },
     "supabase_sync": {
       "enabled": true,
       "auto_sync": true,
       "retry_count": 5
+    },
+    "mes_selector_estilo_dashboard": {
+      "enabled": true,
+      "ubicacion": "todas_pestanas",
+      "color": "por_pestana",
+      "scope": "global"
+    },
+    "aviso_local_condicionado_a_nube": {
+      "enabled": true
     }
   }
 }

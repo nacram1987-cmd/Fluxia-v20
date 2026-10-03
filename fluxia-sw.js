@@ -1,26 +1,26 @@
-const VERSION = 'v94.80-LAB';
+const VERSION = 'v94.81-LAB';
 const CACHE_NAME = `fluxia-${VERSION}`;
 const PRECACHE_ASSETS = ['./', './index.html', './manifest.webmanifest', './fluxia-canal.json'];
 
 self.addEventListener('install', event => {
-  console.log(`[Fluxia SW v94.80] Installing: ${VERSION}`);
+  console.log(`[Fluxia SW v94.81] Installing: ${VERSION}`);
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       return cache.addAll(PRECACHE_ASSETS).catch(err => {
-        console.warn('[Fluxia SW v94.80] Cache error:', err);
+        console.warn('[Fluxia SW v94.81] Cache error:', err);
       });
     }).then(() => self.skipWaiting())
   );
 });
 
 self.addEventListener('activate', event => {
-  console.log(`[Fluxia SW v94.80] Activating: ${VERSION}`);
+  console.log(`[Fluxia SW v94.81] Activating: ${VERSION}`);
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(cacheNames
         .filter(name => name.startsWith('fluxia-') && name !== CACHE_NAME)
         .map(name => {
-          console.log(`[Fluxia SW v94.80] Deleting old cache: ${name}`);
+          console.log(`[Fluxia SW v94.81] Deleting old cache: ${name}`);
           return caches.delete(name);
         })
       );
@@ -42,7 +42,7 @@ self.addEventListener('fetch', event => {
         }
         return response;
       }).catch(err => {
-        console.log(`[Fluxia SW v94.80] Network failed, using cache`);
+        console.log(`[Fluxia SW v94.81] Network failed, using cache`);
         return caches.match(event.request);
       })
     );
@@ -57,10 +57,10 @@ self.addEventListener('fetch', event => {
         caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
         return response;
       }).catch(err => {
-        console.warn(`[Fluxia SW v94.80] Fetch failed:`, err);
+        console.warn(`[Fluxia SW v94.81] Fetch failed:`, err);
       });
     })
   );
 });
 
-console.log(`[Fluxia SW v94.80] Service Worker loaded: ${VERSION}`);
+console.log(`[Fluxia SW v94.81] Service Worker loaded: ${VERSION}`);
