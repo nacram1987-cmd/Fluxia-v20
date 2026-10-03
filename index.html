@@ -117,7 +117,7 @@
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="telephone=no" name="format-detection"/>
 <meta content="no" name="msapplication-tap-highlight"/>
-<title>Fluxia BETA v94.61-ESTABLE</title>
+<title>Fluxia BETA v94.62-ESTABLE</title>
 <!-- Fluxia v91 · brand lock · datos jamás a 0 · compartidos saldo inicial · notif suaves · logo alineado · base v90.10 -->
 <script>
 (function(){window.FluxiaNative={isNative:function(){try{return!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())}catch(e){return false}},platform:function(){try{return(window.Capacitor&&Capacitor.getPlatform)?Capacitor.getPlatform():'web'}catch(e){return'web'}}};})();
@@ -412,9 +412,9 @@ window.fluxiaCuandoLibre = function(fn, intentos){
 };
 
 </script>
-<meta content="v94.61-ESTABLE" name="fluxia-version"/>
+<meta content="v94.62-ESTABLE" name="fluxia-version"/>
 <meta content="lab" name="fluxia-channel"/>
-<script>window.FLUXIA_VERSION = "v94.61-ESTABLE";</script>
+<script>window.FLUXIA_VERSION = "v94.62-ESTABLE";</script>
 <script>
 /* v94.39 · Ir directo a Seguridad en Ajustes */
 window.fxIrASeguridad = function(){
@@ -2136,7 +2136,7 @@ header.top #bancoEstadoHeader{margin-top:4px!important;}
 .gv-importe,.mov-importe,.row-importe,.ingreso-importe,.fijo-importe{font-size:0.95rem!important;}
 </style>
 <style id="fluxiaDrawerFix">
-/* v94.61-ESTABLE fix: encabezado (nombre + cerrar sesión) fijo; solo scrollea la lista */
+/* v94.62-ESTABLE fix: encabezado (nombre + cerrar sesión) fijo; solo scrollea la lista */
 .drawer-menu,#drawerMenu{overflow:hidden!important;display:flex!important;flex-direction:column!important;padding-top:0!important;padding-bottom:0!important;}
 #drawerMenu .drawer-header{position:relative!important;top:auto!important;flex:0 0 auto!important;margin:0!important;padding-top:calc(16px + env(safe-area-inset-top))!important;z-index:3!important;}
 #drawerMenu .drawer-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:8px 0 calc(12px + env(safe-area-inset-bottom));}
@@ -2651,6 +2651,14 @@ body {
       sessionStorage.setItem('fx_plan_nuevo_id', pr.id);
     }catch(e){}
     try{if(typeof fluxiaActualizarPrefijoPerfil==='function')fluxiaActualizarPrefijoPerfil();}catch(_fp){}
+    try{
+      /* Vaciar namespace del nuevo usuario por si quedó basura */
+      var pref = (typeof LS_PREFIX==='string'&&LS_PREFIX) ? LS_PREFIX : ('planRescate_v2_u_'+String(pr.id).replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40)+'_');
+      ['ingresos','fijos','movimientos','provisiones','financiaciones','compartidos','usos','historico','presupuestos','config_plan','efectivo'].forEach(function(s){
+        try{ localStorage.setItem(pref+s, s==='config_plan'?'{}':'[]'); }catch(e){}
+      });
+      try{ localStorage.setItem('fluxia_banco_conexiones_v1_'+String(pr.id).replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40), '[]'); }catch(e){}
+    }catch(e){}
     location.reload();
   });
   oldBtn.addEventListener('click',function(){
@@ -2772,7 +2780,9 @@ body {
     pr.startingPoint={income:state.ingreso,fixed:state.fijos,emergencyTarget:state.objetivo,currentEmergency:state.fondoActual,debt:state.deuda};
     localStorage.setItem(PROFILE_KEY,JSON.stringify(pr));
     const arr=JSON.parse(localStorage.getItem('fluxia_profiles_v2')||'[]'); const i=arr.findIndex(x=>x&&x.id===pr.id); if(i>=0) arr[i]=pr; else arr.push(pr); localStorage.setItem('fluxia_profiles_v2',JSON.stringify(arr));
+    try{ localStorage.setItem('fluxia_perfil_aislado_'+pr.id,'1'); }catch(e){}
     window.FLUXIA_PROFILE=pr; try{if(typeof fluxiaActualizarPrefijoPerfil==='function')fluxiaActualizarPrefijoPerfil();}catch(_fp){}
+    try{ if(typeof fluxiaForzarVacioSiAislado==='function') fluxiaForzarVacioSiAislado(); }catch(e){}
   }
   function createPlanFromOnboarding(){
     // Motor de plan desde cero para usuario nuevo: todo empieza vacío salvo lo que introduce el onboarding.
@@ -3777,7 +3787,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <div style="min-width:0;">
 <div style="font-family:var(--serif); font-weight:700; font-size:1.28rem; line-height:1.15; color:var(--ink,#1A2433); letter-spacing:-0.02em;">Fluxia <span id="fluxiaBetaBadge" style="font-family:var(--sans);font-size:0.62rem;font-weight:800;letter-spacing:0.04em;vertical-align:middle;margin-left:6px;padding:2px 7px;border-radius:999px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid rgba(201,162,39,.35);">BETA</span></div>
 <div id="fluxiaHeaderSub" style="font-size:0.82rem; color:var(--muted); letter-spacing:0.3px; margin-top:2px;">Control absoluto. Flujo perfecto</div>
-<div id="fluxiaVersion" style="font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:3px; opacity:.85;">Versión v94.61-ESTABLE</div>
+<div id="fluxiaVersion" style="font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:3px; opacity:.85;">Versión v94.62-ESTABLE</div>
 <button class="fx-banco-pill" id="bancoEstadoHeader" onclick="window.abrirConexionBancaria()" style="display:none;" type="button"></button>
 </div>
 </div>
@@ -4668,7 +4678,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 </div>
 <div style="margin:0 0 14px;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--surface);">
 <div style="font-weight:800;font-size:.88rem;color:var(--ink);margin-bottom:6px;">🧪 Laboratorio (solo tú)</div>
-<p style="margin:0 0 10px;font-size:.8rem;color:var(--muted);line-height:1.45;">Esta versión concreta (<b id="fluxiaLabVersionLabel">v94.61-ESTABLE</b>). Úsala para probar. <b>No la envíes a invitados</b> mientras sigas cambiando cosas cada día.</p>
+<p style="margin:0 0 10px;font-size:.8rem;color:var(--muted);line-height:1.45;">Esta versión concreta (<b id="fluxiaLabVersionLabel">v94.62-ESTABLE</b>). Úsala para probar. <b>No la envíes a invitados</b> mientras sigas cambiando cosas cada día.</p>
 <button id="btnCopiarEnlaceBeta" style="background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%; margin-bottom:8px;" type="button">🔗 Copiar enlace de ESTA versión</button>
 <button id="btnComoInstalarBeta" style="background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%; margin-bottom:8px;" type="button">📲 Cómo instalarla en el móvil</button>
 <button id="btnInstalarPwa" style="display:none;background:var(--brand-1,#1554F0); color:#fff; border:none; border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%;" type="button">⬇️ Instalar Fluxia en este dispositivo</button>
@@ -4699,7 +4709,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <h3 class="section-title" style="margin:0;">Versión</h3>
 <span style="font-size:.68rem;font-weight:800;letter-spacing:.03em;padding:3px 8px;border-radius:999px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid rgba(201,162,39,.35);">BETA</span>
 </div>
-<p class="hint" id="ayudaVersionTxt" style="margin:0 0 14px;font-weight:600;color:var(--ink);">Fluxia BETA v94.61-ESTABLE · datos en este dispositivo</p>
+<p class="hint" id="ayudaVersionTxt" style="margin:0 0 14px;font-weight:600;color:var(--ink);">Fluxia BETA v94.62-ESTABLE · datos en este dispositivo</p>
 <div class="fluxia-empty-guide" style="margin-bottom:14px;text-align:left;">
 <div class="eg-tit" style="margin-bottom:8px;">🚀 Primeros pasos (2 minutos)</div>
 <ol style="margin:0;padding-left:1.2em;font-size:0.84rem;line-height:1.5;color:var(--ink);">
@@ -5132,33 +5142,60 @@ const Almacen = (function(){
 
 let APP_MODO = 'app';
 let LS_PREFIX = APP_MODO === 'demo' ? 'planRescate_demo_v2_' : 'planRescate_v2_';
-/* v94.60 · AISLAMIENTO NUCLEAR: TODO perfil tiene namespace propio.
-   Nadie lee planRescate_v2_* crudo. El dueño migra una sola vez. */
+/* v94.62 · AISLAMIENTO SEGURO
+   - Cada perfil: planRescate_v2_u_<id>_
+   - Dueño: COPIA (no borra) todo lo unscoped → su namespace; dual-read si falta algo
+   - Secundario: namespace vacío, flag aislado, sin bancos */
+function fluxiaEsPerfilAislado(pr){
+  try{
+    if (!pr || !pr.id) return true;
+    if (pr.newUser || pr.onboardingPending || pr.onboardingSkipped) return true;
+    if (localStorage.getItem('fluxia_perfil_aislado_'+pr.id)==='1') return true;
+    if (localStorage.getItem('fluxia_perfil_vacio_'+pr.id)==='1') return true;
+    return false;
+  }catch(e){ return true; }
+}
 function fluxiaMigrarOwnerSiHaceFalta(sid){
   try{
-    var flag = 'fluxia_migrated_owner_v60_'+sid;
-    if (localStorage.getItem(flag)==='1') return;
-    var hasUnscoped = !!(localStorage.getItem('planRescate_v2_ingresos') ||
-      localStorage.getItem('planRescate_v2_movimientos') ||
-      localStorage.getItem('planRescate_v2_provisiones') ||
-      localStorage.getItem('planRescate_v2_fijos'));
-    if (!hasUnscoped){ localStorage.setItem(flag,'1'); return; }
     var destPref = 'planRescate_v2_u_'+sid+'_';
-    if (localStorage.getItem(destPref+'ingresos')){ localStorage.setItem(flag,'1'); return; }
-    ['ingresos','fijos','movimientos','provisiones','financiaciones','compartidos','usos','historico','presupuestos','config_plan','efectivo'].forEach(function(s){
+    var keys = ['ingresos','fijos','movimientos','provisiones','financiaciones','compartidos','usos','historico','presupuestos','config_plan','efectivo','usosProvisiones','notif_sil'];
+    /* Siempre rellenar huecos desde unscoped (NUNCA borrar unscoped) */
+    keys.forEach(function(s){
       try{
-        var raw = localStorage.getItem('planRescate_v2_'+s);
-        if (raw!=null) localStorage.setItem(destPref+s, raw);
+        var dest = destPref + s;
+        var src = 'planRescate_v2_' + s;
+        var hasDest = localStorage.getItem(dest);
+        var hasSrc = localStorage.getItem(src);
+        if (hasSrc != null && (hasDest == null || hasDest === '' || hasDest === '[]' || hasDest === '{}')){
+          localStorage.setItem(dest, hasSrc);
+        }
       }catch(e){}
     });
+    /* Copiar TODAS las claves planRescate_v2_XXX que no sean ya u_ */
+    try{
+      for (var i = 0; i < localStorage.length; i++){
+        var k = localStorage.key(i);
+        if (!k || k.indexOf('planRescate_v2_') !== 0) continue;
+        if (k.indexOf('planRescate_v2_u_') === 0) continue;
+        if (k.indexOf('planRescate_v2_demo') === 0) continue;
+        var suffix = k.slice('planRescate_v2_'.length);
+        if (!suffix || suffix.indexOf('u_') === 0) continue;
+        var destK = destPref + suffix;
+        var dVal = localStorage.getItem(destK);
+        var sVal = localStorage.getItem(k);
+        if (sVal != null && (dVal == null || dVal === '' || dVal === '[]' || dVal === '{}')){
+          localStorage.setItem(destK, sVal);
+        }
+      }
+    }catch(e){}
     try{
       var cx = localStorage.getItem('fluxia_banco_conexiones_v1');
-      if (cx) localStorage.setItem('fluxia_banco_conexiones_v1_'+sid, cx);
+      var cxD = localStorage.getItem('fluxia_banco_conexiones_v1_'+sid);
+      if (cx && (!cxD || cxD === '[]')) localStorage.setItem('fluxia_banco_conexiones_v1_'+sid, cx);
     }catch(e){}
     localStorage.setItem('fluxia_owner_profile_id_v1', sid);
-    localStorage.setItem(flag,'1');
-    console.log('[v94.60] migrado plan histórico →', destPref);
-  }catch(e){ console.warn('[v94.60] migrate', e); }
+    localStorage.setItem('fluxia_migrated_owner_v62_'+sid, '1');
+  }catch(e){ console.warn('[v94.62] migrate', e); }
 }
 function fluxiaActualizarPrefijoPerfil(){
   try{
@@ -5169,26 +5206,20 @@ function fluxiaActualizarPrefijoPerfil(){
       return LS_PREFIX;
     }
     var sid = String(pr.id).replace(/[^a-zA-Z0-9_-]/g,'').slice(0, 40) || 'x';
-    /* SIEMPRE namespace por perfil — cero excepciones */
     LS_PREFIX = base + 'u_' + sid + '_';
     try{
-      var esSecundario = !!(pr.newUser || pr.onboardingPending || pr.onboardingSkipped);
-      try{ if (localStorage.getItem('fluxia_perfil_aislado_'+pr.id)==='1') esSecundario = true; }catch(e){}
-      if (!esSecundario){
+      if (fluxiaEsPerfilAislado(pr)){
+        localStorage.setItem('fluxia_perfil_aislado_'+pr.id, '1');
+      } else {
         var arr = JSON.parse(localStorage.getItem('fluxia_profiles_v2')||'[]')||[];
         var candidatos = arr.filter(function(x){
           if (!x || !x.id) return false;
-          if (x.newUser || x.onboardingSkipped || x.onboardingPending) return false;
-          try{ if (localStorage.getItem('fluxia_perfil_aislado_'+x.id)==='1') return false; }catch(e){}
+          if (fluxiaEsPerfilAislado(x)) return false;
           return true;
         }).sort(function(a,b){ return (Number(a.createdAt)||0)-(Number(b.createdAt)||0); });
-        var esOwner = !!(pr.legacy || (candidatos.length && String(candidatos[0].id)===String(pr.id)) || localStorage.getItem('fluxia_owner_profile_id_v1')===String(pr.id));
+        var esOwner = !!(pr.legacy || pr.principal || (candidatos.length && String(candidatos[0].id)===String(pr.id)) || localStorage.getItem('fluxia_owner_profile_id_v1')===String(pr.id));
         if (esOwner) fluxiaMigrarOwnerSiHaceFalta(sid);
-        else {
-          try{ localStorage.setItem('fluxia_perfil_aislado_'+pr.id, '1'); }catch(e){}
-        }
-      } else {
-        try{ localStorage.setItem('fluxia_perfil_aislado_'+pr.id, '1'); }catch(e){}
+        else localStorage.setItem('fluxia_perfil_aislado_'+pr.id, '1');
       }
     }catch(e){}
     return LS_PREFIX;
@@ -5197,6 +5228,25 @@ function fluxiaActualizarPrefijoPerfil(){
     return LS_PREFIX;
   }
 }
+/* Forzar plan vacío en memoria para perfiles aislados (sin tocar el localStorage del dueño) */
+function fluxiaForzarVacioSiAislado(){
+  try{
+    var pr = window.FLUXIA_PROFILE;
+    if (!pr || !fluxiaEsPerfilAislado(pr)) return false;
+    if (typeof ingresos !== 'undefined') ingresos = [];
+    if (typeof fijos !== 'undefined') fijos = [];
+    if (typeof movimientos !== 'undefined') movimientos = [];
+    if (typeof provisiones !== 'undefined') provisiones = [];
+    if (typeof financiaciones !== 'undefined') financiaciones = [];
+    if (typeof compartidos !== 'undefined') compartidos = [];
+    if (typeof usosProvisiones !== 'undefined') usosProvisiones = [];
+    if (typeof presupuestos !== 'undefined') presupuestos = [];
+    try{ if (typeof renderAll === 'function') renderAll(); }catch(e){}
+    return true;
+  }catch(e){ return false; }
+}
+window.fluxiaForzarVacioSiAislado = fluxiaForzarVacioSiAislado;
+window.fluxiaEsPerfilAislado = fluxiaEsPerfilAislado;
 /* Stubs compat (código antiguo podía llamarlas) */
 function fluxiaClaimOwnerIfNeeded(){ /* v94.60: absorbido en fluxiaActualizarPrefijoPerfil */ }
 function fluxiaEnsureOwnerProfileId(){
@@ -21648,12 +21698,17 @@ window.FluxiaPro = (function(){
   line-height:1.45!important;
 }
 
-/* Heroes unificados A (crema→teal) */
+/* Heroes unificados A (crema→teal) — TODAS las pestañas incl. compartidos */
 .panel .pv-hero,
 .panel .fij-hero,
 .panel .ing-hero,
 .panel .gv-hero,
 .panel .tu-mes,
+.panel .comp-hero,
+.panel .comp-summary,
+.panel .comp-kpi,
+.panel .comp-top,
+.panel .comp-card-hero,
 .tu-mes,
 #panel-resumen .tu-mes,
 #panel-ingresos .ing-hero,
@@ -21661,10 +21716,17 @@ window.FluxiaPro = (function(){
 #panel-gastos-variables .gv-hero,
 #panel-provisiones .pv-hero,
 #panel-compartidos .comp-hero,
+#panel-compartidos .comp-summary,
+#panel-compartidos .comp-kpi,
+#panel-compartidos .comp-top,
+#panel-compartidos > .card:first-child,
+#panel-compartidos .dashboard-card,
 #panel-financiaciones .fij-hero,
 #panel-presupuestos .pv-hero,
 #panel-efectivo .pv-hero,
 #panel-analisis .pv-hero,
+#panel-bancos .pv-hero,
+#panel-ajustes .settings-card,
 .dashboard-card,
 .kpis > div,
 .kpi-card,
@@ -21689,10 +21751,16 @@ window.FluxiaPro = (function(){
 .fij-hero-val,
 .ing-hero-val,
 .gv-hero-val,
+.comp-hero-val,
+.comp-kpi-val,
 #anHeroVal,
 .kpi .v,
 .kpi strong,
-.dashboard-card-value{
+.dashboard-card-value,
+#panel-compartidos .comp-kpi strong,
+#panel-compartidos .comp-kpi b,
+#panel-compartidos .comp-summary strong,
+#panel-compartidos .comp-summary b{
   color:var(--fx-teal)!important;
   font-family:var(--serif)!important;
 }
@@ -30243,7 +30311,7 @@ header.top{position:sticky;top:0;z-index:50;-webkit-transform:translateZ(0);tran
    Compartidos estilo Tricount, papelera y herramientas de comprobación. NO toca el módulo bancario.
    ═══════════════════════════════════════════════════════════════ */
 window.FLUXIA_CHECKLIST = {
-  version: 'v94.61-ESTABLE',
+  version: 'v94.62-ESTABLE',
   fecha: '3 Oct 2026',
   items: [
     { t:'fijos', n:'Avisos banco→fijo', d:'Fecha siempre visible. Acciones: Sí / Es otro gasto / Descartar (+ Duplicado si aplica).' },
@@ -31857,7 +31925,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 })();
 
 // ═══════════════════════════════════════════════════════════════════════
-// 🔄 INGRESOS AUTOMÁTICOS DESDE BANCO (v94.61-ESTABLE)
+// 🔄 INGRESOS AUTOMÁTICOS DESDE BANCO (v94.62-ESTABLE)
 // ═══════════════════════════════════════════════════════════════════════
 
 
@@ -32049,7 +32117,7 @@ function obtenerTransaccionesBanco() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-// 🗑️  PAPELERA UNIVERSAL (v94.61-ESTABLE)
+// 🗑️  PAPELERA UNIVERSAL (v94.62-ESTABLE)
 // ═══════════════════════════════════════════════════════════════════════
 
 function agregarALaPapelera(tipo, datos, fecha) {
@@ -32142,7 +32210,24 @@ if (typeof sincronizarIngresosDelBanco !== 'undefined') {
     sincronizarIngresosDelBanco();
     limpiarPapeleraExpirada();
   }, 5 * 60 * 1000);
-  console.log('✅ Sincronización automática iniciada (v94.61-ESTABLE)');
+  console.log('✅ Sincronización automática iniciada (v94.62-ESTABLE)');
 }
+/* v94.62 · Tras cargar: si perfil aislado → plan a 0 en memoria (nunca toca datos del dueño) */
+(function(){
+  function run(){
+    try{
+      if (typeof fluxiaActualizarPrefijoPerfil === 'function') fluxiaActualizarPrefijoPerfil();
+      if (typeof fluxiaMigrarOwnerSiHaceFalta === 'function' && window.FLUXIA_PROFILE && window.FLUXIA_PROFILE.id){
+        var sid = String(window.FLUXIA_PROFILE.id).replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40);
+        if (!fluxiaEsPerfilAislado || !fluxiaEsPerfilAislado(window.FLUXIA_PROFILE)){
+          fluxiaMigrarOwnerSiHaceFalta(sid);
+        }
+      }
+      if (typeof fluxiaForzarVacioSiAislado === 'function') fluxiaForzarVacioSiAislado();
+    }catch(e){ console.warn('[v94.62] post-load', e); }
+  }
+  if (document.readyState === 'complete') setTimeout(run, 400);
+  else window.addEventListener('load', function(){ setTimeout(run, 400); });
+})();
 </script>
 </html>
