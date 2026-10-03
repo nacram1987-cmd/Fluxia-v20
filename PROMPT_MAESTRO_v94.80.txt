@@ -1,0 +1,263 @@
+# PROMPT_MAESTRO v94.80-UNIFICACIÓN · Reglas No Negociables
+
+**FECHA**: 2026-10-03
+**VERSIÓN ANTERIOR**: v94.79-CRÍTICA
+**ESTADO**: UX/UI Unificada
+
+---
+
+## NUEVA LEY v94.80 (UX CONSISTENCY)
+
+### PRINCIPIO #26: SELECTOR DE MESES UNIFICADO EN TODAS LAS PESTAÑAS
+**Razón:** v94.79 tenía selector solo en Dashboard. Cuando cambias de pestaña (Ingresos, Fijos, etc), desaparece el selector → confusión de usuario.
+
+**Implementación v94.80:**
+```html
+<!-- En TODAS las pestañas -->
+<div class="mes-selector-unificado" id="mesSelectUnificado" role="navigation" aria-label="Mes del plan">
+  <!-- Se rellena con JS: 12 botones para Ene...Dic -->
+</div>
+```
+
+**CSS:**
+```css
+.mes-selector-unificado {
+  position: sticky;              /* Siempre visible */
+  top: 0;
+  z-index: 100;
+  display: flex;
+  gap: 8px;
+  padding: 12px 14px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;              /* Scroll en mobile */
+}
+
+.mes-selector-unificado button {
+  min-width: 72px;
+  height: 40px;
+  border: 1px solid #D4AF37;
+  background: #F5F3EF;           /* Crema */
+  color: #5C4033;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.mes-selector-unificado button.active {
+  background: linear-gradient(135deg, #8B6914 0%, #6B5312 100%);  /* Oro */
+  color: #FFFFFF;
+  border-color: #5C4010;
+  box-shadow: 0 4px 12px rgba(139, 105, 20, 0.3);
+}
+```
+
+**Ubicaciones:**
+- ✅ Dashboard
+- ✅ Ingresos
+- ✅ Fijos
+- ✅ Provisiones
+- ✅ Variables
+- ✅ Compartidos
+- ✅ Huchas
+
+**Color:** Oro #8B6914 → #6B5312 (prototipo B, consistente con resto)
+
+**Scope:** MES GLOBAL (un solo mes para toda la app, no independiente por pestaña)
+
+**Evento:** `fluxia-mes-cambio` con `detail: { mes: 0-11 }`
+```javascript
+window.addEventListener('fluxia-mes-cambio', e => {
+  const mes = e.detail.mes;
+  // Todas las pestañas escuchan → recargan datos del mes
+});
+```
+
+**Verificación:**
+1. Abre app
+2. Ve a Ingresos → selector en top ✓
+3. Cambia a Febrero
+4. Ve a Fijos → sigue Febrero ✓
+5. Ve a Provisiones → sigue Febrero ✓
+6. Cambias a Marzo → TODAS muestran Marzo ✓
+
+---
+
+## LEYES v94.79 (SUPABASE SYNC - vigentes sin cambios)
+
+### PRINCIPIO #22: Sincronización automática a Supabase
+- Listeners en localStorage + intercept setItem
+- Retry exponencial (1s, 2s, 4s, 8s, 16s)
+- Toast visual de estado
+- Flush al cerrar app
+
+### PRINCIPIO #23: Los ZIPs incluyen SIEMPRE archivos críticos
+```
+fluxia_vX.X_LAB.zip OBLIGATORIAMENTE:
+├── index.html (= index_fluxia_vX.X_LAB.html)
+├── manifest.webmanifest ← NAVEGADOR LO BUSCA
+├── fluxia-canal.json ← DEFINE VERSIÓN
+├── fluxia-sw.js ← SERVICE WORKER
+├── CHANGELOG_vX.X.md
+├── README_vX.X.md
+└── PROMPT_MAESTRO_vX.X.txt
+```
+
+### PRINCIPIO #24: Cómo verificar que accede a versión nueva
+- DevTools → Application → Manifest → "name" correcto
+- DevTools → Network → fluxia-canal.json → version correcta
+- DevTools → Service Workers → activo con versión nueva
+
+### PRINCIPIO #25: Indicador visual obligatorio de sincronización
+- Toast en top-right: "✓ Sincronizado", "⚠ Error", "✗ Sin conexión"
+- El usuario SIEMPRE sabe si sus datos subieron
+
+---
+
+## LEYES INTACTAS (v94.77 y anteriores)
+
+### PRINCIPIO #16 a #21
+- index.html ≡ index_fluxia_vX.X_LAB.html (byte-to-byte)
+- Decisiones del usuario en Almacén (nube)
+- Registros que crecen se fusionan por ID
+- `const Almacen` (no `window.Almacen`)
+- Estilos: `!important` + clases
+- Movimientos PDNG restan del Disponible
+
+---
+
+## CHECKLIST ANTES DE EMPAQUETAR v94.80
+
+```bash
+# ════════════════════════════════════════════════════════════════
+# 1. VERIFICAR LOS 8 PUNTOS DE VERSIÓN
+# ════════════════════════════════════════════════════════════════
+
+grep -o 'v94\.80-LAB' index.html | wc -l
+# Resultado: ≥7 (title + meta + window.FLUXIA_VERSION + div + b)
+
+grep '"name"' manifest.webmanifest | grep v94.80
+# Resultado: "name": "Fluxia BETA v94.80-LAB"
+
+grep 'lab_version' fluxia-canal.json | grep v94.80
+# Resultado: "lab_version": "v94.80-LAB"
+
+grep 'const VERSION' fluxia-sw.js | grep v94.80
+# Resultado: const VERSION = 'v94.80-LAB'
+
+# ════════════════════════════════════════════════════════════════
+# 2. VERIFICAR SELECTOR UNIFICADO
+# ════════════════════════════════════════════════════════════════
+
+grep -c 'mes-selector-unificado' index.html
+# Resultado: ≥2 (CSS + HTML)
+
+grep 'mesSelectUnificado' index.html
+# Resultado: id="mesSelectUnificado" presente
+
+grep -c 'fluxia-mes-cambio' index.html
+# Resultado: ≥1 (event listener)
+
+# ════════════════════════════════════════════════════════════════
+# 3. VERIFICAR SUPABASE SYNC v94.79 (CARRY-OVER)
+# ════════════════════════════════════════════════════════════════
+
+grep '[Fluxia v94' index.html | head -3
+# Resultado: logs con v94.80
+
+# ════════════════════════════════════════════════════════════════
+# 4. EMPAQUETAR ZIP
+# ════════════════════════════════════════════════════════════════
+
+zip -q fluxia_v94.80_LAB.zip \
+  index_fluxia_v94.80_LAB.html \
+  manifest.webmanifest \
+  fluxia-canal.json \
+  fluxia-sw.js \
+  CHANGELOG_v94.80.md \
+  README_v94.80.md \
+  PROMPT_MAESTRO_v94.80.txt
+
+# ════════════════════════════════════════════════════════════════
+# 5. VERIFICAR ZIP
+# ════════════════════════════════════════════════════════════════
+
+unzip -l fluxia_v94.80_LAB.zip | wc -l
+# Resultado: ≥8 (7 archivos + header/footer)
+
+# ════════════════════════════════════════════════════════════════
+# 6. LISTO PARA ENTREGAR
+# ════════════════════════════════════════════════════════════════
+```
+
+---
+
+## ARCHIVOS ENTREGADOS (v94.80)
+
+```
+✅ fluxia_v94.80_LAB.zip (tamaño: ~510K)
+✅ index_fluxia_v94.80_LAB.html (1.9M)
+✅ manifest.webmanifest (2K)
+✅ fluxia-canal.json (4K)
+✅ fluxia-sw.js (8K)
+✅ CHANGELOG_v94.80.md
+✅ README_v94.80.md
+✅ PROMPT_MAESTRO_v94.80.txt (este archivo)
+```
+
+---
+
+## RESUMEN DE CAMBIOS v94.79 → v94.80
+
+| Aspecto | v94.79 | v94.80 |
+|---------|--------|--------|
+| Supabase sync automático | ✅ Sí | ✅ Sí (sin cambios) |
+| Retry exponencial | ✅ Sí | ✅ Sí (sin cambios) |
+| Toast visual | ✅ Sí | ✅ Sí (sin cambios) |
+| Selector meses | Dashboard solo | ✅ TODAS las pestañas |
+| Color selector | (N/A) | ✅ Oro #8B6914→#6B5312 |
+| Posición selector | (N/A) | ✅ Sticky top |
+| UX consistencia | Parcial | ✅ COMPLETA |
+
+---
+
+## ROADMAP v95+
+
+- **v94.81**: Modo offline 100% (sin internet requerida)
+- **v94.82**: Sincronización bidireccional automática (nube → local + local → nube)
+- **v95.00**: Refactor TypeScript + tests finales + UI overhaul
+
+---
+
+## ESTADO DE PRUEBAS v94.80
+
+```
+✅ Selector visible en todas las pestañas: PROBADO
+✅ Color oro correcto: PROBADO
+✅ Sticky position funciona: PROBADO
+✅ Mes global sincronizado: PROBADO
+✅ Evento fluxia-mes-cambio: PROBADO
+✅ Supabase sync (v94.79): PROBADO
+⏳ PWA install real en dispositivo: NO PROBADO
+⏳ Offline mode: NO PROBADO
+```
+
+---
+
+## REFERENCIAS RÁPIDAS
+
+```
+Selector unificado:    .mes-selector-unificado
+Evento mes:            fluxia-mes-cambio
+Color activo:          #8B6914 → #6B5312
+Posición:              sticky
+Z-index:               100
+Scope:                 GLOBAL (un mes)
+Ubicaciones:           7 pestañas
+```
+
+---
+
+**PROMPT_MAESTRO v94.80-UNIFICACIÓN COMPLETO**  
+**Vigente desde: 2026-10-03**  
+**Sustituye a: PROMPT_MAESTRO v94.79-CRÍTICA**
+

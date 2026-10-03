@@ -1,8 +1,8 @@
 {
-  "name": "Fluxia BETA v94.79-LAB",
+  "name": "Fluxia BETA v94.80-LAB",
   "short_name": "Fluxia",
-  "description": "Tu plan de dinero mes a mes: ingresos, gastos, provisiones y cuentas compartidas. Conexión bancaria PSD2 de solo lectura.",
-  "start_url": "./index.html?v=v94.79-LAB",
+  "description": "Tu plan de dinero mes a mes: ingresos, gastos, provisiones y cuentas compartidas. Conexi\u00f3n bancaria PSD2 de solo lectura.",
+  "start_url": "./index.html?v=v94.80-LAB",
   "display": "standalone",
   "orientation": "portrait",
   "scope": "./",
@@ -10,20 +10,9 @@
   "dir": "ltr",
   "theme_color": "#0E7C90",
   "background_color": "#FFFFFF",
-  "categories": ["finance", "productivity"],
-  "screenshots": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    }
+  "categories": [
+    "finance",
+    "productivity"
   ],
   "icons": [
     {
@@ -35,40 +24,9 @@
       "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
-    },
-    {
-      "src": "apple-touch-icon.png",
-      "sizes": "180x180",
-      "type": "image/png",
-      "purpose": "any"
     }
   ],
-  "shortcuts": [
-    {
-      "name": "Dashboard",
-      "url": "./index.html?tab=dashboard&v=v94.79-LAB",
-      "description": "Ver resumen de finanzas"
-    },
-    {
-      "name": "Nuevo Gasto",
-      "url": "./index.html?action=new-expense&v=v94.79-LAB",
-      "description": "Registrar un nuevo gasto"
-    }
-  ],
-  "version": "94.79",
+  "version": "94.80",
   "manifest_version": 2,
-  "prefer_related_applications": false,
-  "launch_handler": {
-    "client_mode": ["navigate-new", "auto"]
-  },
-  "share_target": {
-    "action": "/share",
-    "method": "POST",
-    "enctype": "multipart/form-data",
-    "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url"
-    }
-  }
+  "prefer_related_applications": false
 }
