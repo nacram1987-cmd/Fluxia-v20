@@ -1,11 +1,11 @@
 {
   "canal": "LAB",
-  "version": "v94.81-LAB",
-  "lab_version": "v94.81-LAB",
+  "version": "v94.83-LAB",
+  "lab_version": "v94.83-LAB",
   "stable_version": "v94.46-ESTABLE",
-  "timestamp": "2026-10-03T21:30:00Z",
+  "timestamp": "2026-10-04T00:20:00Z",
   "maintenance": false,
-  "update_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index.html?v=v94.81-LAB",
+  "update_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index.html?v=v94.83-LAB",
   "features": {
     "supabase_sync": {
       "enabled": true,
