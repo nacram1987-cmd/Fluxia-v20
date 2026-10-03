@@ -52,7 +52,376 @@
   document.addEventListener('DOMContentLoaded', lock);
   setInterval(lock, 5000);
 })();
+</script><script>
+/**
+ * ========================================================================
+ * FLUXIA v94.80-CRÍTICA: SUPABASE SYNC FIX COMPLETO
+ * ========================================================================
+ * 
+ * PROBLEMA: Los datos se guardan en localStorage pero NO suben a Supabase
+ * automáticamente. Pérdida de confianza crítica si reinstalan PWA.
+ * 
+ * SOLUCIONES APLICADAS:
+ * 1. Listener automático en localStorage (detecta cambios)
+ * 2. Intercept de setItem → dispara flush automático
+ * 3. Retry automático con exponential backoff
+ * 4. Sincronización entre tabs
+ * 5. Indicador visual de estado de sync
+ * 6. Limpieza de widgets fantasma (#dashConsejero, #dashboardVisualV801)
+ * ========================================================================
+ */
+
+(function() {
+  'use strict';
+
+  // ─────────────────────────────────────────────────────────────────
+  // FIX 1: LISTENER AUTOMÁTICO EN localStorage
+  // ─────────────────────────────────────────────────────────────────
+  
+  console.log('[Fluxia v94.80] Inicializando SUPABASE SYNC FIX CRÍTICA');
+
+  // El evento 'storage' se dispara cuando OTRA TAB cambia localStorage
+  window.addEventListener('storage', function(e) {
+    if (!e.key) return; // cambios generales, ignorar
+    
+    // Detectar si es una clave nuestra
+    if (e.key.startsWith('planRescate_') || 
+        e.key.startsWith('fluxia_') || 
+        e.key.startsWith('__ts__')) {
+      
+      console.log('[Almacén v94.80] Storage event detectado:', e.key);
+      
+      // Disparar flush si Almacén está listo
+      try {
+        if (typeof Almacen !== 'undefined' && typeof Almacen.flush === 'function') {
+          Almacen.flush().catch(err => {
+            console.warn('[Almacén v94.80] Error en flush automático:', err);
+          });
+        }
+      } catch(err) {
+        console.warn('[Almacén v94.80] Error disparando flush:', err);
+      }
+    }
+  });
+
+  // ─────────────────────────────────────────────────────────────────
+  // FIX 2: INTERCEPT DE localStorage.setItem
+  // ─────────────────────────────────────────────────────────────────
+  
+  // Guardar referencias al método original
+  const originalSetItem = Storage.prototype.setItem;
+  const originalRemoveItem = Storage.prototype.removeItem;
+  
+  // Queue de operaciones pendientes (para evitar race conditions)
+  let flushQueue = Promise.resolve();
+  let lastFlushTime = 0;
+  const FLUSH_COOLDOWN = 300; // ms entre flush automáticos
+
+  // Intercept setItem
+  Storage.prototype.setItem = function(key, value) {
+    // Ejecutar setItem original
+    originalSetItem.apply(this, arguments);
+    
+    // Sí es nuestra clave, programar flush automático
+    if (key.startsWith('planRescate_') || 
+        key.startsWith('fluxia_') || 
+        !key.startsWith('__')) {
+      
+      console.log('[Almacén v94.80] setItem intercept:', key);
+      
+      // Cooldown para no saturar con flush
+      const now = Date.now();
+      if (now - lastFlushTime < FLUSH_COOLDOWN) {
+        // Esperar al siguiente intervalo
+        setTimeout(() => {
+          _programarFlushAutomatico(key);
+        }, FLUSH_COOLDOWN);
+      } else {
+        _programarFlushAutomatico(key);
+      }
+    }
+  };
+
+  // Intercept removeItem
+  Storage.prototype.removeItem = function(key) {
+    originalRemoveItem.apply(this, arguments);
+    
+    if (key.startsWith('planRescate_') || key.startsWith('fluxia_')) {
+      console.log('[Almacén v94.80] removeItem intercept:', key);
+      _programarFlushAutomatico(key);
+    }
+  };
+
+  function _programarFlushAutomatico(key) {
+    try {
+      if (typeof Almacen === 'undefined' || typeof Almacen.flush !== 'function') {
+        return;
+      }
+
+      lastFlushTime = Date.now();
+      
+      // Queue el flush para evitar múltiples en paralelo
+      flushQueue = flushQueue.then(async () => {
+        try {
+          console.log('[Almacén v94.80] Ejecutando flush automático para:', key);
+          await Almacen.flush();
+          _mostrarEstadoSync('ok');
+        } catch(err) {
+          console.error('[Almacén v94.80] Error en flush:', err);
+          _mostrarEstadoSync('error');
+          throw err;
+        }
+      });
+
+      // Timeout de seguridad (no esperar más de 5s)
+      Promise.race([
+        flushQueue,
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Flush timeout')), 5000)
+        )
+      ]).catch(err => {
+        console.warn('[Almacén v94.80] Flush expiró o falló:', err.message);
+        _mostrarEstadoSync('timeout');
+      });
+
+    } catch(err) {
+      console.error('[Almacén v94.80] Error programando flush:', err);
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  // FIX 3: RETRY AUTOMÁTICO CON EXPONENTIAL BACKOFF
+  // ─────────────────────────────────────────────────────────────────
+
+  let retryAttempts = {};
+  const MAX_RETRIES = 5;
+  const BASE_RETRY_MS = 1000;
+
+  function _retry(key, attempt = 0) {
+    if (attempt >= MAX_RETRIES) {
+      console.warn(`[Almacén v94.80] Max retries alcanzado para ${key}`);
+      _mostrarEstadoSync('error_permanente');
+      return;
+    }
+
+    // Exponential backoff: 1s, 2s, 4s, 8s, 16s
+    const delayMs = BASE_RETRY_MS * Math.pow(2, attempt);
+    
+    console.log(`[Almacén v94.80] Retry ${attempt + 1}/${MAX_RETRIES} para ${key} en ${delayMs}ms`);
+    
+    setTimeout(() => {
+      try {
+        if (typeof Almacen !== 'undefined' && typeof Almacen.flush === 'function') {
+          Almacen.flush().catch(err => {
+            _retry(key, attempt + 1);
+          });
+        }
+      } catch(err) {
+        _retry(key, attempt + 1);
+      }
+    }, delayMs);
+  }
+
+  // Disparar retry si hay error
+  window.addEventListener('almacen-error', function(e) {
+    if (e.detail && e.detail.key) {
+      console.log('[Almacén v94.80] Error event, iniciando retry para:', e.detail.key);
+      _retry(e.detail.key, 0);
+    }
+  });
+
+  // ─────────────────────────────────────────────────────────────────
+  // FIX 4: INDICADOR VISUAL DE ESTADO SYNC
+  // ─────────────────────────────────────────────────────────────────
+
+  let syncStatusElement = null;
+  let syncStatusTimeout = null;
+
+  function _mostrarEstadoSync(status) {
+    try {
+      // Crear elemento si no existe
+      if (!syncStatusElement) {
+        syncStatusElement = document.createElement('div');
+        syncStatusElement.id = 'fluxia-sync-status-v9479';
+        syncStatusElement.style.cssText = `
+          position: fixed;
+          top: 12px;
+          right: 12px;
+          padding: 8px 12px;
+          border-radius: 6px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          z-index: 99999;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          pointer-events: none;
+        `;
+        document.body.appendChild(syncStatusElement);
+      }
+
+      // Estilos según status
+      const styles = {
+        'ok': {
+          text: '✓ Sincronizado',
+          bg: 'rgba(27, 122, 74, 0.9)',
+          color: '#fff'
+        },
+        'syncing': {
+          text: '⟳ Sincronizando...',
+          bg: 'rgba(51, 65, 85, 0.9)',
+          color: '#fff'
+        },
+        'error': {
+          text: '⚠ Error de sync',
+          bg: 'rgba(180, 83, 9, 0.9)',
+          color: '#fff'
+        },
+        'timeout': {
+          text: '⏱ Sync lenta',
+          bg: 'rgba(88, 80, 48, 0.9)',
+          color: '#fff'
+        },
+        'error_permanente': {
+          text: '✗ Sin conexión',
+          bg: 'rgba(185, 28, 28, 0.9)',
+          color: '#fff'
+        }
+      };
+
+      const style = styles[status] || styles.syncing;
+      syncStatusElement.textContent = style.text;
+      syncStatusElement.style.backgroundColor = style.bg;
+      syncStatusElement.style.color = style.color;
+      syncStatusElement.style.opacity = '0.95';
+
+      // Auto-ocultar después de 3s (excepto para errores)
+      clearTimeout(syncStatusTimeout);
+      if (status === 'ok') {
+        syncStatusTimeout = setTimeout(() => {
+          if (syncStatusElement) syncStatusElement.style.opacity = '0';
+        }, 3000);
+      }
+
+      console.log(`[Almacén v94.80] Status: ${status}`);
+    } catch(err) {
+      console.error('[Almacén v94.80] Error mostrando status:', err);
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  // FIX 5: LIMPIEZA DE WIDGETS FANTASMA
+  // ─────────────────────────────────────────────────────────────────
+
+  function _limpiarWidgetsFantasma() {
+    try {
+      // Limpiar #dashConsejero (Consejero Fluxia residual)
+      const dashConsejero = document.getElementById('dashConsejero');
+      if (dashConsejero) {
+        const dashConsejeroLista = document.getElementById('dashConsejeroLista');
+        if (dashConsejeroLista) {
+          dashConsejeroLista.innerHTML = '';
+          console.log('[Fluxia v94.80] Limpiado dashConsejeroLista');
+        }
+      }
+
+      // Ocultar #dashboardVisualV801 (widget presupuesto fantasma)
+      const dashboardVisualV801 = document.getElementById('dashboardVisualV801');
+      if (dashboardVisualV801) {
+        dashboardVisualV801.style.display = 'none';
+        console.log('[Fluxia v94.80] Oculltado dashboardVisualV801');
+      }
+
+      // Si hay divs con clase .consejero-box extra, ocultarlos
+      document.querySelectorAll('.consejero-box').forEach((box, idx) => {
+        if (idx > 0) { // Mantener el primero si existe
+          box.style.display = 'none';
+          console.log('[Fluxia v94.80] Oculltado consejero-box duplicado');
+        }
+      });
+
+    } catch(err) {
+      console.warn('[Fluxia v94.80] Error limpiando widgets fantasma:', err);
+    }
+  }
+
+  // Ejecutar limpieza al cambiar de mes/tab
+  window.addEventListener('almacen-mes-cambio', _limpiarWidgetsFantasma);
+  window.addEventListener('almacen-tab-cambio', _limpiarWidgetsFantasma);
+  
+  // También ejecutar al iniciar (tras 1s para que el DOM esté listo)
+  setTimeout(_limpiarWidgetsFantasma, 1000);
+  
+  // Y cada 5s para ser robustos (eliminar fantasmas que aparezcan)
+  setInterval(_limpiarWidgetsFantasma, 5000);
+
+  // ─────────────────────────────────────────────────────────────────
+  // FIX 6: MONITOREO CONTINUO DE SINCRONIZACIÓN
+  // ─────────────────────────────────────────────────────────────────
+
+  function _monitorearSync() {
+    setInterval(() => {
+      try {
+        if (typeof Almacen !== 'undefined') {
+          // Verificar si hay pendientes sin sincronizar
+          const estado = Almacen.onEstado && Almacen.onEstado();
+          
+          if (estado === 'local') {
+            // No hay conexión a BD
+            _mostrarEstadoSync('error_permanente');
+          } else if (estado === 'error') {
+            // Hay error
+            _mostrarEstadoSync('error');
+          } else if (estado === 'nube') {
+            // Sincronizado
+            _mostrarEstadoSync('ok');
+          }
+        }
+      } catch(err) {
+        console.debug('[Almacén v94.80] Monitor error:', err);
+      }
+    }, 5000);
+  }
+
+  // Iniciar monitoreo
+  setTimeout(_monitorearSync, 2000);
+
+  // ─────────────────────────────────────────────────────────────────
+  // FIX 7: FLUSH AL CERRAR LA APP (beforeunload)
+  // ─────────────────────────────────────────────────────────────────
+
+  window.addEventListener('beforeunload', function() {
+    try {
+      if (typeof Almacen !== 'undefined' && typeof Almacen.flush === 'function') {
+        // Usar vaciar que es síncrono
+        if (typeof Almacen.vaciar === 'function') {
+          Almacen.vaciar();
+        }
+        // Y intentar flush pero sin esperar
+        Almacen.flush().catch(() => {
+          // Ignorar errores, estamos cerrando
+        });
+      }
+    } catch(err) {
+      // Ignorar, estamos cerrando
+    }
+  });
+
+  // ─────────────────────────────────────────────────────────────────
+  // INICIALIZACIÓN COMPLETADA
+  // ─────────────────────────────────────────────────────────────────
+
+  console.log('[Fluxia v94.80-CRÍTICA] SUPABASE SYNC FIX INICIALIZADO');
+  console.log('[Fluxia v94.80-CRÍTICA] ✓ Listeners automáticos en localStorage');
+  console.log('[Fluxia v94.80-CRÍTICA] ✓ Intercept de setItem/removeItem');
+  console.log('[Fluxia v94.80-CRÍTICA] ✓ Retry automático con backoff');
+  console.log('[Fluxia v94.80-CRÍTICA] ✓ Indicador visual de sync');
+  console.log('[Fluxia v94.80-CRÍTICA] ✓ Limpieza de widgets fantasma');
+  console.log('[Fluxia v94.80-CRÍTICA] ✓ Flush al cerrar app');
+
+})();
+
 </script>
+
 <meta content="#0F3A5C" name="theme-color"/>
 <meta content="light dark" name="color-scheme"/>
 <script>/* v92.1 · Modo claro por defecto. Nunca seguir automáticamente el tema del sistema. */
@@ -110,7 +479,7 @@
 .fx-security-note b{color:var(--ink);}
 .fx-security-card h5{margin:0 0 8px;font-size:.88rem;color:var(--ink);}
 
-/* v94.78-LAB · Dashboard consolidado + navegación mensual */
+/* v94.80-LAB · Dashboard consolidado + navegación mensual */
 .fx-dashboard67{margin:0 0 18px;padding:16px;border:1px solid var(--line);border-radius:18px;background:var(--surface);box-shadow:0 6px 20px rgba(15,58,92,.055);}
 .fx-dashboard67-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:14px;}
 .fx-dashboard67-kicker{font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);}
@@ -169,7 +538,7 @@
 .fx-cloud-integrity strong{color:var(--ink);}
 @media(max-width:430px){.fx-dashboard67-break{grid-template-columns:repeat(2,minmax(0,1fr));}.fx-dashboard67-real .amount{font-size:2.15rem;}.fx-month-nav .current b{font-size:1.05rem;}}
 @media(max-width:420px){.fx-dashboard67-actions{grid-template-columns:1fr;} .fx-dashboard67-real .amount{font-size:1.8rem;}}
-/* v94.78-LAB · Dashboard realmente consolidado: no duplicar héroes/KPIs antiguos en Inicio */
+/* v94.80-LAB · Dashboard realmente consolidado: no duplicar héroes/KPIs antiguos en Inicio */
 body.fx-dashboard-clean #tuMes,
 body.fx-dashboard-clean #dashboardVisualV801,
 body.fx-dashboard-clean #kpiGrid,
@@ -209,7 +578,8 @@ body.fx-dashboard-clean .fx-dashboard67-item.gold:after { content:""; position:a
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="telephone=no" name="format-detection"/>
 <meta content="no" name="msapplication-tap-highlight"/>
-<title>Fluxia BETA v94.78-LAB</title>
+<title>Fluxia BETA v94.80-LAB</title>
+<meta content="v94.80-LAB" name="fluxia-version"/>
 <!-- Fluxia v91 · brand lock · datos jamás a 0 · compartidos saldo inicial · notif suaves · logo alineado · base v90.10 -->
 <script>
 (function(){window.FluxiaNative={isNative:function(){try{return!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())}catch(e){return false}},platform:function(){try{return(window.Capacitor&&Capacitor.getPlatform)?Capacitor.getPlatform():'web'}catch(e){return'web'}}};})();
@@ -504,9 +874,9 @@ window.fluxiaCuandoLibre = function(fn, intentos){
 };
 
 </script>
-<meta content="v94.78-LAB" name="fluxia-version"/>
+<meta content="v94.80-LAB" name="fluxia-version"/>
 <meta content="lab" name="fluxia-channel"/>
-<script>window.FLUXIA_VERSION = "v94.78-LAB";</script>
+<script>window.FLUXIA_VERSION = "v94.80-LAB";</script>
 <script>
 /* v94.39 · Ir directo a Seguridad en Ajustes */
 window.fxIrASeguridad = function(){
@@ -2231,7 +2601,7 @@ header.top #bancoEstadoHeader{margin-top:4px!important;}
 .gv-importe,.mov-importe,.row-importe,.ingreso-importe,.fijo-importe{font-size:0.95rem!important;}
 </style>
 <style id="fluxiaDrawerFix">
-/* v94.78-LAB fix: encabezado (nombre + cerrar sesión) fijo; solo scrollea la lista */
+/* v94.80-LAB fix: encabezado (nombre + cerrar sesión) fijo; solo scrollea la lista */
 .drawer-menu,#drawerMenu{overflow:hidden!important;display:flex!important;flex-direction:column!important;padding-top:0!important;padding-bottom:0!important;}
 #drawerMenu .drawer-header{position:relative!important;top:auto!important;flex:0 0 auto!important;margin:0!important;padding-top:calc(16px + env(safe-area-inset-top))!important;z-index:3!important;}
 #drawerMenu .drawer-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:8px 0 calc(12px + env(safe-area-inset-bottom));}
@@ -2325,7 +2695,7 @@ header.top #bancoEstadoHeader{margin-top:4px!important;}
 <style id="fluxia-v9476-unified-theme">
 /* v94.76 · Identidad visual unificada: Dashboard + todas las pestañas */
 :root{
- --fluxia-cream:#FBF7F0;--fluxia-cream2:#F4EBDD;--fluxia-gold:#C9953D;--fluxia-gold-soft:#F7EBCF;
+ --fluxia-cream:#FBF7F0;--fluxia-cream2:#F4EBDD;--fluxia-gold:#6B5312;--fluxia-gold-soft:#F7EBCF;
  --fluxia-teal:#147F89;--fluxia-teal-soft:#EAF5F5;--fluxia-ink:#40372F;--fluxia-muted:#806F5B;
 }
 /* Tarjetas del Dashboard: iconos, color y navegación recuperados */
@@ -2367,8 +2737,8 @@ header.top #bancoEstadoHeader{margin-top:4px!important;}
 :root[data-theme="dark"]{--wine-dark:#FF9D8F;}
 /* Meses: oro, texto oscuro (contraste ≥ 5:1) */
 .mes-selector-global button{background:#FFFCF7!important;border:1px solid rgba(201,149,61,.32)!important;color:#6A5638!important;box-shadow:none!important;}
-.mes-selector-global button:hover{background:#FCEBC9!important;border-color:#C9953D!important;}
-.mes-selector-global button.active{background:linear-gradient(135deg,#B8941C 0%,#9C7F1A 100%)!important;color:#FFFFFF!important;border-color:#8B6914!important;font-weight:750!important;box-shadow:0 3px 10px rgba(168,120,40,.26)!important;}
+.mes-selector-global button:hover{background:#FCEBC9!important;border-color:#6B5312!important;}
+.mes-selector-global button.active{background: linear-gradient(135deg, #8B6914 0%,#9C7F1A 100%)!important;color:#FFFFFF!important;border-color:#8B6914!important;font-weight:750!important;box-shadow:0 3px 10px rgba(168,120,40,.26)!important;}
 .sec-head .sec-mes{background:#FCEBC9!important;border-color:rgba(201,149,61,.55)!important;color:#6B4A15!important;}
 /* Bloques «héroe» del resto de pestañas = héroe de Huchas (oro suave → teal suave) */
 #panel-presupuestos .ef-intro,#panel-efectivo .ef-intro,#panel-ayuda .fluxia-empty-guide,#panel-importar-exportar .backup-estado,
@@ -4010,7 +4380,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <div style="min-width:0;">
 <div style="font-family:var(--serif); font-weight:700; font-size:1.28rem; line-height:1.15; color:var(--ink,#1A2433); letter-spacing:-0.02em;">Fluxia <span id="fluxiaBetaBadge" style="font-family:var(--sans);font-size:0.62rem;font-weight:800;letter-spacing:0.04em;vertical-align:middle;margin-left:6px;padding:2px 7px;border-radius:999px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid rgba(201,162,39,.35);">BETA</span></div>
 <div id="fluxiaHeaderSub" style="font-size:0.82rem; color:var(--muted); letter-spacing:0.3px; margin-top:2px;">Control absoluto. Flujo perfecto</div>
-<div id="fluxiaVersion" style="font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:3px; opacity:.85;">Versión v94.78-LAB</div>
+<div id="fluxiaVersion" style="font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:3px; opacity:.85;">Versión v94.80-LAB</div>
 <button class="fx-banco-pill" id="bancoEstadoHeader" onclick="window.abrirConexionBancaria()" style="display:none;" type="button"></button>
 <button class="fx-banco-pill fx-nube-pill" id="fxNubeEstado" onclick="try{goToTab('importar-exportar')}catch(e){}" style="display:none;" type="button" aria-live="polite"></button>
 </div>
@@ -4081,7 +4451,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <div id="panelsAnchor"></div>
 <!-- INICIO / RESUMEN DASHBOARD (FASE 2) -->
 <section class="panel active" id="panel-resumen">
-<!-- v94.78-LAB · Dashboard único: una cifra, una explicación, una acción -->
+<!-- v94.80-LAB · Dashboard único: una cifra, una explicación, una acción -->
 <div class="fx-month-nav" aria-label="Navegación del mes">
   <button type="button" id="fxMesPrev" aria-label="Mes anterior" title="Mes anterior">‹</button>
   <div class="current"><b id="fxMesActualLabel">—</b><small id="fxMesActualSub">Mes seleccionado</small></div>
@@ -4931,7 +5301,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 </div>
 <div style="margin:0 0 14px;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--surface);">
 <div style="font-weight:800;font-size:.88rem;color:var(--ink);margin-bottom:6px;">🧪 Laboratorio (solo tú)</div>
-<p style="margin:0 0 10px;font-size:.8rem;color:var(--muted);line-height:1.45;">Esta versión concreta (<b id="fluxiaLabVersionLabel">v94.78-LAB</b>). Úsala sin temor—es la versión estable. <b>Puedes compartirla con confianza.</b></p>
+<p style="margin:0 0 10px;font-size:.8rem;color:var(--muted);line-height:1.45;">Esta versión concreta (<b id="fluxiaLabVersionLabel">v94.80-LAB</b>). Úsala sin temor—es la versión estable. <b>Puedes compartirla con confianza.</b></p>
 <button id="btnCopiarEnlaceBeta" style="background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%; margin-bottom:8px;" type="button">🔗 Copiar enlace de ESTA versión</button>
 <button id="btnComoInstalarBeta" style="background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%; margin-bottom:8px;" type="button">📲 Cómo instalarla en el móvil</button>
 <button id="btnInstalarPwa" style="display:none;background:var(--brand-1,#1554F0); color:#fff; border:none; border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%;" type="button">⬇️ Instalar Fluxia en este dispositivo</button>
@@ -4962,7 +5332,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <h3 class="section-title" style="margin:0;">Versión</h3>
 <span style="font-size:.68rem;font-weight:800;letter-spacing:.03em;padding:3px 8px;border-radius:999px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid rgba(201,162,39,.35);">BETA</span>
 </div>
-<p class="hint" id="ayudaVersionTxt" style="margin:0 0 14px;font-weight:600;color:var(--ink);">Fluxia BETA v94.78-LAB (estable) · datos en este dispositivo</p>
+<p class="hint" id="ayudaVersionTxt" style="margin:0 0 14px;font-weight:600;color:var(--ink);">Fluxia BETA v94.80-LAB (estable) · datos en este dispositivo</p>
 <div class="fluxia-empty-guide" style="margin-bottom:14px;text-align:left;">
 <div class="eg-tit" style="margin-bottom:8px;">🚀 Primeros pasos (2 minutos)</div>
 <ol style="margin:0;padding-left:1.2em;font-size:0.84rem;line-height:1.5;color:var(--ink);">
@@ -6060,7 +6430,7 @@ function initPwaYBeta(){
       name: 'Fluxia BETA',
       short_name: 'Fluxia BETA',
       description: 'Tu plan de dinero mes a mes · Fluxia',
-      start_url: './index.html?v=v94.78-LAB',
+      start_url: './index.html?v=v94.80-LAB',
       scope: './',
       display: 'standalone',
       orientation: 'portrait-primary',
@@ -18277,7 +18647,7 @@ function renderDashboard(){
   const mes = mesSeleccionado;
   const disponible = disponibleEfectivo(mes);
 
-  // v94.78-LAB · Dashboard consolidado: una sola jerarquía visual.
+  // v94.80-LAB · Dashboard consolidado: una sola jerarquía visual.
   try {
     const idx = MESES.indexOf(mes);
     const lbl = MES_LABEL[mes] || mes;
@@ -28524,7 +28894,62 @@ window.FluxiaIntegracionV86 = {
       });
       
       html += '</table>';
-      html += '</body></html>';
+      html += '<script>
+/* v94.80 · Renderizar selector de meses en TODAS las pestañas */
+(function() {
+  function renderMesSelector() {
+    const container = document.getElementById('mesSelectUnificado');
+    if (!container) return;
+    
+    // Limpiar
+    container.innerHTML = '';
+    
+    // Crear botones para cada mes
+    const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 
+                   'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    const ahora = new Date();
+    const mesActual = ahora.getMonth(); // 0-11
+    
+    meses.forEach((mes, idx) => {
+      const btn = document.createElement('button');
+      btn.textContent = mes;
+      btn.className = idx === mesActual ? 'active' : '';
+      btn.setAttribute('data-mes', idx);
+      btn.setAttribute('aria-pressed', idx === mesActual ? 'true' : 'false');
+      
+      btn.addEventListener('click', function() {
+        // Actualizar estado visual
+        document.querySelectorAll('.mes-selector-unificado button').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
+        this.classList.add('active');
+        this.setAttribute('aria-pressed', 'true');
+        
+        // Disparar evento global de cambio de mes
+        window.dispatchEvent(new CustomEvent('fluxia-mes-cambio', {
+          detail: { mes: idx }
+        }));
+        
+        console.log('[Fluxia v94.80] Mes seleccionado:', idx, '(' + mes + ')');
+      });
+      
+      container.appendChild(btn);
+    });
+  }
+  
+  // Renderizar cuando el DOM esté listo
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderMesSelector);
+  } else {
+    renderMesSelector();
+  }
+  
+  // Re-renderizar si el DOM cambia
+  window.addEventListener('load', renderMesSelector);
+})();
+</script>
+</body></html>';
       
       const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
       const url = URL.createObjectURL(blob);
@@ -30999,7 +31424,7 @@ header.top{position:sticky;top:0;z-index:50;-webkit-transform:translateZ(0);tran
    Compartidos estilo Tricount, papelera y herramientas de comprobación. NO toca el módulo bancario.
    ═══════════════════════════════════════════════════════════════ */
 window.FLUXIA_CHECKLIST = {
-  version: 'v94.78-LAB',
+  version: 'v94.80-LAB',
   fecha: '3 Oct 2026',
   items: [
     { t:'fix', n:'Se publicaba el archivo equivocado', d:'index.html era la v94.71 antigua y solo el archivo con sufijo era nuevo. Ahora ambos son idénticos.' },
@@ -31548,12 +31973,85 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 .fxc-in{width:100%;box-sizing:border-box;margin:6px 0 2px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);font:500 16px var(--sans);}
 .fxc-msg{min-height:1.3em;margin:8px 0 0;font-size:.82rem;font-weight:650;} .fxc-msg.err{color:var(--wine-ink);} .fxc-msg.ok{color:var(--teal-ink);}
 
-/* v94.78-LAB: Bordes superiores en acciones */
+/* v94.80-LAB: Bordes superiores en acciones */
 #fxDashRitmoBtn{border-top:3px solid #D4A84A!important;}
 #fxDashPendBtn{border-top:3px solid #E74C3C!important;}
 
 .fx-dashboard67-action:hover{background:var(--surface-2);box-shadow:0 3px 10px rgba(80,60,35,.06);}
 .fx-dashboard67-action:active{transform:scale(0.98);}
+
+#dashConsejero:empty { display: none !important; }
+#dashboardVisualV801 { display: none !important; }
+.consejero-box:empty { display: none !important; }
+
+/* v94.80 · Selector de meses unificado en TODAS las pestañas */
+.mes-selector-unificado {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  gap: 8px;
+  padding: 12px 14px;
+  background: var(--surface, #fff);
+  border-bottom: 1px solid var(--line, #e5e7eb);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.mes-selector-unificado button {
+  flex: 0 0 auto;
+  min-width: 72px;
+  height: 40px;
+  padding: 8px 12px;
+  border: 1px solid #D4AF37;
+  border-radius: 8px;
+  background: #F5F3EF;
+  color: #5C4033;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.mes-selector-unificado button:hover {
+  background: #E8E3D8;
+  border-color: #C9953D;
+  transform: translateY(-1px);
+}
+
+.mes-selector-unificado button.active {
+  background: linear-gradient(135deg, #8B6914 0%, #6B5312 100%);
+  color: #FFFFFF;
+  border-color: #5C4010;
+  box-shadow: 0 4px 12px rgba(139, 105, 20, 0.3);
+}
+
+.mes-selector-unificado button.active:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(139, 105, 20, 0.4);
+}
+
+.mes-selector-unificado button:active {
+  transform: translateY(0);
+}
+
+/* Scroll indicators (opcional) */
+.mes-selector-unificado::-webkit-scrollbar {
+  height: 4px;
+}
+
+.mes-selector-unificado::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mes-selector-unificado::-webkit-scrollbar-thumb {
+  background: #D4AF37;
+  border-radius: 2px;
+}
 </style>
 <script>
 /* ═══════════════════════════════════════════════════════════════
@@ -32622,7 +33120,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 })();
 
 // ═══════════════════════════════════════════════════════════════════════
-// 🔄 INGRESOS AUTOMÁTICOS DESDE BANCO (v94.78-LAB)
+// 🔄 INGRESOS AUTOMÁTICOS DESDE BANCO (v94.80-LAB)
 // ═══════════════════════════════════════════════════════════════════════
 
 
@@ -32814,7 +33312,7 @@ function obtenerTransaccionesBanco() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-// 🗑️  PAPELERA UNIVERSAL (v94.78-LAB)
+// 🗑️  PAPELERA UNIVERSAL (v94.80-LAB)
 // ═══════════════════════════════════════════════════════════════════════
 
 function agregarALaPapelera(tipo, datos, fecha) {
@@ -32907,7 +33405,7 @@ if (typeof sincronizarIngresosDelBanco !== 'undefined') {
     sincronizarIngresosDelBanco();
     limpiarPapeleraExpirada();
   }, 5 * 60 * 1000);
-  console.log('✅ Sincronización automática iniciada (v94.78-LAB)');
+  console.log('✅ Sincronización automática iniciada (v94.80-LAB)');
 }
 /* v94.62 · Tras cargar: si perfil aislado → plan a 0 en memoria (nunca toca datos del dueño)
    v94.63 · NEUTRALIZADO: migrar y vaciar están desactivados (ver fluxiaForzarVacioSiAislado). */
