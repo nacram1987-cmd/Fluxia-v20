@@ -1,8 +1,7 @@
 {
   "app": "Fluxia",
-  "lab_version": "v94.49-LAB",
+  "lab_version": "v94.50-LAB",
   "stable_version": "v94.46-ESTABLE",
-  "timestamp": "2026-10-03T02:20:00Z",
-  "banco_ts_hash": "c4d30337d63fbbc7",
-  "critical": "Sin cuenta: confirm nativo (no modal bajo onboarding)"
+  "timestamp": "2026-10-03T03:10:00Z",
+  "critical": "Perfil scoped storage + sin cuenta cero real + heroes foto2"
 }
