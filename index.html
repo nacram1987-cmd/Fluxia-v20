@@ -110,7 +110,7 @@
 .fx-security-note b{color:var(--ink);}
 .fx-security-card h5{margin:0 0 8px;font-size:.88rem;color:var(--ink);}
 
-/* v94.69-LAB · Dashboard consolidado + navegación mensual */
+/* v94.70-LAB · Dashboard consolidado + navegación mensual */
 .fx-dashboard67{margin:0 0 18px;padding:16px;border:1px solid var(--line);border-radius:18px;background:var(--surface);box-shadow:0 6px 20px rgba(15,58,92,.055);}
 .fx-dashboard67-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:14px;}
 .fx-dashboard67-kicker{font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);}
@@ -138,7 +138,7 @@
 #panel-resumen .dashboard-legacy-summary{display:none !important;}
 #panel-resumen #dashboardVisualV801{display:none !important;}
 #panel-resumen #dashInformeSemana{display:none !important;}
-/* v94.69 · Dashboard refinado: conservar estructura familiar, quitar duplicidad */
+/* v94.70 · Dashboard refinado: conservar estructura familiar, quitar duplicidad */
 #tuMes{display:none !important;}
 #panel-resumen > .hint{display:none !important;}
 .fx-month-nav{display:flex;align-items:center;gap:7px;margin:0 0 10px;padding:3px 0;}
@@ -169,7 +169,7 @@
 .fx-cloud-integrity strong{color:var(--ink);}
 @media(max-width:430px){.fx-dashboard67-break{grid-template-columns:repeat(2,minmax(0,1fr));}.fx-dashboard67-real .amount{font-size:2.15rem;}.fx-month-nav .current b{font-size:1.05rem;}}
 @media(max-width:420px){.fx-dashboard67-actions{grid-template-columns:1fr;} .fx-dashboard67-real .amount{font-size:1.8rem;}}
-/* v94.69-LAB · Dashboard realmente consolidado: no duplicar héroes/KPIs antiguos en Inicio */
+/* v94.70-LAB · Dashboard realmente consolidado: no duplicar héroes/KPIs antiguos en Inicio */
 body.fx-dashboard-clean #tuMes,
 body.fx-dashboard-clean #dashboardVisualV801,
 body.fx-dashboard-clean #kpiGrid,
@@ -196,7 +196,7 @@ body.fx-dashboard-clean .fx-dashboard67-item.gold:after { content:""; position:a
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="telephone=no" name="format-detection"/>
 <meta content="no" name="msapplication-tap-highlight"/>
-<title>Fluxia BETA v94.69-LAB</title>
+<title>Fluxia BETA v94.70-LAB</title>
 <!-- Fluxia v91 · brand lock · datos jamás a 0 · compartidos saldo inicial · notif suaves · logo alineado · base v90.10 -->
 <script>
 (function(){window.FluxiaNative={isNative:function(){try{return!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())}catch(e){return false}},platform:function(){try{return(window.Capacitor&&Capacitor.getPlatform)?Capacitor.getPlatform():'web'}catch(e){return'web'}}};})();
@@ -491,9 +491,9 @@ window.fluxiaCuandoLibre = function(fn, intentos){
 };
 
 </script>
-<meta content="v94.69-LAB" name="fluxia-version"/>
+<meta content="v94.70-LAB" name="fluxia-version"/>
 <meta content="lab" name="fluxia-channel"/>
-<script>window.FLUXIA_VERSION = "v94.69-LAB";</script>
+<script>window.FLUXIA_VERSION = "v94.70-LAB";</script>
 <script>
 /* v94.39 · Ir directo a Seguridad en Ajustes */
 window.fxIrASeguridad = function(){
@@ -2216,7 +2216,7 @@ header.top #bancoEstadoHeader{margin-top:4px!important;}
 .gv-importe,.mov-importe,.row-importe,.ingreso-importe,.fijo-importe{font-size:0.95rem!important;}
 </style>
 <style id="fluxiaDrawerFix">
-/* v94.69-LAB fix: encabezado (nombre + cerrar sesión) fijo; solo scrollea la lista */
+/* v94.70-LAB fix: encabezado (nombre + cerrar sesión) fijo; solo scrollea la lista */
 .drawer-menu,#drawerMenu{overflow:hidden!important;display:flex!important;flex-direction:column!important;padding-top:0!important;padding-bottom:0!important;}
 #drawerMenu .drawer-header{position:relative!important;top:auto!important;flex:0 0 auto!important;margin:0!important;padding-top:calc(16px + env(safe-area-inset-top))!important;z-index:3!important;}
 #drawerMenu .drawer-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:8px 0 calc(12px + env(safe-area-inset-bottom));}
@@ -2259,6 +2259,54 @@ header.top #bancoEstadoHeader{margin-top:4px!important;}
 
 
 
+
+<style id="fluxia-v9470-dashboard-polish">
+/* v94.70 · Dashboard: pinceladas visuales, misma tipografía y jerarquía que las pestañas */
+#panel-resumen .fx-month-nav,
+#panel-resumen .fx-dashboard67,
+#panel-resumen .fx-dashboard67 * {
+  font-family: inherit !important;
+}
+#panel-resumen .fx-month-nav {
+  margin-bottom: 14px !important;
+  border-radius: 16px !important;
+  border-color: rgba(200,150,80,.22) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(248,250,252,.96)) !important;
+  box-shadow: 0 4px 14px rgba(15,35,60,.05) !important;
+}
+#panel-resumen .fx-month-nav .current {
+  min-width: 150px;
+  padding: 7px 12px !important;
+  border-radius: 12px;
+  background: rgba(200,150,80,.08);
+}
+#panel-resumen .fx-month-nav .current b {
+  color: var(--gold, #c89650) !important;
+  letter-spacing: .01em;
+}
+#panel-resumen .fx-dashboard67-real {
+  border-radius: 20px !important;
+  box-shadow: 0 7px 22px rgba(15,35,60,.07) !important;
+}
+#panel-resumen .fx-dashboard67-break {
+  gap: 9px !important;
+}
+#panel-resumen .fx-dashboard67-item {
+  border-radius: 14px !important;
+  border-color: rgba(15,35,60,.07) !important;
+  box-shadow: 0 2px 8px rgba(15,35,60,.035) !important;
+}
+#panel-resumen .fx-dashboard67-actions {
+  gap: 9px !important;
+}
+#panel-resumen .fx-dashboard67-action {
+  border-radius: 14px !important;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+#panel-resumen .fx-dashboard67-action:active {
+  transform: scale(.985);
+}
+</style>
 </head>
 <script>
 window._offlineMode=!navigator.onLine;
@@ -3864,7 +3912,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <div style="min-width:0;">
 <div style="font-family:var(--serif); font-weight:700; font-size:1.28rem; line-height:1.15; color:var(--ink,#1A2433); letter-spacing:-0.02em;">Fluxia <span id="fluxiaBetaBadge" style="font-family:var(--sans);font-size:0.62rem;font-weight:800;letter-spacing:0.04em;vertical-align:middle;margin-left:6px;padding:2px 7px;border-radius:999px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid rgba(201,162,39,.35);">BETA</span></div>
 <div id="fluxiaHeaderSub" style="font-size:0.82rem; color:var(--muted); letter-spacing:0.3px; margin-top:2px;">Control absoluto. Flujo perfecto</div>
-<div id="fluxiaVersion" style="font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:3px; opacity:.85;">Versión v94.69-LAB</div>
+<div id="fluxiaVersion" style="font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:3px; opacity:.85;">Versión v94.70-LAB</div>
 <button class="fx-banco-pill" id="bancoEstadoHeader" onclick="window.abrirConexionBancaria()" style="display:none;" type="button"></button>
 </div>
 </div>
@@ -3934,7 +3982,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <div id="panelsAnchor"></div>
 <!-- INICIO / RESUMEN DASHBOARD (FASE 2) -->
 <section class="panel active" id="panel-resumen">
-<!-- v94.69-LAB · Dashboard único: una cifra, una explicación, una acción -->
+<!-- v94.70-LAB · Dashboard único: una cifra, una explicación, una acción -->
 <div class="fx-month-nav" aria-label="Navegación del mes">
   <button type="button" id="fxMesPrev" aria-label="Mes anterior" title="Mes anterior">‹</button>
   <div class="current"><b id="fxMesActualLabel">—</b><small id="fxMesActualSub">Mes seleccionado</small></div>
@@ -4778,7 +4826,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 </div>
 <div style="margin:0 0 14px;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--surface);">
 <div style="font-weight:800;font-size:.88rem;color:var(--ink);margin-bottom:6px;">🧪 Laboratorio (solo tú)</div>
-<p style="margin:0 0 10px;font-size:.8rem;color:var(--muted);line-height:1.45;">Esta versión concreta (<b id="fluxiaLabVersionLabel">v94.69-LAB</b>). Úsala sin temor—es la versión estable. <b>Puedes compartirla con confianza.</b></p>
+<p style="margin:0 0 10px;font-size:.8rem;color:var(--muted);line-height:1.45;">Esta versión concreta (<b id="fluxiaLabVersionLabel">v94.70-LAB</b>). Úsala sin temor—es la versión estable. <b>Puedes compartirla con confianza.</b></p>
 <button id="btnCopiarEnlaceBeta" style="background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%; margin-bottom:8px;" type="button">🔗 Copiar enlace de ESTA versión</button>
 <button id="btnComoInstalarBeta" style="background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%; margin-bottom:8px;" type="button">📲 Cómo instalarla en el móvil</button>
 <button id="btnInstalarPwa" style="display:none;background:var(--brand-1,#1554F0); color:#fff; border:none; border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%;" type="button">⬇️ Instalar Fluxia en este dispositivo</button>
@@ -4809,7 +4857,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <h3 class="section-title" style="margin:0;">Versión</h3>
 <span style="font-size:.68rem;font-weight:800;letter-spacing:.03em;padding:3px 8px;border-radius:999px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid rgba(201,162,39,.35);">BETA</span>
 </div>
-<p class="hint" id="ayudaVersionTxt" style="margin:0 0 14px;font-weight:600;color:var(--ink);">Fluxia BETA v94.69-LAB (estable) · datos en este dispositivo</p>
+<p class="hint" id="ayudaVersionTxt" style="margin:0 0 14px;font-weight:600;color:var(--ink);">Fluxia BETA v94.70-LAB (estable) · datos en este dispositivo</p>
 <div class="fluxia-empty-guide" style="margin-bottom:14px;text-align:left;">
 <div class="eg-tit" style="margin-bottom:8px;">🚀 Primeros pasos (2 minutos)</div>
 <ol style="margin:0;padding-left:1.2em;font-size:0.84rem;line-height:1.5;color:var(--ink);">
@@ -18073,7 +18121,7 @@ function renderDashboard(){
   const mes = mesSeleccionado;
   const disponible = disponibleEfectivo(mes);
 
-  // v94.69-LAB · Dashboard consolidado: una sola jerarquía visual.
+  // v94.70-LAB · Dashboard consolidado: una sola jerarquía visual.
   try {
     const idx = MESES.indexOf(mes);
     const lbl = MES_LABEL[mes] || mes;
@@ -23076,49 +23124,13 @@ header.top [style*="width:60px"]{width:44px!important;height:44px!important;flex
 <button id="btnInstalarPWA" style="position:fixed; bottom:20px; right:20px; padding:12px 16px; background:var(--teal); color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer; display:none; z-index:999; box-shadow:0 4px 12px rgba(14,124,144,0.3);" type="button">📱 Instalar app</button>
 
 <script>
-/* v94.45 · Salud al arrancar + recordatorio de copia (fase 4) */
+/* v94.70 · Salud al arrancar: recordatorio visual retirado del Dashboard; seguridad en Ajustes. */
 (function(){
-  function diasDesde(iso){
-    try{
-      var t = Date.parse(iso);
-      if (!isFinite(t)) return 9999;
-      return Math.floor((Date.now() - t) / 86400000);
-    }catch(e){ return 9999; }
-  }
-  window.fluxiaSaludArranque = function(){
-    try{
-      var box = document.getElementById('fluxiaSaludBox');
-      if (!box){
-        var host = document.getElementById('panel-resumen') || document.querySelector('.wrap');
-        if (!host) return;
-        box = document.createElement('div');
-        box.id = 'fluxiaSaludBox';
-        box.style.cssText = 'display:none;margin:0 0 12px;padding:12px 14px;border-radius:14px;border:1px solid rgba(200,150,80,.28);background:linear-gradient(135deg,rgba(232,169,61,.12),var(--surface));font-size:.82rem;line-height:1.45;color:var(--ink);';
-        var first = host.firstElementChild;
-        if (first) host.insertBefore(box, first);
-        else host.appendChild(box);
-      }
-      var tips = [];
-      var lastBak = null;
-      try{ lastBak = localStorage.getItem('fluxia_last_backup_iso') || localStorage.getItem('fluxia_backup_last_ok'); }catch(e){}
-      if (!lastBak || diasDesde(lastBak) >= 14){
-        tips.push('Haz una <b>copia cifrada</b> de vez en cuando (Ajustes → Seguridad / Copia). Así no pierdes el plan si cambias de móvil.');
-      }
-      var nube = false;
-      try{ nube = !!(window.Almacen && Almacen.estado && Almacen.estado !== 'sin-sesion'); }catch(e){}
-      if (!nube){
-        tips.push('Sin nube: los datos viven en este dispositivo. Entra en Ajustes → Nube si quieres sincronizar entre aparatos.');
-      }
-      if (!tips.length){ box.style.display = 'none'; box.innerHTML = ''; return; }
-      box.style.display = 'block';
-      box.innerHTML = '<div style="font-weight:700;margin-bottom:4px;">💡 Para no perder nada</div><div>' + tips.join('<br>') + '</div>';
-    }catch(e){}
-  };
+  window.fluxiaSaludArranque = function(){};
   function markBackup(){
     try{ localStorage.setItem('fluxia_last_backup_iso', new Date().toISOString()); }catch(e){}
   }
   window.fluxiaMarcarBackupOk = markBackup;
-  // enganchar descargarBackup si existe
   setTimeout(function(){
     try{
       if (typeof window.descargarBackup === 'function' && !window.descargarBackup.__fx45){
@@ -23131,11 +23143,7 @@ header.top [style*="width:60px"]{width:44px!important;height:44px!important;flex
         window.descargarBackup.__fx45 = true;
       }
     }catch(e){}
-    try{ fluxiaSaludArranque(); }catch(e){}
   }, 1200);
-  document.addEventListener('visibilitychange', function(){
-    if (!document.hidden) try{ fluxiaSaludArranque(); }catch(e){}
-  });
 })();
 </script>
 
@@ -23507,7 +23515,7 @@ window.FluxiaQA_v49 = {
     var ix=arr.findIndex(function(x){ return x&&x.id===id; });
     if(ix<0) return false;
     var item=arr[ix];
-    // v94.69 · restaurar NO elimina el registro histórico: se marca como restaurado.
+    // v94.70 · restaurar NO elimina el registro histórico: se marca como restaurado.
     item.restauradoEn = Date.now();
     arr[ix] = item;
     guardar(arr);
@@ -29339,7 +29347,7 @@ console.log('✅ Fluxia v91 · Confianza + Salud listos');
   var PAPELERA_BASE = 'fluxia_papelera_v1';
   // v93.1 · la papelera es POR USUARIO (antes era común a todos los perfiles)
   function _papKey(){ try{ var id = window.FLUXIA_PROFILE && window.FLUXIA_PROFILE.id; return PAPELERA_BASE + (id ? ('_' + id) : ''); }catch(e){ return PAPELERA_BASE; } }
-  var PAPELERA_DIAS = 0; // v94.69 · conservación permanente; 0 = sin caducidad
+  var PAPELERA_DIAS = 0; // v94.70 · conservación permanente; 0 = sin caducidad
   var ZOOM_KEY = 'fluxia_a11y_zoom_v1';
 
   function toast(m,c,ms){ try{ if(typeof mostrarToast==='function') mostrarToast(m,c||'var(--teal)',ms||2800); }catch(e){} }
@@ -30732,7 +30740,7 @@ header.top{position:sticky;top:0;z-index:50;-webkit-transform:translateZ(0);tran
    Compartidos estilo Tricount, papelera y herramientas de comprobación. NO toca el módulo bancario.
    ═══════════════════════════════════════════════════════════════ */
 window.FLUXIA_CHECKLIST = {
-  version: 'v94.69-LAB',
+  version: 'v94.70-LAB',
   fecha: '4 Oct 2026',
   items: [
     { t:'ui', n:'Paleta mejorada en "Tu mes"', d:'Gradiente más audaz (azul marino → teal → oro) para mayor profundidad visual y jerarquía clara de meses.' },
@@ -32346,7 +32354,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 })();
 
 // ═══════════════════════════════════════════════════════════════════════
-// 🔄 INGRESOS AUTOMÁTICOS DESDE BANCO (v94.69-LAB)
+// 🔄 INGRESOS AUTOMÁTICOS DESDE BANCO (v94.70-LAB)
 // ═══════════════════════════════════════════════════════════════════════
 
 
@@ -32538,7 +32546,7 @@ function obtenerTransaccionesBanco() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-// 🗑️  PAPELERA UNIVERSAL (v94.69-LAB)
+// 🗑️  PAPELERA UNIVERSAL (v94.70-LAB)
 // ═══════════════════════════════════════════════════════════════════════
 
 function agregarALaPapelera(tipo, datos, fecha) {
@@ -32631,7 +32639,7 @@ if (typeof sincronizarIngresosDelBanco !== 'undefined') {
     sincronizarIngresosDelBanco();
     limpiarPapeleraExpirada();
   }, 5 * 60 * 1000);
-  console.log('✅ Sincronización automática iniciada (v94.69-LAB)');
+  console.log('✅ Sincronización automática iniciada (v94.70-LAB)');
 }
 /* v94.62 · Tras cargar: si perfil aislado → plan a 0 en memoria (nunca toca datos del dueño)
    v94.63 · NEUTRALIZADO: migrar y vaciar están desactivados (ver fluxiaForzarVacioSiAislado). */
