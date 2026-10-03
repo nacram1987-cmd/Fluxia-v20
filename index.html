@@ -117,7 +117,7 @@
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="telephone=no" name="format-detection"/>
 <meta content="no" name="msapplication-tap-highlight"/>
-<title>Fluxia BETA v94.57-LAB</title>
+<title>Fluxia BETA v94.59-LAB</title>
 <!-- Fluxia v91 · brand lock · datos jamás a 0 · compartidos saldo inicial · notif suaves · logo alineado · base v90.10 -->
 <script>
 (function(){window.FluxiaNative={isNative:function(){try{return!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())}catch(e){return false}},platform:function(){try{return(window.Capacitor&&Capacitor.getPlatform)?Capacitor.getPlatform():'web'}catch(e){return'web'}}};})();
@@ -412,9 +412,9 @@ window.fluxiaCuandoLibre = function(fn, intentos){
 };
 
 </script>
-<meta content="v94.57-LAB" name="fluxia-version"/>
+<meta content="v94.59-LAB" name="fluxia-version"/>
 <meta content="lab" name="fluxia-channel"/>
-<script>window.FLUXIA_VERSION = "v94.57-LAB";</script>
+<script>window.FLUXIA_VERSION = "v94.59-LAB";</script>
 <script>
 /* v94.39 · Ir directo a Seguridad en Ajustes */
 window.fxIrASeguridad = function(){
@@ -2136,7 +2136,7 @@ header.top #bancoEstadoHeader{margin-top:4px!important;}
 .gv-importe,.mov-importe,.row-importe,.ingreso-importe,.fijo-importe{font-size:0.95rem!important;}
 </style>
 <style id="fluxiaDrawerFix">
-/* v94.57-LAB fix: encabezado (nombre + cerrar sesión) fijo; solo scrollea la lista */
+/* v94.59-LAB fix: encabezado (nombre + cerrar sesión) fijo; solo scrollea la lista */
 .drawer-menu,#drawerMenu{overflow:hidden!important;display:flex!important;flex-direction:column!important;padding-top:0!important;padding-bottom:0!important;}
 #drawerMenu .drawer-header{position:relative!important;top:auto!important;flex:0 0 auto!important;margin:0!important;padding-top:calc(16px + env(safe-area-inset-top))!important;z-index:3!important;}
 #drawerMenu .drawer-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:8px 0 calc(12px + env(safe-area-inset-bottom));}
@@ -3777,7 +3777,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <div style="min-width:0;">
 <div style="font-family:var(--serif); font-weight:700; font-size:1.28rem; line-height:1.15; color:var(--ink,#1A2433); letter-spacing:-0.02em;">Fluxia <span id="fluxiaBetaBadge" style="font-family:var(--sans);font-size:0.62rem;font-weight:800;letter-spacing:0.04em;vertical-align:middle;margin-left:6px;padding:2px 7px;border-radius:999px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid rgba(201,162,39,.35);">BETA</span></div>
 <div id="fluxiaHeaderSub" style="font-size:0.82rem; color:var(--muted); letter-spacing:0.3px; margin-top:2px;">Control absoluto. Flujo perfecto</div>
-<div id="fluxiaVersion" style="font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:3px; opacity:.85;">Versión v94.57-LAB</div>
+<div id="fluxiaVersion" style="font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:3px; opacity:.85;">Versión v94.59-LAB</div>
 <button class="fx-banco-pill" id="bancoEstadoHeader" onclick="window.abrirConexionBancaria()" style="display:none;" type="button"></button>
 </div>
 </div>
@@ -4668,7 +4668,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 </div>
 <div style="margin:0 0 14px;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--surface);">
 <div style="font-weight:800;font-size:.88rem;color:var(--ink);margin-bottom:6px;">🧪 Laboratorio (solo tú)</div>
-<p style="margin:0 0 10px;font-size:.8rem;color:var(--muted);line-height:1.45;">Esta versión concreta (<b id="fluxiaLabVersionLabel">v94.57-LAB</b>). Úsala para probar. <b>No la envíes a invitados</b> mientras sigas cambiando cosas cada día.</p>
+<p style="margin:0 0 10px;font-size:.8rem;color:var(--muted);line-height:1.45;">Esta versión concreta (<b id="fluxiaLabVersionLabel">v94.59-LAB</b>). Úsala para probar. <b>No la envíes a invitados</b> mientras sigas cambiando cosas cada día.</p>
 <button id="btnCopiarEnlaceBeta" style="background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%; margin-bottom:8px;" type="button">🔗 Copiar enlace de ESTA versión</button>
 <button id="btnComoInstalarBeta" style="background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%; margin-bottom:8px;" type="button">📲 Cómo instalarla en el móvil</button>
 <button id="btnInstalarPwa" style="display:none;background:var(--brand-1,#1554F0); color:#fff; border:none; border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%;" type="button">⬇️ Instalar Fluxia en este dispositivo</button>
@@ -4699,7 +4699,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <h3 class="section-title" style="margin:0;">Versión</h3>
 <span style="font-size:.68rem;font-weight:800;letter-spacing:.03em;padding:3px 8px;border-radius:999px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid rgba(201,162,39,.35);">BETA</span>
 </div>
-<p class="hint" id="ayudaVersionTxt" style="margin:0 0 14px;font-weight:600;color:var(--ink);">Fluxia BETA v94.57-LAB · datos en este dispositivo</p>
+<p class="hint" id="ayudaVersionTxt" style="margin:0 0 14px;font-weight:600;color:var(--ink);">Fluxia BETA v94.59-LAB · datos en este dispositivo</p>
 <div class="fluxia-empty-guide" style="margin-bottom:14px;text-align:left;">
 <div class="eg-tit" style="margin-bottom:8px;">🚀 Primeros pasos (2 minutos)</div>
 <ol style="margin:0;padding-left:1.2em;font-size:0.84rem;line-height:1.5;color:var(--ink);">
@@ -21542,10 +21542,19 @@ window.FluxiaPro = (function(){
 
 
 /* ═══════════════════════════════════════════════════════════════
-   v94.22 · SISTEMA VISUAL UNIFICADO (todas las pestañas)
-   Mismo lenguaje: degradados suaves, cards 16px, tipografía clara,
-   números mono, modo claro y oscuro.
+   v94.59 · PALETA A + acentos D (todas las pestañas)
+   Base: crema #FFF9F0 → #EAF5F7 · teal #0E7C90
+   Éxito/verde: menta #0F766E / #CCFBF1
    ═══════════════════════════════════════════════════════════════ */
+:root{
+  --fx-cream:#FFF9F0;
+  --fx-cream-2:#EAF5F7;
+  --fx-teal:#0E7C90;
+  --fx-teal-deep:#0A5F6E;
+  --fx-mint:#0F766E;
+  --fx-mint-soft:#CCFBF1;
+  --fx-mint-bg:#F0FDFA;
+}
 .panel{
   animation: fxPanelIn .28s ease both;
 }
@@ -21573,10 +21582,23 @@ window.FluxiaPro = (function(){
   line-height:1.45!important;
 }
 
-/* Heroes / totales grandes */
+/* Heroes unificados A (crema→teal) */
 .panel .pv-hero,
 .panel .fij-hero,
 .panel .ing-hero,
+.panel .gv-hero,
+.panel .tu-mes,
+.tu-mes,
+#panel-resumen .tu-mes,
+#panel-ingresos .ing-hero,
+#panel-fijos .fij-hero,
+#panel-gastos-variables .gv-hero,
+#panel-provisiones .pv-hero,
+#panel-compartidos .comp-hero,
+#panel-financiaciones .fij-hero,
+#panel-presupuestos .pv-hero,
+#panel-efectivo .pv-hero,
+#panel-analisis .pv-hero,
 .dashboard-card,
 .kpis > div,
 .kpi-card,
@@ -21591,9 +21613,64 @@ window.FluxiaPro = (function(){
 .form-reg,
 .backup-estado{
   border-radius:16px!important;
-  border:1px solid rgba(220,230,240,.95)!important;
-  background:linear-gradient(165deg, rgba(255,255,255,.98) 0%, rgba(243,249,252,.95) 100%)!important;
-  box-shadow:0 4px 16px rgba(15,58,92,.05)!important;
+  border:1px solid rgba(14,124,144,.12)!important;
+  background:linear-gradient(150deg, #FFF9F0 0%, #EAF5F7 55%, #F0FDFA 100%)!important;
+  box-shadow:0 4px 18px rgba(14,124,144,.07)!important;
+}
+/* Números grandes = teal A */
+.tm-val,
+.pv-hero-val,
+.fij-hero-val,
+.ing-hero-val,
+.gv-hero-val,
+#anHeroVal,
+.kpi .v,
+.kpi strong,
+.dashboard-card-value{
+  color:var(--fx-teal)!important;
+  font-family:var(--serif)!important;
+}
+/* Chips éxito = menta D */
+.badge-ok,
+.chip-ok,
+.tm-status,
+[class*="vas-en-verde"],
+.pill-ok{
+  background:var(--fx-mint-soft)!important;
+  color:var(--fx-mint)!important;
+  border-color:rgba(15,118,110,.2)!important;
+}
+/* Pills mes activas */
+.mes-selector button.active,
+.pills button.active,
+#mesSelectorInner button.active{
+  background:var(--fx-teal)!important;
+  color:#fff!important;
+  border-color:var(--fx-teal)!important;
+}
+/* Dark mode: A profundizado + menta legible */
+:root[data-theme="dark"] .panel .pv-hero,
+:root[data-theme="dark"] .panel .fij-hero,
+:root[data-theme="dark"] .panel .ing-hero,
+:root[data-theme="dark"] .panel .gv-hero,
+:root[data-theme="dark"] .tu-mes,
+:root[data-theme="dark"] .dashboard-card,
+:root[data-theme="dark"] .kpis > div,
+:root[data-theme="dark"] .kpi-card,
+:root[data-theme="dark"] .consejero-box,
+:root[data-theme="dark"] .settings-card,
+:root[data-theme="dark"] .mov-item,
+:root[data-theme="dark"] .comp-mov-card{
+  background:linear-gradient(150deg, #1a2832 0%, #15252e 60%, #0f2a28 100%)!important;
+  border-color:rgba(20,184,166,.18)!important;
+}
+:root[data-theme="dark"] .tm-val,
+:root[data-theme="dark"] .pv-hero-val,
+:root[data-theme="dark"] .fij-hero-val,
+:root[data-theme="dark"] .ing-hero-val,
+:root[data-theme="dark"] .gv-hero-val,
+:root[data-theme="dark"] #anHeroVal{
+  color:#5eead4!important;
 }
 
 /* v94.42 · Pago parcial visible + banner HUB046 */
@@ -22868,6 +22945,188 @@ window.FluxiaQA_v49 = {
       }, 900);
     }
   }catch(e){}
+})();
+</script>
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   v94.58 · PAPELERA OBLIGATORIA (huchas, ingresos, fijos, todo)
+   Si se borra algo → SIEMPRE a papelera con snapshot completo.
+   ═══════════════════════════════════════════════════════════════ */
+(function(){
+  function pid(){ try{ return (window.FLUXIA_PROFILE&&FLUXIA_PROFILE.id)?String(FLUXIA_PROFILE.id):'global'; }catch(e){ return 'global'; } }
+  function KEY(){ return 'fluxia_papelera_v2_'+pid(); }
+  function leer(){
+    try{ var a=JSON.parse(localStorage.getItem(KEY())||'[]'); return Array.isArray(a)?a:[]; }catch(e){ return []; }
+  }
+  function guardar(a){
+    try{ localStorage.setItem(KEY(), JSON.stringify((a||[]).slice(0,200))); }catch(e){}
+    try{ if(typeof Almacen!=='undefined'&&Almacen.setItem) Almacen.setItem(KEY(), JSON.stringify((a||[]).slice(0,200))); }catch(e){}
+  }
+  function etiquetaKey(key){
+    var k=String(key||'');
+    if(/provisiones/.test(k)) return 'Hucha';
+    if(/movimientos/.test(k)) return 'Gasto variable';
+    if(/ingresos/.test(k)) return 'Ingreso';
+    if(/fijos/.test(k)) return 'Gasto fijo';
+    if(/financiaciones/.test(k)) return 'Financiación';
+    if(/compartidos/.test(k)) return 'Compartido';
+    if(/presupuestos/.test(k)) return 'Presupuesto';
+    return 'Elemento';
+  }
+  function nombreItem(it){
+    if(!it||typeof it!=='object') return 'Sin nombre';
+    return String(it.nombre||it.concepto||it.categoria||it.persona||it.id||'Sin nombre');
+  }
+  function pushItems(tipo, items, key){
+    if(window._FLUXIA_SIN_PAPELERA) return;
+    var arr=leer();
+    (items||[]).forEach(function(it){
+      if(!it) return;
+      arr.unshift({
+        id:'pp_'+Date.now()+'_'+Math.random().toString(36).slice(2,8),
+        tipo: tipo||etiquetaKey(key),
+        key: key||'',
+        nombre: nombreItem(it),
+        snapshot: JSON.parse(JSON.stringify(it)),
+        when: new Date().toISOString()
+      });
+    });
+    guardar(arr);
+  }
+  function autoDiff(key, valNuevo){
+    try{
+      if(window._FLUXIA_SIN_PAPELERA) return;
+      if(!Array.isArray(valNuevo)) return;
+      var prevRaw=null;
+      try{ if(typeof Almacen!=='undefined'&&Almacen.getItem&&typeof claveLS==='function') prevRaw=Almacen.getItem(claveLS(key)); }catch(e){}
+      if(prevRaw==null && typeof claveLS==='function'){ try{ prevRaw=localStorage.getItem(claveLS(key)); }catch(e){} }
+      if(!prevRaw) return;
+      var prev=JSON.parse(prevRaw);
+      if(!Array.isArray(prev)||!prev.length) return;
+      var idsNuevos={};
+      valNuevo.forEach(function(x){ if(x&&x.id!=null) idsNuevos[String(x.id)]=1; });
+      var perdidos=prev.filter(function(x){
+        if(!x) return false;
+        if(x.id!=null) return !idsNuevos[String(x.id)];
+        /* sin id: comparar nombre+importe aproximado */
+        var n=nombreItem(x);
+        return !valNuevo.some(function(y){ return nombreItem(y)===n && Number(y.importeMensual||y.importe||0)===Number(x.importeMensual||x.importe||0); });
+      });
+      if(perdidos.length) pushItems(etiquetaKey(key), perdidos, key);
+    }catch(e){ console.warn('[Papelera] autoDiff', e); }
+  }
+  function listar(){ return leer(); }
+  function restaurar(id){
+    var arr=leer();
+    var ix=arr.findIndex(function(x){ return x&&x.id===id; });
+    if(ix<0) return false;
+    var item=arr[ix];
+    arr.splice(ix,1); guardar(arr);
+    try{
+      var snap=item.snapshot; if(!snap) return false;
+      if(!snap.id) snap.id=(typeof uid==='function'?uid():('r'+Date.now()));
+      var key=item.key||'';
+      if(/provisiones/.test(key)||item.tipo==='Hucha'){
+        if(typeof provisiones!=='undefined'){
+          if(!provisiones.some(function(p){return p&&String(p.id)===String(snap.id);})) provisiones.push(snap);
+          if(typeof guardarProvisiones==='function') guardarProvisiones();
+          else if(typeof guardarLS==='function') guardarLS('planRescate_v2_provisiones', provisiones);
+        }
+      } else if(/movimientos/.test(key)||item.tipo==='Gasto variable'){
+        if(typeof movimientos!=='undefined'){
+          if(!movimientos.some(function(m){return m&&String(m.id)===String(snap.id);})) movimientos.push(snap);
+          if(typeof guardarMovimientos==='function') guardarMovimientos();
+        }
+      } else if(/ingresos/.test(key)||item.tipo==='Ingreso'){
+        if(typeof ingresosItems!=='undefined'){
+          if(!ingresosItems.some(function(m){return m&&String(m.id)===String(snap.id);})) ingresosItems.push(snap);
+          if(typeof guardarIngresos==='function') guardarIngresos();
+          else if(typeof guardarLS==='function') guardarLS('planRescate_v2_ingresos', ingresosItems);
+        }
+      } else if(/fijos/.test(key)||item.tipo==='Gasto fijo'){
+        if(typeof gastosFijosItems!=='undefined'){
+          if(!gastosFijosItems.some(function(m){return m&&String(m.id)===String(snap.id);})) gastosFijosItems.push(snap);
+          if(typeof guardarFijos==='function') guardarFijos();
+        }
+      } else if(/presupuestos/.test(key)){
+        if(typeof presupuestos!=='undefined'){
+          presupuestos.push(snap);
+          if(typeof guardarPresupuestos==='function') guardarPresupuestos();
+        }
+      } else {
+        /* genérico */
+        try{ if(typeof guardarLS==='function'&&key){
+          var cur=cargarLS(key,[]); if(!Array.isArray(cur)) cur=[];
+          cur.push(snap); guardarLS(key, cur);
+        }}catch(e){}
+      }
+      try{ if(typeof renderAll==='function') renderAll(); }catch(e){}
+      try{ if(typeof mostrarToast==='function') mostrarToast('♻ Recuperado: '+item.nombre,'var(--teal)',2800); }catch(e){}
+      return true;
+    }catch(e){ console.error(e); return false; }
+  }
+  function borrarDef(id){
+    var arr=leer().filter(function(x){ return !x||x.id!==id; });
+    guardar(arr);
+  }
+  function vaciar(){ guardar([]); }
+  /* API pública: sustituye o refuerza la existente */
+  var prev = window.FluxiaPapelera || {};
+  window.FluxiaPapelera = {
+    autoDiff: function(key,val){ try{ autoDiff(key,val); }catch(e){} try{ if(prev.autoDiff) prev.autoDiff(key,val); }catch(e){} },
+    push: pushItems,
+    listar: listar,
+    restaurar: restaurar,
+    borrarDefinitivo: borrarDef,
+    vaciar: vaciar,
+    abrir: function(){ try{ if(typeof prev.abrir==='function') return prev.abrir(); }catch(e){} pintarUI(); }
+  };
+  function pintarUI(){
+    var items=listar();
+    var box=document.getElementById('fxPapeleraModal');
+    if(!box){
+      box=document.createElement('div');
+      box.id='fxPapeleraModal';
+      box.style.cssText='position:fixed;inset:0;z-index:60060;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;padding:12px;';
+      document.body.appendChild(box);
+    }
+    box.style.display='flex';
+    var html='<div style="background:var(--surface);border-radius:18px 18px 12px 12px;max-width:480px;width:100%;max-height:78vh;overflow:auto;padding:16px;">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><b>🗑 Papelera</b><button type="button" id="fxPapCerrar" style="border:none;background:none;font-size:1.3rem;cursor:pointer;">×</button></div>'+
+      '<p style="font-size:.78rem;color:var(--muted);margin:0 0 10px;">Todo lo borrado se guarda aquí. Puedes recuperarlo uno a uno.</p>';
+    if(!items.length) html+='<div style="padding:24px;text-align:center;color:var(--muted);">Vacía</div>';
+    else items.forEach(function(it){
+      html+='<div style="padding:10px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;align-items:center;">'+
+        '<div style="min-width:0;"><div style="font-weight:650;font-size:.88rem;">'+String(it.nombre||'').replace(/</g,'&lt;')+'</div>'+
+        '<div style="font-size:.72rem;color:var(--muted);">'+String(it.tipo||'')+' · '+(it.when?String(it.when).slice(0,16).replace('T',' '):'')+'</div></div>'+
+        '<div style="display:flex;gap:6px;flex-shrink:0;">'+
+        '<button type="button" data-fx-rest="'+it.id+'" style="border:1px solid var(--teal);color:var(--teal);background:transparent;border-radius:8px;padding:6px 10px;font-size:.75rem;font-weight:700;cursor:pointer;">Recuperar</button>'+
+        '<button type="button" data-fx-del="'+it.id+'" style="border:1px solid var(--wine);color:var(--wine);background:transparent;border-radius:8px;padding:6px 10px;font-size:.75rem;cursor:pointer;">Borrar</button>'+
+        '</div></div>';
+    });
+    if(items.length) html+='<button type="button" id="fxPapVaciar" style="margin-top:12px;width:100%;border:1px solid var(--wine);background:transparent;color:var(--wine);border-radius:10px;padding:10px;font-weight:700;cursor:pointer;">Vaciar papelera</button>';
+    html+='</div>';
+    box.innerHTML=html;
+    document.getElementById('fxPapCerrar').onclick=function(){ box.style.display='none'; };
+    var v=document.getElementById('fxPapVaciar');
+    if(v) v.onclick=function(){ if(confirm('¿Vaciar papelera? No se puede deshacer.')){ vaciar(); pintarUI(); } };
+    box.querySelectorAll('[data-fx-rest]').forEach(function(b){ b.onclick=function(){ restaurar(b.getAttribute('data-fx-rest')); pintarUI(); }; });
+    box.querySelectorAll('[data-fx-del]').forEach(function(b){ b.onclick=function(){ borrarDef(b.getAttribute('data-fx-del')); pintarUI(); }; });
+  }
+  window.fluxiaAbrirPapelera = function(){ window.FluxiaPapelera.abrir(); };
+  /* Botón en Ajustes si no existe */
+  setTimeout(function(){
+    try{
+      var host=document.querySelector('#panel-ajustes .fx-security-card')||document.getElementById('panel-ajustes');
+      if(host && !document.getElementById('btnPapeleraV58')){
+        var b=document.createElement('button');
+        b.id='btnPapeleraV58'; b.type='button'; b.className='settings-action';
+        b.textContent='🗑 Papelera (recuperar borrados)';
+        b.onclick=function(){ window.fluxiaAbrirPapelera(); };
+        host.appendChild(b);
+      }
+    }catch(e){}
+  }, 1500);
 })();
 </script>
 <script>
@@ -29862,7 +30121,7 @@ header.top{position:sticky;top:0;z-index:50;-webkit-transform:translateZ(0);tran
    Compartidos estilo Tricount, papelera y herramientas de comprobación. NO toca el módulo bancario.
    ═══════════════════════════════════════════════════════════════ */
 window.FLUXIA_CHECKLIST = {
-  version: 'v94.57-LAB',
+  version: 'v94.59-LAB',
   fecha: '3 Oct 2026',
   items: [
     { t:'fijos', n:'Avisos banco→fijo', d:'Fecha siempre visible. Acciones: Sí / Es otro gasto / Descartar (+ Duplicado si aplica).' },
@@ -31476,7 +31735,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 })();
 
 // ═══════════════════════════════════════════════════════════════════════
-// 🔄 INGRESOS AUTOMÁTICOS DESDE BANCO (v94.57-LAB)
+// 🔄 INGRESOS AUTOMÁTICOS DESDE BANCO (v94.59-LAB)
 // ═══════════════════════════════════════════════════════════════════════
 
 
@@ -31668,7 +31927,7 @@ function obtenerTransaccionesBanco() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-// 🗑️  PAPELERA UNIVERSAL (v94.57-LAB)
+// 🗑️  PAPELERA UNIVERSAL (v94.59-LAB)
 // ═══════════════════════════════════════════════════════════════════════
 
 function agregarALaPapelera(tipo, datos, fecha) {
@@ -31761,7 +32020,7 @@ if (typeof sincronizarIngresosDelBanco !== 'undefined') {
     sincronizarIngresosDelBanco();
     limpiarPapeleraExpirada();
   }, 5 * 60 * 1000);
-  console.log('✅ Sincronización automática iniciada (v94.57-LAB)');
+  console.log('✅ Sincronización automática iniciada (v94.59-LAB)');
 }
 </script>
 </html>
