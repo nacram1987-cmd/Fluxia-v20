@@ -110,7 +110,7 @@
 .fx-security-note b{color:var(--ink);}
 .fx-security-card h5{margin:0 0 8px;font-size:.88rem;color:var(--ink);}
 
-/* v94.71-LAB · Dashboard consolidado + navegación mensual */
+/* v94.76-LAB · Dashboard consolidado + navegación mensual */
 .fx-dashboard67{margin:0 0 18px;padding:16px;border:1px solid var(--line);border-radius:18px;background:var(--surface);box-shadow:0 6px 20px rgba(15,58,92,.055);}
 .fx-dashboard67-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:14px;}
 .fx-dashboard67-kicker{font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);}
@@ -138,7 +138,7 @@
 #panel-resumen .dashboard-legacy-summary{display:none !important;}
 #panel-resumen #dashboardVisualV801{display:none !important;}
 #panel-resumen #dashInformeSemana{display:none !important;}
-/* v94.71 · Dashboard refinado: conservar estructura familiar, quitar duplicidad */
+/* v94.76 · Dashboard refinado: conservar estructura familiar, quitar duplicidad */
 #tuMes{display:none !important;}
 #panel-resumen > .hint{display:none !important;}
 .fx-month-nav{display:flex;align-items:center;gap:7px;margin:0 0 10px;padding:3px 0;}
@@ -169,7 +169,7 @@
 .fx-cloud-integrity strong{color:var(--ink);}
 @media(max-width:430px){.fx-dashboard67-break{grid-template-columns:repeat(2,minmax(0,1fr));}.fx-dashboard67-real .amount{font-size:2.15rem;}.fx-month-nav .current b{font-size:1.05rem;}}
 @media(max-width:420px){.fx-dashboard67-actions{grid-template-columns:1fr;} .fx-dashboard67-real .amount{font-size:1.8rem;}}
-/* v94.71-LAB · Dashboard realmente consolidado: no duplicar héroes/KPIs antiguos en Inicio */
+/* v94.76-LAB · Dashboard realmente consolidado: no duplicar héroes/KPIs antiguos en Inicio */
 body.fx-dashboard-clean #tuMes,
 body.fx-dashboard-clean #dashboardVisualV801,
 body.fx-dashboard-clean #kpiGrid,
@@ -188,7 +188,7 @@ body.fx-dashboard-clean .fx-dashboard67-item.gold:after { content:""; position:a
 .fx-month-nav button.today { background:var(--gold-soft); color:var(--ink); border-color:rgba(232,169,61,.28); }
 @media(max-width:420px){ body.fx-dashboard-clean .fx-dashboard67-break{grid-template-columns:repeat(2,minmax(0,1fr));} }
 
-/* v94.71 · Dashboard final polish: eliminar flash/KPIs heredados y afinar jerarquía */
+/* v94.76 · Dashboard final polish: eliminar flash/KPIs heredados y afinar jerarquía */
 #kpiGrid,
 .dashboard-legacy-summary,
 #panel-resumen > .hint { display:none !important; }
@@ -209,7 +209,7 @@ body.fx-dashboard-clean .fx-dashboard67-item.gold:after { content:""; position:a
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="telephone=no" name="format-detection"/>
 <meta content="no" name="msapplication-tap-highlight"/>
-<title>Fluxia BETA v94.71-LAB</title>
+<title>Fluxia BETA v94.76-LAB</title>
 <!-- Fluxia v91 · brand lock · datos jamás a 0 · compartidos saldo inicial · notif suaves · logo alineado · base v90.10 -->
 <script>
 (function(){window.FluxiaNative={isNative:function(){try{return!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())}catch(e){return false}},platform:function(){try{return(window.Capacitor&&Capacitor.getPlatform)?Capacitor.getPlatform():'web'}catch(e){return'web'}}};})();
@@ -504,9 +504,9 @@ window.fluxiaCuandoLibre = function(fn, intentos){
 };
 
 </script>
-<meta content="v94.71-LAB" name="fluxia-version"/>
+<meta content="v94.76-LAB" name="fluxia-version"/>
 <meta content="lab" name="fluxia-channel"/>
-<script>window.FLUXIA_VERSION = "v94.71-LAB";</script>
+<script>window.FLUXIA_VERSION = "v94.76-LAB";</script>
 <script>
 /* v94.39 · Ir directo a Seguridad en Ajustes */
 window.fxIrASeguridad = function(){
@@ -1305,8 +1305,10 @@ function generarLinkInvitacion(inviteToken) {
     return true;
   }
   async function salir(){
-    try{ var c = await sb(); await c.auth.signOut(); }catch(e){}
-    localStorage.removeItem(BIND_KEY);
+    // v94.76: cerrar sesión de Fluxia no revoca la sesión persistente de Supabase.
+    // Esto permite que «Ya tengo un usuario» vuelva a abrir la cuenta guardada.
+    try{ if(perfilId()) localStorage.setItem(BIND_KEY, perfilId()); }catch(e){}
+    return true;
   }
   async function usuario(){
     try{ var c = await sb(); var s = await c.auth.getSession(); return (s.data && s.data.session && s.data.session.user) || null; }
@@ -2229,7 +2231,7 @@ header.top #bancoEstadoHeader{margin-top:4px!important;}
 .gv-importe,.mov-importe,.row-importe,.ingreso-importe,.fijo-importe{font-size:0.95rem!important;}
 </style>
 <style id="fluxiaDrawerFix">
-/* v94.71-LAB fix: encabezado (nombre + cerrar sesión) fijo; solo scrollea la lista */
+/* v94.76-LAB fix: encabezado (nombre + cerrar sesión) fijo; solo scrollea la lista */
 .drawer-menu,#drawerMenu{overflow:hidden!important;display:flex!important;flex-direction:column!important;padding-top:0!important;padding-bottom:0!important;}
 #drawerMenu .drawer-header{position:relative!important;top:auto!important;flex:0 0 auto!important;margin:0!important;padding-top:calc(16px + env(safe-area-inset-top))!important;z-index:3!important;}
 #drawerMenu .drawer-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:8px 0 calc(12px + env(safe-area-inset-bottom));}
@@ -2274,7 +2276,7 @@ header.top #bancoEstadoHeader{margin-top:4px!important;}
 
 
 <style id="fluxia-v9470-dashboard-polish">
-/* v94.71 · Dashboard: pinceladas visuales, misma tipografía y jerarquía que las pestañas */
+/* v94.76 · Dashboard: pinceladas visuales, misma tipografía y jerarquía que las pestañas */
 #panel-resumen .fx-month-nav,
 #panel-resumen .fx-dashboard67,
 #panel-resumen .fx-dashboard67 * {
@@ -2320,7 +2322,41 @@ header.top #bancoEstadoHeader{margin-top:4px!important;}
   transform: scale(.985);
 }
 </style>
-</head>
+<style id="fluxia-v9476-unified-theme">
+/* v94.76 · Identidad visual unificada: Dashboard + todas las pestañas */
+:root{
+ --fluxia-cream:#FBF7F0;--fluxia-cream2:#F4EBDD;--fluxia-gold:#C9953D;--fluxia-gold-soft:#F7EBCF;
+ --fluxia-teal:#147F89;--fluxia-teal-soft:#EAF5F5;--fluxia-ink:#40372F;--fluxia-muted:#806F5B;
+}
+/* Tarjetas del Dashboard: iconos, color y navegación recuperados */
+#panel-resumen .fx-dashboard67-item{border-radius:15px!important;min-height:70px!important;padding:11px 8px!important;cursor:pointer!important;font-family:var(--sans)!important;box-shadow:0 3px 12px rgba(80,60,35,.045)!important;appearance:none!important;-webkit-appearance:none!important;}
+#panel-resumen .fx-dashboard67-item .label{font-size:.74rem!important;font-weight:750!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:4px!important;}
+#panel-resumen .fx-dashboard67-item .value{font-family:var(--serif)!important;font-size:.94rem!important;font-weight:600!important;margin-top:5px!important;}
+#panel-resumen .fx-dashboard67-item.teal{background:linear-gradient(160deg,#F8FEFE,#EAF5F7)!important;border:1px solid rgba(20,127,137,.18)!important;}
+#panel-resumen .fx-dashboard67-item.ink{background:linear-gradient(160deg,#FFFCF7,#F3EEE6)!important;border:1px solid rgba(64,55,47,.12)!important;}
+#panel-resumen .fx-dashboard67-item.gold{background:linear-gradient(160deg,#FFF9EC,#F5E5BE)!important;border:1px solid rgba(201,149,61,.34)!important;}
+#panel-resumen .fx-dashboard67-item.violet{background:linear-gradient(160deg,#FCFAFF,#F0EAF8)!important;border:1px solid rgba(109,85,125,.17)!important;}
+#panel-resumen .fx-dashboard67-item.teal .label,.fx-dashboard67-item.teal .value{color:#147F89!important}
+#panel-resumen .fx-dashboard67-item.ink .label,.fx-dashboard67-item.ink .value{color:#5D5145!important}
+#panel-resumen .fx-dashboard67-item.gold .label,.fx-dashboard67-item.gold .value{color:#8A622B!important}
+#panel-resumen .fx-dashboard67-item.violet .label,.fx-dashboard67-item.violet .value{color:#70567F!important}
+/* Todo el menú comparte el mismo lenguaje: crema, teal, oro, tipografía ligera y tarjetas limpias */
+.panel:not(#panel-resumen){
+ background:linear-gradient(180deg,#FFFCF7 0%,#FBF7F0 48%,#F7F0E7 100%)!important;
+ border:1px solid rgba(201,149,61,.16)!important;border-radius:22px!important;
+ box-shadow:0 8px 28px rgba(80,60,35,.045)!important;padding:18px!important;
+}
+.panel:not(#panel-resumen) .section-title,.panel:not(#panel-resumen) h1,.panel:not(#panel-resumen) h2,.panel:not(#panel-resumen) h3{color:var(--fluxia-ink)!important;font-weight:650!important;letter-spacing:-.01em!important;}
+.panel:not(#panel-resumen) .card,.panel:not(#panel-resumen) .fluxia-card,.panel:not(#panel-resumen) .card-section,.panel:not(#panel-resumen) .form-card,.panel:not(#panel-resumen) .box{
+ background:rgba(255,252,247,.92)!important;border:1px solid rgba(201,149,61,.14)!important;border-radius:16px!important;box-shadow:0 3px 14px rgba(80,60,35,.035)!important;
+}
+.panel:not(#panel-resumen) input,.panel:not(#panel-resumen) select,.panel:not(#panel-resumen) textarea{border-color:rgba(20,127,137,.18)!important;background:#FFFCF7!important;border-radius:11px!important;}
+.panel:not(#panel-resumen) button:not(.danger):not(.delete):not(.fpg-delete-user){border-radius:11px!important;}
+.panel:not(#panel-resumen) .primary,.panel:not(#panel-resumen) .btn-primary{background:var(--fluxia-teal)!important;border-color:var(--fluxia-teal)!important;}
+.panel:not(#panel-resumen) .pill,.panel:not(#panel-resumen) .tag{border-radius:999px!important;}
+/* encabezados de pestañas con un hilo dorado común */
+.panel:not(#panel-resumen)::before{content:"";display:block;width:42px;height:3px;border-radius:999px;background:var(--fluxia-gold);opacity:.72;margin:0 0 12px;}
+</style></head>
 <script>
 window._offlineMode=!navigator.onLine;
 window.addEventListener('online',()=>{window._offlineMode=false;});
@@ -2745,7 +2781,13 @@ body {
       var nom=String(pr.name||'Usuario').replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});
       b.innerHTML='<span>'+(pr.principal?'⭐ ':'👤 ')+nom+'<small>'+(pr.principal?'Principal · entra solo':'Sesión guardada en este dispositivo')+'</small></span><span>Entrar →</span>';
       if(pr.principal) b.classList.add('fpg-principal');
-      b.addEventListener('click',function(){try{sessionStorage.removeItem('fx_salida');sessionStorage.setItem('fx_gate_ok','1');}catch(e){}saveActive(pr);window.FLUXIA_PROFILE=pr; try{if(typeof fluxiaActualizarPrefijoPerfil==='function')fluxiaActualizarPrefijoPerfil();}catch(_fp){}espejo();location.reload();});
+      b.addEventListener('click',function(){
+  try{sessionStorage.removeItem('fx_salida');sessionStorage.setItem('fx_gate_ok','1');}catch(e){}
+  saveActive(pr); window.FLUXIA_PROFILE=pr;
+  try{ localStorage.setItem(BIND_KEY, String(pr.id)); }catch(e){}
+  try{if(typeof fluxiaActualizarPrefijoPerfil==='function')fluxiaActualizarPrefijoPerfil();}catch(_fp){}
+  espejo(); location.reload();
+});
       var star=document.createElement('button');star.type='button';star.className='fpg-star';star.textContent=pr.principal?'★':'☆';
       star.title=pr.principal?'Quitar como principal':'Recordar como principal';star.setAttribute('aria-label',star.title);
       star.addEventListener('click',function(e){e.stopPropagation();var marcar=!pr.principal;var arr=getProfiles().map(function(x){x.principal=marcar&&x.id===pr.id;return x;});saveProfiles(arr);espejo();renderProfiles();msg.classList.add('ok');msg.textContent=marcar?'⭐ '+String(pr.name||'Usuario')+' entrará automáticamente en este dispositivo.':'Ya no se entrará automáticamente.';});
@@ -2806,7 +2848,13 @@ body {
       list.scrollIntoView({behavior:'smooth',block:'nearest'});
     }catch(e){}
   });
-  window.FluxiaSesion={cerrar:function(){try{sessionStorage.setItem('fx_salida','1');sessionStorage.removeItem('fx_gate_ok');}catch(e){}try{if(window.Almacen&&Almacen.vaciar)Almacen.vaciar();}catch(e){}saveActive(null);window.FLUXIA_PROFILE=null;location.reload();},eliminar:async function(pr){try{if(window.Almacen&&Almacen.eliminarTodo)await Almacen.eliminarTodo();}catch(e){}try{saveProfiles(getProfiles().filter(function(x){return x&&x.id!==pr.id;}));}catch(e){}}};
+  window.FluxiaSesion={cerrar:async function(){
+  try{sessionStorage.setItem('fx_salida','1');sessionStorage.removeItem('fx_gate_ok');}catch(e){}
+  try{if(window.Almacen&&Almacen.flush) await Almacen.flush(); else if(window.Almacen&&Almacen.vaciar) Almacen.vaciar();}catch(e){}
+  // Guardamos el perfil para «Ya tengo un usuario». NO hacemos saveActive(null) ni signOut Supabase.
+  try{var a=getActive(); if(a) saveProfiles(getProfiles().map(function(x){return x&&x.id===a.id?Object.assign({},x,{principal:true}):x;}));}catch(e){}
+  window.FLUXIA_PROFILE=null; location.reload();
+},eliminar:async function(pr){try{if(window.Almacen&&Almacen.eliminarTodo)await Almacen.eliminarTodo();}catch(e){}try{saveProfiles(getProfiles().filter(function(x){return x&&x.id!==pr.id;}));}catch(e){}}};
 })();
 </script>
 <script>
@@ -3925,7 +3973,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <div style="min-width:0;">
 <div style="font-family:var(--serif); font-weight:700; font-size:1.28rem; line-height:1.15; color:var(--ink,#1A2433); letter-spacing:-0.02em;">Fluxia <span id="fluxiaBetaBadge" style="font-family:var(--sans);font-size:0.62rem;font-weight:800;letter-spacing:0.04em;vertical-align:middle;margin-left:6px;padding:2px 7px;border-radius:999px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid rgba(201,162,39,.35);">BETA</span></div>
 <div id="fluxiaHeaderSub" style="font-size:0.82rem; color:var(--muted); letter-spacing:0.3px; margin-top:2px;">Control absoluto. Flujo perfecto</div>
-<div id="fluxiaVersion" style="font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:3px; opacity:.85;">Versión v94.71-LAB</div>
+<div id="fluxiaVersion" style="font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:3px; opacity:.85;">Versión v94.76-LAB</div>
 <button class="fx-banco-pill" id="bancoEstadoHeader" onclick="window.abrirConexionBancaria()" style="display:none;" type="button"></button>
 </div>
 </div>
@@ -3995,7 +4043,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <div id="panelsAnchor"></div>
 <!-- INICIO / RESUMEN DASHBOARD (FASE 2) -->
 <section class="panel active" id="panel-resumen">
-<!-- v94.71-LAB · Dashboard único: una cifra, una explicación, una acción -->
+<!-- v94.76-LAB · Dashboard único: una cifra, una explicación, una acción -->
 <div class="fx-month-nav" aria-label="Navegación del mes">
   <button type="button" id="fxMesPrev" aria-label="Mes anterior" title="Mes anterior">‹</button>
   <div class="current"><b id="fxMesActualLabel">—</b><small id="fxMesActualSub">Mes seleccionado</small></div>
@@ -4009,16 +4057,22 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
     <div class="note" id="fxDashDisponibleNota">Lo que queda después de lo ya contabilizado.</div>
   </div>
   <div class="fx-dashboard67-break" aria-label="Desglose del mes">
-    <div class="fx-dashboard67-item"><div class="label">Ingresos</div><div class="value" id="fxDashIngresos">—</div></div>
-    <div class="fx-dashboard67-item"><div class="label">Fijos</div><div class="value" id="fxDashFijos">—</div></div>
-    <div class="fx-dashboard67-item gold"><div class="label">Provisiones</div><div class="value" id="fxDashProvisiones">—</div></div>
-    <div class="fx-dashboard67-item"><div class="label">Variables</div><div class="value" id="fxDashVariables">—</div></div>
+    <button type="button" class="fx-dashboard67-item teal" id="fxDashCardIngresos"><div class="label">💶 Ingresos</div><div class="value" id="fxDashIngresos">—</div></button>
+    <button type="button" class="fx-dashboard67-item ink" id="fxDashCardFijos"><div class="label">📌 Fijos</div><div class="value" id="fxDashFijos">—</div></button>
+    <button type="button" class="fx-dashboard67-item gold" id="fxDashCardProvisiones"><div class="label">🏺 Provisiones</div><div class="value" id="fxDashProvisiones">—</div></button>
+    <button type="button" class="fx-dashboard67-item violet" id="fxDashCardVariables"><div class="label">💸 Variables</div><div class="value" id="fxDashVariables">—</div></button>
   </div>
   <div class="fx-dashboard67-actions">
     <button class="fx-dashboard67-action" type="button" id="fxDashRitmoBtn"><div class="title">📆 <span id="fxDashRitmoTitle">Puedes gastar hoy</span></div><div class="detail" id="fxDashRitmoDetail">—</div></button>
     <button class="fx-dashboard67-action" type="button" id="fxDashPendBtn"><div class="title">💳 <span id="fxDashPendTitle">Pagos pendientes</span></div><div class="detail" id="fxDashPendDetail">—</div></button>
   </div>
 </div>
+<script>
+(function(){
+  function nav(id,tab){var b=document.getElementById(id);if(b)b.addEventListener('click',function(){if(typeof goToTab==='function')goToTab(tab);});}
+  nav('fxDashCardIngresos','ingresos');nav('fxDashCardFijos','fijos');nav('fxDashCardProvisiones','provisiones');nav('fxDashCardVariables','gastos-variables');
+})();
+</script>
 <div class="fx-cloud-integrity" id="fxCloudIntegrity" role="status">
   <span class="dot" aria-hidden="true"></span><span id="fxCloudIntegrityText"><strong>Datos protegidos</strong> · guardado local y nube cuando está conectada</span>
 </div>
@@ -4839,7 +4893,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 </div>
 <div style="margin:0 0 14px;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--surface);">
 <div style="font-weight:800;font-size:.88rem;color:var(--ink);margin-bottom:6px;">🧪 Laboratorio (solo tú)</div>
-<p style="margin:0 0 10px;font-size:.8rem;color:var(--muted);line-height:1.45;">Esta versión concreta (<b id="fluxiaLabVersionLabel">v94.71-LAB</b>). Úsala sin temor—es la versión estable. <b>Puedes compartirla con confianza.</b></p>
+<p style="margin:0 0 10px;font-size:.8rem;color:var(--muted);line-height:1.45;">Esta versión concreta (<b id="fluxiaLabVersionLabel">v94.76-LAB</b>). Úsala sin temor—es la versión estable. <b>Puedes compartirla con confianza.</b></p>
 <button id="btnCopiarEnlaceBeta" style="background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%; margin-bottom:8px;" type="button">🔗 Copiar enlace de ESTA versión</button>
 <button id="btnComoInstalarBeta" style="background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%; margin-bottom:8px;" type="button">📲 Cómo instalarla en el móvil</button>
 <button id="btnInstalarPwa" style="display:none;background:var(--brand-1,#1554F0); color:#fff; border:none; border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%;" type="button">⬇️ Instalar Fluxia en este dispositivo</button>
@@ -4870,7 +4924,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <h3 class="section-title" style="margin:0;">Versión</h3>
 <span style="font-size:.68rem;font-weight:800;letter-spacing:.03em;padding:3px 8px;border-radius:999px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid rgba(201,162,39,.35);">BETA</span>
 </div>
-<p class="hint" id="ayudaVersionTxt" style="margin:0 0 14px;font-weight:600;color:var(--ink);">Fluxia BETA v94.71-LAB (estable) · datos en este dispositivo</p>
+<p class="hint" id="ayudaVersionTxt" style="margin:0 0 14px;font-weight:600;color:var(--ink);">Fluxia BETA v94.76-LAB (estable) · datos en este dispositivo</p>
 <div class="fluxia-empty-guide" style="margin-bottom:14px;text-align:left;">
 <div class="eg-tit" style="margin-bottom:8px;">🚀 Primeros pasos (2 minutos)</div>
 <ol style="margin:0;padding-left:1.2em;font-size:0.84rem;line-height:1.5;color:var(--ink);">
@@ -5142,6 +5196,8 @@ const Almacen = (function(){
     // respuesta remota antigua pueda sustituir silenciosamente datos locales.
     try{ lsSet('__ts__'+String(k), String(Date.now())); }catch(e){}
     marcar(k, 'set');
+    // v94.76: datos financieros críticos (especialmente huchas) no esperan el debounce.
+    if (listo && db && /provisiones|movimientos|ingresos|fijos|financiaciones|compartidos|presupuestos|usos|efectivo/.test(String(k))) subir(k);
   }
   function removeItem(k){
     cache[k] = null;
@@ -5194,9 +5250,8 @@ const Almacen = (function(){
     });
     return cadena[k];
   }
-  function vaciar(){
-    Object.keys(pendiente).forEach(k=>{ clearTimeout(timers[k]); subir(k); });
-  }
+  function vaciar(){ Object.keys(pendiente).forEach(k=>{ clearTimeout(timers[k]); subir(k); }); }
+  async function flush(){ const ks=Object.keys(pendiente); ks.forEach(k=>{clearTimeout(timers[k]); subir(k);}); const ps=ks.map(k=>cadena[k]).filter(Boolean); if(ps.length) await Promise.allSettled(ps); return Object.keys(pendiente).length===0; }
 
   function resolverEspera(){ while (esperando.length) esperando.shift()(); }
 
@@ -5292,7 +5347,7 @@ const Almacen = (function(){
   window.addEventListener('pagehide', vaciar);
 
   return {
-    getItem, setItem, removeItem, claves, iniciar, vaciar,
+    getItem, setItem, removeItem, claves, iniciar, vaciar, flush,
     async eliminarTodo(){
       try{const ks=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&(!ES_LEGACY?k.indexOf(LOCAL_PREFIX)===0:nuestra(k)))ks.push(k);}ks.forEach(k=>localStorage.removeItem(k));}catch(e){}
       try{if(db){const snap=await db.collection(RAIZ).get();await Promise.all((snap.docs||[]).map(d=>d.delete()));}}catch(e){console.warn('Almacén: no se pudo borrar todo en remoto',e);}
@@ -5918,7 +5973,7 @@ function initPwaYBeta(){
       name: 'Fluxia BETA',
       short_name: 'Fluxia BETA',
       description: 'Tu plan de dinero mes a mes · Fluxia',
-      start_url: './index.html?v=v94.71-LAB',
+      start_url: './index.html?v=v94.76-LAB',
       scope: './',
       display: 'standalone',
       orientation: 'portrait-primary',
@@ -18124,8 +18179,9 @@ function renderFluxiaCloudIntegrity(){
     if(!el||!txt) return;
     var est=(window.Almacen&&Almacen.estado)||'local';
     if(est==='nube'){ el.classList.add('ok'); txt.innerHTML='<strong>Datos protegidos y sincronizados</strong> · nube activa · conservación histórica'; }
-    else if(est==='error'){ el.classList.remove('ok'); txt.innerHTML='<strong>Datos guardados en este dispositivo</strong> · nube pendiente de sincronización'; }
-    else { el.classList.remove('ok'); txt.innerHTML='<strong>Datos guardados localmente</strong> · conecta la nube para tener copia remota'; }
+    else if(est==='error'){ el.classList.remove('ok'); txt.innerHTML='<strong>Sincronización con nube pendiente</strong> · Fluxia reintentará automáticamente'; }
+    else if(est==='cargando'){ el.classList.remove('ok'); txt.innerHTML='<strong>Conectando con la nube…</strong> · verificando tus datos'; }
+    else { el.classList.remove('ok'); txt.innerHTML='<strong>Nube pendiente de confirmación</strong> · tus datos no se consideran sincronizados hasta verificar la conexión'; }
   }catch(e){}
 }
 
@@ -18134,7 +18190,7 @@ function renderDashboard(){
   const mes = mesSeleccionado;
   const disponible = disponibleEfectivo(mes);
 
-  // v94.71-LAB · Dashboard consolidado: una sola jerarquía visual.
+  // v94.76-LAB · Dashboard consolidado: una sola jerarquía visual.
   try {
     const idx = MESES.indexOf(mes);
     const lbl = MES_LABEL[mes] || mes;
@@ -23137,7 +23193,7 @@ header.top [style*="width:60px"]{width:44px!important;height:44px!important;flex
 <button id="btnInstalarPWA" style="position:fixed; bottom:20px; right:20px; padding:12px 16px; background:var(--teal); color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer; display:none; z-index:999; box-shadow:0 4px 12px rgba(14,124,144,0.3);" type="button">📱 Instalar app</button>
 
 <script>
-/* v94.71 · Salud al arrancar: recordatorio visual retirado del Dashboard; seguridad en Ajustes. */
+/* v94.76 · Salud al arrancar: recordatorio visual retirado del Dashboard; seguridad en Ajustes. */
 (function(){
   window.fluxiaSaludArranque = function(){};
   function markBackup(){
@@ -23528,7 +23584,7 @@ window.FluxiaQA_v49 = {
     var ix=arr.findIndex(function(x){ return x&&x.id===id; });
     if(ix<0) return false;
     var item=arr[ix];
-    // v94.71 · restaurar NO elimina el registro histórico: se marca como restaurado.
+    // v94.76 · restaurar NO elimina el registro histórico: se marca como restaurado.
     item.restauradoEn = Date.now();
     arr[ix] = item;
     guardar(arr);
@@ -29360,7 +29416,7 @@ console.log('✅ Fluxia v91 · Confianza + Salud listos');
   var PAPELERA_BASE = 'fluxia_papelera_v1';
   // v93.1 · la papelera es POR USUARIO (antes era común a todos los perfiles)
   function _papKey(){ try{ var id = window.FLUXIA_PROFILE && window.FLUXIA_PROFILE.id; return PAPELERA_BASE + (id ? ('_' + id) : ''); }catch(e){ return PAPELERA_BASE; } }
-  var PAPELERA_DIAS = 0; // v94.71 · conservación permanente; 0 = sin caducidad
+  var PAPELERA_DIAS = 0; // v94.76 · conservación permanente; 0 = sin caducidad
   var ZOOM_KEY = 'fluxia_a11y_zoom_v1';
 
   function toast(m,c,ms){ try{ if(typeof mostrarToast==='function') mostrarToast(m,c||'var(--teal)',ms||2800); }catch(e){} }
@@ -30753,7 +30809,7 @@ header.top{position:sticky;top:0;z-index:50;-webkit-transform:translateZ(0);tran
    Compartidos estilo Tricount, papelera y herramientas de comprobación. NO toca el módulo bancario.
    ═══════════════════════════════════════════════════════════════ */
 window.FLUXIA_CHECKLIST = {
-  version: 'v94.71-LAB',
+  version: 'v94.76-LAB',
   fecha: '4 Oct 2026',
   items: [
     { t:'ui', n:'Paleta mejorada en "Tu mes"', d:'Gradiente más audaz (azul marino → teal → oro) para mayor profundidad visual y jerarquía clara de meses.' },
@@ -32367,7 +32423,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 })();
 
 // ═══════════════════════════════════════════════════════════════════════
-// 🔄 INGRESOS AUTOMÁTICOS DESDE BANCO (v94.71-LAB)
+// 🔄 INGRESOS AUTOMÁTICOS DESDE BANCO (v94.76-LAB)
 // ═══════════════════════════════════════════════════════════════════════
 
 
@@ -32559,7 +32615,7 @@ function obtenerTransaccionesBanco() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-// 🗑️  PAPELERA UNIVERSAL (v94.71-LAB)
+// 🗑️  PAPELERA UNIVERSAL (v94.76-LAB)
 // ═══════════════════════════════════════════════════════════════════════
 
 function agregarALaPapelera(tipo, datos, fecha) {
@@ -32652,7 +32708,7 @@ if (typeof sincronizarIngresosDelBanco !== 'undefined') {
     sincronizarIngresosDelBanco();
     limpiarPapeleraExpirada();
   }, 5 * 60 * 1000);
-  console.log('✅ Sincronización automática iniciada (v94.71-LAB)');
+  console.log('✅ Sincronización automática iniciada (v94.76-LAB)');
 }
 /* v94.62 · Tras cargar: si perfil aislado → plan a 0 en memoria (nunca toca datos del dueño)
    v94.63 · NEUTRALIZADO: migrar y vaciar están desactivados (ver fluxiaForzarVacioSiAislado). */
