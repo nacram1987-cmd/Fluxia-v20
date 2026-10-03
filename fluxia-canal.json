@@ -1,7 +1,1 @@
-{
-  "app": "Fluxia",
-  "lab_version": "v94.52-LAB",
-  "stable_version": "v94.46-ESTABLE",
-  "timestamp": "2026-10-03T03:40:00Z",
-  "critical": "DATA SAFETY: sin cuenta no borra planRescate global"
-}
+{"app":"Fluxia","lab_version":"v94.53-LAB","stable_version":"v94.46-ESTABLE","timestamp":"2026-10-03T03:50:00Z"}
