@@ -1,4 +1,4 @@
-# Fluxia v94.66-LAB
+# Fluxia v94.67-LAB
 
 Tu control financiero personal · Presupuestos · Ingresos · Gastos · Tarjetas · Préstamos
 
@@ -34,3 +34,11 @@ Tu control financiero personal · Presupuestos · Ingresos · Gastos · Tarjetas
 
 ---
 v94.66-LAB · 4 Oct 2026 · Listo para usar
+
+
+## v94.67-LAB · consolidación
+- Dashboard principal simplificado: Disponible real como cifra protagonista.
+- Entradas, compromisos, provisiones y variables quedan como desglose único.
+- Navegación mensual anterior / Hoy / siguiente sin cambiar de mes al navegar por pestañas.
+- Notificaciones internas con un único temporizador.
+- LAB y ESTABLE siguen siendo canales separados; el manifest no se utiliza para cambiar el canal estable.
