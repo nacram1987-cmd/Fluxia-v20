@@ -1,1 +1,8 @@
-{"app":"Fluxia","lab_version":"v94.77-LAB","stable_version":"v94.46-ESTABLE","timestamp":"2026-10-03T20:50:00Z","note":"Cerrar sesión sin borrar · dual-write huchas · dismiss fijos permanente · estética provisiones"}
+{
+  "app": "Fluxia",
+  "lab": "index.html",
+  "lab_version": "v94.70-LAB",
+  "stable": "index.html",
+  "stable_version": "v94.46-ESTABLE",
+  "timestamp": "2026-10-03T18:00:00+02:00"
+}
