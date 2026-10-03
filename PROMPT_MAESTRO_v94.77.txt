@@ -1,0 +1,12 @@
+# PROMPT MAESTRO · v94.77-LAB
+
+## Crítico almacenamiento
+- Cerrar sesión ≠ borrar (nunca Almacen.vaciar)
+- Dueño: dual-write planRescate_v2_* y planRescate_v2_u_<id>_*
+- Dueño nunca fluxiaForzarVacioSiAislado
+
+## Bancos
+- Descartar/Es otro gasto → fluxia_fijos_dismiss_v77 (localStorage permanente)
+
+## Visual
+- Patrón Provisiones (crema/menta suave) en todos los heroes de pestaña
