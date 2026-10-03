@@ -1,7 +1,7 @@
 {
-  "name": "Fluxia BETA v94.74-LAB",
+  "name": "Fluxia BETA v94.75-LAB",
   "short_name": "Fluxia",
-  "start_url": "./index.html?v=v94.74-LAB",
+  "start_url": "./index.html?v=v94.75-LAB",
   "scope": "./",
   "display": "standalone",
   "background_color": "#FFFFFF",
