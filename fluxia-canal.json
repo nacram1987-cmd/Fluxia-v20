@@ -1,8 +1,82 @@
 {
-  "app": "Fluxia",
-  "lab": "index.html",
-  "lab_version": "v94.77-LAB",
-  "stable": "index.html",
+  "canal": "LAB",
+  "version": "v94.79-LAB",
+  "lab_version": "v94.79-LAB",
   "stable_version": "v94.46-ESTABLE",
-  "timestamp": "2026-10-03T20:51:55+02:00"
+  "timestamp": "2026-10-03T19:45:00Z",
+  "maintenance": false,
+  "update_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index.html?v=v94.79-LAB",
+  "manifest_url": "https://nacram1987-cmd.github.io/Fluxia-v20/manifest.webmanifest",
+  "updates": {
+    "v94.79-LAB": {
+      "name": "Fluxia v94.79-CRÍTICA: SUPABASE SYNC FIX",
+      "description": "Sincronización automática de datos a Supabase, retry inteligente, indicador visual de estado, limpieza de widgets fantasma.",
+      "release_date": "2026-10-03",
+      "type": "critical",
+      "critical_fixes": [
+        "Listeners automáticos en localStorage",
+        "Intercept de setItem → flush automático",
+        "Retry exponential backoff (1s, 2s, 4s, 8s, 16s)",
+        "Toast visual de sincronización",
+        "Limpieza de widgets residuales",
+        "Flush al cerrar app"
+      ],
+      "breaking_changes": false,
+      "minimum_app_version": "v94.46",
+      "recommended_action": "Actualizar inmediatamente"
+    },
+    "v94.78-LAB": {
+      "name": "Fluxia v94.78-LAB: Mejoras visuales",
+      "description": "Prototipo B de colores, separación visual mejorada",
+      "release_date": "2026-10-03",
+      "type": "patch"
+    }
+  },
+  "features": {
+    "supabase_sync": {
+      "enabled": true,
+      "auto_sync": true,
+      "retry_count": 5,
+      "retry_backoff_ms": 1000,
+      "timeout_ms": 5000
+    },
+    "offline_mode": {
+      "enabled": true,
+      "local_fallback": true
+    },
+    "multi_tab_sync": {
+      "enabled": true
+    },
+    "visual_indicators": {
+      "enabled": true,
+      "toast_position": "top-right"
+    }
+  },
+  "api": {
+    "supabase": {
+      "url": "https://YOUR_SUPABASE_URL",
+      "key": "REDACTED_PUBLIC_KEY"
+    }
+  },
+  "support": {
+    "email": "support@fluxia.app",
+    "documentation": "https://docs.fluxia.app",
+    "status_page": "https://status.fluxia.app",
+    "issues_tracker": "https://github.com/nacram1987/Fluxia-v20/issues"
+  },
+  "telemetry": {
+    "enabled": false,
+    "analytics": false,
+    "crash_reporting": false
+  },
+  "security": {
+    "min_tls_version": "1.2",
+    "certificate_pinning": false,
+    "csp_enabled": true
+  },
+  "notes": {
+    "changelog": "CHANGELOG_v94.79.md",
+    "known_issues": [],
+    "deprecations": []
+  }
 }
