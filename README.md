@@ -1,9 +1,9 @@
-# Fluxia BETA v94.72-LAB
+# Fluxia BETA v94.73-LAB
 
 ## Objetivo
 Consolidación real del Inicio/Dashboard y del selector de meses, manteniendo la lógica financiera y el aislamiento de usuarios de versiones anteriores.
 
-## Cambios v94.72
+## Cambios v94.73
 - Dashboard de Inicio con una sola jerarquía: Disponible real → desglose → acciones.
 - Se ocultan en Inicio los héroes/KPIs/resumen visual antiguos que duplicaban información.
 - Selector local del Dashboard: mes anterior, Hoy y mes siguiente.
@@ -11,8 +11,8 @@ Consolidación real del Inicio/Dashboard y del selector de meses, manteniendo la
 - Distinción explícita entre **REAL** (mes actual) y **PLAN** (mes seleccionado no actual).
 - Oro utilizado como acento funcional para provisiones/valor.
 - Notificaciones activadas por defecto y temporizador idempotente.
-- LAB y ESTABLE separados: LAB v94.72; ESTABLE v94.46 según PROMPT_MAESTRO.
-- manifest.webmanifest arranca explícitamente v94.72-LAB.
+- LAB y ESTABLE separados: LAB v94.73; ESTABLE v94.46 según PROMPT_MAESTRO.
+- manifest.webmanifest arranca explícitamente v94.73-LAB.
 
 ## Banco / Supabase
 **SIN CAMBIOS en Fluxia-banco-index.ts. No desplegar de nuevo.**
@@ -26,17 +26,17 @@ Consolidación real del Inicio/Dashboard y del selector de meses, manteniendo la
 ## Pruebas ejecutadas en esta entrega
 - Verificación de versión LAB en puntos obligatorios.
 - Verificación de ESTABLE en canal: v94.46-ESTABLE.
-- Verificación de manifest: start_url apunta a v94.72-LAB.
+- Verificación de manifest: start_url apunta a v94.73-LAB.
 - Verificación de ZIP: contenido y estructura.
 - Verificación de sintaxis JavaScript de bloques inline.
 
 No se declara la versión 100% verificada: las pruebas bancarias reales requieren ejecución con las cuentas conectadas del usuario.
 
 
-### Regla de datos v94.72
+### Regla de datos v94.73
 Los registros financieros no se eliminan físicamente. La papelera es permanente y se sincroniza mediante Almacen cuando hay nube activa.
 
 
-## v94.72 · Dashboard
+## v94.73 · Dashboard
 - Eliminado del Dashboard el aviso visible «Para no perder nada»; las recomendaciones de copia/seguridad permanecen fuera del Dashboard.
 - Pinceladas visuales: misma tipografía heredada de la interfaz/pestañas, jerarquía más limpia, navegación mensual oro y tarjetas ligeramente refinadas sin rediseño.
