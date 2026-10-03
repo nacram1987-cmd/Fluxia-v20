@@ -1,7 +1,7 @@
 {
   "app": "Fluxia",
-  "lab_version": "v94.51-LAB",
+  "lab_version": "v94.52-LAB",
   "stable_version": "v94.46-ESTABLE",
-  "timestamp": "2026-10-03T03:30:00Z",
-  "note": "Heroes = tu-mes exact; sin cuenta reload + prefix"
+  "timestamp": "2026-10-03T03:40:00Z",
+  "critical": "DATA SAFETY: sin cuenta no borra planRescate global"
 }
