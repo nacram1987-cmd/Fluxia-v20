@@ -117,7 +117,7 @@
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="telephone=no" name="format-detection"/>
 <meta content="no" name="msapplication-tap-highlight"/>
-<title>Fluxia BETA v94.53-LAB</title>
+<title>Fluxia BETA v94.56-LAB</title>
 <!-- Fluxia v91 · brand lock · datos jamás a 0 · compartidos saldo inicial · notif suaves · logo alineado · base v90.10 -->
 <script>
 (function(){window.FluxiaNative={isNative:function(){try{return!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())}catch(e){return false}},platform:function(){try{return(window.Capacitor&&Capacitor.getPlatform)?Capacitor.getPlatform():'web'}catch(e){return'web'}}};})();
@@ -412,9 +412,9 @@ window.fluxiaCuandoLibre = function(fn, intentos){
 };
 
 </script>
-<meta content="v94.53-LAB" name="fluxia-version"/>
+<meta content="v94.56-LAB" name="fluxia-version"/>
 <meta content="lab" name="fluxia-channel"/>
-<script>window.FLUXIA_VERSION = "v94.53-LAB";</script>
+<script>window.FLUXIA_VERSION = "v94.56-LAB";</script>
 <script>
 /* v94.39 · Ir directo a Seguridad en Ajustes */
 window.fxIrASeguridad = function(){
@@ -2136,7 +2136,7 @@ header.top #bancoEstadoHeader{margin-top:4px!important;}
 .gv-importe,.mov-importe,.row-importe,.ingreso-importe,.fijo-importe{font-size:0.95rem!important;}
 </style>
 <style id="fluxiaDrawerFix">
-/* v94.53-LAB fix: encabezado (nombre + cerrar sesión) fijo; solo scrollea la lista */
+/* v94.56-LAB fix: encabezado (nombre + cerrar sesión) fijo; solo scrollea la lista */
 .drawer-menu,#drawerMenu{overflow:hidden!important;display:flex!important;flex-direction:column!important;padding-top:0!important;padding-bottom:0!important;}
 #drawerMenu .drawer-header{position:relative!important;top:auto!important;flex:0 0 auto!important;margin:0!important;padding-top:calc(16px + env(safe-area-inset-top))!important;z-index:3!important;}
 #drawerMenu .drawer-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:8px 0 calc(12px + env(safe-area-inset-bottom));}
@@ -2639,15 +2639,18 @@ body {
   newBtn.addEventListener('click',function(){
     var nombre=window.prompt('¿Cómo se llama este nuevo usuario?','');
     if(nombre===null)return; nombre=String(nombre).trim(); if(!nombre)nombre='Nuevo usuario';
-    var pr={id:'usr-'+uuid(),name:nombre,createdAt:Date.now(),newUser:true,legacy:false,onboardingPending:true};
-    registerProfile(pr);saveActive(pr);window.FLUXIA_PROFILE=pr; try{if(typeof fluxiaActualizarPrefijoPerfil==='function')fluxiaActualizarPrefijoPerfil();}catch(_fp){}
+    var pr={id:'usr-'+uuid(),name:nombre,createdAt:Date.now(),newUser:true,legacy:false,principal:false,onboardingPending:true};
+    registerProfile(pr);saveActive(pr);window.FLUXIA_PROFILE=pr;
     try{
+      /* v94.55 · aislamiento permanente: NUNCA comparte planRescate_v2_* del dueño */
+      localStorage.setItem('fluxia_perfil_aislado_'+pr.id,'1');
+      localStorage.setItem('fluxia_perfil_vacio_'+pr.id,'1');
       localStorage.setItem('fluxia_profile_new_v2','1');
       sessionStorage.setItem('fx_gate_ok','1');
-      // v91.8 · plan NUEVO vacío: no heredar datos del usuario anterior
       sessionStorage.setItem('fx_plan_nuevo_vacio','1');
       sessionStorage.setItem('fx_plan_nuevo_id', pr.id);
     }catch(e){}
+    try{if(typeof fluxiaActualizarPrefijoPerfil==='function')fluxiaActualizarPrefijoPerfil();}catch(_fp){}
     location.reload();
   });
   oldBtn.addEventListener('click',function(){
@@ -2953,11 +2956,10 @@ body {
       }, 6000);
       try{ sessionStorage.setItem('fx_gate_ok','1'); sessionStorage.removeItem('fx_salida'); }catch(e){}
       try{ sessionStorage.setItem('fx_toast_sin_cuenta','1'); }catch(e){}
-      setTimeout(function(){
-        try{ if(typeof window.renderAll==='function') window.renderAll(); }catch(e){}
-        try{ if(typeof window.goToTab==='function') window.goToTab('resumen'); }catch(e){}
-        try{ if(typeof mostrarToast==='function') mostrarToast('✅ Vista a 0 en este perfil (tu plan guardado en el móvil no se ha borrado)','var(--teal)',4000); }catch(e){}
-      }, 100);
+      /* Recarga para cargar SOLO el namespace aislado (vacío) y no pintar memoria del dueño */
+      setTimeout(function(){ try{ location.reload(); }catch(e){
+        try{ if(typeof window.renderAll==='function') window.renderAll(); }catch(e2){}
+      } }, 80);
     }
     window.fluxiaEntrarSinCuenta = _ejecutarSinCuenta;
     if(state.step===0){
@@ -2981,6 +2983,10 @@ body {
       pr.startingPoint={income:0,fixed:0,emergencyTarget:0,currentEmergency:0,debt:0};
       localStorage.setItem(PROFILE_KEY,JSON.stringify(pr));
       const arr=JSON.parse(localStorage.getItem('fluxia_profiles_v2')||'[]'); const i=arr.findIndex(x=>x&&x.id===pr.id); if(i>=0)arr[i]=pr; else arr.push(pr); localStorage.setItem('fluxia_profiles_v2',JSON.stringify(arr));
+      try{
+        localStorage.setItem('fluxia_perfil_aislado_'+pr.id,'1');
+        localStorage.setItem('fluxia_perfil_vacio_'+pr.id,'1');
+      }catch(e){}
       window.FLUXIA_PROFILE=pr; try{if(typeof fluxiaActualizarPrefijoPerfil==='function')fluxiaActualizarPrefijoPerfil();}catch(_fp){}
       localStorage.removeItem('fluxia_profile_new_v2');
       localStorage.setItem('fluxia_first_run_v2_'+profile.id,'1');
@@ -3361,7 +3367,8 @@ body {
 // la clave no empieza por tmd_/planRescate/bk_, así que nunca se sincroniza con la nube.
 (function(){
   var PROFILE_ID = (window.FLUXIA_PROFILE && window.FLUXIA_PROFILE.id) ? String(window.FLUXIA_PROFILE.id) : 'sin-perfil';
-  var KEY = 'faceid_lock_v2_' + PROFILE_ID, DISABLED_KEY = 'faceid_user_disabled_v2_' + PROFILE_ID, AUSENCIA_MS = 60000;
+  /* v94.56 · Bloqueo más estricto en tablet compartida: 30 s en segundo plano */
+  var KEY = 'faceid_lock_v2_' + PROFILE_ID, DISABLED_KEY = 'faceid_user_disabled_v2_' + PROFILE_ID, AUSENCIA_MS = 30000;
   var el = document.getElementById('bloqueo');
   var btn = document.getElementById('bqBtn'), btnTxt = document.getElementById('bqBtnTxt');
   var msgEl = document.getElementById('bqMsg'), subEl = document.getElementById('bqSub');
@@ -3451,6 +3458,11 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
     if (m === 'ninguna' || !m) return;              // sin protección: no se bloquea nunca
     desbloqueado = false; intentos = 0; modo = 'entrar'; mensaje(''); mostrar(); skipEl.textContent = '🔑 Usar clave de acceso';
     resetEl.style.display = 'none'; if (noneEl) noneEl.style.display = 'none';
+    try{
+      var nm = (window.FLUXIA_PROFILE && FLUXIA_PROFILE.name) ? String(FLUXIA_PROFILE.name) : 'Fluxia';
+      var bn = document.getElementById('bqName'); if (bn) bn.textContent = nm;
+      var bs = document.getElementById('bqSub'); if (bs) bs.textContent = 'Plan de ' + nm + ' · protegido en este dispositivo';
+    }catch(e){}
     if (m === 'clave' || !leer()){
       btn.style.display = 'none'; skipEl.style.display = 'none';
       abrirClave(!pinExists());
@@ -3765,7 +3777,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <div style="min-width:0;">
 <div style="font-family:var(--serif); font-weight:700; font-size:1.28rem; line-height:1.15; color:var(--ink,#1A2433); letter-spacing:-0.02em;">Fluxia <span id="fluxiaBetaBadge" style="font-family:var(--sans);font-size:0.62rem;font-weight:800;letter-spacing:0.04em;vertical-align:middle;margin-left:6px;padding:2px 7px;border-radius:999px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid rgba(201,162,39,.35);">BETA</span></div>
 <div id="fluxiaHeaderSub" style="font-size:0.82rem; color:var(--muted); letter-spacing:0.3px; margin-top:2px;">Control absoluto. Flujo perfecto</div>
-<div id="fluxiaVersion" style="font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:3px; opacity:.85;">Versión v94.53-LAB</div>
+<div id="fluxiaVersion" style="font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:3px; opacity:.85;">Versión v94.56-LAB</div>
 <button class="fx-banco-pill" id="bancoEstadoHeader" onclick="window.abrirConexionBancaria()" style="display:none;" type="button"></button>
 </div>
 </div>
@@ -4656,7 +4668,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 </div>
 <div style="margin:0 0 14px;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--surface);">
 <div style="font-weight:800;font-size:.88rem;color:var(--ink);margin-bottom:6px;">🧪 Laboratorio (solo tú)</div>
-<p style="margin:0 0 10px;font-size:.8rem;color:var(--muted);line-height:1.45;">Esta versión concreta (<b id="fluxiaLabVersionLabel">v94.53-LAB</b>). Úsala para probar. <b>No la envíes a invitados</b> mientras sigas cambiando cosas cada día.</p>
+<p style="margin:0 0 10px;font-size:.8rem;color:var(--muted);line-height:1.45;">Esta versión concreta (<b id="fluxiaLabVersionLabel">v94.56-LAB</b>). Úsala para probar. <b>No la envíes a invitados</b> mientras sigas cambiando cosas cada día.</p>
 <button id="btnCopiarEnlaceBeta" style="background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%; margin-bottom:8px;" type="button">🔗 Copiar enlace de ESTA versión</button>
 <button id="btnComoInstalarBeta" style="background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%; margin-bottom:8px;" type="button">📲 Cómo instalarla en el móvil</button>
 <button id="btnInstalarPwa" style="display:none;background:var(--brand-1,#1554F0); color:#fff; border:none; border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%;" type="button">⬇️ Instalar Fluxia en este dispositivo</button>
@@ -4687,7 +4699,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <h3 class="section-title" style="margin:0;">Versión</h3>
 <span style="font-size:.68rem;font-weight:800;letter-spacing:.03em;padding:3px 8px;border-radius:999px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid rgba(201,162,39,.35);">BETA</span>
 </div>
-<p class="hint" id="ayudaVersionTxt" style="margin:0 0 14px;font-weight:600;color:var(--ink);">Fluxia BETA v94.53-LAB · datos en este dispositivo</p>
+<p class="hint" id="ayudaVersionTxt" style="margin:0 0 14px;font-weight:600;color:var(--ink);">Fluxia BETA v94.56-LAB · datos en este dispositivo</p>
 <div class="fluxia-empty-guide" style="margin-bottom:14px;text-align:left;">
 <div class="eg-tit" style="margin-bottom:8px;">🚀 Primeros pasos (2 minutos)</div>
 <ol style="margin:0;padding-left:1.2em;font-size:0.84rem;line-height:1.5;color:var(--ink);">
@@ -5121,20 +5133,75 @@ const Almacen = (function(){
 let APP_MODO = 'app';
 let LS_PREFIX = APP_MODO === 'demo' ? 'planRescate_demo_v2_' : 'planRescate_v2_';
 /* v94.50 · Prefijo por perfil: un usuario nuevo NUNCA hereda el plan de otro en el mismo móvil */
+function fluxiaEnsureOwnerProfileId(){
+  /* Un solo perfil “dueño” del plan histórico sin sufijo. Nunca un usuario nuevo/aislado. */
+  try{
+    var oid = localStorage.getItem('fluxia_owner_profile_id_v1');
+    if (oid){
+      try{
+        if (localStorage.getItem('fluxia_perfil_aislado_'+oid)==='1'){
+          localStorage.removeItem('fluxia_owner_profile_id_v1');
+          oid = null;
+        }
+      }catch(e){}
+      if (oid) return String(oid);
+    }
+    var pr = window.FLUXIA_PROFILE;
+    if (!pr || !pr.id) return null;
+    if (pr.newUser || pr.onboardingPending || pr.onboardingSkipped) return null;
+    try{ if (localStorage.getItem('fluxia_perfil_aislado_'+pr.id)==='1') return null; }catch(e){}
+    var hasData = false;
+    try{
+      hasData = !!(localStorage.getItem('planRescate_v2_ingresos') ||
+        localStorage.getItem('planRescate_v2_movimientos') ||
+        localStorage.getItem('planRescate_v2_provisiones') ||
+        localStorage.getItem('planRescate_v2_fijos'));
+    }catch(e){}
+    if (pr.principal || pr.legacy || hasData){
+      localStorage.setItem('fluxia_owner_profile_id_v1', String(pr.id));
+      return String(pr.id);
+    }
+  }catch(e){}
+  return null;
+}
 function fluxiaActualizarPrefijoPerfil(){
-  /* v94.52 · SEGURIDAD: el plan histórico vive en planRescate_v2_* SIN sufijo.
-     NUNCA cambiar el prefijo a otro sitio si esas claves tienen datos (evita “desaparecen huchas”).
-     Usuario nuevo/sin cuenta: flag de plan vacío en sesión, SIN borrar las claves globales. */
+  /* v94.55 · AISLAMIENTO TAJANTE
+     - Dueño (owner): planRescate_v2_* (claves históricas, tu plan)
+     - Cualquier otro usuario / Sin cuenta / nuevo: planRescate_v2_u_<id>_*
+     Así un hermano en la misma tablet NO ve tus cuentas. */
   try{
     var base = (typeof APP_MODO !== 'undefined' && APP_MODO === 'demo') ? 'planRescate_demo_v2_' : 'planRescate_v2_';
-    LS_PREFIX = base;
+    var pr = window.FLUXIA_PROFILE;
+    if (!pr || !pr.id){
+      LS_PREFIX = base + 'anon_';
+      return LS_PREFIX;
+    }
+    var sid = String(pr.id).replace(/[^a-zA-Z0-9_-]/g,'').slice(0, 40) || 'x';
+    /* Marcado explícito como aislado (usuario nuevo / sin cuenta) */
+    var aislado = false;
+    try{
+      if (localStorage.getItem('fluxia_perfil_aislado_'+pr.id)==='1') aislado = true;
+      if (localStorage.getItem('fluxia_perfil_vacio_'+pr.id)==='1') aislado = true;
+    }catch(e){}
+    if (pr.newUser || pr.onboardingPending || pr.onboardingSkipped || aislado){
+      LS_PREFIX = base + 'u_' + sid + '_';
+      return LS_PREFIX;
+    }
+    var ownerId = fluxiaEnsureOwnerProfileId();
+    if (ownerId && String(pr.id) === String(ownerId)){
+      LS_PREFIX = base;
+      return LS_PREFIX;
+    }
+    /* No es el dueño → siempre namespace propio (vacío hasta que escriba) */
+    LS_PREFIX = base + 'u_' + sid + '_';
     return LS_PREFIX;
   }catch(e){
-    LS_PREFIX = 'planRescate_v2_';
+    LS_PREFIX = 'planRescate_v2_anon_';
     return LS_PREFIX;
   }
 }
 window.fluxiaActualizarPrefijoPerfil = fluxiaActualizarPrefijoPerfil;
+window.fluxiaEnsureOwnerProfileId = fluxiaEnsureOwnerProfileId;
 
 
 // ── Aislamiento por perfil (B) ───────────────────────────────────────────
@@ -6439,22 +6506,18 @@ function guardarLS(key, val){
             return false;
           }
         }
-        // Buscar en localStorage crudo por si el prefijo difiere.
-        // En un usuario nuevo esto está expresamente prohibido para evitar cruzar perfiles.
-        var _nuevoGuardar = !!(window.FLUXIA_PROFILE && (window.FLUXIA_PROFILE.newUser || window.FLUXIA_PROFILE.onboardingPending || window.FLUXIA_PROFILE.onboardingSkipped)) || (function(){ try{return sessionStorage.getItem('fx_plan_nuevo_vacio')==='1';}catch(e){return false;} })();
-        if (!_nuevoGuardar) for (var i=0;i<localStorage.length;i++){
-          var k = localStorage.key(i);
-          if (!k) continue;
-          if (k.indexOf(String(key).replace('planRescate_v2_',''))>=0 || k.indexOf(key)>=0){
-            try{
-              var p2 = JSON.parse(localStorage.getItem(k));
-              if (Array.isArray(p2) && p2.length > 0){
-                console.warn('[Fluxia v91.2] BLOQUEADO vacío · hallado', k, p2.length);
-                return false;
-              }
-            }catch(e2){}
+        /* v94.55: solo mirar la MISMA clave del prefijo actual — nunca datos de otro perfil */
+        try{
+          var kOwn = claveLS(key);
+          var rawOwn = localStorage.getItem(kOwn);
+          if (rawOwn){
+            var pOwn = JSON.parse(rawOwn);
+            if (Array.isArray(pOwn) && pOwn.length > 0){
+              console.warn('[Fluxia] BLOQUEADO vacío en este perfil ·', kOwn, pOwn.length);
+              return false;
+            }
           }
-        }
+        }catch(e2){}
       }catch(e3){}
     }
     try{ if (window.FluxiaPapelera && window.FluxiaPapelera.autoDiff) window.FluxiaPapelera.autoDiff(key, val); }catch(_pp){}  // v93.1: todo lo que desaparece va a la papelera
@@ -6562,21 +6625,8 @@ function guardarConfigPlan(){
 }
 
 function cargarTodo(){
+  /* v94.55: el prefijo ya aísla; cargarLS solo lee las claves de ESTE perfil */
   try{ if (typeof fluxiaActualizarPrefijoPerfil === 'function') fluxiaActualizarPrefijoPerfil(); }catch(e){}
-  /* v94.52 · Perfil marcado vacío (Sin cuenta): no leer el plan global del dueño */
-  try{
-    var _pidC = (window.FLUXIA_PROFILE && FLUXIA_PROFILE.id) ? String(FLUXIA_PROFILE.id) : '';
-    var _vacio = false;
-    if (_pidC && localStorage.getItem('fluxia_perfil_vacio_'+_pidC)==='1') _vacio = true;
-    if (sessionStorage.getItem('fx_plan_nuevo_vacio')==='1' && sessionStorage.getItem('fx_plan_nuevo_id')===_pidC) _vacio = true;
-    if (_vacio){
-      ingresosItems=[]; gastosFijosItems=[]; financiaciones=[]; provisiones=[];
-      presupuestos=[]; usosProvisiones=[]; historicoReposiciones=[]; movimientos=[]; gastosCompartidos=[];
-      try{ window.ingresosItems=ingresosItems; window.movimientos=movimientos; window.provisiones=provisiones; }catch(e){}
-      try{ cargarEfectivo && cargarEfectivo(); }catch(e){}
-      return;
-    }
-  }catch(e){}
   ingresosItems   = cargarLS('planRescate_v2_ingresos', []);
   try{ limpiarCobrosFuturos(); }catch(e){}
   gastosFijosItems= cargarLS('planRescate_v2_fijos', []);
@@ -6670,32 +6720,20 @@ function cargarTodo(){
 }
 // v94.7: NUEVO · Resetear TODO a 0 para "Sin cuenta"
 function resetearTodoParaSinCuenta(){
-  /* v94.52 · Sin cuenta SEGURO:
-     - NO borra planRescate_v2_* globales (son el plan del dueño en este móvil)
-     - Marca ESTE perfil como plan vacío en sesión
-     - Solo limpia arrays en memoria para la vista actual
-     - Copia de seguridad previa por si hace falta restaurar */
+  /* v94.55 · Sin cuenta AISLADO:
+     - Marca el perfil como aislado (namespace propio)
+     - NO toca planRescate_v2_* del dueño (sin sufijo u_)
+     - Escribe arrays vacíos SOLO en el prefijo de este perfil
+     - Bancos de este perfil a [] */
   try{
     var _pid=(window.FLUXIA_PROFILE&&FLUXIA_PROFILE.id)||('tmp_'+Date.now());
-    var _prev={};
-    try{
-      ['planRescate_v2_ingresos','planRescate_v2_fijos','planRescate_v2_movimientos','planRescate_v2_provisiones','planRescate_v2_financiaciones','planRescate_v2_compartidos','planRescate_v2_usos','planRescate_v2_historico','planRescate_v2_presupuestos'].forEach(function(k){
-        try{ var v=localStorage.getItem(k); if(v) _prev[k]=v; }catch(e){}
-        try{ if(typeof Almacen!=='undefined'&&Almacen.getItem){ var a=Almacen.getItem(k); if(a) _prev['almacen:'+k]=a; } }catch(e){}
-      });
-      localStorage.setItem('fluxia_pre_import_v1_'+_pid, JSON.stringify({cuando:new Date().toISOString(),motivo:'sin_cuenta_seguro',claves:_prev}));
-    }catch(e){}
-    try{
-      sessionStorage.setItem('fx_plan_nuevo_vacio','1');
-      sessionStorage.setItem('fx_plan_nuevo_id', String(_pid));
-      localStorage.setItem('fluxia_perfil_vacio_'+_pid, '1');
-    }catch(e){}
     try{
       if (window.FLUXIA_PROFILE){
         FLUXIA_PROFILE.newUser = true;
         FLUXIA_PROFILE.onboardingSkipped = true;
         FLUXIA_PROFILE.onboardingPending = false;
-        /* NO tocar otros perfiles ni borrar legacy del dueño en disco */
+        FLUXIA_PROFILE.legacy = false;
+        FLUXIA_PROFILE.principal = false;
         localStorage.setItem('fluxia_profile_active_v2', JSON.stringify(FLUXIA_PROFILE));
         try{
           var arr=JSON.parse(localStorage.getItem('fluxia_profiles_v2')||'[]');
@@ -6705,7 +6743,47 @@ function resetearTodoParaSinCuenta(){
         }catch(e2){}
       }
     }catch(e){}
-    /* Vista en memoria a 0 (solo esta sesión / este perfil marcado vacío) */
+    try{
+      localStorage.setItem('fluxia_perfil_aislado_'+_pid, '1');
+      localStorage.setItem('fluxia_perfil_vacio_'+_pid, '1');
+      sessionStorage.setItem('fx_plan_nuevo_vacio','1');
+      sessionStorage.setItem('fx_plan_nuevo_id', String(_pid));
+    }catch(e){}
+    try{ if (typeof fluxiaActualizarPrefijoPerfil === 'function') fluxiaActualizarPrefijoPerfil(); }catch(e){}
+    /* Solo vaciar claves del prefijo ACTUAL (u_<id>), nunca las del dueño */
+    try{
+      var pref = LS_PREFIX || '';
+      if (pref.indexOf('_u_') >= 0 || /u_[a-zA-Z0-9_-]+_$/.test(pref)){
+        var keys = [];
+        for (var i=0;i<localStorage.length;i++){
+          var k = localStorage.key(i);
+          if (k && k.indexOf(pref)===0) keys.push(k);
+        }
+        keys.forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
+      }
+    }catch(e){}
+    try{
+      window._FLUXIA_PERMITIR_VACIADO_TOTAL=true;
+      window._FLUXIA_PERMITIR_VACIADO_INGRESOS=true;
+      window._FLUXIA_PERMITIR_VACIADO_FIJOS=true;
+      window._FLUXIA_PERMITIR_VACIADO_MOVIMIENTOS=true;
+      window._FLUXIA_SIN_PAPELERA=true;
+      if (typeof guardarLS === 'function'){
+        ['ingresos','fijos','movimientos','provisiones','financiaciones','compartidos','usos','historico','presupuestos'].forEach(function(s){
+          try{ guardarLS('planRescate_v2_'+s, []); }catch(e){}
+        });
+      }
+    }catch(e){}
+    finally{
+      try{
+        window._FLUXIA_PERMITIR_VACIADO_TOTAL=false;
+        window._FLUXIA_PERMITIR_VACIADO_INGRESOS=false;
+        window._FLUXIA_PERMITIR_VACIADO_FIJOS=false;
+        window._FLUXIA_PERMITIR_VACIADO_MOVIMIENTOS=false;
+        window._FLUXIA_SIN_PAPELERA=false;
+      }catch(e){}
+    }
+    try{ localStorage.setItem('fluxia_banco_conexiones_v1_'+_pid, '[]'); }catch(e){}
     try{
       ingresosItems=[]; gastosFijosItems=[]; financiaciones=[]; provisiones=[];
       presupuestos=[]; usosProvisiones=[]; historicoReposiciones=[]; movimientos=[]; gastosCompartidos=[];
@@ -9073,6 +9151,22 @@ function provisionesTotal(mes){
   const total = activas.reduce((s,p)=>s+p.importeMensual,0);
   return total;
 }
+/* v94.54 · Lo que realmente resta del disponible:
+   por cada hucha activa se reserva el MAYOR entre la meta mensual y lo ya aportado.
+   Así, si metes de más (o aportas con meta 0), el disponible baja. */
+function provisionesParaDisponible(mes){
+  try{
+    var activas = provisionesActivas(mes);
+    return activas.reduce(function(s, p){
+      var meta = Number(p && p.importeMensual) || 0;
+      var real = 0;
+      try{ real = totalAportadoProvision(p, mes); }catch(e){ real = 0; }
+      return s + Math.max(meta, real);
+    }, 0);
+  }catch(e){
+    return provisionesTotal(mes);
+  }
+}
 function provisionAportadoAcumulado(p, mesLimite){
   const limIdx = absMes(mesLimite);
   let total = 0;
@@ -9157,7 +9251,7 @@ function obtenerEstadísticasMes(mes){
   const ing = ingresosTotal(mes);
   const fijos = gastosFijosTotal(mes);
   const vars = variablesTotal(mes);
-  const provs = provisionesTotal(mes);
+  const provs = (typeof provisionesParaDisponible === 'function') ? provisionesParaDisponible(mes) : provisionesTotal(mes);
   const gastos = fijos + vars + provs;
   const disponible = ing - gastos;
   return { mes, ingresos: ing, fijos, variables: vars, provisiones: provs, gastos, disponible };
@@ -9471,7 +9565,9 @@ function disponibleEfectivo(mes){
     }
     return true; /* sin fecha futura: cuenta en el plan del mes */
   }).reduce(function(s,it){ return s+(Number(it.importe)||0); }, 0);
-  return ing - gastosFijosTotal(mes) - provisionesTotal(mes) - variablesTotal(mes) + impactoCajaCompartidosMes(mes);
+  /* v94.54: huchas con max(meta, aportado real) para que meter dinero de más baje el disponible */
+  var provDisp = (typeof provisionesParaDisponible === 'function') ? provisionesParaDisponible(mes) : provisionesTotal(mes);
+  return ing - gastosFijosTotal(mes) - provDisp - variablesTotal(mes) + impactoCajaCompartidosMes(mes);
 }
 
 function historialConceptos(){
@@ -11076,6 +11172,19 @@ function renderHero(){
   const v = document.getElementById('tmDisponible');
   v.textContent = eur(disp, 2);
   v.style.color = disp >= 0 ? 'var(--teal)' : 'var(--wine)';
+  try{
+    var sub = document.getElementById('tmDispSub');
+    if (!sub && v && v.parentNode){
+      sub = document.createElement('div');
+      sub.id = 'tmDispSub';
+      sub.className = 'tm-disp-sub';
+      sub.style.cssText = 'font-size:.78rem;color:var(--muted);margin:2px 0 8px;line-height:1.35;';
+      v.parentNode.insertBefore(sub, v.nextSibling);
+    }
+    if (sub){
+      sub.textContent = 'Después de gastos fijos, huchas (meta o lo aportado) y variables';
+    }
+  }catch(e){}
   const chip = document.getElementById('tmChip');
   chip.className = 'tm-chip ' + (disp >= 0 ? 'ok' : 'ajuste');
   chip.textContent = disp >= 0 ? '🌿 Vas en verde este mes' : '🧭 Mes ajustado · revisa variables y provisiones';
@@ -11186,7 +11295,7 @@ function renderMetas(){
   // Dashboard: Gastos totales
   const fijoTotal = gastosFijosTotal(mesSeleccionado);      // fijos + financiaciones
   const varTotal = variablesTotal(mesSeleccionado);
-  const provTotal = provisionesTotal(mesSeleccionado);
+  const provTotal = (typeof provisionesParaDisponible === 'function') ? provisionesParaDisponible(mesSeleccionado) : provisionesTotal(mesSeleccionado);
   const gastosTotal = fijoTotal + varTotal + provTotal;
   setTxt('dashGastosTotal', eur(gastosTotal, 2));
 
@@ -11195,8 +11304,8 @@ function renderMetas(){
   const signo = disponible >= 0 ? '✓' : '⚠';
   setTxt('dashDisponible', signo + ' ' + eur(disponible, 2));
   const disponibleHint = disponible >= 0
-    ? `Está bien. Luego: financiaciones y gastos compartidos`
-    : `Deficiencia. Revisar provisiones o gastos variables`;
+    ? `Después de fijos, huchas (meta o aportado) y variables`
+    : `En rojo · revisa variables, fijos o aportaciones a huchas`;
   setTxt('dashDisponibleHint', disponibleHint);
 
   // METAS: Fondo de emergencia (los elementos pueden no existir en el DOM)
@@ -12319,8 +12428,11 @@ function renderProvisiones(){
         submitLabel: 'Aportar',
         onSubmit: (v) => {
           registrarAportacionProvision(p.id, mesSeleccionado, v.importe, v.fecha || hoyISO());
-          renderProvisiones(); if (typeof renderKPIs === 'function') renderKPIs();
-          mostrarToast('✅ Aportados ' + eur(v.importe, 2) + ' a ' + p.nombre, 'var(--teal)', 2200);
+          renderProvisiones();
+          if (typeof renderKPIs === 'function') renderKPIs();
+          if (typeof renderHero === 'function') renderHero();
+          if (typeof renderMetas === 'function') renderMetas();
+          mostrarToast('✅ Aportados ' + eur(v.importe, 2) + ' a ' + p.nombre + ' · disponible actualizado', 'var(--teal)', 2400);
         }
       });
     });
@@ -12347,7 +12459,7 @@ function renderProvisiones(){
       openFormModal({title:'Editar aportación',fields:[
         {name:'importe',label:'Importe (€)',type:'number',min:0.01,step:'0.01',required:true,value:a.importe},
         {name:'fecha',label:'Fecha',type:'date',required:true,value:a.fecha||hoyISO()}
-      ],submitLabel:'Guardar',onSubmit:v=>{a.importe=_r2(parseImporte(v.importe)||0);a.fecha=v.fecha||a.fecha;guardarProvisiones();renderProvisiones();if(typeof renderKPIs==='function')renderKPIs();}});
+      ],submitLabel:'Guardar',onSubmit:v=>{a.importe=_r2(parseImporte(v.importe)||0);a.fecha=v.fecha||a.fecha;guardarProvisiones();renderProvisiones();if(typeof renderKPIs==='function')renderKPIs();if(typeof renderHero==='function')renderHero();if(typeof renderMetas==='function')renderMetas();}});
     }));
 
     // Borrar una aportación del mes
@@ -12356,7 +12468,7 @@ function renderProvisiones(){
         title: 'Borrar aportación',
         message: '¿Quitar esta aportación de «' + p.nombre + '»?',
         confirmLabel: 'Borrar', danger: true,
-        onConfirm: () => { eliminarAportacionProvision(p.id, mesSeleccionado, b.dataset.delApt); renderProvisiones(); if (typeof renderKPIs === 'function') renderKPIs(); }
+        onConfirm: () => { eliminarAportacionProvision(p.id, mesSeleccionado, b.dataset.delApt); renderProvisiones(); if (typeof renderKPIs === 'function') renderKPIs(); if (typeof renderHero === 'function') renderHero(); if (typeof renderMetas === 'function') renderMetas(); }
       });
     }));
 
@@ -22737,6 +22849,235 @@ window.FluxiaQA_v49 = {
   }catch(e){}
 })();
 </script>
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   v94.56 · FASE 1+2: Confianza multi-usuario + Bancos pro
+   ═══════════════════════════════════════════════════════════════ */
+(function(){
+  function nomPerfil(){
+    try{ return (window.FLUXIA_PROFILE && FLUXIA_PROFILE.name) ? String(FLUXIA_PROFILE.name).trim() : ''; }catch(e){ return ''; }
+  }
+  function pid(){
+    try{ return (window.FLUXIA_PROFILE && FLUXIA_PROFILE.id) ? String(FLUXIA_PROFILE.id) : ''; }catch(e){ return ''; }
+  }
+
+  /* ── 1) Banner «Estás en el plan de X» ── */
+  function pintarBannerSesion(){
+    try{
+      var n = nomPerfil(); if (!n) return;
+      var host = document.getElementById('dashAvisosInicio') || document.getElementById('panel-resumen');
+      if (!host) return;
+      var box = document.getElementById('fxSesionBanner');
+      if (!box){
+        box = document.createElement('div');
+        box.id = 'fxSesionBanner';
+        box.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 12px;padding:10px 14px;border-radius:14px;border:1px solid rgba(14,124,144,.18);background:linear-gradient(135deg,#F0FAFB,#E8F4F8);font-size:.82rem;';
+        host.insertBefore(box, host.firstChild);
+      }
+      box.innerHTML = '<div style="color:var(--ink);"><b>Estás en el plan de ' + n.replace(/[<>]/g,'') + '</b><div style="font-size:.75rem;color:var(--muted);margin-top:2px;">Datos aislados · no se mezclan con otros usuarios de este dispositivo</div></div>' +
+        '<button type="button" id="fxSesionCerrar" style="border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 12px;font-weight:650;font-size:.78rem;cursor:pointer;min-height:40px;">Cerrar sesión</button>';
+      var b = document.getElementById('fxSesionCerrar');
+      if (b) b.onclick = function(){
+        try{
+          if (window.FluxiaSesion && typeof FluxiaSesion.cerrar === 'function') FluxiaSesion.cerrar();
+          else if (confirm('¿Cerrar sesión de '+n+'?')) location.reload();
+        }catch(e){}
+      };
+      /* Drawer sub */
+      try{
+        var ds = document.getElementById('drawerSub');
+        if (ds) ds.textContent = 'Plan de ' + n + ' · Fluxia';
+        var dh = document.getElementById('drawerHello');
+        if (dh) dh.textContent = 'Hola, ' + n.split(/\s+/)[0];
+      }catch(e){}
+    }catch(e){}
+  }
+
+  /* ── 1) Exportar solo ESTE perfil ── */
+  window.fluxiaExportarPerfil = function(){
+    try{
+      if (typeof fluxiaActualizarPrefijoPerfil === 'function') fluxiaActualizarPrefijoPerfil();
+      var pref = (typeof LS_PREFIX === 'string') ? LS_PREFIX : 'planRescate_v2_';
+      var data = { v: 'fluxia-perfil-v1', when: new Date().toISOString(), profile: window.FLUXIA_PROFILE || null, prefix: pref, keys: {} };
+      for (var i=0;i<localStorage.length;i++){
+        var k = localStorage.key(i);
+        if (!k) continue;
+        if (k.indexOf(pref)===0 || (pref==='planRescate_v2_' && /^planRescate_v2_[^u]/.test(k) && k.indexOf('planRescate_v2_u_')<0)){
+          /* dueño: claves sin u_; aislado: solo su pref */
+          if (pref.indexOf('_u_')>=0 && k.indexOf(pref)!==0) continue;
+          if (pref==='planRescate_v2_' && k.indexOf('planRescate_v2_u_')===0) continue;
+          try{ data.keys[k] = localStorage.getItem(k); }catch(e){}
+        }
+      }
+      var blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'fluxia_' + (nomPerfil()||'perfil').replace(/\s+/g,'_') + '_' + (new Date().toISOString().slice(0,10)) + '.json';
+      a.click();
+      try{ if (typeof mostrarToast==='function') mostrarToast('✅ Copia del perfil descargada','var(--teal)',2800); }catch(e){}
+    }catch(e){ console.error(e); try{ mostrarToast('No se pudo exportar','var(--wine)',2800); }catch(e2){} }
+  };
+
+  /* ── 2) Resumen semanal bancos + reglas + cargos raros ── */
+  window.FluxiaBancoPro = {
+    resumenSemanal: function(){
+      try{
+        var movs = (typeof movimientos!=='undefined' && Array.isArray(movimientos)) ? movimientos : [];
+        var hoy = new Date();
+        var lim = new Date(hoy.getTime() - 7*86400000).toISOString().slice(0,10);
+        var nuevos = 0, fijosPend = 0, raros = 0;
+        var porConcepto = {};
+        movs.forEach(function(m){
+          if (!m || m.origen!=='banco') return;
+          var f = String(m.fecha||'').slice(0,10);
+          if (f < lim) return;
+          nuevos++;
+          var c = String(m.concepto||'').toLowerCase().slice(0,40);
+          if (!porConcepto[c]) porConcepto[c] = [];
+          porConcepto[c].push(Number(m.importe)||0);
+        });
+        try{
+          var pend = JSON.parse(localStorage.getItem('fluxia_banco_fijos_pend_v1')||'[]');
+          fijosPend = Array.isArray(pend) ? pend.length : 0;
+        }catch(e){}
+        /* Raros: importe > 2.5× media del mismo concepto en 90 días */
+        var lim90 = new Date(hoy.getTime() - 90*86400000).toISOString().slice(0,10);
+        movs.forEach(function(m){
+          if (!m || m.origen!=='banco') return;
+          var f = String(m.fecha||'').slice(0,10);
+          if (f < lim) return;
+          var c = String(m.concepto||'').toLowerCase().slice(0,40);
+          var hist = movs.filter(function(x){
+            return x && x.origen==='banco' && String(x.concepto||'').toLowerCase().slice(0,40)===c && String(x.fecha||'').slice(0,10)>=lim90 && String(x.fecha||'').slice(0,10)<f;
+          }).map(function(x){ return Number(x.importe)||0; });
+          if (hist.length >= 3){
+            var med = hist.reduce(function(s,v){return s+v;},0)/hist.length;
+            if (med > 0 && (Number(m.importe)||0) > med * 2.5) raros++;
+          }
+        });
+        return { nuevos: nuevos, fijosPend: fijosPend, raros: raros };
+      }catch(e){ return { nuevos:0, fijosPend:0, raros:0 }; }
+    },
+    pintarResumen: function(){
+      try{
+        var r = this.resumenSemanal();
+        var host = document.getElementById('dashAvisosInicio') || document.getElementById('panel-resumen');
+        if (!host) return;
+        var box = document.getElementById('fxBancoResumenSem');
+        if (!box){
+          box = document.createElement('div');
+          box.id = 'fxBancoResumenSem';
+          box.style.cssText = 'margin:0 0 12px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--surface);font-size:.82rem;';
+          var ban = document.getElementById('fxSesionBanner');
+          if (ban && ban.nextSibling) host.insertBefore(box, ban.nextSibling);
+          else host.insertBefore(box, host.firstChild);
+        }
+        if (!r.nuevos && !r.fijosPend && !r.raros){
+          box.innerHTML = '<b>🏦 Semana bancaria</b><div style="color:var(--muted);margin-top:4px;">Sin cargos nuevos relevantes en 7 días.</div>';
+          return;
+        }
+        box.innerHTML = '<b>🏦 Semana bancaria</b><div style="margin-top:6px;color:var(--ink);">' +
+          (r.nuevos ? ('· <b>'+r.nuevos+'</b> cargos nuevos · ') : '') +
+          (r.fijosPend ? ('<b>'+r.fijosPend+'</b> posible'+(r.fijosPend===1?'':'s')+' fijo'+(r.fijosPend===1?'':'s')+' por revisar · ') : '') +
+          (r.raros ? ('<b style="color:var(--wine);">'+r.raros+'</b> importe'+(r.raros===1?'':'s')+' inusual'+(r.raros===1?'':'es')) : '') +
+          '</div>' +
+          (r.fijosPend ? '<button type="button" onclick="try{if(window.FluxiaBancoFijos)FluxiaBancoFijos.pintarBanner()}catch(e){}" style="margin-top:8px;border:1px solid var(--teal);background:var(--teal);color:#fff;border-radius:10px;padding:8px 12px;font-size:.78rem;font-weight:700;cursor:pointer;">Revisar posibles fijos</button>' : '');
+      }catch(e){}
+    },
+    reglas: function(){
+      try{ return JSON.parse(localStorage.getItem('fluxia_banco_reglas_fijos_v1')||'{}')||{}; }catch(e){ return {}; }
+    },
+    guardarReglas: function(r){
+      try{ localStorage.setItem('fluxia_banco_reglas_fijos_v1', JSON.stringify(r||{})); }catch(e){}
+    },
+    abrirReglas: function(){
+      try{
+        var r = this.reglas();
+        var keys = Object.keys(r);
+        if (!keys.length){
+          if (typeof mostrarToast==='function') mostrarToast('Aún no hay reglas aprendidas (aparecen al enlazar un cargo con un fijo)','var(--muted)',3200);
+          return;
+        }
+        var html = keys.map(function(k){
+          var it = r[k] || {};
+          return '<div style="padding:8px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;align-items:center;">' +
+            '<div style="font-size:.8rem;"><b>'+String(k).slice(0,32)+'</b><div style="color:var(--muted);">→ '+(it.fijoNombre||it.nombreNorm||'?')+'</div></div>' +
+            '<button type="button" data-fx-regla="'+String(k).replace(/"/g,'&quot;')+'" style="border:1px solid var(--wine);color:var(--wine);background:transparent;border-radius:8px;padding:6px 10px;font-size:.75rem;cursor:pointer;">Quitar</button></div>';
+        }).join('');
+        var box = document.getElementById('fxReglasBancoBox');
+        if (!box){
+          box = document.createElement('div');
+          box.id = 'fxReglasBancoBox';
+          box.style.cssText = 'position:fixed;inset:0;z-index:60050;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px;';
+          document.body.appendChild(box);
+        }
+        box.style.display = 'flex';
+        box.innerHTML = '<div style="background:var(--surface);border-radius:16px;max-width:420px;width:100%;max-height:80vh;overflow:auto;padding:16px;">' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><b>Reglas banco → fijo</b><button type="button" id="fxReglasCerrar" style="border:none;background:none;font-size:1.2rem;cursor:pointer;">×</button></div>' +
+          '<p style="font-size:.78rem;color:var(--muted);margin:0 0 8px;">Fluxia aprende al confirmar «Sí, es ese». Puedes borrar una regla si se equivoca.</p>' + html + '</div>';
+        document.getElementById('fxReglasCerrar').onclick = function(){ box.style.display='none'; };
+        box.querySelectorAll('[data-fx-regla]').forEach(function(btn){
+          btn.onclick = function(){
+            var key = btn.getAttribute('data-fx-regla');
+            var rr = window.FluxiaBancoPro.reglas();
+            delete rr[key];
+            window.FluxiaBancoPro.guardarReglas(rr);
+            window.FluxiaBancoPro.abrirReglas();
+          };
+        });
+      }catch(e){ console.error(e); }
+    },
+    hub046Nota: function(){
+      return 'Límite diario del banco (HUB046). Hoy solo lectura del último saldo conocido. Mañana se actualiza solo — no hace falta reconectar ni pulsar sincronizar.';
+    }
+  };
+
+  function inyectarAjustesExtra(){
+    try{
+      var card = document.querySelector('#panel-ajustes .fx-security-card .settings-actions');
+      if (card && !document.getElementById('btnExportPerfil')){
+        var b = document.createElement('button');
+        b.id = 'btnExportPerfil';
+        b.type = 'button';
+        b.className = 'settings-action';
+        b.textContent = '💾 Copia solo este perfil';
+        b.onclick = function(){ window.fluxiaExportarPerfil(); };
+        card.parentNode.appendChild(b);
+        var note = document.createElement('p');
+        note.className = 'settings-note';
+        note.style.marginTop = '8px';
+        note.textContent = 'Con bloqueo activo, al salir 30 s de la app se vuelve a pedir Face ID o clave. Cada perfil tiene la suya.';
+        card.parentNode.appendChild(note);
+      }
+      var bancoCard = document.getElementById('bancoEstadoAjustes');
+      if (bancoCard && !document.getElementById('btnReglasBanco')){
+        var wrap = bancoCard.parentNode;
+        if (wrap){
+          var br = document.createElement('button');
+          br.id = 'btnReglasBanco';
+          br.type = 'button';
+          br.className = 'settings-action';
+          br.textContent = '📌 Reglas banco → fijo';
+          br.onclick = function(){ window.FluxiaBancoPro.abrirReglas(); };
+          var acts = wrap.querySelector('.settings-actions');
+          if (acts) acts.appendChild(br);
+        }
+      }
+    }catch(e){}
+  }
+
+  function boot(){
+    pintarBannerSesion();
+    try{ window.FluxiaBancoPro.pintarResumen(); }catch(e){}
+    inyectarAjustesExtra();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(boot, 1200); });
+  else setTimeout(boot, 1200);
+  document.addEventListener('visibilitychange', function(){
+    if (!document.hidden) setTimeout(function(){ pintarBannerSesion(); try{ window.FluxiaBancoPro.pintarResumen(); }catch(e){} }, 400);
+  });
+})();
+</script>
 
 
 <script>
@@ -29441,7 +29782,7 @@ header.top{position:sticky;top:0;z-index:50;-webkit-transform:translateZ(0);tran
    Compartidos estilo Tricount, papelera y herramientas de comprobación. NO toca el módulo bancario.
    ═══════════════════════════════════════════════════════════════ */
 window.FLUXIA_CHECKLIST = {
-  version: 'v94.53-LAB',
+  version: 'v94.56-LAB',
   fecha: '3 Oct 2026',
   items: [
     { t:'fijos', n:'Avisos banco→fijo', d:'Fecha siempre visible. Acciones: Sí / Es otro gasto / Descartar (+ Duplicado si aplica).' },
@@ -31055,7 +31396,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 })();
 
 // ═══════════════════════════════════════════════════════════════════════
-// 🔄 INGRESOS AUTOMÁTICOS DESDE BANCO (v94.53-LAB)
+// 🔄 INGRESOS AUTOMÁTICOS DESDE BANCO (v94.56-LAB)
 // ═══════════════════════════════════════════════════════════════════════
 
 
@@ -31247,7 +31588,7 @@ function obtenerTransaccionesBanco() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-// 🗑️  PAPELERA UNIVERSAL (v94.53-LAB)
+// 🗑️  PAPELERA UNIVERSAL (v94.56-LAB)
 // ═══════════════════════════════════════════════════════════════════════
 
 function agregarALaPapelera(tipo, datos, fecha) {
@@ -31340,7 +31681,7 @@ if (typeof sincronizarIngresosDelBanco !== 'undefined') {
     sincronizarIngresosDelBanco();
     limpiarPapeleraExpirada();
   }, 5 * 60 * 1000);
-  console.log('✅ Sincronización automática iniciada (v94.53-LAB)');
+  console.log('✅ Sincronización automática iniciada (v94.56-LAB)');
 }
 </script>
 </html>
