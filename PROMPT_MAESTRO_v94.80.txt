@@ -255,6 +255,78 @@ Scope:                 GLOBAL (un mes)
 Ubicaciones:           7 pestañas
 ```
 
+
+---
+
+## PRINCIPIO #27: DESPLIEGUE A GITHUB PAGES (CRÍTICO PARA FUTURAS VERSIONES)
+
+**EL PROBLEMA v94.80:** Los archivos se generan pero NO se ven en el navegador porque NO se suben a GitHub automáticamente.
+
+**FLUJO ACTUAL (manual):**
+```
+Claude genera v94.80 →  /outputs/ (aquí)
+                            ↓
+                      Nacho descarga
+                            ↓
+                      Copia a ~/Fluxia-v20/
+                            ↓
+                      git add, git commit, git push
+                            ↓
+                      GitHub Pages redeploy
+                            ↓
+                      Navegador actualiza ✓
+```
+
+**PASOS OBLIGATORIOS PARA QUE FUNCIONE:**
+
+1. **Descargar archivos v94.80 de /outputs/**
+   - index_fluxia_v94.80_LAB.html
+   - manifest.webmanifest
+   - fluxia-canal.json
+   - fluxia-sw.js
+
+2. **Copiar a tu repo local: ~/Fluxia-v20/**
+   ```bash
+   cp index_fluxia_v94.80_LAB.html ~/Fluxia-v20/index.html
+   cp manifest.webmanifest ~/Fluxia-v20/manifest.webmanifest
+   cp fluxia-canal.json ~/Fluxia-v20/fluxia-canal.json
+   cp fluxia-sw.js ~/Fluxia-v20/fluxia-sw.js
+   ```
+
+3. **Verificar cambios**
+   ```bash
+   cd ~/Fluxia-v20/
+   git status  # Debe mostrar 4 archivos modified
+   ```
+
+4. **Commit y push**
+   ```bash
+   git add index.html manifest.webmanifest fluxia-canal.json fluxia-sw.js
+   git commit -m "v94.80-UNIFICACIÓN: Selector de meses en todas las pestañas"
+   git push origin main
+   ```
+
+5. **Esperar 1-2 minutos (GitHub Pages redeploy)**
+
+6. **Verificar en navegador**
+   ```
+   Abre: https://nacram1987-cmd.github.io/Fluxia-v20/
+   Console (F12): busca [Fluxia v94.80]
+   DevTools → Manifest: "name" = "Fluxia BETA v94.80-LAB"
+   ```
+
+**SI NO FUNCIONA:**
+- Limpiar caché: `Ctrl+Shift+Delete`
+- Verificar rama: `git branch` (debe ser `main`)
+- Verificar GitHub Actions: `Settings → Pages → Build and deployment`
+
+**PARA v94.81+:**
+- Crear script `deploy.sh` que automatice esto
+- O notificar a Nacho exactamente qué archivos copiar
+- O integrar en CI/CD de GitHub
+
+---
+
 ---
 
 **PROMPT_MAESTRO v94.80-UNIFICACIÓN COMPLETO**  
