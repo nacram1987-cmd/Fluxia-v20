@@ -1,18 +1,36 @@
-# Fluxia v94.65 · Inicio más limpio (LAB y ESTABLE: mismo código)
+# Fluxia v94.66-LAB
 
-Parte de v94.64. 3 parches exactos (`tests/patch65.py`).
+Tu control financiero personal · Presupuestos · Ingresos · Gastos · Tarjetas · Préstamos
 
-## Cambios
-- **Inicio**: fuera la tarjeta «Estás en el plan de Nacho · Cerrar sesión» (el nombre ya está arriba y «Cerrar sesión» sigue en el menú ☰).
-- **Inicio**: fuera la tarjeta «Semana bancaria · 30 cargos nuevos ·». Solo aparece una línea fina si hay un importe inusual en el banco.
-- **Menú ☰**: «Hola, Nacho», la versión y «Cerrar sesión» quedan juntos y centrados con el avatar y la ✕.
-  «Cerrar sesión» sigue pidiendo confirmación y mantiene zona táctil amplia.
+## Cambios v94.65 → v94.66-LAB
 
-## Pruebas EJECUTADAS (Chromium, sobre el index.html de dentro del ZIP)
-- syntax.py 88 bloques, 0 errores · e2e_v9465 10/10 (v94.64: 4/10) · e2e_v9464 18/18 · e2e_v9463 16/16 · e2e_v9463b 12/12.
+### ✨ Mejoras Visuales
+- **Paleta "Tu mes"**: Degradado azul marino (#0F3A5C) → teal → oro para mayor profundidad
 
-## NO probado
-- iPhone real (la alineación se midió en un viewport de 390 px y se revisó en captura).
-- Suites antiguas (test_ingresos…): no estaban en el ZIP.
+### 🏗️ Arquitectura
+- **Checklist integrado**: 6 items reales sincronizados desde README
+- **Diagnóstico de gastos faltantes**: Suite paralela a ingresos
+- **Origen en papelera**: User vs System tracking
+- **Multi-dispositivo**: Debounce 500ms mejorado
+- **Avisos banco→fijo**: Fecha siempre visible
 
-TS sin cambios (hash c4d30337d63fbbc7).
+## 🐛 Problemas Conocidos
+- **Cargo Abarrotao ~18€**: Movimiento fantasma (multi-dispositivo)
+- **Presupuesto fantasma**: Se crea sin datos de entrada
+- **Duplicados papelera**: Después de restaurar
+
+## 📦 Cómo Usar
+
+1. **Navegador**: Abre index.html en Chrome/Safari/Firefox
+2. **PWA**: En Chrome → Instalar desde la barra de dirección
+3. **Servidor web**: Sube TODOS los archivos a tu servidor
+
+## 🔧 Configuración Técnica
+
+**localStorage**: ~5-10 MB | **Offline**: No (en desarrollo) | **Sync**: Eventual consistency
+
+## 🎯 Versionado (8 puntos)
+✅ `<title>` · `<meta>` · `window.FLUXIA_VERSION` · `#fluxiaVersion` · `#fluxiaLabVersionLabel` · Archivo · `manifest.webmanifest` · `fluxia-canal.json`
+
+---
+v94.66-LAB · 4 Oct 2026 · Listo para usar
