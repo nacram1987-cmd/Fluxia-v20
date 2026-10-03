@@ -1,1 +1,14 @@
-{"name":"Fluxia BETA v94.67-LAB","short_name":"Fluxia","start_url":"./index.html?v=v94.67-LAB","display":"standalone","background_color":"#FCEBC9","theme_color":"#0E7C90","lang":"es","icons":[{"src":"fluxia-icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}
+{
+  "name": "Fluxia BETA v94.68-LAB",
+  "short_name": "Fluxia",
+  "start_url": "./index.html?v=v94.68-LAB",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0E7C90",
+  "description": "Fluxia · Control absoluto. Flujo perfecto.",
+  "icons": [
+    {"src":"./fluxia-icon-180.png","sizes":"180x180","type":"image/png"},
+    {"src":"./fluxia-icon-192.png","sizes":"192x192","type":"image/png"},
+    {"src":"./fluxia-icon-512.png","sizes":"512x512","type":"image/png"}
+  ]
+}

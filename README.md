@@ -1,44 +1,33 @@
-# Fluxia v94.67-LAB
+# Fluxia BETA v94.68-LAB
 
-Tu control financiero personal · Presupuestos · Ingresos · Gastos · Tarjetas · Préstamos
+## Objetivo
+Consolidación real del Inicio/Dashboard y del selector de meses, manteniendo la lógica financiera y el aislamiento de usuarios de versiones anteriores.
 
-## Cambios v94.65 → v94.66-LAB
+## Cambios v94.68
+- Dashboard de Inicio con una sola jerarquía: Disponible real → desglose → acciones.
+- Se ocultan en Inicio los héroes/KPIs/resumen visual antiguos que duplicaban información.
+- Selector local del Dashboard: mes anterior, Hoy y mes siguiente.
+- El selector global se mantiene para el resto de pestañas y no duplica el control en Inicio.
+- Distinción explícita entre **REAL** (mes actual) y **PLAN** (mes seleccionado no actual).
+- Oro utilizado como acento funcional para provisiones/valor.
+- Notificaciones activadas por defecto y temporizador idempotente.
+- LAB y ESTABLE separados: LAB v94.68; ESTABLE v94.46 según PROMPT_MAESTRO.
+- manifest.webmanifest arranca explícitamente v94.68-LAB.
 
-### ✨ Mejoras Visuales
-- **Paleta "Tu mes"**: Degradado azul marino (#0F3A5C) → teal → oro para mayor profundidad
+## Banco / Supabase
+**SIN CAMBIOS en Fluxia-banco-index.ts. No desplegar de nuevo.**
 
-### 🏗️ Arquitectura
-- **Checklist integrado**: 6 items reales sincronizados desde README
-- **Diagnóstico de gastos faltantes**: Suite paralela a ingresos
-- **Origen en papelera**: User vs System tracking
-- **Multi-dispositivo**: Debounce 500ms mejorado
-- **Avisos banco→fijo**: Fecha siempre visible
+## Pendiente de validación real
+- Movimiento Shell 7,50 €: comprobar banco → clasificación → gasto → Disponible real, sin duplicado.
+- CaixaBank/Revolut: comprobar continuidad de movimientos y estados.
+- Push bancario: validar entrega real en iPhone. Fluxia deja las preferencias activadas por defecto, pero el permiso del sistema y la entrega efectiva dependen del canal bancario/PWA.
+- Cierre de mes y cambio de octubre/noviembre.
 
-## 🐛 Problemas Conocidos
-- **Cargo Abarrotao ~18€**: Movimiento fantasma (multi-dispositivo)
-- **Presupuesto fantasma**: Se crea sin datos de entrada
-- **Duplicados papelera**: Después de restaurar
+## Pruebas ejecutadas en esta entrega
+- Verificación de versión LAB en puntos obligatorios.
+- Verificación de ESTABLE en canal: v94.46-ESTABLE.
+- Verificación de manifest: start_url apunta a v94.68-LAB.
+- Verificación de ZIP: contenido y estructura.
+- Verificación de sintaxis JavaScript de bloques inline.
 
-## 📦 Cómo Usar
-
-1. **Navegador**: Abre index.html en Chrome/Safari/Firefox
-2. **PWA**: En Chrome → Instalar desde la barra de dirección
-3. **Servidor web**: Sube TODOS los archivos a tu servidor
-
-## 🔧 Configuración Técnica
-
-**localStorage**: ~5-10 MB | **Offline**: No (en desarrollo) | **Sync**: Eventual consistency
-
-## 🎯 Versionado (8 puntos)
-✅ `<title>` · `<meta>` · `window.FLUXIA_VERSION` · `#fluxiaVersion` · `#fluxiaLabVersionLabel` · Archivo · `manifest.webmanifest` · `fluxia-canal.json`
-
----
-v94.66-LAB · 4 Oct 2026 · Listo para usar
-
-
-## v94.67-LAB · consolidación
-- Dashboard principal simplificado: Disponible real como cifra protagonista.
-- Entradas, compromisos, provisiones y variables quedan como desglose único.
-- Navegación mensual anterior / Hoy / siguiente sin cambiar de mes al navegar por pestañas.
-- Notificaciones internas con un único temporizador.
-- LAB y ESTABLE siguen siendo canales separados; el manifest no se utiliza para cambiar el canal estable.
+No se declara la versión 100% verificada: las pruebas bancarias reales requieren ejecución con las cuentas conectadas del usuario.

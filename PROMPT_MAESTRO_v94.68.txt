@@ -1,0 +1,555 @@
+# PROMPT_MAESTRO v94.43 · Reglas No Negociables
+
+(Sustituye a v94.43.5. Cambios v94.43: botón "Sin cuenta" realmente funcional, cobros con fecha futura nunca cuentan como cobrados, UNA sola puerta de restaurar (admite .fluxia cifrado), borrados no vuelven del banco, y lecciones nuevas en #8.5.)
+## PRINCIPIO #0: CADA ENTREGA = NÚMERO DE VERSIÓN NUEVO
+v94.43 → v94.43 → v94.43... NUNCA reutilizar un número aunque solo cambie un byte.
+Si ya se entregó v94.X y hay que corregirla, lo siguiente es v94.(X+1), nunca "arreglar la misma".
+**Motivo:** Trazabilidad total, evitar confusiones con backups/recuperación.
+## PRINCIPIO #1: VERSIONADO COINCIDE EN TODO (EXHAUSTIVO)
+**CRÍTICO:** Hay 8 lugares donde la versión DEBE aparecer. SIN EXCEPCIONES.
+
+### Lugares OBLIGATORIOS en index.html:
+1. `<title>Fluxia BETA vX.X-LAB</title>` 
+2. `<meta content="vX.X-LAB" name="fluxia-version"/>`
+3. `<script>window.FLUXIA_VERSION = "vX.X-LAB";</script>`
+4. `<div id="fluxiaVersion">Versión vX.X-LAB</div>` (LO QUE VE EL USUARIO)
+5. `<b id="fluxiaLabVersionLabel">vX.X-LAB</b>` (panel de versión)
+
+### En otros archivos:
+6. Nombre archivo: `index_fluxia_vX.X_LAB.html`
+7. `manifest.webmanifest`: `"name": "Fluxia BETA vX.X-LAB"`
+8. `fluxia-canal.json`: `"lab_version": "vX.X-LAB"`
+
+**Verificación automática ANTES de empaquetar:**
+```bash
+grep -o 'v[0-9][0-9]\.[0-9]-LAB\|v[0-9][0-9]\.[0-9][0-9]-LAB' index.html | sort | uniq
+# Resultado esperado: TODOS deben ser vX.X-LAB (mismo número)
+# Si hay dos versiones distintas → ERROR, no empaquetar
+```
+
+**fluxia-sw.js también se actualiza SIEMPRE** (`const VERSION = 'vX.X'`). Sin excepciones: en v94.43 se olvidó y el usuario lo vio.
+
+## PRINCIPIO #2: manifest Y canal.json SIEMPRE ACTUALIZADOS A VERSION NUEVA
+**OBLIGATORIO EN CADA ENTREGA.** Estos archivos definen qué versión descarga el cliente.
+
+### manifest.webmanifest
+**SIEMPRE actualizar:**
+```json
+{
+  "name": "Fluxia BETA vX.X-LAB",
+  "short_name": "Fluxia",
+  "start_url": "./index.html",
+  ...
+}
+```
+Si no cambias el `name`, el cliente no sabe que hay versión nueva.
+
+### fluxia-canal.json
+**SIEMPRE actualizar (es el CONTROL DE VERSIONES de la app):**
+```json
+{
+  "app": "Fluxia",
+  "lab": "index.html",
+  "lab_version": "vX.X-LAB",
+  "stable": "index.html",
+  "stable_version": "v93.10-ESTABLE",
+  "timestamp": "ISO8601"
+}
+```
+- `lab_version` = la versión LAB que GitHub Pages va a descargar
+- Si no cambia, el cliente cree que sigue en v94.43
+
+**REGLA DE ORO:** Si olvidas actualizar manifest y canal.json, el usuario seguirá en la versión anterior aunque hayas subido los archivos.
+
+## PRINCIPIO #2.5: VERIFICACIÓN AUTOMÁTICA DE VERSIONES (OBLIGATORIA)
+**ANTES de cualquier ZIP o entrega, ejecutar esto:**
+
+```bash
+echo "=== BÚSQUEDA DE TODAS LAS VERSIONES EN index.html ===" 
+grep -n "v94\|v93\|v95\|v96" index.html | grep -E "title|VERSION|fluxiaVersion|fluxiaLabVersionLabel|meta content" | sort -u
+
+echo "=== BÚSQUEDA POR PATRÓN ===" 
+grep -oE "v[0-9]{2}\.[0-9]-LAB|v[0-9]{2}\.[0-9]{2}-LAB" index.html | sort | uniq -c
+
+echo "=== SI APARECEN DOS VERSIONES DIFERENTES: DETENER ===" 
+echo "ERROR: Hay múltiples versiones. Verificar todos los puntos de PRINCIPIO #1"
+```
+
+**JAMÁS empaquetar si esto encuentra más de una versión diferente.**
+
+---
+
+## PRINCIPIO #3: SIEMPRE ENTREGAR EN ZIP
+ZIP contiene EXACTAMENTE estos archivos (orden alfabético):
+1. `Fluxia-banco-index.ts` (Edge Function si hay cambios)
+2. `COPY_TO_SUPABASE.txt` (instrucciones si hay cambios TS)
+3. `PROMPT_MAESTRO_vX.X.txt` (este archivo)
+4. `README.md` (changelog + guía rápida)
+5. `fluxia-canal.json` (nuevo, actualizado)
+6. `fluxia-icon-180.png`, `fluxia-icon-192.png`, `fluxia-icon-512.png`, `fluxia-icon.svg`
+7. `fluxia-sw.js` (service worker, puede tener VERSION vX.X-1)
+8. `index.html` (copia sin sufijo de `index_fluxia_vX.X_LAB.html`)
+9. `index_fluxia_vX.X_LAB.html` (fuente, para referencia)
+10. `manifest.webmanifest` (actualizado)
+
+ZIP nombre: `fluxia_vX.X_LAB.zip`
+
+## PRINCIPIO #4: SI HAY .TS NUEVO → COPY_TO_SUPABASE.txt
+Si SIN CAMBIOS en Fluxia-banco-index.ts:
+```
+SIN CAMBIOS. NO VOLVER A DESPLEGAR.
+Hash: [SHA256 primeros 16 chars]
+```
+
+Si CON CAMBIOS:
+```
+COPY TO SUPABASE EDGE FUNCTION
+Project: kylduzmrfbubeamfrbbr
+Function: Fluxia-banco
+Archivo: Fluxia-banco-index.ts
+```
+
+## PRINCIPIO #5: PRUEBAS EJECUTADAS, NO ADIVINAS (con datos REALES)
+Sintaxis + suites funcionales SIEMPRE, ejecutadas sobre el index.html que va DENTRO del ZIP:
+- `syntax.py`: 0 errores
+- `test_ingresos.js`: 19/19 · `test_fijos.js`: 15/15 · `test_clasif.js`: 39/39 · `test_ciclos.js`: OK
+- `test_real_v945.js`: 26/26 (movimientos REALES de Nacho: nómina, pensión, José Ignacio, Ana, Mycard, Apple)
+- `test_v946.js`: 18/18 (doble confirmación de borrado)
+- `test_v947.js`: 12/12 (histórico; el flag sessionStorage ya no se usa)
+- `test_v9475.js`: NEW · 25/25 (camino de clic de Sin cuenta, cobros futuros, blacklist, restaurar .fluxia cifrado, ciclo crear→abrir)
+- Cada función nueva: test nuevo `test_vX_X.js`.
+Un test debe poder FALLAR: prohibidas las aserciones que siempre dan ✅.
+Si un test antiguo falla porque cambió una regla a propósito, se actualiza el test CON SU MOTIVO escrito; nunca se borra ni se ignora.
+Reportar siempre: qué se probó, qué NO se probó, y qué queda pendiente. Prohibido decir "sin fallos" o "100% verificado".
+## PRINCIPIO #6: NO PEDIR CONSOLA/DEVTOOLS
+Usuario en iPhone. TODO diagnóstico DENTRO de la app.
+- Panel "🔍 ¿No ves un ingreso?" para movimientos dudosos
+- Banner "🔗 Ciclos financieros" para confirmaciones
+- Alertas en-app para cambios detectados
+
+## PRINCIPIO #7: QUIRÚRGICOS
+Cambios exact-match, sin reescrituras amplias.
+- Usar `str_replace()` o scripts Python con assertions
+- Cada patch debe ser independiente y verificable
+- NO tocar líneas que no sean target
+
+## PRINCIPIO #8: REGLAS DE NEGOCIO VIGENTES (v94.43)
+
+### Ingresos del banco
+- "Transferencia Nomina… (empresa)" EN CaixaBank = NÓMINA; se enlaza con la prevista y pasa al MES SIGUIENTE (la nómina de septiembre se cobra en octubre y es la de octubre).
+- "From…", "transfer", "transferencia de", "traspaso", "amortiz…" NO son nómina.
+- Si hay duda sobre un ingreso o gasto, la IA PREGUNTA (Es mío / Puente / Es un ingreso) y recuerda la respuesta. Hasta responder, las entradas dudosas no cuentan como ingreso y las salidas sí cuentan como gasto.
+- Nunca duplicar: el mismo movimiento reentregado no vuelve a gasto, ni a ingreso, ni a pregunta.
+
+### Traspasos propios
+- Nombre del titular con ";" o mismo nombre en ambos lados (sale de una cuenta y entra en otra) = TRASPASO: ni ingreso ni gasto.
+
+### Puentes manuales (Ana, suegra…)
+- Salida hacia la persona: importe exacto primero (500 → suegra), nombre después (Ana María → puente Ana). Si hay dos puentes con el mismo nombre NO adivina: pregunta.
+- Entrada de la persona del puente se apunta en el puente y nunca cuenta como ingreso. Si 1.800 + 700 = 2.500 el puente queda CERRADO.
+- Salidas de puente NO cuentan como gasto. Botón "no es de este puente" deshace el enlace.
+- Botón "Rehacer ingresos del banco" repara lo que versiones anteriores decidieron mal.
+
+### REGLAS DEL USUARIO AÚN SIN IMPLEMENTAR (obligatorio tenerlas presentes)
+1. ✅ IMPLEMENTADO v94.43 (ingresos): un ingreso previsto con fecha de cobro FUTURA no se marca como cobrado ni cuenta como disponible hasta que llegue esa fecha (salvo que el banco ya lo haya visto: bancoRef). La fecha se conserva como `fechaPrevista` y se muestra "Pendiente · cobro previsto". `limpiarCobrosFuturos()`. PENDIENTE: misma regla para gastos fijos con pagadoEl futuro.
+2. Huchas/provisiones: el rescate de una hucha para un puente es dinero ya contabilizado; al reponerlo NO debe contar dos veces. **v94.43 ANOTADO:** Cuando rescatas 500€ de una hucha (gasto de 500€), y luego repones 500€ (ingreso de 500€), el neto es 0 pero el disponible NO cambia (ambos se anulan). NEUTRAL. Definir con usuario si esto es correcto.
+3. La tarjeta "¿Qué es esto?" debe mostrar banco, fecha y concepto completo de cada movimiento dudoso.
+4. CaixaBank se desconecta tras un rato largo en la app y Revolut no: diagnosticar `estado`/renovación de sesión en la Edge Function y corregir.
+## PRINCIPIO #8.5: LECCIONES (QUÉ NUNCA VOLVER A HACER)
+
+**v94.43:** se cambió `<title>` y `window.FLUXIA_VERSION` pero no `fluxiaVersion` ni `fluxiaLabVersionLabel`; el usuario veía la versión antigua. → PRINCIPIO #2.5.
+
+**v94.43 (grave):** se entregó como "v94.43" una COPIA de v94.43 con el número cambiado (sed), sin los parches reales, y se borró con `rm -rf` la carpeta donde estaba el trabajo verdadero. Además se dijo "sin fallos" sin probar con datos reales. → Reglas:
+1. PROHIBIDO `rm -rf` sobre carpetas de versión. Cada versión nueva = carpeta nueva; las anteriores se conservan intactas.
+2. PROHIBIDO crear una versión con `sed` de número sobre otra. El número solo se cambia al final, sobre el HTML ya parcheado y probado.
+3. Antes de entregar, extraer el ZIP y ejecutar las suites SOBRE ESE index.html; comprobar que contiene las funciones nuevas (grep).
+4. Al reanudar tras compactación, localizar el trabajo real (transcript en /mnt/transcripts) ANTES de crear nada.
+
+**v94.43:** El botón "Sin cuenta" no hacía nada (ingresosItems seguía cargando datos viejos). NUEVA FUNCIÓN `resetearTodoParaSinCuenta()` que:
+- Vacía TODOS los arrays: ingresosItems = [], gastosFijosItems = [], etc.
+- Guarda arrays vacíos en localStorage
+- Pone flag sessionStorage para evitar recargas
+- Se llama en `skipPlan()` cuando state.step === 0 (botón "Sin cuenta")
+- `cargarTodo()` chequea el flag y si existe, NO carga nada de localStorage
+
+
+**v94.43 (lecciones de v94.43 → v94.43, TODAS comprobadas en el código real):**
+1. `window.fxConfirmar(titulo,msg,etiqueta,fn,peligro)` es de CALLBACK y devuelve `undefined`. PROHIBIDO usarla como booleano (`if(!fxConfirmar(...)) return;` = botón muerto para siempre). Así estuvieron muertos "Sin cuenta", "Cerrar sesión de la nube" y "Desconectar todos los bancos". Siempre: `window.fxConfirmar(t,m,e,function(){...hacer...}, true)`.
+2. Un test de función aislada NO prueba un botón. Para cada botón tocado: test del camino de CLIC (la confirmación se abre, no se hace nada antes de confirmar, se hace al confirmar).
+3. Antes de decir que algo "resuelve" un problema, comprobar con grep que la función nueva SE USA (v94.43 creó `estáEnBlacklist()` que nadie llamaba, y guardaba el ID interno en vez de `bancoRef`, el ID del banco).
+4. No crear flags que bloqueen la CARGA de datos (v94.43: el flag "sin cuenta" hacía que lo apuntado después nunca se volviera a cargar).
+5. NUNCA reescribir la Edge Function desde cero ni de memoria: parchear siempre el TS real que el usuario tiene en Supabase y compilar (tsc) antes de entregar (mi TS "v94.43.4" tenía `const` reasignado, TS2588).
+6. Un solo importador de copias: `importarCopiaFluxia` detecta copia cifrada (`fluxia_copia:1`) y abre la pantalla de contraseña. Ningún botón de restaurar puede ignorar el formato `.fluxia`.
+7. Si la captura del usuario muestra una versión distinta a la entregada (p. ej. v94.43.2 en pantalla), decirlo ANTES de afirmar que algo falla o arregla: puede que no esté instalada.
+
+## PRINCIPIO #10.5: SIEMPRE MANDAR LOS DOS ENLACES AL FINAL (OBLIGATORIO)
+**Después de CADA entrega, terminar EXACTAMENTE con:**
+
+```
+═══════════════════════════════════════════════════════════════
+ENLACES DE ACCESO (actualizar en cada versión):
+
+📍 VERSIÓN LAB (experimental, esta que acabas de recibir):
+   https://nacram1987-cmd.github.io/Fluxia-v20/index.html?v=vX.X-LAB
+
+📍 VERSIÓN ESTABLE (producción, usuarios finales):
+   https://nacram1987-cmd.github.io/Fluxia-v20/index.html?v=v93.10-ESTABLE
+
+═══════════════════════════════════════════════════════════════
+```
+
+**Estos enlaces DEBEN aparecer:**
+- ✓ Al final de CADA entrega
+- ✓ Fácil de copiar y compartir
+- ✓ Con el número de versión correcto
+- ✓ Ambos: LAB + ESTABLE
+
+Si falta alguno de estos enlaces → **ENTREGA INCOMPLETA**
+
+---
+
+## PRINCIPIO #11: SIEMPRE PRESENTAR ARCHIVOS AL USUARIO (OBLIGATORIO)
+**JAMÁS OMITIR ESTO.** Después de cada entrega, SIEMPRE:
+
+1. Usar herramienta `present_files()` con:
+   - `fluxia_vX.X_LAB.zip` (principal)
+   - `index_fluxia_vX.X_LAB.html` (fuente)
+   - `PROMPT_MAESTRO_vX.X.txt` (reglas)
+   - `README_vX.X.md` (changelog)
+
+2. **Los archivos deben ser CLICKEABLES** en la respuesta final
+
+3. Si no aparecen enlaces descargables:
+   - ❌ FALLO CRÍTICO
+   - El usuario no puede descargar nada
+   - Versión incompleta
+
+**VERIFICACIÓN:** Respuesta debe terminar con:
+```
+📦 ARCHIVOS LISTOS PARA DESCARGAR:
+  ✓ fluxia_vX.X_LAB.zip (descarga directa)
+  ✓ index.html (descarga directa)
+  ✓ PROMPT_MAESTRO (descarga directa)
+```
+
+Si no ves esos enlaces → reclamar ANTES de hacer nada.
+
+---
+
+## PRINCIPIO #12: ADITIVO
+Cada versión solo mejora: no se estropea nada de lo que funciona (todas las suites anteriores siguen pasando) y los datos del usuario nunca se pierden al actualizar o hacer downgrade.
+## PRINCIPIO #13: TODO CAMBIO DEBE PODER GUARDARSE (regla del usuario)
+Cualquier cambio, sea cual sea (alta, edición, cobro, enlace, respuesta a una pregunta), debe persistir: tras cada modificación de datos hay un guardado (`guardarIngresos`, `guardarMovimientos`, `guardarFijos`, `guardarFinanciaciones`, `guardarProvisiones`, `guardarUsos`, `guardarCompartidos`, `guardarEfectivo`…).
+- Al añadir código que modifique una lista, añadir el guardado en la misma función.
+- Auditoría obligatoria en cada entrega: buscar `.push(`/`.splice(`/`=…filter(` sobre las listas de datos y confirmar el guardado. Auditoría v94.43: 55 modificaciones, 0 rutas sin guardar (cubre listas; NO cubre ediciones de campos sueltos).
+
+## PRINCIPIO #14: BORRAR = DOBLE CONFIRMACIÓN SIEMPRE (regla del usuario)
+Borrar o quitar cualquier elemento exige DOS confirmaciones; cancelar en cualquiera no toca nada.
+- `openConfirmModal({danger:true})` ya encadena la segunda pantalla "⚠️ Última confirmación" automáticamente.
+- Los `confirm()` nativos que borran/quitan usan `window.fxConfirm2(msg)` (dos confirmaciones). Prohibido añadir un borrado con `confirm()` simple o sin confirmación.
+- Cada borrado nuevo lleva test (ver test_v946.js y test_v947.js).
+
+## PRINCIPIO #15: FINANZAS AL MILÍMETRO
+Cada céntimo clasificado correctamente, no solo que el total cuadre. La IA pregunta ante la duda, recuerda la respuesta, evita duplicados y explica de dónde sale cada movimiento. No inventar datos: si algo no se sabe, se dice.
+
+## CHECKLIST ANTES DE ENTREGAR
+
+### 🔴 PRIMER PASO (BLOQUEANTE): VERIFICACIÓN DE VERSIONES
+```bash
+# Ejecutar ESTO como primera cosa:
+grep -oE "v[0-9]{2}\.[0-9]{1,2}-LAB" index.html | sort | uniq -c
+```
+**Debe haber UNA SOLA línea. Si aparecen dos versiones → STOP, arreglar**
+- [ ] Resultado: todas las versiones = vX.X-LAB (idénticas)
+- [ ] Si alguna dice vX.X-1-LAB o diferente: DETENER y arreglar
+- [ ] Verificar: `<title>`, `window.FLUXIA_VERSION`, `fluxiaVersion`, `fluxiaLabVersionLabel`, `<meta content>`
+
+### ⚠️ CRÍTICO (sin estos, el usuario no actualiza):
+- [ ] index.html: `<title>Fluxia BETA vX.X-LAB</title>`
+- [ ] index.html: `window.FLUXIA_VERSION = "vX.X-LAB"`
+- [ ] index.html: `<meta content="vX.X-LAB" name="fluxia-version"/>`
+- [ ] index.html: `<div id="fluxiaVersion">Versión vX.X-LAB</div>` (LO QUE VE EL USUARIO)
+- [ ] index.html: `<b id="fluxiaLabVersionLabel">vX.X-LAB</b>`
+- [ ] manifest.webmanifest: `"name": "Fluxia BETA vX.X-LAB"` (NO vX.X-1-LAB)
+- [ ] fluxia-canal.json: `"lab_version": "vX.X-LAB"` (NO vX.X-1-LAB)
+- [ ] fluxia-canal.json: timestamp actualizado (ISO 8601)
+
+### ✅ VERSIONES COHERENTES:
+- [x] window.FLUXIA_VERSION = "v94.53-LAB" en index.html
+- [x] <title>Fluxia BETA v94.53-LAB</title>
+- [x] Nombre ZIP = fluxia_v94.43_LAB.zip
+- [x] Nombre archivo fuente = index_fluxia_v94.43_LAB.html
+- [x] PROMPT_MAESTRO_v94.43.txt
+- [x] README.md con v94.43 en título
+
+### 🧪 PRUEBAS (sobre el index.html EXTRAÍDO del ZIP):
+- [ ] syntax.py: 0 errores
+- [ ] test_ingresos 19/19 · test_fijos 15/15 · test_clasif 39/39 · test_ciclos OK
+- [ ] test_real_v945 26/26 · test_v946 18/18 · test_v947 (nuevo, sin cuenta)
+- [ ] Informado qué NO se probó y qué queda pendiente
+
+### 📦 ZIP:
+- [x] 13 archivos (verificar con `unzip -l`)
+- [x] PROMPT_MAESTRO_v94.43.txt incluido
+- [x] README.md incluido
+- [x] Todos los PNGs, SVG, TS incluidos
+
+### ✅ PASO FINAL (NO OMITIBLE): PRESENTAR ARCHIVOS AL USUARIO
+- [ ] Usar `present_files()` con ZIP + HTML + PROMPT
+- [ ] Verificar que los enlaces sean CLICKEABLES en la respuesta
+- [ ] Terminar con: "📦 ARCHIVOS LISTOS PARA DESCARGAR"
+- [ ] Usuario puede descargar TODO sin pedirme nada más
+- [ ] Si falta este paso: **INCOMPLETO, hacer de nuevo**
+
+## PRINCIPIO #8 · AÑADIDOS v94.43
+1. Botón «Sin cuenta»: reset completo + `_skipPlanSinPlan()` (entra al plan vacío). Nunca solo `state.step=1`.
+2. `ingresosTotal(mes)` = solo cobrados (`pagadoEl`). Pendientes en `ingresosPrevistosTotal`.
+3. Fecha de cobro futura → `fechaPrevista`, sin `pagadoEl`, no cuenta en disponible.
+4. Disponible real = cobrados − gastos (conciencia de consumo).
+
+## LECCIÓN v94.43
+NO cambiar la semántica de ingresosTotal ni el layout del total de la pestaña Ingresos.
+- ingresosTotal = plan (todos no-puente)
+- disponibleEfectivo = solo cobrados
+- fecha futura = pendiente visual, sin reestructurar la UI
+
+## LECCIÓN v94.43
+"ESTE MES TE QUEDAN" usa la fórmula del PLAN (ingresosTotal), no solo cobrados.
+No mezclar "conciencia de cobro" (badge pendiente) con el cálculo del disponible del mes.
+
+## LECCIÓN v94.43 (HUB046)
+HUB046 = límite diario del banco. NO es sesión caducada.
+- No mostrar Reconectar como acción principal
+- No refrescar sesión en accionEstado si ya hay HUB046
+- No marcar caducado=true
+- Backoff hasta fin del día
+
+## LECCIÓN v94.43
+Nunca referenciar FluxiaGVBorrados.debeIgnorarBanco sin haber definido el módulo.
+Blacklist = id + fingerprint fecha|cents|concepto normalizado (sin acentos).
+Tres puertas: call(), aplicarMovs (primera línea), purge al arrancar.
+
+## LECCIÓN v94.43
+1. Nunca inyectar código JS sin `<script>` envolvente.
+2. presupuestos NO deben estar en el bloqueo de "array vacío".
+3. Papelera: eliminarDefinitivo por id + vaciar con fxConfirmar callback.
+
+## LECCIÓN v94.43
+Purgar vetados en cargarTodo() de forma síncrona, no solo con setTimeout.
+Blacklist dual: localStorage + Almacen + claveLS.
+fecha+cents exactos → mismo cargo del banco (aunque cambie el concepto).
+
+## v94.43
+Disponible excluye fechaPrevista futura. PapeleraUI con borrar definitivo. Compartidos pago parcial visible.
+
+## v94.43
+Lupa fuera. Presupuestos blacklist. Papelera UI + vet al borrar definitivo.
+
+## v94.43
+Header visual hero.
+
+## v94.43
+Una sola vía de copia. Textos de seguridad sobrios.
+
+## v94.43
+Seguridad honesta. Header logo 56px. Sin cuenta a 0.
+
+## v94.43
+Sistema visual unificado en todas las pestañas (claro/oscuro). Sin reescritura de lógica.
+
+## v94.43 · Paso 1
+Salud al arrancar + empty states + menos ruido en toasts de borrado.
+
+## v94.43
+Amortización=hucha en clasificar. Sync bancario con backoff. Purge cola IA.
+
+## LECCIONES v94.43 (obligatorias)
+- PROHIBIDO inventar código, endpoints o tablas. Primero leer el código real y parchear.
+- PROHIBIDO decir "testeado en iPhone": solo se declara lo verificado en código (grep, node --check, cmp).
+- PROHIBIDO borrar/limpiar claves localStorage con prefijo `fluxia_` o `planRescate_v2_`: contienen datos reales.
+- NUNCA reescribir manifest, canal.json ni .ts desde cero: partir siempre del original de la versión anterior.
+- Reintentos/fallbacks NO ayudan contra HUB046 (límite diario del banco): gastan cuota. No reintentar.
+- Una mejora por versión. Cada entrega declara qué se verificó y qué solo puede probar Nacho en iPhone.
+
+## DECISIONES v94.43
+- Autoguardado = red de seguridad en IndexedDB sobre TODO localStorage (la app ya guarda local + nube vía Almacen).
+- Bancos: no reintentar contra HUB046. La palanca real es "usuario presente" (cabeceras PSU) en acciones manuales.
+- El cliente marca presente:true solo con forzar (botón Sincronizar ahora / ↻ saldos). Lo automático NO.
+- Cualquier cambio al .ts exige COPY_TO_SUPABASE.txt con hash y versión nuevos.
+
+
+## REGLAS DE NACHO (OBLIGATORIAS, v94.43)
+- VERSIONES = v94.43, v94.43, v94.43... NUNCA letras (nada de "b", "c", "-fix").
+- Prohibido decir "verificado/testeado" de algo que no se ha ejecutado de verdad. Si un cambio no se probó, decirlo.
+- Nacho NO crea reglas: la app debe preguntar sola ("¿es tu fijo X?", "¿es la cuota de tu préstamo?").
+- "Kai" en los dictados de Nacho = CaixaBank.
+- Un gasto del banco que coincide en importe con un fijo o con la cuota de un préstamo se PREGUNTA (FluxiaBancoFijos).
+- CaixaBank/Revolut: con permiso vivo se muestran como "Conectado" aunque haya límite diario (HUB046).
+- Los gastos del banco se guardan con importe POSITIVO (no negativo).
+
+## DECISIONES v94.43
+- FluxiaBancoFijos compara también con financiaciones (cuota, ±1 €) y revisa una vez los gastos ya apuntados (últimos 45 días).
+- Fijos: si coinciden importe Y nombre → se enlaza solo (ya existía); si solo coincide el importe → pregunta.
+- El .ts NO cambia respecto a v94.43 (hash c4d30337d63fbbc7).
+
+## DECISIONES v94.43
+- Saldos: cada cuenta se identifica por iban o, si no hay, por uid (CaixaBank no devuelve IBAN: antes las 2 cuentas chocaban).
+- Se guarda el último saldo conocido por cuenta (fluxia_banco_saldos_ult_v1) y se muestra "último conocido dd/mm hh:mm" si el banco limita.
+- Ocultar saldo por cuenta (fluxia_saldo_ocultos_v1): no se pinta ni suma en tarjetas, estado general ni Ajustes.
+- calcularSaldos() es la única fuente; window.FluxiaBancoSaldosVisibles() la expone a otros módulos.
+- El .ts NO cambia (hash c4d30337d63fbbc7).
+
+## DECISIONES v94.43
+- El límite diario HUB046 NUNCA es avería en la UI: operativo() del encabezado y de Ajustes lo cuenta como conectado (esLimiteCx).
+- Hay DOS sitios que deciden el estado del banco: la tarjeta del modal (pintarListaConexiones) y el encabezado (pintarBancoHeader/operativo, módulo "Bancos"). Cualquier cambio de estado debe tocar ambos.
+- Caducado, error distinto al límite o sin cuentas SIGUEN marcándose como incidencia.
+- El .ts NO cambia (hash c4d30337d63fbbc7).
+
+## DECISIONES v94.43 (hucha "Mantenimiento e Césped")
+- Verificado en código: NINGÚN proceso automático escribe p.fin en huchas; solo el formulario de alta/edición (líneas ~12019 y ~12279). provisionActivaEnMes() funciona como está diseñada.
+- NO se quitó el límite de fin (habría dejado muerto el campo "Mes de fin" y cambiado totales). El plan antiguo "quitar mIdx<=finIdx" queda DESCARTADO.
+- Nuevo: revisarFinHuchas() pregunta "¿Sigue activa?" cuando el mes de fin ya pasó. Una vez por hucha+fin (clave fluxia_prov_fin_preg_v1). No toca nada hasta confirmar.
+- La causa exacta de por qué esa hucha acabó con fin=septiembre NO se puede demostrar desde el código.
+- Archivo .ts: NO cambia (hash c4d30337d63fbbc7). No existe "Fluxia-banco-index_v94.43.ts" ni "_v94.43.ts": el .ts vigente es el del ZIP.
+
+## DECISIONES v94.43 (corrección del aviso de hucha de v94.43)
+- Defecto reproducido en simulación: recargarDesdeServidor() -> cargarTodo() recrea `provisiones` con objetos nuevos. Si ocurre con el cuadro abierto, v94.43 cambiaba una copia vieja y no guardaba nada. Con el código antiguo fallan las pruebas de carrera; con el nuevo pasan.
+- NO se puede demostrar que esa fuera la causa en el iPhone de Nacho.
+- Ahora: se busca la hucha por id en la lista actual, se verifica el guardado, se espera a Almacen.estado!=='cargando' (máx. 6 reintentos), y si sigue sin salir se explica el motivo (p.ej. mes de inicio).
+- Clave nueva fluxia_prov_fin_preg_v2; la v1 se conserva (regla: no borrar claves fluxia_*).
+- El .ts NO cambia (hash c4d30337d63fbbc7).
+
+## PENDIENTE: cargo "Abarrotao" (~18 €) que no entra
+- Aún sin diagnosticar. Hipótesis por código/docs: (a) CaixaBank con límite diario HUB046 -> no se piden sus movimientos hoy; (b) cargo PENDIENTE y el banco no lo devuelve por defecto (Enable Banking: transaction_status opcional; sin él depende del banco); (c) borrado antes por Nacho (FluxiaGVBorrados/veto).
+- El diagnóstico existente (clsDiag, "¿No ves un ingreso?") solo cubre INGRESOS, no gastos.
+- NO tocar el .ts para pedir PDNG sin confirmar el banco y evitar duplicados (el id de un pendiente puede cambiar al contabilizarse).
+
+## DECISIONES v94.43 (papelera: botón Vaciar/Borrar)
+- Causa verificada: #modalOverlay (cuadro de confirmación) z-index 10500 < hoja papelera 60000. El aviso salía DETRÁS y solo se veía al cerrar la hoja. Afecta a «Vaciar» y a «Borrar» de cada elemento.
+- Arreglo: fxConfirmar sube el cuadro a 60010 solo mientras exista #fxPapeleraOverlay y lo restaura al cerrarse (MutationObserver sobre la clase "open"). Probado con openConfirmModal/closeModal REALES, incluida la 2ª confirmación de acciones peligrosas.
+
+## SIN RESOLVER (no hay prueba de causa; NO inventar arreglos)
+1. Gastos que "se repiten en la papelera". Hechos verificados: la papelera (FluxiaPapelera.autoDiff) recoge TODO lo que desaparece de las listas al guardar, también lo quitado por rutinas automáticas (puentesConciliar, clasificador de traspasos, purgarAntiguos) que NO activan _FLUXIA_SIN_PAPELERA. Falta ver qué entradas son (captura de Nacho).
+2. Presupuesto de prueba que reaparece. Descartado: autoguardado v94.43 (solo restaura con localStorage totalmente vacío); solo hay UN sitio que crea presupuestos; ya existen v94.43/v94.43 (escritura forzada + lista negra por categoría). Hipótesis NO probada: la regla de Almacen "remoto más corto/vacío nunca gana a local con datos" impide que un borrado se propague entre copias (otro dispositivo, pestaña Safari vs icono PWA). Pendiente de datos de Nacho.
+3. Abarrotao ~18 €: capturas 15:15 -> 16:13 muestran gasto variable +18,80 y saldo Revolut -18,80: probablemente YA entró (con otro nombre). Sin confirmar.
+- El .ts NO cambia (hash c4d30337d63fbbc7).
+
+## DECISIONES v94.43 (ingresos recibidos)
+- Pedido de Nacho: catalogar ingresos recibidos (Bizum / Transferencia) y rehacer la estética. Se interpretó «con oral» como «con label (etiqueta)». No se confirmó con Nacho.
+- Datos: un ingreso del banco NO guarda el texto original; solo concepto formateado, banco, fecha. Por eso a los ya existentes no se les puede saber el medio: la app PREGUNTA («¿Cómo te llegó?» Bizum / Transferencia). A los nuevos se les pone medio si el texto del banco lo dice (Bizum: concepto o nombre; Transferencia: SOLO concepto; Nómina: esNomina).
+- Nuevo campo opcional it.medio ('bizum'|'transferencia'|'nomina'). No se tocó el .ts. Nombre mostrado: «Nombre;ap1;ap2» → «Nombre Ap1 Ap2» solo al pintar.
+- Diseño: tarjetas .ing-card (CSS #fxIngV37, solo #ingList); sin tachado ni opacidad; puentes cerrados con «Ver cuadre» plegable.
+- Corregido de paso en «Editar ingreso»: busca por id (cierre sobre datos viejos).
+- AUDITORIA_v94.43.md (en el ZIP aparte) lista hallazgos A1–A4, M1–M6, B1–B6 y orden propuesto v94.43+ (decimales con coma en Dinero en mano → escapar texto del banco → listaGastosFijos → ediciones por id).
+- El .ts NO cambia (hash c4d30337d63fbbc7).
+
+## v94.43
+- autoDiff no re-encola vetados → rompe ciclo papelera↔banco
+- eliminarDefinitivo/vaciar + SIN_PAPELERA + quitar de movimientos
+- Heroes unificados entre pestañas
+- canal: stable_version = v94.43-ESTABLE
+
+## v94.43
+- ESTABLE = v94.38 hasta nuevo aviso
+- fxIrASeguridad() desde Dashboard
+- Análisis reordenado
+- Heroes = estilo shared-total-hero
+- FLUXIA_CHECKLIST solo cambios de la versión
+
+## v94.43
+HUB046 UI honesta + Pago parcial visible. ESTABLE=v94.38.
+
+## v94.44
+Compartidos hero cálido; details Ajustes/Ayuda plegados al cambiar pestaña; saldos último conocido; categorías manuales persistentes.
+
+## v94.45 · Fases 3 y 4
+- Edición por id: fijos, provisiones, financiaciones, guardarPago, compartidos reembolso.
+- Héroes restante unificados (efectivo/presupuestos/financiaciones).
+- fluxiaSaludArranque: aviso copia/nube en Inicio; marca fecha al descargarBackup.
+- TS: mismo c4d30337 / v94.30. Nacho indica ya desplegado en Supabase.
+- ESTABLE: v94.46-ESTABLE.
+
+## v94.46 · ESTABLE
+- Sin cuenta operativo (reset + flags + cierra overlay).
+- Presupuestos borrados: blacklist + filtro pres() + render + papelera.
+- Tema teal Dashboard en héroes.
+- Recuperar ingreso banco individual.
+- ESTABLE = v94.46-ESTABLE.
+
+## v94.47
+- Tema teal Dashboard global (todas las pestañas).
+- Diag ingresos al final del panel + recuperar uno a uno.
+- ESTABLE sigue v94.46 hasta validación.
+
+## v94.48
+- Recover ingreso: x.k
+- Force teal CSS all panels
+
+## v94.49 · CRÍTICO Sin cuenta
+- Causa: modal confirm bajo onboarding.
+- Fix: confirm() nativo + reset + cierra overlays.
+- GV: recuperar uno a uno desde blacklist.
+- FluxiaQA_v49.
+
+## v94.50 · Aislamiento de perfiles
+- LS_PREFIX por profile.id (salvo legacy/principal).
+- resetearTodoParaSinCuenta nuclear del prefijo del perfil.
+- cargarTodo ya no borra flags sin cuenta.
+- Héroes idénticos a Dashboard (FFF9F0→EAF5F7, #0E7C90).
+
+## v94.51
+- Heroes = .tu-mes exact gradient
+- Sin cuenta: reload after reset
+- newUser always scoped prefix
+
+## v94.52 · INTEGRIDAD
+- PROHIBIDO borrar planRescate_v2_* globales en Sin cuenta.
+- LS_PREFIX siempre base.
+- fluxiaRestaurarPreImport().
+
+## v94.53
+- Banner fijos: fecha + Sí / otro gasto / descartar
+- diaCargo y fechaEstimada en fijos
+
+## v94.63 · INTEGRIDAD (lecciones OBLIGATORIAS, comprobadas en código y en navegador real)
+1. LS_PREFIX SIEMPRE 'planRescate_v2_'. PROHIBIDO volver a namespaces por perfil (planRescate_v2_u_*): partieron el plan en dos en v94.55–62. El aislamiento entre usuarios es Almacen (fluxia_user_<id>__ + planUsuarios/<id>). El espacio u_ solo se LEE (FluxiaRecV63).
+2. PROHIBIDO vaciar listas en memoria «por si acaso» (fluxiaForzarVacioSiAislado). Un vaciado + cualquier guardado = pérdida real (rescates de huchas).
+3. PROHIBIDO cualquier «recuperación» que escanee TODO localStorage y elija la lista más larga. Solo claves del perfil actual y solo si la lista está VACÍA. Una lista más corta puede ser un borrado legítimo.
+4. Veto de borrados: gasto MANUAL = solo por id. Fecha+importe solo para cargos del banco.
+5. Cambiar el nombre de una clave = migrar o leer la antigua. Nunca dejar al usuario sin reglas/cortes/revisados.
+6. Comprobaciones al abrir (cierre de mes, avisos) esperan a Almacen listo + FluxiaRecV63.listo.
+7. Con prefijo base, NUNCA escribir [] en claves con LS_PREFIX fuera de Almacen (borra el plan legacy).
+8. Tests E2E con Playwright sobre el index REAL: tests/e2e_v9463.js (16) y e2e_v9463b.js (12). Deben fallar con v94.62.
+9. Entregas: LAB y ESTABLE = mismo código, solo cambia la etiqueta. Un ZIP por canal.
+- El .ts NO cambia (hash c4d30337d63fbbc7).
+
+## v94.64 · CLASIFICAR UNO A UNO + «¿No ves un gasto?»
+1. Respuesta POR MOVIMIENTO (fluxia_banco_clasif_item_v9464) manda sobre la regla del grupo. Categorías: hucha, traspaso tuyo, puente, gasto normal / ingreso real, fijo concreto, cuota concreta (con los fijos y cuotas del MES del movimiento).
+2. Tarjeta «¿Qué es esto?»: cada grupo tiene «Ver las N una a una» con fecha, banco y concepto completo de cada movimiento (cumple la regla pendiente #3).
+3. «¿No ves un ingreso?» también permite elegir categoría en cada entrada.
+4. «¿No ves un gasto?» al final de Gastos variables, Gastos fijos y Financiación: buscador + borrados recuperables (papeleras + cargos vetados) + salidas del banco con estado y categoría. Diagnóstico de salidas: fluxia_banco_diag_out_v9464.
+5. FluxiaGVBorrados.desvetar(mv): «Recuperar solo este» quita el veto SOLO de ese cargo. El panel v94.49 filtraba por x.fp (inexistente): nunca recuperó nada → sustituido.
+6. Bugs previos corregidos: ciclosPintar llamaba a clsBox fuera de su módulo (ReferenceError: el aviso «🔗 Ciclos financieros» no salía nunca); v94.26 llamaba a window.clsRefrescar inexistente; v94.26 sacaba en silencio las ENTRADAS de amortización de la cola (ahora las decides tú; las salidas siguen siendo hucha).
+7. Grupo de entradas tipo hucha: el botón decía «Gasto normal» → «Es un ingreso» (+ Puente).
+8. Test: tests/e2e_v9464.js (18). Siguen pasando e2e_v9463 (16) y e2e_v9463b (12).
+- El .ts NO cambia (hash c4d30337d63fbbc7).
+
+## v94.66 · INICIO LIMPIO
+1. En Inicio NO se pintan «Estás en el plan de X · Cerrar sesión» (el nombre ya sale en la cabecera y Cerrar sesión está en el menú ☰) ni la tarjeta «Semana bancaria» («N cargos nuevos» no pedía nada; los «posibles fijos» ya los pregunta el aviso de fijos). Solo queda UNA línea fina si hay importes inusuales.
+2. Regla de diseño del Inicio: cada tarjeta debe pedir una acción o dar una cifra útil. Sin acción y sin utilidad, no ocupa pantalla.
+3. Cabecera del menú: el botón «Cerrar sesión» ya no infla el bloque de texto (zona táctil por ::after, no por min-height/padding). Nombre, versión y botón quedan centrados con el avatar.
+4. FluxiaBancoPro.resumenSemanal leía una clave global (fluxia_banco_fijos_pend_v1) que desde v94.57 es por perfil: contaba mal. Ya no se usa en pantalla.
+5. Test: tests/e2e_v9465.js (10). Falla con v94.64 (4/10).
+- El .ts NO cambia (hash c4d30337d63fbbc7).
+
+## v94.68 · CONSOLIDACIÓN REAL DEL DASHBOARD + MESES
+- El Dashboard de Inicio debe tener UNA sola jerarquía visual: Disponible real → desglose → acciones. No superponer el héroe antiguo, KPIs antiguos ni resumen visual v80.1.
+- En Inicio se oculta el selector global de meses para evitar duplicidad. El selector local del Dashboard es el único control de mes: anterior / Hoy / siguiente.
+- El mes seleccionado debe persistir al cambiar de pestaña; «Hoy» devuelve al mes calendario actual del plan.
+- El Dashboard debe distinguir explícitamente REAL vs PLAN: el mes en curso muestra disponible real; meses no actuales muestran cifras del plan y no deben presentarse como dinero bancario disponible hoy.
+- Oro = acento funcional para provisiones/metas/valor; no sustituye al teal ni convierte toda la interfaz en azul.
+- Notificaciones de Fluxia activadas por defecto. Si el usuario las desactiva se respeta su elección. Esto no implica saltarse el permiso de notificaciones del sistema iOS.
+- El inicializador de notificaciones debe ser idempotente: un solo temporizador por sesión.
+- No modificar la versión ESTABLE salvo indicación expresa. Para esta entrega: ESTABLE = v94.46-ESTABLE.
+- LAB de esta entrega: v94.68-LAB. manifest.webmanifest debe arrancar explícitamente la LAB; fluxia-canal.json debe conservar ESTABLE v94.46-ESTABLE.
+- No se eliminan datos ni módulos: la consolidación es visual/jerárquica y los módulos antiguos quedan fuera de Inicio cuando duplican información.
