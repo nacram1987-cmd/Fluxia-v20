@@ -1,0 +1,13 @@
+{
+  "canal": "LAB",
+  "lab_version": "v95.5-LAB",
+  "lab_file": "index_fluxia_v95.5_LAB.html",
+  "lab_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index_fluxia_v95.5_LAB.html?v=v95.5-LAB",
+  "stable_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index.html",
+  "stable_untouched": true,
+  "supabase_sync": true,
+  "sync_model": "item-id + _fxUpdatedAt + tombstones + optimistic-CAS",
+  "retry_count": 5,
+  "timestamp": "2026-10-04T18:51:00+02:00",
+  "notas": "v95.5: sincronización por elemento, lápidas de borrado, control de concurrencia, recuperación idempotente de Mantenimiento Césped, selector mensual por pestaña, navegación y diseño elite, eliminación de flushes globales duplicados."
+}
