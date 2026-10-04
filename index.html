@@ -479,7 +479,7 @@
 .fx-security-note b{color:var(--ink);}
 .fx-security-card h5{margin:0 0 8px;font-size:.88rem;color:var(--ink);}
 
-/* v94.88.3-LAB · Dashboard consolidado + navegación mensual */
+/* v94.88.4-LAB · Dashboard consolidado + navegación mensual */
 .fx-dashboard67{margin:0 0 18px;padding:16px;border:1px solid var(--line);border-radius:18px;background:var(--surface);box-shadow:0 6px 20px rgba(15,58,92,.055);}
 .fx-dashboard67-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:14px;}
 .fx-dashboard67-kicker{font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);}
@@ -538,7 +538,7 @@
 .fx-cloud-integrity strong{color:var(--ink);}
 @media(max-width:430px){.fx-dashboard67-break{grid-template-columns:repeat(2,minmax(0,1fr));}.fx-dashboard67-real .amount{font-size:2.15rem;}.fx-month-nav .current b{font-size:1.05rem;}}
 @media(max-width:420px){.fx-dashboard67-actions{grid-template-columns:1fr;} .fx-dashboard67-real .amount{font-size:1.8rem;}}
-/* v94.88.3-LAB · Dashboard realmente consolidado: no duplicar héroes/KPIs antiguos en Inicio */
+/* v94.88.4-LAB · Dashboard realmente consolidado: no duplicar héroes/KPIs antiguos en Inicio */
 body.fx-dashboard-clean #tuMes,
 body.fx-dashboard-clean #dashboardVisualV801,
 body.fx-dashboard-clean #kpiGrid,
@@ -578,8 +578,8 @@ body.fx-dashboard-clean .fx-dashboard67-item.gold:after { content:""; position:a
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="telephone=no" name="format-detection"/>
 <meta content="no" name="msapplication-tap-highlight"/>
-<title>Fluxia BETA v94.88.3-LAB</title>
-<meta content="v94.88.3-LAB" name="fluxia-version"/>
+<title>Fluxia BETA v94.88.4-LAB</title>
+<meta content="v94.88.4-LAB" name="fluxia-version"/>
 <!-- Fluxia v91 · brand lock · datos jamás a 0 · compartidos saldo inicial · notif suaves · logo alineado · base v90.10 -->
 <script>
 (function(){window.FluxiaNative={isNative:function(){try{return!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())}catch(e){return false}},platform:function(){try{return(window.Capacitor&&Capacitor.getPlatform)?Capacitor.getPlatform():'web'}catch(e){return'web'}}};})();
@@ -886,9 +886,9 @@ window.fluxiaCuandoLibre = function(fn, intentos){
 };
 
 </script>
-<meta content="v94.88.3-LAB" name="fluxia-version"/>
+<meta content="v94.88.4-LAB" name="fluxia-version"/>
 <meta content="lab" name="fluxia-channel"/>
-<script>window.FLUXIA_VERSION = "v94.88.3-LAB";</script>
+<script>window.FLUXIA_VERSION = "v94.88.4-LAB";</script>
 <script>
 /* v94.39 · Ir directo a Seguridad en Ajustes */
 window.fxIrASeguridad = function(){
@@ -1583,22 +1583,35 @@ function generarLinkInvitacion(inviteToken) {
         return {
           set: async function(obj){
             var row = { user_id: idActual, clave: k, v: obj && obj.v, t: (obj && obj.t) || Date.now() };
-            var r = await c.from(TABLA).upsert(row, { onConflict: 'user_id,clave' });
-            if (r.error) {
-              /* v94.88.2 · Fallback si falta UNIQUE: update y si 0 filas, insert */
-              console.warn('[Nube] upsert falló, reintento update/insert', r.error.message);
-              var u = await c.from(TABLA).update({ v: row.v, t: row.t }).eq('user_id', idActual).eq('clave', k);
-              if (u.error) {
-                var ins = await c.from(TABLA).insert(row);
-                lanzar(ins.error);
-              } else if (!u.data || (Array.isArray(u.data) && u.data.length === 0)) {
-                /* PostgREST a veces no devuelve data sin select; intentar insert por si no existía */
-                var ins2 = await c.from(TABLA).insert(row);
-                if (ins2.error && !/duplicate|unique|23505/i.test(String(ins2.error.message||''))) {
-                  lanzar(ins2.error);
-                }
+            /* v94.88.4 · GUARDADO CONFIRMADO. Cada paso pide la fila de vuelta (.select) y NADA se da por
+               bueno en silencio (antes un «duplicate key» o un UPDATE de 0 filas se tragaba y la app creía
+               que la hucha estaba en la nube cuando no lo estaba). */
+            var r = await c.from(TABLA).upsert(row, { onConflict: 'user_id,clave' }).select('clave');
+            if (!r.error && Array.isArray(r.data) && r.data.length) return;
+            var motivoUp = r.error ? (r.error.message || r.error.code || 'error') : 'el servidor no devolvió la fila';
+            console.warn('[Nube] upsert no confirmado (' + k + '):', motivoUp);
+            var u = await c.from(TABLA).update({ v: row.v, t: row.t }).eq('user_id', idActual).eq('clave', k).select('clave');
+            if (u.error) lanzar(u.error);
+            if (Array.isArray(u.data) && u.data.length) return;
+            var ins = await c.from(TABLA).insert(row).select('clave');
+            if (ins.error) {
+              if (/duplicate|unique|23505/i.test(String(ins.error.message || ins.error.code || ''))) {
+                var e2 = new Error('La fila «' + k + '» ya existe en la nube pero no es tuya o no se puede modificar (clave primaria solo en «clave» o permisos). Ejecuta fluxia-reparar-nube.sql');
+                e2.code = 'conflicto_fila'; throw e2;
               }
+              lanzar(ins.error);
             }
+            if (!Array.isArray(ins.data) || !ins.data.length) {
+              var e3 = new Error('Supabase no confirmó el guardado de «' + k + '» (' + motivoUp + '). Ejecuta fluxia-reparar-nube.sql');
+              e3.code = 'sin_confirmacion'; throw e3;
+            }
+          },
+          /* v94.88.4 · lee UNA fila de la nube (para verificar de verdad que está guardada) */
+          get: async function(){
+            var g = await c.from(TABLA).select('clave,v,t').eq('user_id', idActual).eq('clave', k).limit(1);
+            lanzar(g.error);
+            var f = (g.data && g.data[0]) || null;
+            return f ? { v: f.v, t: f.t } : null;
           },
           delete: function(){ return borrar(k); }
         };
@@ -2660,7 +2673,7 @@ header.top #bancoEstadoHeader{margin-top:4px!important;}
 .gv-importe,.mov-importe,.row-importe,.ingreso-importe,.fijo-importe{font-size:0.95rem!important;}
 </style>
 <style id="fluxiaDrawerFix">
-/* v94.88.3-LAB fix: encabezado (nombre + cerrar sesión) fijo; solo scrollea la lista */
+/* v94.88.4-LAB fix: encabezado (nombre + cerrar sesión) fijo; solo scrollea la lista */
 .drawer-menu,#drawerMenu{overflow:hidden!important;display:flex!important;flex-direction:column!important;padding-top:0!important;padding-bottom:0!important;}
 #drawerMenu .drawer-header{position:relative!important;top:auto!important;flex:0 0 auto!important;margin:0!important;padding-top:calc(16px + env(safe-area-inset-top))!important;z-index:3!important;}
 #drawerMenu .drawer-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:8px 0 calc(12px + env(safe-area-inset-bottom));}
@@ -4503,7 +4516,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <div style="min-width:0;">
 <div style="font-family:var(--serif); font-weight:700; font-size:1.28rem; line-height:1.15; color:var(--ink,#1A2433); letter-spacing:-0.02em;">Fluxia <span id="fluxiaBetaBadge" style="font-family:var(--sans);font-size:0.62rem;font-weight:800;letter-spacing:0.04em;vertical-align:middle;margin-left:6px;padding:2px 7px;border-radius:999px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid rgba(201,162,39,.35);">BETA</span></div>
 <div id="fluxiaHeaderSub" style="font-size:0.82rem; color:var(--muted); letter-spacing:0.3px; margin-top:2px;">Control absoluto. Flujo perfecto</div>
-<div id="fluxiaVersion" style="font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:3px; opacity:.85;">Versión v94.88.3-LAB</div>
+<div id="fluxiaVersion" style="font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:3px; opacity:.85;">Versión v94.88.4-LAB</div>
 <button class="fx-banco-pill" id="bancoEstadoHeader" onclick="window.abrirConexionBancaria()" style="display:none;" type="button"></button>
 <button class="fx-banco-pill fx-nube-pill" id="fxNubeEstado" onclick="try{goToTab('importar-exportar')}catch(e){}" style="display:none;" type="button" aria-live="polite"></button>
 </div>
@@ -4574,7 +4587,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <div id="panelsAnchor"></div>
 <!-- INICIO / RESUMEN DASHBOARD (FASE 2) -->
 <section class="panel active" id="panel-resumen">
-<!-- v94.88.3-LAB · Dashboard único: una cifra, una explicación, una acción -->
+<!-- v94.88.4-LAB · Dashboard único: una cifra, una explicación, una acción -->
 <div class="fx-month-nav" aria-label="Navegación del mes">
   <button type="button" id="fxMesPrev" aria-label="Mes anterior" title="Mes anterior">‹</button>
   <div class="current"><b id="fxMesActualLabel">—</b><small id="fxMesActualSub">Mes seleccionado</small></div>
@@ -5424,7 +5437,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 </div>
 <div style="margin:0 0 14px;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--surface);">
 <div style="font-weight:800;font-size:.88rem;color:var(--ink);margin-bottom:6px;">🧪 Laboratorio (solo tú)</div>
-<p style="margin:0 0 10px;font-size:.8rem;color:var(--muted);line-height:1.45;">Esta versión concreta (<b id="fluxiaLabVersionLabel">v94.88.3-LAB</b>). Úsala sin temor—es la versión estable. <b>Puedes compartirla con confianza.</b></p>
+<p style="margin:0 0 10px;font-size:.8rem;color:var(--muted);line-height:1.45;">Esta versión concreta (<b id="fluxiaLabVersionLabel">v94.88.4-LAB</b>). Úsala sin temor—es la versión estable. <b>Puedes compartirla con confianza.</b></p>
 <button id="btnCopiarEnlaceBeta" style="background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%; margin-bottom:8px;" type="button">🔗 Copiar enlace de ESTA versión</button>
 <button id="btnComoInstalarBeta" style="background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%; margin-bottom:8px;" type="button">📲 Cómo instalarla en el móvil</button>
 <button id="btnInstalarPwa" style="display:none;background:var(--brand-1,#1554F0); color:#fff; border:none; border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%;" type="button">⬇️ Instalar Fluxia en este dispositivo</button>
@@ -5455,7 +5468,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <h3 class="section-title" style="margin:0;">Versión</h3>
 <span style="font-size:.68rem;font-weight:800;letter-spacing:.03em;padding:3px 8px;border-radius:999px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid rgba(201,162,39,.35);">BETA</span>
 </div>
-<p class="hint" id="ayudaVersionTxt" style="margin:0 0 14px;font-weight:600;color:var(--ink);">Fluxia BETA v94.88.3-LAB (estable) · datos en este dispositivo</p>
+<p class="hint" id="ayudaVersionTxt" style="margin:0 0 14px;font-weight:600;color:var(--ink);">Fluxia BETA v94.88.4-LAB (estable) · datos en este dispositivo</p>
 <div class="fluxia-empty-guide" style="margin-bottom:14px;text-align:left;">
 <div class="eg-tit" style="margin-bottom:8px;">🚀 Primeros pasos (2 minutos)</div>
 <ol style="margin:0;padding-left:1.2em;font-size:0.84rem;line-height:1.5;color:var(--ink);">
@@ -5796,7 +5809,9 @@ const Almacen = (function(){
         try {
           if (!fallos[k] && typeof mostrarToast === 'function') {
             var corto = String(msg).slice(0, 120);
-            if (/onConflict|unique|constraint|42P10|PGRST/i.test(corto)) {
+            if (/ya existe en la nube|no confirmó el guardado/i.test(corto)) {
+              mostrarToast('⚠ Nube: ' + corto, 'var(--wine)', 6000);
+            } else if (/onConflict|unique|constraint|42P10|PGRST/i.test(corto)) {
               mostrarToast('⚠ Nube: falta índice único en fluxia_datos (user_id,clave)', 'var(--gold)', 4500);
             } else if (/row-level security|RLS|42501|permission/i.test(corto)) {
               mostrarToast('⚠ Nube: RLS bloquea el guardado. Revisa políticas', 'var(--gold)', 4500);
@@ -5819,6 +5834,23 @@ const Almacen = (function(){
   async function flush(){ const ks=Object.keys(pendiente); ks.forEach(k=>{clearTimeout(timers[k]); subir(k);}); const ps=ks.map(k=>cadena[k]).filter(Boolean); if(ps.length) await Promise.allSettled(ps); return Object.keys(pendiente).length===0; }
 
   function resolverEspera(){ while (esperando.length) esperando.shift()(); }
+
+  /* v94.88.4 · ¿Está de verdad en Supabase? Devuelve {ok, motivo}. No fía de «pendientes vacío». */
+  async function verificar(k){
+    try{
+      if (!db) return { ok:false, motivo:'sin sesión de nube (estás en modo local)' };
+      await flush();
+      const ref = db.doc(RAIZ + '/' + k);
+      if (typeof ref.get !== 'function') return { ok:false, motivo:'lectura no disponible' };
+      const f = await ref.get();
+      if (!f) return { ok:false, motivo:'la fila no existe en la nube' };
+      const local = (cache[k] !== undefined && cache[k] !== null) ? cache[k] : lsGet(k);
+      if (String(f.v) !== String(local)) return { ok:false, motivo:'la nube tiene una versión distinta' };
+      return { ok:true, motivo:'' };
+    }catch(e){
+      return { ok:false, motivo:String((e && (e.message || e.code)) || e).slice(0,160) };
+    }
+  }
 
   /* v94.77 · HUCHAS: aportaciones y usos son un registro que solo crece (cada uno con id).
      Si local y nube difieren, NUNCA gana una sola versión: se unen por id. Así un móvil con datos
@@ -6176,6 +6208,10 @@ const Almacen = (function(){
         Object.keys(pendiente).forEach(k=>subir(k));
         emitirEstado();
         console.log('[Almacén v94.88.2] reconectar OK · remoto:', claves_remotas.length, 'pendientes:', Object.keys(pendiente).length);
+        /* v94.88.4 · tras entrar, lo descargado quedaba en memoria interna pero la pantalla (huchas, etc.) no se
+           refrescaba hasta recargar: ahora se avisa igual que cuando la nube llega tarde al abrir. */
+        if (claves_remotas.length) hubo_remoto = true;
+        if (hubo_remoto && arrancada && remotoTardio) { try{ remotoTardio(); }catch(e){ console.error(e); } }
         return true;
       }catch(e){
         console.warn('[Almacén v94.88] reconectar fallo lectura', e);
@@ -6189,7 +6225,7 @@ const Almacen = (function(){
   }
 
   return {
-    getItem, setItem, removeItem, claves, iniciar, vaciar, flush, reconectar,
+    getItem, setItem, removeItem, claves, iniciar, vaciar, flush, reconectar, verificar,
     async eliminarTodo(){
       try{const ks=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&(!ES_LEGACY?k.indexOf(LOCAL_PREFIX)===0:nuestra(k)))ks.push(k);}ks.forEach(k=>localStorage.removeItem(k));}catch(e){}
       try{if(db){const snap=await db.collection(RAIZ).get();await Promise.all((snap.docs||[]).map(d=>d.delete()));}}catch(e){console.warn('Almacén: no se pudo borrar todo en remoto',e);}
@@ -6815,7 +6851,7 @@ function initPwaYBeta(){
       name: 'Fluxia BETA',
       short_name: 'Fluxia BETA',
       description: 'Tu plan de dinero mes a mes · Fluxia',
-      start_url: './index.html?v=v94.88.3-LAB',
+      start_url: './index.html?v=v94.88.4-LAB',
       scope: './',
       display: 'standalone',
       orientation: 'portrait-primary',
@@ -8486,20 +8522,25 @@ function guardarFijos(){
 function guardarFinanciaciones(){ guardarLS('planRescate_v2_financiaciones', financiaciones); }
 function guardarProvisiones(){
   var ok = guardarLS('planRescate_v2_provisiones', provisiones);
-  /* v94.88.2 · HUCHAS: escritura directa + flush agresivo a Supabase */
+  /* v94.88.4 · HUCHAS: escritura directa + CONFIRMACIÓN real contra Supabase (se lee de vuelta y se compara) */
   try {
     var payload = JSON.stringify(provisiones || []);
     if (typeof Almacen !== 'undefined' && Almacen.setItem) {
       Almacen.setItem('planRescate_v2_provisiones', payload);
     }
-    if (typeof Almacen !== 'undefined' && typeof Almacen.flush === 'function') {
-      Almacen.flush().then(function(done){
-        if (done === false) {
-          try { if (typeof mostrarToast === 'function') mostrarToast('⚠ Hucha en este dispositivo; nube pendiente', 'var(--gold)', 3200); } catch(_){}
-        }
-      }).catch(function(){
-        try { if (typeof mostrarToast === 'function') mostrarToast('⚠ Hucha en este dispositivo; nube pendiente', 'var(--gold)', 3200); } catch(_){}
-      });
+    if (typeof Almacen !== 'undefined' && typeof Almacen.verificar === 'function') {
+      clearTimeout(window._fxVerifHucha);
+      window._fxVerifHucha = setTimeout(function(){
+        Almacen.verificar('planRescate_v2_provisiones').then(function(r){
+          try {
+            if (typeof mostrarToast !== 'function') return;
+            if (r && r.ok) { if (Array.isArray(provisiones) && provisiones.length) mostrarToast('☁️ Huchas guardadas en la nube ✓', 'var(--teal)', 2200); }
+            else { mostrarToast('⚠ Huchas NO guardadas en la nube: ' + ((r && r.motivo) || 'motivo desconocido'), 'var(--wine)', 4500); }
+          } catch(_){}
+        }).catch(function(){});
+      }, 700);
+    } else if (typeof Almacen !== 'undefined' && typeof Almacen.flush === 'function') {
+      Almacen.flush().catch(function(){});
     }
   } catch(_){}
   return ok;
@@ -19160,7 +19201,7 @@ function renderDashboard(){
   const mes = mesSeleccionado;
   const disponible = disponibleEfectivo(mes);
 
-  // v94.88.3-LAB · Dashboard consolidado: una sola jerarquía visual.
+  // v94.88.4-LAB · Dashboard consolidado: una sola jerarquía visual.
   try {
     const idx = MESES.indexOf(mes);
     const lbl = MES_LABEL[mes] || mes;
@@ -20932,55 +20973,14 @@ window.FluxiaSyncImport = (function(){
   }
 
   // Subir datos a Supabase
+  /* v94.88.4 · Antes escribía filas con claves distintas ('provisiones', 'ingresos'…) y valores no-texto que el
+     Almacén ignora, y llamaba a FluxiaNube.sb (no existe) → siempre fallaba. Ahora sube por el Almacén. */
   async function uploadToSupabase(data){
-    if(!window.FluxiaNube || !data) return false;
-
     try{
-      const client = await FluxiaNube.sb();
-      const user = await FluxiaNube.usuario();
-
-      if(!user) throw new Error('No hay sesión activa');
-
-      const uid = user.id;
-      const tabla = 'fluxia_datos';
-
-      // Mapeo de claves locales a claves de base de datos
-      const keyMap = {
-        'planRescate_v2_config_plan': 'config',
-        'planRescate_v2_ingresos': 'ingresos',
-        'planRescate_v2_fijos': 'fijos',
-        'planRescate_v2_financiaciones': 'financiaciones',
-        'planRescate_v2_provisiones': 'provisiones',
-        'planRescate_v2_movimientos': 'movimientos',
-        'planRescate_v2_compartidos': 'compartidos'
-      };
-
-      const uploads = [];
-
-      Object.entries(keyMap).forEach(([localKey, dbKey]) => {
-        if(data[localKey]){
-          uploads.push(
-            client.from(tabla).upsert({
-              user_id: uid,
-              clave: dbKey,
-              v: data[localKey],
-              t: Date.now()
-            }, { onConflict: 'user_id,clave' })
-          );
-        }
-      });
-
-      // Esperar a que se suban todos
-      const results = await Promise.all(uploads);
-
-      // Verificar errores
-      const hasError = results.some(r => r.error);
-      if(hasError) throw new Error('Error al subir datos a Supabase');
-
-      return true;
-    }catch(e){
-      return false;
-    }
+      if (typeof Almacen === 'undefined') return false;
+      if (Almacen.reconectar) await Almacen.reconectar();
+      return (await Almacen.flush()) !== false;
+    }catch(e){ return false; }
   }
 
   // Mostrar modal de sincronización
@@ -31956,7 +31956,7 @@ header.top{position:sticky;top:0;z-index:50;-webkit-transform:translateZ(0);tran
    Compartidos estilo Tricount, papelera y herramientas de comprobación. NO toca el módulo bancario.
    ═══════════════════════════════════════════════════════════════ */
 window.FLUXIA_CHECKLIST = {
-  version: 'v94.88.3-LAB',
+  version: 'v94.88.4-LAB',
   fecha: '3 Oct 2026',
   items: [
     { t:'fix', n:'Se publicaba el archivo equivocado', d:'index.html era la v94.71 antigua y solo el archivo con sufijo era nuevo. Ahora ambos son idénticos.' },
@@ -32505,7 +32505,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 .fxc-in{width:100%;box-sizing:border-box;margin:6px 0 2px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);font:500 16px var(--sans);}
 .fxc-msg{min-height:1.3em;margin:8px 0 0;font-size:.82rem;font-weight:650;} .fxc-msg.err{color:var(--wine-ink);} .fxc-msg.ok{color:var(--teal-ink);}
 
-/* v94.88.3-LAB: Bordes superiores en acciones */
+/* v94.88.4-LAB: Bordes superiores en acciones */
 #fxDashRitmoBtn{border-top:3px solid #D4A84A!important;}
 #fxDashPendBtn{border-top:3px solid #E74C3C!important;}
 
@@ -33584,7 +33584,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 })();
 
 // ═══════════════════════════════════════════════════════════════════════
-// 🔄 INGRESOS AUTOMÁTICOS DESDE BANCO (v94.88.3-LAB)
+// 🔄 INGRESOS AUTOMÁTICOS DESDE BANCO (v94.88.4-LAB)
 // ═══════════════════════════════════════════════════════════════════════
 
 
@@ -33776,7 +33776,7 @@ function obtenerTransaccionesBanco() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-// 🗑️  PAPELERA UNIVERSAL (v94.88.3-LAB)
+// 🗑️  PAPELERA UNIVERSAL (v94.88.4-LAB)
 // ═══════════════════════════════════════════════════════════════════════
 
 function agregarALaPapelera(tipo, datos, fecha) {
@@ -33869,7 +33869,7 @@ if (typeof sincronizarIngresosDelBanco !== 'undefined') {
     sincronizarIngresosDelBanco();
     limpiarPapeleraExpirada();
   }, 5 * 60 * 1000);
-  console.log('✅ Sincronización automática iniciada (v94.88.3-LAB)');
+  console.log('✅ Sincronización automática iniciada (v94.88.4-LAB)');
 }
 /* v94.62 · Tras cargar: si perfil aislado → plan a 0 en memoria (nunca toca datos del dueño)
    v94.63 · NEUTRALIZADO: migrar y vaciar están desactivados (ver fluxiaForzarVacioSiAislado). */
