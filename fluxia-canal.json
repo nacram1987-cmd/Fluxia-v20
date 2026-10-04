@@ -3,11 +3,11 @@
   "stable_version": "v95.25",
   "stable_file": "index.html",
   "stable_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index.html?v=v95.25",
-  "lab_version": "v95.28-LAB",
-  "lab_file": "index_fluxia_v95.28_LAB.html",
-  "lab_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index_fluxia_v95.28_LAB.html?v=v95.28-LAB",
+  "lab_version": "v95.25-LAB",
+  "lab_file": "index_fluxia_v95.25_LAB.html",
+  "lab_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index_fluxia_v95.25_LAB.html?v=v95.25-LAB",
   "pwa_name": "Fluxia BETA",
   "supabase_sync": true,
-  "integrity_gate": "v95.25_estable_pinned+v95.27_hucha_integrity_preserved+v95.28_visual_rebuild_no_financial_changes",
-  "notas": "v95.25 continúa ESTABLE. v95.28-LAB conserva la cirugía de Huchas de v95.27 y reconstruye la cabecera/Dashboard sin tocar el motor financiero."
+  "integrity_gate": "huchas+rescates+banca+pagos_financiacion+no_regresiones",
+  "notas": "v95.25: Fase 4 completa de Banca Inteligente con memoria de decisiones exactas y control revocable; cierre de duplicados automáticos de aportaciones mediante bloqueo de seeds, identidad semántica, tombstones y cuarentena."
 }
