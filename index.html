@@ -2805,6 +2805,49 @@ header.top #bancoEstadoHeader{margin-top:4px!important;}
 <style id="fluxia-v9477-theme">
 /* v94.77 · Patrón «Huchas» (fino y elegante) en todo el menú + selector de meses en oro con contraste */
 :root{--wine-dark:#8B3A3A;--fx-hair:rgba(201,149,61,.24);--fx-hucha:linear-gradient(135deg,#FCEBC9 0%,#EAF5F5 100%);--fx-card:#FFFCF7;--fx-shadow:0 4px 16px rgba(80,60,35,.055);}
+
+/* v94.81 · SELECTOR UNIFICADO DE MESES EN TODAS LAS PESTAÑAS */
+.mes-selector-unificado {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  gap: 8px;
+  padding: 12px 14px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+  scroll-behavior: smooth;
+}
+
+.mes-selector-unificado button {
+  min-width: 72px;
+  height: 40px;
+  border: 1px solid #D4AF37;
+  background: #F5F3EF;
+  color: #5C4033;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.mes-selector-unificado button:hover {
+  border-color: #8B6914;
+  box-shadow: 0 2px 8px rgba(139, 105, 20, 0.15);
+}
+
+.mes-selector-unificado button.active {
+  background: linear-gradient(135deg, #8B6914 0%, #6B5312 100%);
+  color: #FFFFFF;
+  border-color: #5C4010;
+  box-shadow: 0 4px 12px rgba(139, 105, 20, 0.3);
+}
+
+
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--wine-dark:#FF9D8F;}}
 :root[data-theme="dark"]{--wine-dark:#FF9D8F;}
 /* Meses: oro, texto oscuro (contraste ≥ 5:1) */
@@ -11221,6 +11264,8 @@ function goToTab(tabName){
     requestAnimationFrame(_doScrollTab);
   }
 }
+  try{ renderMesSelector(); }catch(e){}
+
 
 // Tabs internas dentro de un panel (ej. Registro vs Por Categoría en Gastos Variables)
 function goToInternalTab(tabName){
@@ -20691,6 +20736,56 @@ Almacen.cuandoListo(3500).then(async ()=>{
   try{ actualizarBadgesNav(); }catch(e){}
 
 });
+
+
+
+/* v94.81 · SELECTOR UNIFICADO DE MESES - FUNCIONES Y EVENTO GLOBAL */
+(function(){
+  const MESES_NOMBRE = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                        'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  let mesActualSelector = null;
+
+  window.renderMesSelector = function(){
+    const cont = document.getElementById('mesSelectUnificado');
+    if(!cont) return;
+    cont.innerHTML = '';
+    const actual = typeof mesSeleccionado !== 'undefined' ? mesSeleccionado : window.mesSeleccionado || 0;
+    MESES_NOMBRE.forEach((nom, idx) => {
+      const btn = document.createElement('button');
+      btn.textContent = nom.slice(0,3);
+      btn.dataset.mes = idx;
+      btn.title = nom;
+      btn.className = (idx === actual) ? 'active' : '';
+      btn.onclick = function(){
+        cambiarMesSelector(idx);
+      };
+      cont.appendChild(btn);
+    });
+    mesActualSelector = actual;
+  };
+
+  window.cambiarMesSelector = function(idx){
+    if(typeof mesSeleccionado === 'undefined') return;
+    mesSeleccionado = idx;
+    const ev = new CustomEvent('fluxia-mes-cambio', { detail: { mes: idx } });
+    window.dispatchEvent(ev);
+    renderMesSelector();
+    try{ if(typeof renderAll === 'function') renderAll(); }catch(e){}
+  };
+
+  window.addEventListener('fluxia-mes-cambio', (e) => {
+    const mes = e.detail.mes;
+    if(typeof mesSeleccionado !== 'undefined') mesSeleccionado = mes;
+    renderMesSelector();
+  });
+
+  // Inicial: renderizar después de que cargueTodo
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', () => setTimeout(renderMesSelector, 200));
+  } else {
+    setTimeout(renderMesSelector, 200);
+  }
+})();
 
 </script>
 <script>
