@@ -1,16 +1,10 @@
 {
   "canal": "LAB",
-  "version": "v94.9.1-CORRECTO",
-  "lab_version": "v94.9.1-CORRECTO",
-  "stable_version": "v94.46-ESTABLE",
-  "timestamp": "2026-10-04T13:45:00Z",
-  "maintenance": false,
-  "update_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index.html?v=v94.9.1-CORRECTO",
-  "features": {
-    "supabase_sync": {
-      "enabled": true,
-      "auto_sync": true,
-      "retry_count": 5
-    }
-  }
+  "lab_version": "v95.0-LAB",
+  "canal_url": "https://nacram1987-cmd.github.io/Fluxia-v20",
+  "supabase_sync": true,
+  "supabase_url": "https://kylduzmrfbubeamfrbbr.supabase.co",
+  "retry_count": 5,
+  "timestamp": "2026-10-04T16:00:00Z",
+  "notas": "v95.0: Borrados sincronizados, layout mejorado, scroll automático, meses en color oscuro"
 }
