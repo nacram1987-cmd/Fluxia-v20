@@ -1,0 +1,25 @@
+{
+  "name": "Fluxia BETA v95.7-LAB",
+  "short_name": "Fluxia",
+  "description": "Fluxia · laboratorio v95.7 · nube principal",
+  "start_url": "/Fluxia-v20/index_fluxia_v95.7_LAB.html?v=v95.7-LAB",
+  "scope": "/Fluxia-v20/",
+  "display": "standalone",
+  "background_color": "#F5F7F7",
+  "theme_color": "#157F87",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
