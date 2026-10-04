@@ -287,11 +287,11 @@ body.fx-dashboard-clean .fx-dashboard67-item.gold:after { content:""; position:a
 <meta content="noindex, nofollow, noarchive, nosnippet" name="robots"/>
 <meta content="noindex, nofollow, noarchive, nosnippet" name="googlebot"/>
 <meta content="no-referrer" name="referrer"/>
-<link href="./manifest.webmanifest" id="fluxiaManifestLink" rel="manifest"/>
+<link href="./manifest_v95.26_LAB.webmanifest" id="fluxiaManifestLink" rel="manifest"/>
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="telephone=no" name="format-detection"/>
 <meta content="no" name="msapplication-tap-highlight"/>
-<title>Fluxia BETA v95.25</title>
+<title>Fluxia BETA v95.26-LAB</title>
 <meta content="v95.22" name="fluxia-version"/>
 <!-- Fluxia v91 · brand lock · datos jamás a 0 · compartidos saldo inicial · notif suaves · logo alineado · base v90.10 -->
 <script>
@@ -2330,7 +2330,7 @@ window.guardarLSBatch=(k,v)=>{window._lsQueue=window._lsQueue||{};window._lsQueu
     registrar: function(){
       if (!('serviceWorker' in navigator)){ window.__fxSwEstado = 'no-soportado'; return Promise.resolve(null); }
       if (prom) return prom;
-      prom = navigator.serviceWorker.register('./fluxia-sw.js', { scope:'./' }).then(function(){
+      prom = navigator.serviceWorker.register('./fluxia-sw-v95.26.js', { scope:'./' }).then(function(){
         window.__fxSwEstado = 'registrado';
         return navigator.serviceWorker.ready.then(function(r){ window.__fxSwEstado = 'listo'; try{ document.dispatchEvent(new Event('fluxia:sw-listo')); }catch(e){} return r; });
       }).catch(function(e){ window.__fxSwEstado = 'error: ' + (e && e.message || e); prom = null; return null; });
@@ -4330,13 +4330,12 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 </div>
 <div class="wrap">
 <div class="aviso-almacen" id="avisoAlmacen" style="display:none;"></div>
-<header class="top">
-<div class="fx-header-row" style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
-<button aria-label="Abrir menú" class="menu-btn" id="btnMenu" title="Menú">☰</button>
-<div style="flex:1; min-width:0; display:flex; align-items:center; gap:10px;">
-<!-- Logo FLUXIA -->
-<div style="flex-shrink:0; width:56px; height:56px; align-self:center;">
-<svg class="logo-main" style="width:100%;height:100%;display:block;border-radius:16px;box-shadow:0 4px 14px rgba(21,127,135,.22);" viewbox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+<header class="top fx26-top">
+<div class="fx26-header-row">
+<button aria-label="Abrir menú" class="menu-btn fx26-icon-btn" id="btnMenu" title="Menú">☰</button>
+<div class="fx26-center">
+  <div class="fx26-brand-row">
+    <div class="fx26-logo"><svg class="logo-main" style="width:100%;height:100%;display:block;border-radius:16px;box-shadow:0 4px 14px rgba(21,127,135,.22);" viewbox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <lineargradient id="dashGrad" x1="0%" x2="100%" y1="0%" y2="100%">
 <stop offset="0%" stop-color="#174650"></stop>
@@ -4346,17 +4345,19 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <rect fill="url(#dashGrad)" height="160" rx="36" width="160"></rect>
 <path d="M 28.8 64 C 45.9 90.4, 62.9 90.4, 80 64 C 97.1 37.6, 114.1 37.6, 131.2 64" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="9"></path>
 <path d="M 28.8 96 C 45.9 69.6, 62.9 69.6, 80 96 C 97.1 122.4, 114.1 122.4, 131.2 96" fill="none" opacity="0.72" stroke="#fff" stroke-linecap="round" stroke-width="9"></path>
-</svg>
+</svg></div>
+    <div class="fx26-brand-name">Fluxia</div>
+    <span id="fluxiaBetaBadge" class="fx26-beta">BETA</span>
+  </div>
+  <div class="fx26-greeting" id="fx26Greeting">Hola, Nacho</div>
+  <div id="fluxiaHeaderSub" class="fx26-sub">Controla lo que realmente puedes gastar</div>
+  <div id="fluxiaVersion" class="fx26-version">Versión v95.26-LAB</div>
+  <div class="fx-hdr-text fx26-status-host">
+    <button class="fx-banco-pill" id="bancoEstadoHeader" onclick="window.abrirConexionBancaria()" style="display:none;" type="button"></button>
+    <button class="fx-banco-pill fx-nube-pill" id="fxNubeEstado" onclick="try{goToTab('importar-exportar')}catch(e){}" style="display:none;" type="button" aria-live="polite"></button>
+  </div>
 </div>
-<div class="fx-hdr-text" style="flex:1;display:flex;flex-direction:column;justify-content:center;">
-<div style="font-family:var(--serif); font-weight:700; font-size:1.28rem; line-height:1.15; color:var(--ink,#1A2433); letter-spacing:-0.02em;">Fluxia <span id="fluxiaBetaBadge" style="font-family:var(--sans);font-size:0.62rem;font-weight:800;letter-spacing:0.04em;vertical-align:middle;margin-left:6px;padding:2px 7px;border-radius:999px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid rgba(201,162,39,.35);">BETA</span></div>
-<div id="fluxiaHeaderSub" style="font-size:0.82rem; color:var(--muted); letter-spacing:0.3px; margin-top:2px;">Control absoluto. Flujo perfecto</div>
-<div id="fluxiaVersion" style="font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:3px; opacity:.85;">Versión v95.25</div>
-<button class="fx-banco-pill" id="bancoEstadoHeader" onclick="window.abrirConexionBancaria()" style="display:none;" type="button"></button>
-<button class="fx-banco-pill fx-nube-pill" id="fxNubeEstado" onclick="try{goToTab('importar-exportar')}catch(e){}" style="display:none;" type="button" aria-live="polite"></button>
-</div>
-</div>
-<button aria-label="Notificaciones" class="menu-btn" id="headerNotifications" style="position:relative;width:44px;height:44px;min-width:44px;padding:0;border-radius:14px;display:inline-flex;align-items:center;justify-content:center;font-size:1.05rem;cursor:pointer;flex:0 0 auto;" title="Notificaciones">🔔<span aria-hidden="true" id="headerNotificationsDot" style="display:none;position:absolute;top:2px;right:2px;width:10px;height:10px;border-radius:50%;background:var(--wine);border:2px solid var(--surface);box-sizing:border-box;box-shadow:0 0 0 1px rgba(225,89,79,.35);"></span><span aria-hidden="true" id="headerNotificationsBadge" style="display:none;position:absolute;top:-6px;right:-5px;min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:var(--wine);color:#fff;font-size:0.68rem;font-weight:800;line-height:19px;text-align:center;border:2px solid var(--surface);box-sizing:border-box;">0</span></button>
+<button aria-label="Notificaciones" class="menu-btn fx26-icon-btn" id="headerNotifications" title="Notificaciones">🔔<span aria-hidden="true" id="headerNotificationsDot" style="display:none;position:absolute;top:2px;right:2px;width:10px;height:10px;border-radius:50%;background:var(--wine);border:2px solid var(--surface);box-sizing:border-box;box-shadow:0 0 0 1px rgba(225,89,79,.35);"></span><span aria-hidden="true" id="headerNotificationsBadge" style="display:none;position:absolute;top:-6px;right:-5px;min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:var(--wine);color:#fff;font-size:0.68rem;font-weight:800;line-height:19px;text-align:center;border:2px solid var(--surface);box-sizing:border-box;">0</span></button>
 </div>
 </header>
 <p class="fecha" id="fechaHoy" aria-hidden="true" style="display:none!important;"></p>
@@ -6654,7 +6655,7 @@ function initPwaYBeta(){
       name: 'Fluxia BETA v95.22',
       short_name: 'Fluxia BETA',
       description: 'Fluxia · BETA v95.22 · nube principal',
-      start_url: './' + ((location.pathname.split('/').pop() || 'index.html')) + '?v=v95.25',
+      start_url: './' + ((location.pathname.split('/').pop() || 'index.html')) + '?v=v95.26-LAB',
       scope: './',
       display: 'standalone',
       orientation: 'portrait-primary',
@@ -25363,6 +25364,49 @@ header.top .menu-btn{box-shadow:0 5px 16px rgba(15,58,92,.08)!important;}
  .fx-dash-quick{grid-template-columns:repeat(2,minmax(0,1fr));}
 }
 </style>
+
+<style id="fluxia-v9526-option3-phase5">
+/* v95.26-LAB · Dirección visual elegida: opción 3 + detalle premium + Fase 5 segura. */
+html body header.top.fx26-top{padding:calc(12px + env(safe-area-inset-top)) 0 14px!important;margin-bottom:12px!important;border:none!important;border-radius:0 0 26px 26px!important;background:linear-gradient(180deg,rgba(255,255,255,.98) 0%,rgba(247,251,250,.98) 100%)!important;box-shadow:0 8px 28px rgba(19,70,65,.055)!important;overflow:visible!important;}
+.fx26-header-row{display:grid!important;grid-template-columns:50px minmax(0,1fr) 50px!important;gap:10px!important;align-items:start!important;}
+.fx26-center{min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 2px;}
+.fx26-brand-row{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;white-space:nowrap;}
+.fx26-logo{width:42px;height:42px;flex:0 0 42px}.fx26-logo .logo-main{width:100%!important;height:100%!important;display:block!important;border-radius:14px!important;box-shadow:0 5px 16px rgba(21,127,135,.16)!important;}
+.fx26-brand-name{font-family:var(--serif);font-size:1.5rem;line-height:1;font-weight:700;letter-spacing:-.03em;color:#123F48;}
+.fx26-beta{display:inline-flex!important;align-items:center;justify-content:center;padding:4px 9px!important;border-radius:999px!important;background:#DDF4EE!important;border:1px solid rgba(13,118,111,.12)!important;color:#11766F!important;font:800 .58rem/1 var(--sans)!important;letter-spacing:.06em!important;box-shadow:none!important;margin:0!important;transform:none!important;}
+.fx26-greeting{margin-top:9px;font-family:var(--sans);font-weight:760;font-size:1.32rem;line-height:1.08;letter-spacing:-.025em;color:var(--ink);}
+.fx26-sub{margin-top:5px!important;font-size:.78rem!important;line-height:1.3!important;color:#6D8187!important;font-weight:520;white-space:normal!important;}
+.fx26-version{margin-top:7px!important;display:inline-flex!important;padding:3px 8px!important;border-radius:999px!important;background:#EAF4F4!important;color:#2B777B!important;font:700 .58rem/1.2 var(--mono)!important;opacity:1!important;}
+.fx26-status-host{width:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;min-width:0!important;margin-top:8px!important;padding:0!important;}
+.fx26-status-host .fx-header-status{display:flex!important;justify-content:center!important;align-items:center!important;gap:7px!important;flex-wrap:wrap!important;width:100%!important;margin:0!important;}
+.fx26-status-host .fx-banco-pill,.fx26-status-host .fx-header-status .fx-banco-pill{width:auto!important;max-width:100%!important;min-height:31px!important;padding:5px 10px!important;border-radius:999px!important;background:rgba(255,255,255,.92)!important;border:1px solid rgba(48,101,96,.14)!important;box-shadow:0 3px 12px rgba(22,66,61,.04)!important;font-size:.64rem!important;line-height:1.15!important;white-space:nowrap!important;}
+.fx26-icon-btn{position:relative!important;width:48px!important;height:48px!important;min-width:48px!important;min-height:48px!important;margin-top:2px!important;border-radius:17px!important;background:#FFFFFF!important;color:#0E706A!important;border:1px solid rgba(13,118,111,.18)!important;box-shadow:0 5px 16px rgba(15,70,65,.055)!important;font-size:1.16rem!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;}
+/* Dashboard: hero principal inspirado en el boceto 3, sin cambiar cálculos. */
+html body #panel-resumen .tu-mes,html body .tu-mes#tuMes{padding:20px 18px!important;border-radius:22px!important;background:linear-gradient(145deg,#0D7A78 0%,#0E615F 58%,#123F48 100%)!important;border:1px solid rgba(255,255,255,.12)!important;box-shadow:0 12px 28px rgba(13,97,95,.16)!important;color:#fff!important;overflow:hidden!important;position:relative!important;}
+html body #panel-resumen .tu-mes:after,html body .tu-mes#tuMes:after{content:"";position:absolute;right:-40px;bottom:-58px;width:220px;height:150px;border:1px solid rgba(255,255,255,.12);border-radius:50%;transform:rotate(-12deg);pointer-events:none;}
+html body #tuMes .tm-saludo{display:none!important;}
+html body #tuMes .tm-lbl{color:rgba(255,255,255,.78)!important;font-size:.74rem!important;letter-spacing:.08em!important;text-transform:uppercase!important;font-weight:750!important;}
+html body #tuMes .tm-val{color:#fff!important;font-family:var(--sans)!important;font-weight:780!important;letter-spacing:-.05em!important;font-size:2.35rem!important;line-height:1.05!important;margin-top:5px!important;}
+html body #tuMes .tm-chip{display:inline-flex!important;margin-top:9px!important;padding:5px 9px!important;border-radius:999px!important;background:rgba(255,255,255,.11)!important;border:1px solid rgba(255,255,255,.13)!important;color:#E9FFFB!important;font-size:.7rem!important;}
+html body #tuMes .tm-camino-tit,html body #tuMes .tm-camino,html body #tuMes .tm-pie{color:rgba(255,255,255,.80)!important;position:relative;z-index:1;}
+html body #tuMes .tm-camino-tit{font-size:.67rem!important;margin-top:14px!important;}
+/* Fase 5 segura: tactilidad, scroll y animaciones más ligeras; cero cambios de datos. */
+html{-webkit-tap-highlight-color:transparent;scroll-behavior:smooth}body{overscroll-behavior-y:none}button,[role="button"],a,.drawer-item,.kpi,.dashboard-card{touch-action:manipulation} .panel.active{animation:fx26PanelIn .18s ease-out both!important}@keyframes fx26PanelIn{from{opacity:.72;transform:translateY(3px)}to{opacity:1;transform:none}} .fluxia-toast{transition:opacity .18s ease,transform .18s ease!important} .menu-btn,.settings-action,.dashboard-btn,.pv-gen-btn,.fx-rules-btn{transition:transform .10s ease,box-shadow .14s ease,background .14s ease,border-color .14s ease!important} .menu-btn:active,.settings-action:active,.dashboard-btn:active,.pv-gen-btn:active,.fx-rules-btn:active{transform:scale(.975)!important}
+@media(max-width:390px){.fx26-header-row{grid-template-columns:45px minmax(0,1fr) 45px!important;gap:7px!important}.fx26-icon-btn{width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;border-radius:15px!important}.fx26-logo{width:36px;height:36px;flex-basis:36px}.fx26-brand-name{font-size:1.30rem}.fx26-beta{font-size:.53rem!important;padding:3px 7px!important}.fx26-greeting{font-size:1.16rem;margin-top:7px}.fx26-sub{font-size:.70rem!important}.fx26-version{font-size:.54rem!important}.fx26-status-host .fx-banco-pill,.fx26-status-host .fx-header-status .fx-banco-pill{font-size:.57rem!important;padding:4px 8px!important;min-height:29px!important}html body #tuMes .tm-val{font-size:2.05rem!important}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}.panel.active{animation:none!important}.menu-btn,.settings-action,.dashboard-btn,.pv-gen-btn,.fx-rules-btn,.fluxia-toast{transition:none!important}}
+:root[data-theme="dark"] body header.top.fx26-top{background:linear-gradient(180deg,#0D162B 0%,#101B30 100%)!important;box-shadow:0 8px 28px rgba(0,0,0,.18)!important}.fx26-brand-name{color:var(--ink)}:root[data-theme="dark"] .fx26-beta{background:#17362F!important;color:#6EE7D2!important;border-color:rgba(110,231,210,.16)!important}:root[data-theme="dark"] .fx26-icon-btn{background:#131D35!important;color:#6EE7D2!important;border-color:#2E3D5C!important}:root[data-theme="dark"] .fx26-status-host .fx-banco-pill{background:#131D35!important;border-color:#2E3D5C!important}
+</style>
+<script id="fluxia-v9526-header-phase5">
+(function(){
+  'use strict';
+  function nombre(){try{var p=(typeof perfilActual==='function'?perfilActual():null);var n=p&&(p.nombre||p.name);if(n)return String(n).split(/\s+/)[0];}catch(e){}try{var t=document.getElementById('tmSaludo');var m=t&&String(t.textContent||'').match(/Hola[, ]+([^·!]+)/i);if(m)return m[1].trim().split(/\s+/)[0];}catch(e){}return 'Nacho';}
+  function paint(){try{var g=document.getElementById('fx26Greeting');if(g)g.textContent='Hola, '+nombre();var s=document.getElementById('fluxiaHeaderSub');if(s)s.textContent='Controla lo que realmente puedes gastar';var v=document.getElementById('fluxiaVersion');if(v)v.textContent='Versión v95.26-LAB';}catch(e){}}
+  function init(){paint();setTimeout(paint,350);setTimeout(paint,1200);}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)setTimeout(paint,80);});
+})();
+</script>
+
 </body>
 <!-- v59 · Emparejar cargos bancarios con gastos fijos + multi-banco (UI) -->
 <script>
