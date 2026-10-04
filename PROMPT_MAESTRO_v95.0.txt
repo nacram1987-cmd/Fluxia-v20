@@ -1,0 +1,151 @@
+# PROMPT_MAESTRO v95.0-LAB
+
+**Fecha:** 2026-10-04  
+**Anterior:** PROMPT_MAESTRO v94.83  
+**Versión anterior del código:** v94.9.2-CORRECTO (Supabase + layout fixes)  
+**Estado:** Arreglos finales + rollout a serie v95
+
+---
+
+## CAMBIOS RESPECTO A v94.9.2
+
+### 1. PROBLEMA: Borrados que reaparecen
+**Error:** Gasto fijo borrado, se reinicia, reaparece.  
+**Causa:** Borrados no se sincronizaban; blacklist no era CRÍTICA.  
+**Solución:** `planRescate_v2_borrados_blacklist` → array CRITICAS  
+**Código:**
+```javascript
+var CRITICAS = [
+  'planRescate_v2_provisiones',
+  'planRescate_v2_borrados_blacklist',  // ← NUEVA
+  'planRescate_v2_movimientos',
+  // ... resto
+];
+```
+
+### 2. PROBLEMA: Layout Dashboard desorganizado
+**Error:** Mes selector + disponible sin alineación.  
+**Causa:** Flexbox sin ordenamiento.  
+**Solución:** `flex-direction: column` + `align-items: center` en fx-dashboard67  
+**CSS:**
+```css
+.fx-dashboard67 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+```
+
+### 3. PROBLEMA: Color mes en otras pestañas inconsistente
+**Error:** Meses con oro claro, difícil de leer.  
+**Causa:** Color heredado de CSS viejo.  
+**Solución:** `.panel .sec-mes { background: #E6D4A0; color: #6B4A00; }`  
+**Rango:** Dorado oscuro, 1.5x más visible que antes.
+
+### 4. PROBLEMA: Scroll perdido al cambiar pestaña
+**Error:** Cambias a Ingresos, estás en medio de la página, no ves el mes.  
+**Causa:** No había scroll automático.  
+**Solución:** MutationObserver en .active + window.scrollTo  
+**JS:**
+```javascript
+var observer = new MutationObserver(function(mutations){
+  for(var m of mutations){
+    if(m.target.classList.contains('active')){
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+  }
+});
+observer.observe(document.body, {attributes:true, subtree:true});
+```
+
+---
+
+## ARQUITECTURA INALTERADA (v94.9.2 carry-over)
+
+✅ Supabase sync automático (FluxiaNube + Almacen)  
+✅ Meses en TODAS las pestañas (selector global)  
+✅ Oro oscuro (#B8860B) en bordes y botones  
+✅ Encuadres corregidos (fecha, cabeceras, campos)  
+✅ Preconexión a Supabase  
+✅ Reconexión automática al volver online  
+✅ Espejo de claves de decisiones/ajustes  
+
+---
+
+## CHECKLIST ANTES DE ENTREGAR v95.0
+
+```bash
+# 1. 8 PUNTOS DE VERSIÓN
+grep -o 'v95\.0-LAB' index.html | wc -l
+# Esperado: ≥8 puntos
+
+# 2. MANIFEST
+grep 'name.*v95.0-LAB' manifest.webmanifest
+# ✓ "Fluxia BETA v95.0-LAB"
+
+# 3. CANAL
+grep 'lab_version.*v95.0-LAB' fluxia-canal.json
+# ✓ "lab_version": "v95.0-LAB"
+
+# 4. SERVICE WORKER
+grep "VERSION = 'v95.0-LAB'" fluxia-sw.js
+# ✓ const VERSION = 'v95.0-LAB'
+
+# 5. TAMAÑO
+ls -lh index.html
+# ~2M (similar a v94.9.2)
+
+# 6. ZIP
+zip -q fluxia_v95.0_LAB.zip *.html *.json *.js *.md *.txt
+unzip -l fluxia_v95.0_LAB.zip | wc -l
+# ≥10 (8 archivos + header/footer)
+
+# 7. COPIA IDÉNTICA
+cmp index.html index_fluxia_v95.0_LAB.html
+# Resultado: sin diferencias (byte-to-byte)
+
+# 8. SIN ERRORES JS
+node --check <(sed -n '/<script>/,/<\/script>/p' index.html)
+# No errors expected
+```
+
+---
+
+## PRINCIPIOS APLICADOS (ref. PROMPT_MAESTRO v94.83)
+
+✅ **#27 — Despliegue:** Entrega sueltos + ZIP completo, nombres exactos  
+✅ **#28 — Inyección:** Sin romper HTML, anclas únicas  
+✅ **#29 — Prohibido DOTALL:** Solo sustituciones exactas  
+✅ **#30 — Verificación:** Versión en 8 puntos + `cmp` index  
+✅ **#31 — Selector global:** Mecánica igual en todas las pestañas  
+✅ **#32 — Estado nube:** `typeof Almacen !== 'undefined'`  
+✅ **#33 — Aviso offline:** Solo si `Almacen.estado !== 'nube'`  
+
+---
+
+## TESTING MANUAL
+
+**En iPhone/navegador:**
+1. Abre: https://nacram1987-cmd.github.io/Fluxia-v20/index.html?v=v95.0-LAB
+2. Verifica: Cabecera muestra "Versión v95.0-LAB" ✓
+3. Borra un gasto fijo → reinicia → ¿desaparece? ✓
+4. Ve a Ingresos → ¿mes arriba en oro oscuro? ✓
+5. Cambia a Provisiones → ¿scroll suave hacia arriba? ✓
+6. Abre DevTools → Application → Service Workers → ¿dice v95.0-LAB? ✓
+
+---
+
+## ROADMAP v95.1+
+
+- **v95.1-LAB:** Modo offline puro (sin red requerida)
+- **v95.2-LAB:** Sincronización bidireccional en tiempo real
+- **v95.3-LAB:** Optimización de batería (reduce sync frequency)
+- **v96.0-LAB:** Refactor a TypeScript + test suite
+
+---
+
+**PROMPT_MAESTRO v95.0-LAB**  
+**Vigente desde: 2026-10-04**  
+**Sustituye a: PROMPT_MAESTRO v94.83**
+
