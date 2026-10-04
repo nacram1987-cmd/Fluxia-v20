@@ -1,0 +1,58 @@
+# PROMPT_MAESTRO v95.1-LAB
+
+**Fecha:** 2026-10-04  
+**Versión anterior:** v95.0-LAB (1 hora)  
+**Estado:** HOTFIX CRÍTICO
+
+---
+
+## PROBLEMA IDENTIFICADO EN v95.0
+
+En v95.0 regeneré el código para buscar en `fluxia_datos` pero **mantuve el prefijo incorrecto** `planRescate_v2_`.
+
+En Supabase, las claves están guardadas como:
+- `v2_provisiones`
+- `v2_movimientos`
+- `v2_presupuestos`
+- etc.
+
+NO como `planRescate_v2_provisiones`.
+
+**Resultado:** v95.0 buscaba en el lugar equivocado → huchas desaparecían visualmente.
+
+---
+
+## SOLUCIÓN EN v95.1
+
+Reemplazar **TODAS** las referencias:
+```
+'planRescate_v2_ → 'v2_
+"planRescate_v2_ → "v2_
+planRescate_v2_ → v2_
+```
+
+Esto afectó a ~2952 bytes del HTML pero mantiene la funcionalidad intacta.
+
+---
+
+## VERIFICACIÓN
+
+✅ 8 puntos de versión: v95.1-LAB  
+✅ Prefijo correcto en todas las búsquedas: v2_  
+✅ Supabase sync: sin cambios (sigue usando `fluxia_datos`)  
+✅ Tamaño archivo: ~1.9 MB (similar a v95.0)  
+
+---
+
+## ROADMAP
+
+- **v95.2-LAB:** Offline mode 100%
+- **v95.3-LAB:** Sincronización bidireccional
+- **v96.0-LAB:** Refactor TypeScript
+
+---
+
+**PROMPT_MAESTRO v95.1-LAB**  
+**Vigente desde: 2026-10-04 16:15**  
+**Sustituye a: PROMPT_MAESTRO v95.0-LAB**
+

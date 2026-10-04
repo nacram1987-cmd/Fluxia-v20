@@ -1,10 +1,10 @@
 {
   "canal": "LAB",
-  "lab_version": "v95.0-LAB",
+  "lab_version": "v95.1-LAB",
   "canal_url": "https://nacram1987-cmd.github.io/Fluxia-v20",
   "supabase_sync": true,
   "supabase_url": "https://kylduzmrfbubeamfrbbr.supabase.co",
   "retry_count": 5,
-  "timestamp": "2026-10-04T16:00:00Z",
-  "notas": "v95.0: Borrados sincronizados, layout mejorado, scroll automático, meses en color oscuro"
+  "timestamp": "2026-10-04T16:15:00Z",
+  "notas": "v95.1: Prefijo correcto v2_ (no planRescate_v2_), las huchas vuelven a aparecer"
 }
