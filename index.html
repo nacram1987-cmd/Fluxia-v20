@@ -479,7 +479,7 @@
 .fx-security-note b{color:var(--ink);}
 .fx-security-card h5{margin:0 0 8px;font-size:.88rem;color:var(--ink);}
 
-/* v94.88.1-LAB · Dashboard consolidado + navegación mensual */
+/* v94.88.2-LAB · Dashboard consolidado + navegación mensual */
 .fx-dashboard67{margin:0 0 18px;padding:16px;border:1px solid var(--line);border-radius:18px;background:var(--surface);box-shadow:0 6px 20px rgba(15,58,92,.055);}
 .fx-dashboard67-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:14px;}
 .fx-dashboard67-kicker{font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);}
@@ -538,7 +538,7 @@
 .fx-cloud-integrity strong{color:var(--ink);}
 @media(max-width:430px){.fx-dashboard67-break{grid-template-columns:repeat(2,minmax(0,1fr));}.fx-dashboard67-real .amount{font-size:2.15rem;}.fx-month-nav .current b{font-size:1.05rem;}}
 @media(max-width:420px){.fx-dashboard67-actions{grid-template-columns:1fr;} .fx-dashboard67-real .amount{font-size:1.8rem;}}
-/* v94.88.1-LAB · Dashboard realmente consolidado: no duplicar héroes/KPIs antiguos en Inicio */
+/* v94.88.2-LAB · Dashboard realmente consolidado: no duplicar héroes/KPIs antiguos en Inicio */
 body.fx-dashboard-clean #tuMes,
 body.fx-dashboard-clean #dashboardVisualV801,
 body.fx-dashboard-clean #kpiGrid,
@@ -578,8 +578,8 @@ body.fx-dashboard-clean .fx-dashboard67-item.gold:after { content:""; position:a
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="telephone=no" name="format-detection"/>
 <meta content="no" name="msapplication-tap-highlight"/>
-<title>Fluxia BETA v94.88.1-LAB</title>
-<meta content="v94.88.1-LAB" name="fluxia-version"/>
+<title>Fluxia BETA v94.88.2-LAB</title>
+<meta content="v94.88.2-LAB" name="fluxia-version"/>
 <!-- Fluxia v91 · brand lock · datos jamás a 0 · compartidos saldo inicial · notif suaves · logo alineado · base v90.10 -->
 <script>
 (function(){window.FluxiaNative={isNative:function(){try{return!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())}catch(e){return false}},platform:function(){try{return(window.Capacitor&&Capacitor.getPlatform)?Capacitor.getPlatform():'web'}catch(e){return'web'}}};})();
@@ -886,9 +886,9 @@ window.fluxiaCuandoLibre = function(fn, intentos){
 };
 
 </script>
-<meta content="v94.88.1-LAB" name="fluxia-version"/>
+<meta content="v94.88.2-LAB" name="fluxia-version"/>
 <meta content="lab" name="fluxia-channel"/>
-<script>window.FLUXIA_VERSION = "v94.88.1-LAB";</script>
+<script>window.FLUXIA_VERSION = "v94.88.2-LAB";</script>
 <script>
 /* v94.39 · Ir directo a Seguridad en Ajustes */
 window.fxIrASeguridad = function(){
@@ -2630,7 +2630,7 @@ header.top #bancoEstadoHeader{margin-top:4px!important;}
 .gv-importe,.mov-importe,.row-importe,.ingreso-importe,.fijo-importe{font-size:0.95rem!important;}
 </style>
 <style id="fluxiaDrawerFix">
-/* v94.88.1-LAB fix: encabezado (nombre + cerrar sesión) fijo; solo scrollea la lista */
+/* v94.88.2-LAB fix: encabezado (nombre + cerrar sesión) fijo; solo scrollea la lista */
 .drawer-menu,#drawerMenu{overflow:hidden!important;display:flex!important;flex-direction:column!important;padding-top:0!important;padding-bottom:0!important;}
 #drawerMenu .drawer-header{position:relative!important;top:auto!important;flex:0 0 auto!important;margin:0!important;padding-top:calc(16px + env(safe-area-inset-top))!important;z-index:3!important;}
 #drawerMenu .drawer-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:8px 0 calc(12px + env(safe-area-inset-bottom));}
@@ -4473,7 +4473,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <div style="min-width:0;">
 <div style="font-family:var(--serif); font-weight:700; font-size:1.28rem; line-height:1.15; color:var(--ink,#1A2433); letter-spacing:-0.02em;">Fluxia <span id="fluxiaBetaBadge" style="font-family:var(--sans);font-size:0.62rem;font-weight:800;letter-spacing:0.04em;vertical-align:middle;margin-left:6px;padding:2px 7px;border-radius:999px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid rgba(201,162,39,.35);">BETA</span></div>
 <div id="fluxiaHeaderSub" style="font-size:0.82rem; color:var(--muted); letter-spacing:0.3px; margin-top:2px;">Control absoluto. Flujo perfecto</div>
-<div id="fluxiaVersion" style="font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:3px; opacity:.85;">Versión v94.88.1-LAB</div>
+<div id="fluxiaVersion" style="font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:3px; opacity:.85;">Versión v94.88.2-LAB</div>
 <button class="fx-banco-pill" id="bancoEstadoHeader" onclick="window.abrirConexionBancaria()" style="display:none;" type="button"></button>
 <button class="fx-banco-pill fx-nube-pill" id="fxNubeEstado" onclick="try{goToTab('importar-exportar')}catch(e){}" style="display:none;" type="button" aria-live="polite"></button>
 </div>
@@ -4544,7 +4544,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <div id="panelsAnchor"></div>
 <!-- INICIO / RESUMEN DASHBOARD (FASE 2) -->
 <section class="panel active" id="panel-resumen">
-<!-- v94.88.1-LAB · Dashboard único: una cifra, una explicación, una acción -->
+<!-- v94.88.2-LAB · Dashboard único: una cifra, una explicación, una acción -->
 <div class="fx-month-nav" aria-label="Navegación del mes">
   <button type="button" id="fxMesPrev" aria-label="Mes anterior" title="Mes anterior">‹</button>
   <div class="current"><b id="fxMesActualLabel">—</b><small id="fxMesActualSub">Mes seleccionado</small></div>
@@ -5394,7 +5394,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 </div>
 <div style="margin:0 0 14px;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--surface);">
 <div style="font-weight:800;font-size:.88rem;color:var(--ink);margin-bottom:6px;">🧪 Laboratorio (solo tú)</div>
-<p style="margin:0 0 10px;font-size:.8rem;color:var(--muted);line-height:1.45;">Esta versión concreta (<b id="fluxiaLabVersionLabel">v94.88.1-LAB</b>). Úsala sin temor—es la versión estable. <b>Puedes compartirla con confianza.</b></p>
+<p style="margin:0 0 10px;font-size:.8rem;color:var(--muted);line-height:1.45;">Esta versión concreta (<b id="fluxiaLabVersionLabel">v94.88.2-LAB</b>). Úsala sin temor—es la versión estable. <b>Puedes compartirla con confianza.</b></p>
 <button id="btnCopiarEnlaceBeta" style="background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%; margin-bottom:8px;" type="button">🔗 Copiar enlace de ESTA versión</button>
 <button id="btnComoInstalarBeta" style="background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%; margin-bottom:8px;" type="button">📲 Cómo instalarla en el móvil</button>
 <button id="btnInstalarPwa" style="display:none;background:var(--brand-1,#1554F0); color:#fff; border:none; border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%;" type="button">⬇️ Instalar Fluxia en este dispositivo</button>
@@ -5425,7 +5425,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <h3 class="section-title" style="margin:0;">Versión</h3>
 <span style="font-size:.68rem;font-weight:800;letter-spacing:.03em;padding:3px 8px;border-radius:999px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid rgba(201,162,39,.35);">BETA</span>
 </div>
-<p class="hint" id="ayudaVersionTxt" style="margin:0 0 14px;font-weight:600;color:var(--ink);">Fluxia BETA v94.88.1-LAB (estable) · datos en este dispositivo</p>
+<p class="hint" id="ayudaVersionTxt" style="margin:0 0 14px;font-weight:600;color:var(--ink);">Fluxia BETA v94.88.2-LAB (estable) · datos en este dispositivo</p>
 <div class="fluxia-empty-guide" style="margin-bottom:14px;text-align:left;">
 <div class="eg-tit" style="margin-bottom:8px;">🚀 Primeros pasos (2 minutos)</div>
 <ol style="margin:0;padding-left:1.2em;font-size:0.84rem;line-height:1.5;color:var(--ink);">
@@ -5693,17 +5693,17 @@ const Almacen = (function(){
     if (cache[k] === v && !pendiente[k]) return;      // sin cambios: no se escribe
     cache[k] = v;
     lsSet(k, v);   /* caché local inmediata para UI; NO es la fuente de verdad */
-    // v91 · Marca temporal local
     try{ lsSet('__ts__'+String(k), String(Date.now())); }catch(e){}
     marcar(k, 'set');
-    /* v94.88 · Cloud-first: si hay sesión, subir YA y solo confirmar al éxito real.
-       Mientras tanto el estado es "sincronizando" o "pendiente". */
-    if (listo && db && nuestra(k)) {
-      if (estado !== 'error') { estado = 'sincronizando'; emitirEstado(); }
-      subir(k);
-    } else if (listo && !db && nuestra(k)) {
-      /* Offline o sin sesión: queda en cola local, nunca se afirma "guardado en nube" */
-      estado = 'local'; emitirEstado();
+    /* v94.88.2 · Siempre encolar; subir YA si hay db */
+    if (nuestra(k)) {
+      pendiente[k] = 'set';
+      if (db) {
+        if (estado !== 'error') { estado = 'sincronizando'; emitirEstado(); }
+        subir(k);
+      } else if (listo) {
+        estado = 'local'; emitirEstado();
+      }
     }
   }
   function removeItem(k){
@@ -5944,6 +5944,31 @@ const Almacen = (function(){
         }
       });
       estado = 'nube'; listo = true;
+
+      /* v94.88.2 · FORZAR subida de datos críticos locales a Supabase.
+         Idempotente (upsert). Evita perder huchas/movimientos que nunca subieron. */
+      try {
+        var CRITICAS = ['planRescate_v2_provisiones','planRescate_v2_usos','planRescate_v2_movimientos',
+          'planRescate_v2_ingresos','planRescate_v2_fijos','planRescate_v2_financiaciones',
+          'planRescate_v2_compartidos','planRescate_v2_historico','planRescate_v2_config_plan',
+          'planRescate_v2_presupuestos','planRescate_v2_borrados_blacklist'];
+        CRITICAS.forEach(function(ck){
+          var lv = (cache[ck] !== undefined && cache[ck] !== null) ? cache[ck] : lsGet(ck);
+          if (lv == null || lv === '' || lv === 'null') return;
+          if (lv === '[]' || lv === '{}') return;
+          cache[ck] = lv;
+          pendiente[ck] = 'set';
+        });
+        // también cualquier otra clave nuestra con datos
+        claves().forEach(function(ck){
+          if (pendiente[ck]) return;
+          var lv = (cache[ck] !== undefined && cache[ck] !== null) ? cache[ck] : lsGet(ck);
+          if (lv && lv !== '[]' && lv !== '{}' && lv !== 'null') {
+            pendiente[ck] = 'set';
+          }
+        });
+      } catch(_fu){ console.warn('[Almacén v94.88.2] force upload', _fu); }
+
       Object.keys(pendiente).forEach(k=>programar(k, 0));
     }catch(e){
       console.warn('Almacén: no se pudo leer el servidor', e && (e.code || e.message));
@@ -6082,9 +6107,30 @@ const Almacen = (function(){
           }
         });
         estado = 'nube'; listo = true;
+
+        /* v94.88.2 · FORZAR subida de datos críticos locales a Supabase */
+        try {
+          var CRITICAS = ['planRescate_v2_provisiones','planRescate_v2_usos','planRescate_v2_movimientos',
+            'planRescate_v2_ingresos','planRescate_v2_fijos','planRescate_v2_financiaciones',
+            'planRescate_v2_compartidos','planRescate_v2_historico','planRescate_v2_config_plan',
+            'planRescate_v2_presupuestos','planRescate_v2_borrados_blacklist'];
+          CRITICAS.forEach(function(ck){
+            var lv = (cache[ck] !== undefined && cache[ck] !== null) ? cache[ck] : lsGet(ck);
+            if (lv == null || lv === '' || lv === 'null') return;
+            if (lv === '[]' || lv === '{}') return;
+            cache[ck] = lv;
+            pendiente[ck] = 'set';
+          });
+          claves().forEach(function(ck){
+            if (pendiente[ck]) return;
+            var lv = (cache[ck] !== undefined && cache[ck] !== null) ? cache[ck] : lsGet(ck);
+            if (lv && lv !== '[]' && lv !== '{}' && lv !== 'null') pendiente[ck] = 'set';
+          });
+        } catch(_fu){ console.warn('[Almacén v94.88.2] force upload reconectar', _fu); }
+
         Object.keys(pendiente).forEach(k=>subir(k));
         emitirEstado();
-        console.log('[Almacén v94.88] reconectar OK · remoto:', claves_remotas.length, 'pendientes:', Object.keys(pendiente).length);
+        console.log('[Almacén v94.88.2] reconectar OK · remoto:', claves_remotas.length, 'pendientes:', Object.keys(pendiente).length);
         return true;
       }catch(e){
         console.warn('[Almacén v94.88] reconectar fallo lectura', e);
@@ -6724,7 +6770,7 @@ function initPwaYBeta(){
       name: 'Fluxia BETA',
       short_name: 'Fluxia BETA',
       description: 'Tu plan de dinero mes a mes · Fluxia',
-      start_url: './index.html?v=v94.88.1-LAB',
+      start_url: './index.html?v=v94.88.2-LAB',
       scope: './',
       display: 'standalone',
       orientation: 'portrait-primary',
@@ -8385,16 +8431,19 @@ function guardarFijos(){
 function guardarFinanciaciones(){ guardarLS('planRescate_v2_financiaciones', financiaciones); }
 function guardarProvisiones(){
   var ok = guardarLS('planRescate_v2_provisiones', provisiones);
-  /* v94.88 · HUCHAS: forzar subida inmediata y visible. Sin esto, aportaciones
-     se perdían al cerrar sesión o desinstalar si el flush no había terminado. */
+  /* v94.88.2 · HUCHAS: escritura directa + flush agresivo a Supabase */
   try {
+    var payload = JSON.stringify(provisiones || []);
+    if (typeof Almacen !== 'undefined' && Almacen.setItem) {
+      Almacen.setItem('planRescate_v2_provisiones', payload);
+    }
     if (typeof Almacen !== 'undefined' && typeof Almacen.flush === 'function') {
       Almacen.flush().then(function(done){
         if (done === false) {
-          try { if (typeof mostrarToast === 'function') mostrarToast('⚠ Hucha guardada aquí; nube pendiente', 'var(--gold)', 2800); } catch(_){}
+          try { if (typeof mostrarToast === 'function') mostrarToast('⚠ Hucha en este dispositivo; nube pendiente', 'var(--gold)', 3200); } catch(_){}
         }
       }).catch(function(){
-        try { if (typeof mostrarToast === 'function') mostrarToast('⚠ Hucha guardada aquí; nube pendiente', 'var(--gold)', 2800); } catch(_){}
+        try { if (typeof mostrarToast === 'function') mostrarToast('⚠ Hucha en este dispositivo; nube pendiente', 'var(--gold)', 3200); } catch(_){}
       });
     }
   } catch(_){}
@@ -19056,7 +19105,7 @@ function renderDashboard(){
   const mes = mesSeleccionado;
   const disponible = disponibleEfectivo(mes);
 
-  // v94.88.1-LAB · Dashboard consolidado: una sola jerarquía visual.
+  // v94.88.2-LAB · Dashboard consolidado: una sola jerarquía visual.
   try {
     const idx = MESES.indexOf(mes);
     const lbl = MES_LABEL[mes] || mes;
@@ -31852,7 +31901,7 @@ header.top{position:sticky;top:0;z-index:50;-webkit-transform:translateZ(0);tran
    Compartidos estilo Tricount, papelera y herramientas de comprobación. NO toca el módulo bancario.
    ═══════════════════════════════════════════════════════════════ */
 window.FLUXIA_CHECKLIST = {
-  version: 'v94.88.1-LAB',
+  version: 'v94.88.2-LAB',
   fecha: '3 Oct 2026',
   items: [
     { t:'fix', n:'Se publicaba el archivo equivocado', d:'index.html era la v94.71 antigua y solo el archivo con sufijo era nuevo. Ahora ambos son idénticos.' },
@@ -32401,7 +32450,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 .fxc-in{width:100%;box-sizing:border-box;margin:6px 0 2px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);font:500 16px var(--sans);}
 .fxc-msg{min-height:1.3em;margin:8px 0 0;font-size:.82rem;font-weight:650;} .fxc-msg.err{color:var(--wine-ink);} .fxc-msg.ok{color:var(--teal-ink);}
 
-/* v94.88.1-LAB: Bordes superiores en acciones */
+/* v94.88.2-LAB: Bordes superiores en acciones */
 #fxDashRitmoBtn{border-top:3px solid #D4A84A!important;}
 #fxDashPendBtn{border-top:3px solid #E74C3C!important;}
 
@@ -33480,7 +33529,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 })();
 
 // ═══════════════════════════════════════════════════════════════════════
-// 🔄 INGRESOS AUTOMÁTICOS DESDE BANCO (v94.88.1-LAB)
+// 🔄 INGRESOS AUTOMÁTICOS DESDE BANCO (v94.88.2-LAB)
 // ═══════════════════════════════════════════════════════════════════════
 
 
@@ -33672,7 +33721,7 @@ function obtenerTransaccionesBanco() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-// 🗑️  PAPELERA UNIVERSAL (v94.88.1-LAB)
+// 🗑️  PAPELERA UNIVERSAL (v94.88.2-LAB)
 // ═══════════════════════════════════════════════════════════════════════
 
 function agregarALaPapelera(tipo, datos, fecha) {
@@ -33765,7 +33814,7 @@ if (typeof sincronizarIngresosDelBanco !== 'undefined') {
     sincronizarIngresosDelBanco();
     limpiarPapeleraExpirada();
   }, 5 * 60 * 1000);
-  console.log('✅ Sincronización automática iniciada (v94.88.1-LAB)');
+  console.log('✅ Sincronización automática iniciada (v94.88.2-LAB)');
 }
 /* v94.62 · Tras cargar: si perfil aislado → plan a 0 en memoria (nunca toca datos del dueño)
    v94.63 · NEUTRALIZADO: migrar y vaciar están desactivados (ver fluxiaForzarVacioSiAislado). */
