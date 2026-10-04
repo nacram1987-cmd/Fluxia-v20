@@ -2,7 +2,7 @@
   "name": "Fluxia BETA",
   "short_name": "Fluxia BETA",
   "description": "Fluxia BETA · v95.22 · nube principal e integridad financiera",
-  "start_url": "./index.html?v=v95.22",
+  "start_url": "./index_fluxia_v95.22_LAB.html?v=v95.22-LAB",
   "scope": "/Fluxia-v20/",
   "display": "standalone",
   "background_color": "#F6F8F7",
