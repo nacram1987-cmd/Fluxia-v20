@@ -1,0 +1,13 @@
+{
+  "canal": "LAB",
+  "lab_version": "v95.10-LAB",
+  "lab_file": "index_fluxia_v95.10_LAB.html",
+  "lab_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index_fluxia_v95.10_LAB.html?v=v95.10-LAB",
+  "stable_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index.html",
+  "stable_untouched": true,
+  "supabase_sync": true,
+  "sync_model": "item-id + _fxUpdatedAt + tombstones + optimistic-CAS",
+  "retry_count": 5,
+  "timestamp": "2026-10-04T20:45:00+02:00",
+  "notas": "v95.10: reconciliación merge-first para listas financieras, corrección de tombstones con prefijo, restauración no destructiva de las 7 huchas desde copia real 2026-10-03 y purga bancaria autoritativa antes de pintar."
+}
