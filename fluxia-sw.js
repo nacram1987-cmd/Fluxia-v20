@@ -1,4 +1,4 @@
-const VERSION = 'v94.88.4-LAB';
+const VERSION = 'v94.9.1-LAB';
 const CACHE_NAME = `fluxia-${VERSION}`;
 const PRECACHE_ASSETS = ['./', './index.html', './manifest.webmanifest', './fluxia-canal.json'];
 

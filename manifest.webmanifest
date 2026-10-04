@@ -1,8 +1,8 @@
 {
-  "name": "Fluxia BETA v94.88.4-LAB",
+  "name": "Fluxia BETA v94.9.1-LAB",
   "short_name": "Fluxia",
   "description": "Tu plan de dinero mes a mes: ingresos, gastos, provisiones y cuentas compartidas. Conexión bancaria PSD2 de solo lectura.",
-  "start_url": "./index.html?v=v94.88.4-LAB",
+  "start_url": "./index.html?v=v94.9.1-LAB",
   "display": "standalone",
   "orientation": "portrait",
   "scope": "./",
