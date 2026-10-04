@@ -1,10 +1,10 @@
 {
   "canal": "LAB",
-  "lab_version": "v95.1-LAB",
+  "lab_version": "v95.2-LAB",
   "canal_url": "https://nacram1987-cmd.github.io/Fluxia-v20",
   "supabase_sync": true,
   "supabase_url": "https://kylduzmrfbubeamfrbbr.supabase.co",
   "retry_count": 5,
-  "timestamp": "2026-10-04T16:15:00Z",
-  "notas": "v95.1: Prefijo correcto v2_ (no planRescate_v2_), las huchas vuelven a aparecer"
+  "timestamp": "2026-10-04T18:00:00Z",
+  "notas": "v95.2: la nube manda (borrados persistentes), cola de cambios pendientes, meses a todo ancho, color por pestaña, boton Dejar solo la nube"
 }
