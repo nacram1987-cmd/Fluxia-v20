@@ -1,8 +1,8 @@
 {
   "name": "Fluxia BETA",
   "short_name": "Fluxia BETA",
-  "description": "Fluxia BETA · v95.25 · evolución sin regresiones + Fase 4 banca inteligente + integridad de huchas",
-  "start_url": "./index.html?v=v95.25",
+  "description": "Fluxia BETA · v95.25-LAB · evolución sin regresiones + Fase 4 banca inteligente + integridad de huchas",
+  "start_url": "./index_fluxia_v95.25_LAB.html?v=v95.25-LAB",
   "scope": "/Fluxia-v20/",
   "display": "standalone",
   "background_color": "#F6F8F7",
