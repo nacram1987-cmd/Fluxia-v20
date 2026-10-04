@@ -1,4 +1,4 @@
-# Fluxia v95.2-LAB
+# Fluxia v95.2.3-LAB
 
 **Lo borrado ya no vuelve · Meses a todo el ancho · Color por pestaña**
 
@@ -6,8 +6,8 @@
 Descarga una copia de seguridad desde Ajustes.
 
 ## Subir a GitHub
-Sube los 5 archivos: `index.html`, `index_fluxia_v95.2_LAB.html`, `fluxia-sw.js`, `fluxia-canal.json`, `manifest.webmanifest`.
-Abre `https://nacram1987-cmd.github.io/Fluxia-v20/index.html?v=v95.2-LAB` y comprueba que la cabecera dice «Versión v95.2-LAB».
+Sube los 5 archivos: `index.html`, `index_fluxia_v95.2.3_LAB.html`, `fluxia-sw.js`, `fluxia-canal.json`, `manifest.webmanifest`.
+Abre `https://nacram1987-cmd.github.io/Fluxia-v20/index.html?v=v95.2.3-LAB` y comprueba que la cabecera dice «Versión v95.2.3-LAB».
 
 ## Qué deberías ver
 - Dashboard: mes, Disponible y los cuatro cuadros con el mismo ancho.
