@@ -1,4 +1,4 @@
-const VERSION = 'v95.2.3-LAB';
+const VERSION = 'v95.3.0-LAB';
 const CACHE_NAME = `fluxia-${VERSION}`;
 const URLS_TO_CACHE = [
   '/Fluxia-v20/index.html',

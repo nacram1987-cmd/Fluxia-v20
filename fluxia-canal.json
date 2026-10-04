@@ -1,10 +1,10 @@
 {
   "canal": "LAB",
-  "lab_version": "v95.2.3-LAB",
+  "lab_version": "v95.3.0-LAB",
   "canal_url": "https://nacram1987-cmd.github.io/Fluxia-v20",
   "supabase_sync": true,
   "supabase_url": "https://kylduzmrfbubeamfrbbr.supabase.co",
   "retry_count": 5,
-  "timestamp": "2026-10-04T18:00:00Z",
-  "notas": "v95.2: la nube manda (borrados persistentes), cola de cambios pendientes, meses a todo ancho, color por pestaña, boton Dejar solo la nube"
+  "timestamp": "2026-10-04T18:30:00+02:00",
+  "notas": "v95.3: selector de mes integra el día actual, No mostrar más persistente para preguntas bancarias, eliminado flush global duplicado que provocaba lag, UI refinada."
 }
