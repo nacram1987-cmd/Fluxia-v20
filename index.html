@@ -479,7 +479,7 @@
 .fx-security-note b{color:var(--ink);}
 .fx-security-card h5{margin:0 0 8px;font-size:.88rem;color:var(--ink);}
 
-/* v94.88-LAB · Dashboard consolidado + navegación mensual */
+/* v94.88.1-LAB · Dashboard consolidado + navegación mensual */
 .fx-dashboard67{margin:0 0 18px;padding:16px;border:1px solid var(--line);border-radius:18px;background:var(--surface);box-shadow:0 6px 20px rgba(15,58,92,.055);}
 .fx-dashboard67-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:14px;}
 .fx-dashboard67-kicker{font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);}
@@ -538,7 +538,7 @@
 .fx-cloud-integrity strong{color:var(--ink);}
 @media(max-width:430px){.fx-dashboard67-break{grid-template-columns:repeat(2,minmax(0,1fr));}.fx-dashboard67-real .amount{font-size:2.15rem;}.fx-month-nav .current b{font-size:1.05rem;}}
 @media(max-width:420px){.fx-dashboard67-actions{grid-template-columns:1fr;} .fx-dashboard67-real .amount{font-size:1.8rem;}}
-/* v94.88-LAB · Dashboard realmente consolidado: no duplicar héroes/KPIs antiguos en Inicio */
+/* v94.88.1-LAB · Dashboard realmente consolidado: no duplicar héroes/KPIs antiguos en Inicio */
 body.fx-dashboard-clean #tuMes,
 body.fx-dashboard-clean #dashboardVisualV801,
 body.fx-dashboard-clean #kpiGrid,
@@ -578,8 +578,8 @@ body.fx-dashboard-clean .fx-dashboard67-item.gold:after { content:""; position:a
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="telephone=no" name="format-detection"/>
 <meta content="no" name="msapplication-tap-highlight"/>
-<title>Fluxia BETA v94.88-LAB</title>
-<meta content="v94.88-LAB" name="fluxia-version"/>
+<title>Fluxia BETA v94.88.1-LAB</title>
+<meta content="v94.88.1-LAB" name="fluxia-version"/>
 <!-- Fluxia v91 · brand lock · datos jamás a 0 · compartidos saldo inicial · notif suaves · logo alineado · base v90.10 -->
 <script>
 (function(){window.FluxiaNative={isNative:function(){try{return!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())}catch(e){return false}},platform:function(){try{return(window.Capacitor&&Capacitor.getPlatform)?Capacitor.getPlatform():'web'}catch(e){return'web'}}};})();
@@ -886,9 +886,9 @@ window.fluxiaCuandoLibre = function(fn, intentos){
 };
 
 </script>
-<meta content="v94.88-LAB" name="fluxia-version"/>
+<meta content="v94.88.1-LAB" name="fluxia-version"/>
 <meta content="lab" name="fluxia-channel"/>
-<script>window.FLUXIA_VERSION = "v94.88-LAB";</script>
+<script>window.FLUXIA_VERSION = "v94.88.1-LAB";</script>
 <script>
 /* v94.39 · Ir directo a Seguridad en Ajustes */
 window.fxIrASeguridad = function(){
@@ -2630,7 +2630,7 @@ header.top #bancoEstadoHeader{margin-top:4px!important;}
 .gv-importe,.mov-importe,.row-importe,.ingreso-importe,.fijo-importe{font-size:0.95rem!important;}
 </style>
 <style id="fluxiaDrawerFix">
-/* v94.88-LAB fix: encabezado (nombre + cerrar sesión) fijo; solo scrollea la lista */
+/* v94.88.1-LAB fix: encabezado (nombre + cerrar sesión) fijo; solo scrollea la lista */
 .drawer-menu,#drawerMenu{overflow:hidden!important;display:flex!important;flex-direction:column!important;padding-top:0!important;padding-bottom:0!important;}
 #drawerMenu .drawer-header{position:relative!important;top:auto!important;flex:0 0 auto!important;margin:0!important;padding-top:calc(16px + env(safe-area-inset-top))!important;z-index:3!important;}
 #drawerMenu .drawer-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:8px 0 calc(12px + env(safe-area-inset-bottom));}
@@ -3328,14 +3328,27 @@ body {
   window.FluxiaSesion={cerrar:async function(){
   try{sessionStorage.setItem('fx_salida','1');sessionStorage.removeItem('fx_gate_ok');}catch(e){}
   try{ if(window.FluxiaEspejo) FluxiaEspejo.volcar(); }catch(e){}
-  /* v94.88 · Antes de cerrar: volcar huchas (aportaciones + usos) a Almacen y flush a nube */
+  /* v94.88.1 · Antes de cerrar: VOLCAR TODO y esperar confirmación nube (hasta 12s) */
   try{ if(typeof guardarProvisiones==='function') guardarProvisiones(); }catch(e){}
   try{ if(typeof guardarUsos==='function') guardarUsos(); }catch(e){}
   try{ if(typeof guardarFijos==='function') guardarFijos(); }catch(e){}
   try{ if(typeof guardarIngresos==='function') guardarIngresos(); }catch(e){}
   try{ if(typeof guardarMovimientos==='function') guardarMovimientos(); }catch(e){}
   try{ if(typeof guardarFinanciaciones==='function') guardarFinanciaciones(); }catch(e){}
-  try{ if(typeof Almacen!=='undefined'&&Almacen.flush){ await Promise.race([Almacen.flush(), new Promise(function(r){ setTimeout(r,6000); })]); } else if(typeof Almacen!=='undefined'&&Almacen.vaciar) Almacen.vaciar(); }catch(e){} /* v94.88: flush 6s + volcado huchas previo */
+  try{ if(typeof guardarCompartidos==='function') guardarCompartidos(); }catch(e){}
+  try{
+    if(typeof Almacen!=='undefined'&&Almacen.flush){
+      var _okFlush = await Promise.race([
+        Almacen.flush().then(function(r){ return r; }),
+        new Promise(function(r){ setTimeout(function(){ r(false); }, 12000); })
+      ]);
+      if(_okFlush===false){
+        try{ if(typeof mostrarToast==='function') mostrarToast('⚠ Algunos datos pueden no haber llegado a la nube. Reabre con conexión.', 'var(--gold)', 4000); }catch(_){}
+        /* segunda oportunidad breve */
+        try{ await Promise.race([Almacen.flush(), new Promise(function(r){ setTimeout(r, 4000); })]); }catch(_){}
+      }
+    } else if(typeof Almacen!=='undefined'&&Almacen.vaciar) Almacen.vaciar();
+  }catch(e){}
   // Guardamos el perfil para «Ya tengo un usuario». NO hacemos saveActive(null) ni signOut Supabase.
   try{var a=getActive(); if(a) saveProfiles(getProfiles().map(function(x){return x&&x.id===a.id?Object.assign({},x,{principal:true}):x;}));}catch(e){}
   window.FLUXIA_PROFILE=null; location.reload();
@@ -4460,7 +4473,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <div style="min-width:0;">
 <div style="font-family:var(--serif); font-weight:700; font-size:1.28rem; line-height:1.15; color:var(--ink,#1A2433); letter-spacing:-0.02em;">Fluxia <span id="fluxiaBetaBadge" style="font-family:var(--sans);font-size:0.62rem;font-weight:800;letter-spacing:0.04em;vertical-align:middle;margin-left:6px;padding:2px 7px;border-radius:999px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid rgba(201,162,39,.35);">BETA</span></div>
 <div id="fluxiaHeaderSub" style="font-size:0.82rem; color:var(--muted); letter-spacing:0.3px; margin-top:2px;">Control absoluto. Flujo perfecto</div>
-<div id="fluxiaVersion" style="font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:3px; opacity:.85;">Versión v94.88-LAB</div>
+<div id="fluxiaVersion" style="font-size:0.7rem; color:var(--muted); font-family:var(--mono); margin-top:3px; opacity:.85;">Versión v94.88.1-LAB</div>
 <button class="fx-banco-pill" id="bancoEstadoHeader" onclick="window.abrirConexionBancaria()" style="display:none;" type="button"></button>
 <button class="fx-banco-pill fx-nube-pill" id="fxNubeEstado" onclick="try{goToTab('importar-exportar')}catch(e){}" style="display:none;" type="button" aria-live="polite"></button>
 </div>
@@ -4531,7 +4544,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <div id="panelsAnchor"></div>
 <!-- INICIO / RESUMEN DASHBOARD (FASE 2) -->
 <section class="panel active" id="panel-resumen">
-<!-- v94.88-LAB · Dashboard único: una cifra, una explicación, una acción -->
+<!-- v94.88.1-LAB · Dashboard único: una cifra, una explicación, una acción -->
 <div class="fx-month-nav" aria-label="Navegación del mes">
   <button type="button" id="fxMesPrev" aria-label="Mes anterior" title="Mes anterior">‹</button>
   <div class="current"><b id="fxMesActualLabel">—</b><small id="fxMesActualSub">Mes seleccionado</small></div>
@@ -5381,7 +5394,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 </div>
 <div style="margin:0 0 14px;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--surface);">
 <div style="font-weight:800;font-size:.88rem;color:var(--ink);margin-bottom:6px;">🧪 Laboratorio (solo tú)</div>
-<p style="margin:0 0 10px;font-size:.8rem;color:var(--muted);line-height:1.45;">Esta versión concreta (<b id="fluxiaLabVersionLabel">v94.88-LAB</b>). Úsala sin temor—es la versión estable. <b>Puedes compartirla con confianza.</b></p>
+<p style="margin:0 0 10px;font-size:.8rem;color:var(--muted);line-height:1.45;">Esta versión concreta (<b id="fluxiaLabVersionLabel">v94.88.1-LAB</b>). Úsala sin temor—es la versión estable. <b>Puedes compartirla con confianza.</b></p>
 <button id="btnCopiarEnlaceBeta" style="background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%; margin-bottom:8px;" type="button">🔗 Copiar enlace de ESTA versión</button>
 <button id="btnComoInstalarBeta" style="background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%; margin-bottom:8px;" type="button">📲 Cómo instalarla en el móvil</button>
 <button id="btnInstalarPwa" style="display:none;background:var(--brand-1,#1554F0); color:#fff; border:none; border-radius:10px; padding:11px; font-weight:600; font-size:0.9rem; cursor:pointer; width:100%;" type="button">⬇️ Instalar Fluxia en este dispositivo</button>
@@ -5412,7 +5425,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <h3 class="section-title" style="margin:0;">Versión</h3>
 <span style="font-size:.68rem;font-weight:800;letter-spacing:.03em;padding:3px 8px;border-radius:999px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid rgba(201,162,39,.35);">BETA</span>
 </div>
-<p class="hint" id="ayudaVersionTxt" style="margin:0 0 14px;font-weight:600;color:var(--ink);">Fluxia BETA v94.88-LAB (estable) · datos en este dispositivo</p>
+<p class="hint" id="ayudaVersionTxt" style="margin:0 0 14px;font-weight:600;color:var(--ink);">Fluxia BETA v94.88.1-LAB (estable) · datos en este dispositivo</p>
 <div class="fluxia-empty-guide" style="margin-bottom:14px;text-align:left;">
 <div class="eg-tit" style="margin-bottom:8px;">🚀 Primeros pasos (2 minutos)</div>
 <ol style="margin:0;padding-left:1.2em;font-size:0.84rem;line-height:1.5;color:var(--ink);">
@@ -5851,9 +5864,13 @@ const Almacen = (function(){
               const esListaCritica = /movimientos|fijos|ingresos|provisiones|financiaciones|compartidos|presupuestos|usos/.test(String(k));
               // v91.5 · NUNCA remoto vacío/más corto gana sobre local con datos
               if (esListaCritica && Array.isArray(la) && la.length > 0) {
-                /* v94.88 · Solo proteger contra remoto VACÍO (posible carga parcial). Si remoto tiene datos, gana remoto salvo ts local más nuevo. */
+                /* v94.88.1 · INTEGRIDAD: nunca perder datos.
+                   - remoto vacío → local gana
+                   - local más largo → local gana
+                   - empate → gana quien tenga más aportaciones/pagos (huchas)
+                   - si remoto gana por ts pero local tiene MÁS contenido → fusión / local */
                 if (!Array.isArray(ra) || ra.length === 0) localGana = true;
-                else if (false && ra.length < la.length) localGana = true; /* desactivado: no preferir local por longitud */
+                else if (ra.length < la.length) localGana = true;
                 else if (ra.length === la.length) {
                   /* v94.88 · empate: más aportaciones (huchas) o más pagadoEl/pagos */
                   try {
@@ -5878,7 +5895,7 @@ const Almacen = (function(){
               if (esListaCritica && Array.isArray(ra) && ra.length === 0) localGana = true;
             } catch(e){}
           }
-          // v94.77 · huchas: fusión por id antes de decidir quién gana
+          // v94.88.1 · huchas: SIEMPRE fusionar por id; nunca pisar aportaciones
           try{
             if (_esClaveHucha(k) && lv && rv != null){
               const fus = _fusionarHuchas(k, lv, rv, localGana);
@@ -5886,11 +5903,27 @@ const Almacen = (function(){
                 cache[k] = fus; lsSet(k, fus);
                 try{ lsSet('__ts__'+String(k), String(Date.now())); }catch(_t){}
                 pendiente[k] = 'set';
-                console.warn('[Almacén v94.77] Huchas fusionadas por id:', k);
+                console.warn('[Almacén v94.88.1] Huchas fusionadas por id:', k);
                 return;
               }
+              /* Si no hubo fusión textual pero local tiene más aportaciones, local gana */
+              try {
+                var _la = JSON.parse(lv), _ra = JSON.parse(rv);
+                function _aptCount(arr){
+                  var n=0; (arr||[]).forEach(function(x){
+                    if(x&&x.aportaciones&&typeof x.aportaciones==='object'){
+                      Object.keys(x.aportaciones).forEach(function(m){
+                        var L=x.aportaciones[m]; if(Array.isArray(L)) n+=L.length;
+                      });
+                    }
+                  }); return n;
+                }
+                if (Array.isArray(_la) && Array.isArray(_ra) && _aptCount(_la) > _aptCount(_ra)) {
+                  localGana = true;
+                }
+              } catch(_sc){}
             }
-          }catch(_f){ console.warn('[Almacén v94.77] fusión huchas', _f); }
+          }catch(_f){ console.warn('[Almacén v94.88.1] fusión huchas', _f); }
           if(localGana){
             cache[k] = lv;
             pendiente[k] = 'set';
@@ -5974,9 +6007,9 @@ const Almacen = (function(){
                 const la = JSON.parse(lv), ra = JSON.parse(rv);
                 const esListaCritica = /movimientos|fijos|ingresos|provisiones|financiaciones|compartidos|presupuestos|usos/.test(String(k));
                 if (esListaCritica && Array.isArray(la) && la.length > 0) {
-                  /* v94.88 · Solo proteger contra remoto VACÍO. */
+                  /* v94.88.1 · INTEGRIDAD: nunca perder datos */
                   if (!Array.isArray(ra) || ra.length === 0) localGana = true;
-                  else if (false && ra.length < la.length) localGana = true;
+                  else if (ra.length < la.length) localGana = true;
                   else if (ra.length === la.length) {
                     /* v94.88 · empate: más aportaciones (huchas) o más pagadoEl/pagos */
                     try {
@@ -6001,6 +6034,34 @@ const Almacen = (function(){
                 if (esListaCritica && Array.isArray(ra) && ra.length === 0) localGana = true;
               } catch(e){}
             }
+            // v94.88.1 · huchas en reconectar: SIEMPRE fusionar por id
+            try{
+              if (_esClaveHucha(k) && lv && rv != null){
+                const fus = _fusionarHuchas(k, lv, rv, localGana);
+                if (fus){
+                  cache[k] = fus; lsSet(k, fus);
+                  try{ lsSet('__ts__'+String(k), String(Date.now())); }catch(_t){}
+                  pendiente[k] = 'set';
+                  console.warn('[Almacén v94.88.1] Huchas fusionadas (reconectar):', k);
+                  return;
+                }
+                try {
+                  var _la2 = JSON.parse(lv), _ra2 = JSON.parse(rv);
+                  function _aptCount2(arr){
+                    var n=0; (arr||[]).forEach(function(x){
+                      if(x&&x.aportaciones&&typeof x.aportaciones==='object'){
+                        Object.keys(x.aportaciones).forEach(function(m){
+                          var L=x.aportaciones[m]; if(Array.isArray(L)) n+=L.length;
+                        });
+                      }
+                    }); return n;
+                  }
+                  if (Array.isArray(_la2) && Array.isArray(_ra2) && _aptCount2(_la2) > _aptCount2(_ra2)) {
+                    localGana = true;
+                  }
+                } catch(_sc2){}
+              }
+            }catch(_f2){ console.warn('[Almacén v94.88.1] fusión huchas reconectar', _f2); }
             if(localGana){
               cache[k] = lv;
               pendiente[k] = 'set';
@@ -6663,7 +6724,7 @@ function initPwaYBeta(){
       name: 'Fluxia BETA',
       short_name: 'Fluxia BETA',
       description: 'Tu plan de dinero mes a mes · Fluxia',
-      start_url: './index.html?v=v94.88-LAB',
+      start_url: './index.html?v=v94.88.1-LAB',
       scope: './',
       display: 'standalone',
       orientation: 'portrait-primary',
@@ -18995,7 +19056,7 @@ function renderDashboard(){
   const mes = mesSeleccionado;
   const disponible = disponibleEfectivo(mes);
 
-  // v94.88-LAB · Dashboard consolidado: una sola jerarquía visual.
+  // v94.88.1-LAB · Dashboard consolidado: una sola jerarquía visual.
   try {
     const idx = MESES.indexOf(mes);
     const lbl = MES_LABEL[mes] || mes;
@@ -31791,7 +31852,7 @@ header.top{position:sticky;top:0;z-index:50;-webkit-transform:translateZ(0);tran
    Compartidos estilo Tricount, papelera y herramientas de comprobación. NO toca el módulo bancario.
    ═══════════════════════════════════════════════════════════════ */
 window.FLUXIA_CHECKLIST = {
-  version: 'v94.88-LAB',
+  version: 'v94.88.1-LAB',
   fecha: '3 Oct 2026',
   items: [
     { t:'fix', n:'Se publicaba el archivo equivocado', d:'index.html era la v94.71 antigua y solo el archivo con sufijo era nuevo. Ahora ambos son idénticos.' },
@@ -32340,7 +32401,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 .fxc-in{width:100%;box-sizing:border-box;margin:6px 0 2px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);font:500 16px var(--sans);}
 .fxc-msg{min-height:1.3em;margin:8px 0 0;font-size:.82rem;font-weight:650;} .fxc-msg.err{color:var(--wine-ink);} .fxc-msg.ok{color:var(--teal-ink);}
 
-/* v94.88-LAB: Bordes superiores en acciones */
+/* v94.88.1-LAB: Bordes superiores en acciones */
 #fxDashRitmoBtn{border-top:3px solid #D4A84A!important;}
 #fxDashPendBtn{border-top:3px solid #E74C3C!important;}
 
@@ -33419,7 +33480,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:1
 })();
 
 // ═══════════════════════════════════════════════════════════════════════
-// 🔄 INGRESOS AUTOMÁTICOS DESDE BANCO (v94.88-LAB)
+// 🔄 INGRESOS AUTOMÁTICOS DESDE BANCO (v94.88.1-LAB)
 // ═══════════════════════════════════════════════════════════════════════
 
 
@@ -33611,7 +33672,7 @@ function obtenerTransaccionesBanco() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-// 🗑️  PAPELERA UNIVERSAL (v94.88-LAB)
+// 🗑️  PAPELERA UNIVERSAL (v94.88.1-LAB)
 // ═══════════════════════════════════════════════════════════════════════
 
 function agregarALaPapelera(tipo, datos, fecha) {
@@ -33704,7 +33765,7 @@ if (typeof sincronizarIngresosDelBanco !== 'undefined') {
     sincronizarIngresosDelBanco();
     limpiarPapeleraExpirada();
   }, 5 * 60 * 1000);
-  console.log('✅ Sincronización automática iniciada (v94.88-LAB)');
+  console.log('✅ Sincronización automática iniciada (v94.88.1-LAB)');
 }
 /* v94.62 · Tras cargar: si perfil aislado → plan a 0 en memoria (nunca toca datos del dueño)
    v94.63 · NEUTRALIZADO: migrar y vaciar están desactivados (ver fluxiaForzarVacioSiAislado). */
