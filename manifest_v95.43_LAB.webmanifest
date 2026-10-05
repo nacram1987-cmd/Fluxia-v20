@@ -1,8 +1,8 @@
 {
   "name": "Fluxia BETA",
   "short_name": "Fluxia BETA",
-  "description": "Fluxia BETA · v95.25 · evolución sin regresiones + Fase 4 banca inteligente + integridad de huchas",
-  "start_url": "./index.html?v=v95.25",
+  "description": "Fluxia BETA · v95.43 LAB · aislamiento multiusuario + seguridad cloud + cuota segura",
+  "start_url": "./index_fluxia_v95.43_LAB.html?v=v95.43-LAB",
   "scope": "/Fluxia-v20/",
   "display": "standalone",
   "background_color": "#F6F8F7",
@@ -21,5 +21,6 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "id": "./index_fluxia_v95.43_LAB.html"
 }
