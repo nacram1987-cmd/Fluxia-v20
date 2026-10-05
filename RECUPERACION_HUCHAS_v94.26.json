@@ -1,0 +1,46 @@
+{
+  "source": "fluxia_v94.26_LAB.zip",
+  "source_facts": {
+    "provisions": [
+      "Amortización 422.67",
+      "Renta 164.05",
+      "Tributos 130.16",
+      "Boda Ana 50",
+      "Mantenimiento Césped 35",
+      "Agua 67",
+      "Seguro de coche 50"
+    ],
+    "base_contributions": {
+      "julio": {
+        "Amortización": 422.67,
+        "Renta": 164.05,
+        "Tributos": 130.16,
+        "Mantenimiento Césped": 35
+      },
+      "agosto": {
+        "Amortización": 422.67,
+        "Renta": 164.05,
+        "Tributos": 130.16,
+        "Boda Ana": 50,
+        "Agua": 67,
+        "Seguro de coche": 50
+      },
+      "septiembre": {
+        "Amortización": 422.67,
+        "Renta": 164.05,
+        "Tributos": 130.16,
+        "Boda Ana": 50,
+        "Agua": 67,
+        "Seguro de coche": 50
+      }
+    }
+  },
+  "confirmed_later_corrections": [
+    "Boda Ana: 100 historical + 50 October = 150",
+    "Agua: definitive payment 132.90 on 2026-09-27",
+    "Tributos: temporary rescue pending 240.48",
+    "October planned/real contributions: Amortización 422.67, Renta 164.05, Mantenimiento Césped 35, Boda Ana 50",
+    "Control total: 2817.88",
+    "Amortización reconciliation adjustment: -0.10 to match confirmed control total"
+  ]
+}
