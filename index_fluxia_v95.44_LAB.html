@@ -2956,6 +2956,13 @@ body {
   function getProfiles(){try{var s=sessionStorage.getItem(PROFILES_KEY);if(s){var b=JSON.parse(s);if(Array.isArray(b))return b;}}catch(e){}try{var a=JSON.parse(localStorage.getItem(PROFILES_KEY)||'[]');return Array.isArray(a)?a:[];}catch(e){return window.__fxProfilesFallback||[];}}
   function saveProfiles(a){window.__fxProfilesFallback=a;try{sessionStorage.setItem(PROFILES_KEY,JSON.stringify(a));}catch(e){}try{localStorage.setItem(PROFILES_KEY,JSON.stringify(a));}catch(e){}}
   function registerProfile(o){var a=getProfiles().filter(function(x){return x&&x.id&&x.id!==o.id;});a.push(o);saveProfiles(a);}
+  window.FluxiaProfilesSafe = {
+    getActive:getActive,
+    saveActive:saveActive,
+    getProfiles:getProfiles,
+    saveProfiles:saveProfiles,
+    registerProfile:registerProfile
+  };
   // ── v69 · Recordar usuarios aunque el navegador limpie localStorage ──
   var REG_COOKIE='fxreg', REG_DB='fluxia_meta';
   function mini(a){return (a||[]).filter(function(x){return x&&x.id;}).map(function(x){return {id:x.id,name:x.name,legacy:!!x.legacy,principal:!!x.principal,createdAt:x.createdAt||0};});}
@@ -3241,6 +3248,30 @@ body {
   const $=id=>document.getElementById(id);
   const eurFmt=n=>new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(Number(n)||0);
   function esc(v){return String(v??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
+  function fxGetActiveProfile(){
+    try{ if(window.FluxiaProfilesSafe&&FluxiaProfilesSafe.getActive) return FluxiaProfilesSafe.getActive(); }catch(e){}
+    try{ var s=sessionStorage.getItem(PROFILE_KEY); if(s) return JSON.parse(s); }catch(e){}
+    try{ return JSON.parse(localStorage.getItem(PROFILE_KEY)||'null'); }catch(e){}
+    return window.__fxActiveFallback||null;
+  }
+  function fxSaveActiveProfile(pr){
+    try{ if(window.FluxiaProfilesSafe&&FluxiaProfilesSafe.saveActive){ FluxiaProfilesSafe.saveActive(pr); return; } }catch(e){}
+    window.__fxActiveFallback=pr||null;
+    try{ if(pr) sessionStorage.setItem(PROFILE_KEY,JSON.stringify(pr)); else sessionStorage.removeItem(PROFILE_KEY); }catch(e){}
+    try{ if(pr) localStorage.setItem(PROFILE_KEY,JSON.stringify(pr)); else localStorage.removeItem(PROFILE_KEY); }catch(e){}
+  }
+  function fxGetProfiles(){
+    try{ if(window.FluxiaProfilesSafe&&FluxiaProfilesSafe.getProfiles) return FluxiaProfilesSafe.getProfiles(); }catch(e){}
+    try{ var s=sessionStorage.getItem('fluxia_profiles_v2'); if(s){ var a=JSON.parse(s); if(Array.isArray(a)) return a; } }catch(e){}
+    try{ var b=JSON.parse(localStorage.getItem('fluxia_profiles_v2')||'[]'); return Array.isArray(b)?b:[]; }catch(e){}
+    return window.__fxProfilesFallback||[];
+  }
+  function fxSaveProfiles(arr){
+    try{ if(window.FluxiaProfilesSafe&&FluxiaProfilesSafe.saveProfiles){ FluxiaProfilesSafe.saveProfiles(arr); return; } }catch(e){}
+    window.__fxProfilesFallback=arr||[];
+    try{ sessionStorage.setItem('fluxia_profiles_v2',JSON.stringify(arr||[])); }catch(e){}
+    try{ localStorage.setItem('fluxia_profiles_v2',JSON.stringify(arr||[])); }catch(e){}
+  }
   function show(){
     if(!profile || !profile.newUser || !profile.onboardingPending) return;
     /* v95.9 · Un usuario NUEVO nunca hereda la sesión cloud de otro perfil.
@@ -3344,12 +3375,12 @@ body {
     ].map(r=>'<div class="fob-row"><span>'+r[0]+'</span><b>'+r[1]+'</b></div>').join('');
   }
   function saveProfile(){
-    const pr=JSON.parse(localStorage.getItem(PROFILE_KEY)||'null')||profile;
+    const pr=fxGetActiveProfile()||profile;
     pr.name=profile.name; pr.onboardingPending=false; pr.newUser=false; pr.onboardingCompletedAt=Date.now(); try{sessionStorage.removeItem('fx_plan_nuevo_vacio');sessionStorage.removeItem('fx_plan_nuevo_id');sessionStorage.setItem('fx_gate_ok','1');sessionStorage.removeItem('fx_salida');}catch(e){}
     pr.goals=state.goals.slice(); pr.goalDeadlineMonths=state.plazo; pr.goalFlexible=state.flexible;
     pr.startingPoint={income:state.ingreso,fixed:state.fijos,emergencyTarget:state.objetivo,currentEmergency:state.fondoActual,debt:state.deuda};
-    localStorage.setItem(PROFILE_KEY,JSON.stringify(pr));
-    const arr=JSON.parse(localStorage.getItem('fluxia_profiles_v2')||'[]'); const i=arr.findIndex(x=>x&&x.id===pr.id); if(i>=0) arr[i]=pr; else arr.push(pr); localStorage.setItem('fluxia_profiles_v2',JSON.stringify(arr));
+    fxSaveActiveProfile(pr);
+    const arr=fxGetProfiles(); const i=arr.findIndex(x=>x&&x.id===pr.id); if(i>=0) arr[i]=pr; else arr.push(pr); fxSaveProfiles(arr);
     try{ localStorage.setItem('fluxia_perfil_aislado_'+pr.id,'1'); }catch(e){}
     window.FLUXIA_PROFILE=pr; try{if(typeof fluxiaActualizarPrefijoPerfil==='function')fluxiaActualizarPrefijoPerfil();}catch(_fp){}
     try{ if(typeof fluxiaForzarVacioSiAislado==='function') fluxiaForzarVacioSiAislado(); }catch(e){}
@@ -3448,15 +3479,15 @@ body {
               if (nDatos < 0){ $('fobError').textContent='❌ No se pudo comprobar tu cuenta. Revisa la conexión e inténtalo de nuevo.'; return; }
               $('fobError').textContent='✅ Cuenta encontrada. Cargando tus datos…';
               try{
-                const pr=JSON.parse(localStorage.getItem(PROFILE_KEY)||'null')||profile;
+                const pr=fxGetActiveProfile()||profile;
                 pr.onboardingPending=false;
                 pr.newUser=false;
                 pr.onboardingCompletedAt=Date.now();
                 pr.cloudRestored=true;
-                localStorage.setItem(PROFILE_KEY,JSON.stringify(pr));
-                const arr=JSON.parse(localStorage.getItem('fluxia_profiles_v2')||'[]'); const i=arr.findIndex(x=>x&&x.id===pr.id); if(i>=0) arr[i]=pr; else arr.push(pr); localStorage.setItem('fluxia_profiles_v2',JSON.stringify(arr));
-                localStorage.removeItem('fluxia_profile_new_v2');
-                localStorage.setItem('fluxia_first_run_v2_'+pr.id,'1');
+                fxSaveActiveProfile(pr);
+                const arr=fxGetProfiles(); const i=arr.findIndex(x=>x&&x.id===pr.id); if(i>=0) arr[i]=pr; else arr.push(pr); fxSaveProfiles(arr);
+                try{ localStorage.removeItem('fluxia_profile_new_v2'); }catch(e2){}
+                try{ localStorage.setItem('fluxia_first_run_v2_'+pr.id,'1'); }catch(e2){}
                 try{ sessionStorage.setItem('fx_gate_ok','1'); sessionStorage.removeItem('fx_salida'); sessionStorage.removeItem('fx_plan_nuevo_vacio'); }catch(e2){}
                 window.FLUXIA_PROFILE=pr; try{if(typeof fluxiaActualizarPrefijoPerfil==='function')fluxiaActualizarPrefijoPerfil();}catch(_fp){}
               }catch(e){}
@@ -3563,14 +3594,14 @@ body {
   }
   function _skipPlanSinPlan(){
     try{
-      const pr=getActive()||profile;
+      const pr=fxGetActiveProfile()||profile;
       if(!pr||!pr.id)throw new Error('Falta perfil');
       pr.onboardingPending=false; pr.onboardingSkipped=true; pr.onboardingSkippedAt=Date.now();
       pr.newUser=true; pr.legacy=false; pr.principal=false;
       pr.goals=[]; pr.goalDeadlineMonths=null; pr.goalFlexible=false;
       pr.startingPoint={income:0,fixed:0,emergencyTarget:0,currentEmergency:0,debt:0};
-      saveActive(pr);
-      const arr=getProfiles(); const i=arr.findIndex(x=>x&&x.id===pr.id); if(i>=0)arr[i]=pr; else arr.push(pr); saveProfiles(arr);
+      fxSaveActiveProfile(pr);
+      const arr=fxGetProfiles(); const i=arr.findIndex(x=>x&&x.id===pr.id); if(i>=0)arr[i]=pr; else arr.push(pr); fxSaveProfiles(arr);
       try{
         localStorage.setItem('fluxia_perfil_aislado_'+pr.id,'1');
         localStorage.setItem('fluxia_perfil_vacio_'+pr.id,'1');
@@ -3589,10 +3620,10 @@ body {
       try{
         overlay.classList.remove('on');
         document.documentElement.style.overflow=''; document.body.style.overflow='';
-        try{ localStorage.removeItem(PROFILE_KEY); }catch(e){}
+        try{ fxSaveActiveProfile(null); }catch(e){}
         try{
-          const arr=JSON.parse(localStorage.getItem('fluxia_profiles_v2')||'[]');
-          localStorage.setItem('fluxia_profiles_v2', JSON.stringify(arr.filter(x=>!x||x.id!==(profile&&profile.id))));
+          const arr=fxGetProfiles();
+          fxSaveProfiles(arr.filter(x=>!x||x.id!==(profile&&profile.id)));
         }catch(e){}
         try{ localStorage.removeItem('fluxia_profile_new_v2'); }catch(e){}
         try{ sessionStorage.removeItem('fx_gate_ok'); sessionStorage.setItem('fx_salida','1'); }catch(e){}
@@ -11655,11 +11686,14 @@ function saveFamilyConfig(cfg){
     if (window.FLUXIA_PROFILE){
       window.FLUXIA_PROFILE.familyMode = c.activo;
       window.FLUXIA_PROFILE.familyMembers = c.miembros.slice();
-      const PROFILE_KEY = 'fluxia_profile_v2';
-      localStorage.setItem(PROFILE_KEY, JSON.stringify(window.FLUXIA_PROFILE));
-      const arr = JSON.parse(localStorage.getItem('fluxia_profiles_v2')||'[]');
+      try{ if(window.FluxiaProfilesSafe&&FluxiaProfilesSafe.saveActive) FluxiaProfilesSafe.saveActive(window.FLUXIA_PROFILE); }catch(_sa){}
+      const arr = (window.FluxiaProfilesSafe&&FluxiaProfilesSafe.getProfiles) ? FluxiaProfilesSafe.getProfiles() : JSON.parse(localStorage.getItem('fluxia_profiles_v2')||'[]');
       const i = arr.findIndex(x => x && x.id === window.FLUXIA_PROFILE.id);
-      if (i >= 0){ arr[i] = window.FLUXIA_PROFILE; localStorage.setItem('fluxia_profiles_v2', JSON.stringify(arr)); }
+      if (i >= 0){
+        arr[i] = window.FLUXIA_PROFILE;
+        if(window.FluxiaProfilesSafe&&FluxiaProfilesSafe.saveProfiles) FluxiaProfilesSafe.saveProfiles(arr);
+        else localStorage.setItem('fluxia_profiles_v2', JSON.stringify(arr));
+      }
     }
   }catch(e){}
   return c;
@@ -20451,6 +20485,7 @@ function arrancarApp(){
           '<p>Cloud autoritativa y CAS: IMPLEMENTADO · PROBADO en simulación · caché vieja no se sube al arrancar.</p>'+
           '<p>Huchas y borrados: IMPLEMENTADO · PROBADO en simulación · dos aportaciones iguales sobreviven y un borrado por ID prevalece.</p>'+
           '<p>Aislamiento entre perfiles: IMPLEMENTADO · PROBADO en almacén simulado · falta ensayo de navegador y Supabase real.</p>'+
+          '<p>Onboarding/Metas con almacenamiento lleno: IMPLEMENTADO · PROBADO por regresión estática · Crear mi Fluxia, Ahora no y Sin cuenta usan perfil seguro.</p>'+
           '<p>Interfaz móvil 390/430 px: PENDIENTE · navegador local bloqueado · no validado.</p>';
         ayuda.appendChild(details);
       }
