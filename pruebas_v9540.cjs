@@ -1,0 +1,1 @@
+const fs=require('fs');const s=fs.readFileSync('index_fluxia_v95.40_LAB.html','utf8');const must=['fxDashHoy','fxDashSemana','Ritmo recomendado','fx-v9540-premium','v95.40-LAB'];for(const x of must){if(!s.includes(x))throw new Error('Falta '+x)};console.log('OK v95.40 markers');

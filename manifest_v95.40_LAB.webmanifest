@@ -1,8 +1,8 @@
 {
   "name": "Fluxia BETA",
   "short_name": "Fluxia BETA",
-  "description": "Fluxia BETA · v95.39 · cloud-first verificado + pagos con fecha real + render estable",
-  "start_url": "./index.html?v=v95.39",
+  "description": "Fluxia BETA · v95.40 LAB · dashboard premium + ritmo diario/semanal + fluidez protegida",
+  "start_url": "./index_fluxia_v95.40_LAB.html?v=v95.40-LAB",
   "scope": "/Fluxia-v20/",
   "display": "standalone",
   "background_color": "#F6F8F7",
@@ -21,5 +21,6 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "id": "./index_fluxia_v95.40_LAB.html"
 }
