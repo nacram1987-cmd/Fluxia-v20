@@ -1,5 +1,5 @@
 const fs=require('fs'),vm=require('vm'),assert=require('assert');
-const html=fs.readFileSync(__dirname+'/index_fluxia_v95.35_LAB.html','utf8');
+const html=fs.readFileSync(__dirname+'/index_fluxia_v95.36_LAB.html','utf8');
 let disk={},tick=100;
 const c={window:{},Date,LS_PREFIX:'v2_',claveLS:k=>k,console,clearTimeout:()=>{},cache:{},pendiente:{},timers:{},FX_TOMBSTONE:'__FLUXIA_TOMBSTONE_V95_4__',nuestra:()=>true,_respaldar:()=>{},guardarPendiente:()=>{},lsGet:k=>disk[k]??null,lsSet:(k,v)=>disk[k]=v,lsDel:k=>delete disk[k],claves:()=>Object.keys(disk).filter(k=>k.startsWith('v2_')),localStorage:{getItem:k=>disk['raw:'+k]??null,setItem:(k,v)=>disk['raw:'+k]=v},Almacen:{getItem:k=>c.cache[k]??disk[k]??null,setItem:(k,v)=>{disk[k]=v;c.cache[k]=v;}}};
 vm.createContext(c);
