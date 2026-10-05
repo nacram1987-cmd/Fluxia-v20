@@ -1,0 +1,1 @@
+const fs=require('fs');const s=fs.readFileSync('index_fluxia_v95.47_LAB.html','utf8');['fx47-fijos-hero','fx47-fijos-summary','fx47FinancingSection','fx47FixedSection','fx47-approved-shell'].forEach(x=>{if(!s.includes(x)){console.error('FAIL',x);process.exitCode=1}else console.log('OK',x)});

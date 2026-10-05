@@ -1,9 +1,5 @@
-/* Fluxia v95.44 LAB · network-first · estable protegida v95.25 */
-const VERSION='v95.44-LAB';
-const CACHE_NAME='fluxia-lab-'+VERSION;
-const ENTRY='/Fluxia-v20/index_fluxia_v95.44_LAB.html';
-const MANIFEST='/Fluxia-v20/manifest_v95.44_LAB.webmanifest';
-const SHELL=[ENTRY,MANIFEST,'/Fluxia-v20/icon-192.png','/Fluxia-v20/icon-512.png','/Fluxia-v20/apple-touch-icon.png'];
-self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE_NAME).then(c=>Promise.allSettled(SHELL.map(u=>c.add(u)))).then(()=>self.skipWaiting())));
-self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ns=>Promise.all(ns.filter(n=>n.startsWith('fluxia-lab-')&&n!==CACHE_NAME).map(n=>caches.delete(n)))).then(()=>self.clients.claim())));
-self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET')return;const u=new URL(r.url);if(u.origin!==self.location.origin)return;const ok=u.pathname===ENTRY||u.pathname===MANIFEST||SHELL.includes(u.pathname);if(!ok)return;e.respondWith(fetch(r,{cache:'no-store'}).then(resp=>{if(resp&&resp.ok)caches.open(CACHE_NAME).then(c=>c.put(r,resp.clone())).catch(()=>{});return resp;}).catch(()=>caches.match(r,{ignoreSearch:true}).then(x=>x||caches.match(ENTRY,{ignoreSearch:true}))));});
+/* Bridge from stale v95.44 LAB worker to v95.47 */
+const TARGET='/Fluxia-v20/index_fluxia_v95.47_LAB.html?v=v95.47-LAB&from=sw-95.44';
+self.addEventListener('install',e=>e.waitUntil(self.skipWaiting()));
+self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ns=>Promise.all(ns.filter(n=>/^fluxia-lab-/.test(n)).map(n=>caches.delete(n)))).then(()=>self.clients.claim())));
+self.addEventListener('fetch',e=>{if(e.request.mode==='navigate'){const u=new URL(e.request.url);if(u.pathname.endsWith('/index_fluxia_v95.44_LAB.html')||u.pathname.endsWith('/index_fluxia_v95.46_LAB.html'))e.respondWith(Promise.resolve(Response.redirect(TARGET,302)));}});

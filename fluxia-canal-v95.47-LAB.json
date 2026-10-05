@@ -1,0 +1,8 @@
+{
+  "version": "v95.47-LAB",
+  "channel": "LAB",
+  "entry": "index_fluxia_v95.47_LAB.html?v=v95.47-LAB",
+  "stable": "v95.39",
+  "status": "lab_only",
+  "note": "Diseño premium aprobado de Gastos fijos + recuperación por clave + corrección definitiva de refs PWA/SW v95.44."
+}

@@ -1,0 +1,10 @@
+{
+  "version": "v95.47-LAB",
+  "provider": "Supabase",
+  "project_url": "https://kylduzmrfbubeamfrbbr.supabase.co",
+  "publishable_key": "sb_publishable_5hX9-6-J7MlJfvmeWZcz5w_U-KlTCaj",
+  "table": "fluxia_datos",
+  "auth_storage_key": "fluxia_sb_auth",
+  "stable": "v95.39",
+  "note": "Public Supabase config only; no personal passwords. Fixed-key recovery + version-coherent LAB."
+}

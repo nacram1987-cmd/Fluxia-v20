@@ -2,7 +2,7 @@
   "name": "Fluxia BETA v95.47-LAB",
   "short_name": "Fluxia BETA",
   "description": "Fluxia BETA · v95.47 LAB · gastos fijos recuperados por clave + diseño premium aprobado + build coherente",
-  "start_url": "./index_fluxia_v95.47_LAB.html?v=v95.47-LAB&from=manifest-95.44",
+  "start_url": "./index_fluxia_v95.47_LAB.html?v=v95.47-LAB",
   "scope": "/Fluxia-v20/",
   "display": "standalone",
   "background_color": "#F8F8F3",
