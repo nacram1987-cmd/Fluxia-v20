@@ -1,5 +1,5 @@
 const fs=require('fs'),vm=require('vm'),assert=require('assert');
-const s=fs.readFileSync(__dirname+'/index_fluxia_v95.34_LAB.html','utf8');
+const s=fs.readFileSync(__dirname+'/index_fluxia_v95.35_LAB.html','utf8');
 const storage={};let tick=10;
 const c={window:{},LS_PREFIX:'planRescate_demo_v2_',Date:{now:()=>tick},Almacen:{getItem:k=>storage[k]||null,setItem:(k,v)=>storage[k]=v},claveLS:k=>'planRescate_demo_v2_'+k.replace('v2_','')};
 vm.createContext(c);let a=s.indexOf('window.FluxiaSync954 = (function(){'),b=s.indexOf('\n})();',a)+6;vm.runInContext(s.slice(a,b),c);let sync=c.window.FluxiaSync954;
