@@ -1,16 +1,16 @@
 const fs=require('fs'),vm=require('vm'),assert=require('assert');
-const h=fs.readFileSync('index_fluxia_v95.48_LAB.html','utf8');
-assert(h.includes('v95.48-LAB'));
-assert(h.includes('manifest_v95.48_LAB.webmanifest'));
-assert(h.includes('fluxia-sw-v95.48.js'));
+const h=fs.readFileSync('index_fluxia_v95.49_LAB.html','utf8');
+assert(h.includes('v95.49-LAB'));
+assert(h.includes('manifest_v95.49_LAB.webmanifest'));
+assert(h.includes('fluxia-sw-v95.49.js'));
 assert(h.includes('RECUPERACIÓN FORENSE POR BLOQUE'));
 assert(h.includes("dest:'v2_ingresos'"));
 assert(h.includes("dest:'v2_movimientos'"));
 assert(h.includes("dest:'v2_fijos'"));
 assert(!h.includes("if(x.actuales.length) return {ok:true,migrated:false,reason:'namespace ya contiene datos'"));
-console.log('OK v95.48 per-block migration static checks');
+console.log('OK v95.49 per-block migration static checks');
 
-const html=fs.readFileSync('index_fluxia_v95.48_LAB.html','utf8');
+const html=fs.readFileSync('index_fluxia_v95.49_LAB.html','utf8');
 assert(html.includes('window.FluxiaProfilesSafe = {'));
 assert(html.includes('function fxGetActiveProfile()'));
 assert(html.includes('function fxSaveActiveProfile(pr)'));

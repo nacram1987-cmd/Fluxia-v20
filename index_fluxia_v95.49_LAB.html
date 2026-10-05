@@ -1673,7 +1673,7 @@ function generarLinkInvitacion(inviteToken) {
       if(src)candidatos.push({dest:m.dest,source:src.row,fuente:src.fuente});
     });
     if(!candidatos.length){
-      try{localStorage.setItem('fluxia_missing_blocks_checked_v9549_'+p,JSON.stringify({t:Date.now(),copied:[]}));}catch(e){}
+      try{localStorage.setItem('fluxia_missing_blocks_checked_v9548_'+p,JSON.stringify({t:Date.now(),copied:[]}));}catch(e){}
       return {ok:true,migrated:false,reason:'no hay bloques vacíos recuperables',copied:[]};
     }
 
@@ -1692,7 +1692,7 @@ function generarLinkInvitacion(inviteToken) {
       if(!got||String(got.v)!==String(z.source.v))return {ok:false,migrated:copied.length>0,motivo:'La nube no confirmó '+z.dest,copied:copied};
       copied.push(z.dest);
     }
-    try{localStorage.setItem('fluxia_missing_blocks_recovered_v9549_'+p,JSON.stringify({t:Date.now(),uid:String(u.id),copied:copied}));}catch(e){try{sessionStorage.setItem('fluxia_missing_blocks_recovered_v9549_'+p,JSON.stringify({t:Date.now(),copied:copied}));}catch(_){}}
+    try{localStorage.setItem('fluxia_missing_blocks_recovered_v9548_'+p,JSON.stringify({t:Date.now(),uid:String(u.id),copied:copied}));}catch(e){try{sessionStorage.setItem('fluxia_missing_blocks_recovered_v9548_'+p,JSON.stringify({t:Date.now(),copied:copied}));}catch(_){}}
     return {ok:true,migrated:copied.length>0,copied:copied,verified:copied.length};
   }
 
@@ -26141,7 +26141,7 @@ body{background:linear-gradient(180deg,#f8fbfa 0,#f4f7f5 45%,#f7f5f0 100%)!impor
   async function run(){
     try{
       var pr=window.FLUXIA_PROFILE||{}; if(!pr.id||pr.legacy||pr.newUser||pr.onboardingPending)return;
-      var mk='fluxia_missing_blocks_boot_v9549_'+String(pr.id);
+      var mk='fluxia_missing_blocks_boot_v9548_'+String(pr.id);
       try{if(localStorage.getItem(mk)==='done'||sessionStorage.getItem(mk)==='done')return;}catch(e){}
       if(!window.FluxiaNube||!FluxiaNube.usuario||!FluxiaNube.recuperarDatosLegacyParaPerfil)return;
       var u=await FluxiaNube.usuario(); if(!u)return;
@@ -26160,6 +26160,24 @@ body{background:linear-gradient(180deg,#f8fbfa 0,#f4f7f5 45%,#f7f5f0 100%)!impor
 })();
 </script>
 
+<style id="fluxia-v9549-exact-ui">
+#fx34Context{display:block!important;padding:0 26px 18px!important;margin:0!important;background:transparent!important;border:0!important;box-shadow:none!important;min-height:0!important}
+#fx34Context .fx34-context-grid{display:block!important;min-height:0!important;padding:0!important;margin:0!important;background:transparent!important;border:0!important;box-shadow:none!important}
+#fx34Context .fx30-greeting{display:none!important}
+#fx34Context .fx30-statusrow{display:grid!important;grid-template-columns:1fr 1fr!important;gap:12px!important;width:100%!important;margin:0!important;padding:0!important}
+#fx34Context .fx-banco-pill{display:flex!important;min-height:54px!important;width:100%!important;justify-content:center!important;align-items:center!important;border-radius:18px!important;background:rgba(255,255,255,.86)!important;border:1px solid rgba(20,70,80,.12)!important;box-shadow:0 8px 22px rgba(25,55,60,.05)!important;font-weight:750!important}
+#fluxiaBetaBadge{background:linear-gradient(180deg,#f7d86f,#e7b83f)!important;color:#6e5110!important;border:1px solid rgba(158,112,13,.28)!important;box-shadow:0 3px 10px rgba(190,142,34,.18)!important}
+#fluxiaHeaderSub,#fluxiaVersion,.fx30-tagline{display:none!important}
+#fx49AvailableAudit{font-size:.72rem;line-height:1.35;color:rgba(255,255,255,.72);margin-top:7px;letter-spacing:.01em;min-height:1em}
+@media(max-width:520px){#fx34Context{padding-left:26px!important;padding-right:26px!important}#fx34Context .fx30-statusrow{gap:10px!important}#fx34Context .fx-banco-pill{font-size:.78rem!important;min-height:48px!important}}
+</style>
+<script id="fluxia-v9549-accounting-audit">
+(function(){
+function money(n){try{return new Intl.NumberFormat('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}).format(Number(n)||0)+' €'}catch(e){return (Number(n)||0).toFixed(2)+' €'}}
+function audit(){try{var host=document.querySelector('.fx39-disponible-copy,.hero-disponible,.disponible-hero,#tuMes');if(!host)return;var el=document.getElementById('fx49AvailableAudit');if(!el){el=document.createElement('div');el.id='fx49AvailableAudit';host.appendChild(el)}var m=window.mesSeleccionado||'octubre',ing=0;try{ing=(ingresosDe(m)||[]).filter(function(it){if(!it||it.tipo==='puente')return false;var h=(typeof hoyISO==='function'?hoyISO():new Date().toISOString().slice(0,10));if(it.pagadoEl)return true;if(it.fechaPrevista&&String(it.fechaPrevista).slice(0,10)>h)return false;return true}).reduce(function(a,it){return a+(Number(it.importe)||0)},0)}catch(e){}var fij=0,pro=0,vari=0,comp=0;try{fij=Number(gastosFijosTotal(m))||0}catch(e){}try{pro=Number(provisionesParaDisponible(m))||0}catch(e){}try{vari=Number(variablesTotal(m))||0}catch(e){}try{comp=Number(impactoCajaCompartidosMes(m))||0}catch(e){}var calc=ing-fij-pro-vari+comp,parts=[money(ing)+' ingresos','− '+money(fij)+' fijos','− '+money(pro)+' huchas','− '+money(vari)+' variables'];if(Math.abs(comp)>=.005)parts.push((comp>=0?'+ ':'− ')+money(Math.abs(comp))+' compartidos');el.textContent=parts.join(' · ')+' = '+money(calc);el.title='Conciliación exacta del Disponible'}catch(e){}}
+function run(){audit();setTimeout(audit,250);setTimeout(audit,1200)}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')setTimeout(audit,150)});var old=window.renderDashboard;if(typeof old==='function'&&!old.__fx49){var w=function(){var r=old.apply(this,arguments);setTimeout(audit,0);return r};w.__fx49=true;window.renderDashboard=w;try{renderDashboard=w}catch(e){}}
+})();
+</script>
 </body>
 <!-- v59 · Emparejar cargos bancarios con gastos fijos + multi-banco (UI) -->
 <script>

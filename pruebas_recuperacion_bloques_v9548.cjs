@@ -12,4 +12,4 @@ let legacy={v2_fijos:JSON.stringify([{id:'OLD'}]),planRescate_v2_ingresos:JSON.s
 assert.deepStrictEqual(plan(current,legacy),[['v2_ingresos','planRescate_v2_ingresos'],['v2_movimientos','v2_movimientos']]);
 assert(!plan(current,legacy).some(x=>x[0]==='v2_fijos'),'No debe pisar fijos no vacíos');
 assert(!plan(current,legacy).some(x=>x[0]==='v2_provisiones'),'No debe pisar huchas no vacías');
-console.log('OK v95.48 per-key recovery');
+console.log('OK v95.49 per-key recovery');
