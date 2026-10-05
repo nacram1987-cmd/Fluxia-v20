@@ -1,5 +1,11 @@
 const fs=require('fs'),vm=require('vm'),assert=require('assert');
 const html=fs.readFileSync('index_fluxia_v95.44_LAB.html','utf8');
+assert(html.includes('window.FluxiaProfilesSafe = {'));
+assert(html.includes('function fxGetActiveProfile()'));
+assert(html.includes('function fxSaveActiveProfile(pr)'));
+assert(!html.includes("const pr=JSON.parse(localStorage.getItem(PROFILE_KEY)||'null')||profile;"));
+assert(html.includes('fxSaveActiveProfile(pr);'));
+console.log('OK onboarding metas uses storage-safe profile helpers');
 const start=html.indexOf('const Almacen = (function(){'),end=html.indexOf('\nlet APP_MODO',start),al=html.slice(start,end);
 const s=html.indexOf('window.FluxiaSync954 = (function(){'),e=html.indexOf('})();',s)+5,sync=html.slice(s,e);
 const loc=new Map(),box=new Map(),cloud=new Map();let quota=false,online=true;

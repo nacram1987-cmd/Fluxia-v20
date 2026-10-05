@@ -449,3 +449,4 @@ VIGENTE DESDE v95.25. Mantiene todas las leyes de integridad anteriores no incom
 7. Una escritura cloud exige CAS y relectura de la revisión escrita antes de declarar guardado. Los fallos conservan pendiente.
 8. Una versión con pruebas faltantes se identifica como candidata sin publicación ni promoción; no se declara reparada.
 9. La fotografía de 2.817,88 € no es objetivo dinámico y no se genera ningún movimiento para alcanzarla.
+10. El onboarding de usuario nuevo, Metas, “Ahora no”, “Sin cuenta”, Cancelar y Cambio de usuario no pueden depender de escritura directa en localStorage. Deben usar un helper tolerante con fallback sessionStorage/memoria y preservar siempre el profile_id activo antes de crear cualquier dato financiero.
