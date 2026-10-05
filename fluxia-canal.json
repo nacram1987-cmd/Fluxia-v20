@@ -3,11 +3,11 @@
   "stable_version": "v95.39",
   "stable_file": "index.html",
   "stable_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index.html?v=v95.39",
-  "lab_version": "v95.43-LAB",
-  "lab_file": "index_fluxia_v95.43_LAB.html",
-  "lab_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index_fluxia_v95.43_LAB.html?v=v95.43-LAB",
+  "lab_version": "v95.45-LAB",
+  "lab_file": "index_fluxia_v95.45_LAB.html",
+  "lab_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index_fluxia_v95.45_LAB.html?v=v95.45-LAB",
   "pwa_name": "Fluxia BETA",
   "supabase_sync": true,
-  "integrity_gate": "multiusuario+cloud_namespace+credenciales+cuota+persistencia+no_regresiones",
-  "notas": "v95.39 permanece ESTABLE. v95.43 LAB añade aislamiento multiusuario estricto, acceso resistente a cuota llena y coherencia tipográfica sin promover todavía la LAB."
+  "integrity_gate": "cloud-recovery+profile-isolation+outbox+readback",
+  "notas": "v95.45: recupera datos cloud legacy v95.39 dentro del namespace del perfil autenticado, sin mezclar usuarios ni sobrescribir la estable."
 }

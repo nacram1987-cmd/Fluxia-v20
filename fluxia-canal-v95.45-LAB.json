@@ -1,0 +1,8 @@
+{
+  "version": "v95.45-LAB",
+  "channel": "LAB",
+  "entry": "index_fluxia_v95.45_LAB.html?v=v95.45-LAB",
+  "stable": "v95.39",
+  "status": "candidate_recovery_cloud",
+  "integrity_gate": "legacy-cloud-migration+profile-isolation+outbox+readback"
+}

@@ -1,0 +1,30 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const html=fs.readFileSync('index_fluxia_v95.45_LAB.html','utf8');
+assert(html.includes('window.FluxiaProfilesSafe = {'));
+assert(html.includes('function fxGetActiveProfile()'));
+assert(html.includes('function fxSaveActiveProfile(pr)'));
+assert(!html.includes("const pr=JSON.parse(localStorage.getItem(PROFILE_KEY)||'null')||profile;"));
+assert(html.includes('fxSaveActiveProfile(pr);'));
+console.log('OK onboarding metas uses storage-safe profile helpers');
+const start=html.indexOf('const Almacen = (function(){'),end=html.indexOf('\nlet APP_MODO',start),al=html.slice(start,end);
+const s=html.indexOf('window.FluxiaSync954 = (function(){'),e=html.indexOf('})();',s)+5,sync=html.slice(s,e);
+const loc=new Map(),box=new Map(),cloud=new Map();let quota=false,online=true;
+function storage(){return {get length(){return loc.size},key(i){return [...loc.keys()][i]},getItem(k){return loc.get(k)??null},setItem(k,v){if(quota)throw Error('QuotaExceededError');loc.set(k,String(v))},removeItem(k){loc.delete(k)}}}
+function idb(){return {open(){const req={result:{objectStoreNames:{contains:()=>true},close(){},transaction(){const tx={objectStore(){return {put(v,k){queueMicrotask(()=>{box.set(k,v);tx.oncomplete?.()})},delete(k){queueMicrotask(()=>{box.delete(k);tx.oncomplete?.()})},get(k){const q={};queueMicrotask(()=>{q.result=box.get(k);q.onsuccess?.();queueMicrotask(()=>tx.oncomplete?.())});return q},getAll(){const q={};queueMicrotask(()=>{q.result=[...box.values()];q.onsuccess?.();queueMicrotask(()=>tx.oncomplete?.())});return q}}}};return tx}}};queueMicrotask(()=>req.onsuccess?.());return req}}}
+function db(){return {doc(k){return {get:async()=>cloud.get(k)||null,compareAndSet:async(v,t)=>{let old=cloud.get(k);if((old?.t??null)!==t)return {ok:false,current:old};cloud.set(k,v);return {ok:true}}}},collection(k){return {get:async()=>({docs:[...cloud.entries()].filter(([n])=>n.startsWith(k+'/')).map(([n,v])=>({id:n.slice(k.length+1),data:()=>v}))})}}}}
+function ctx(pid){const localStorage=storage(),window={FLUXIA_PROFILE:{id:pid,legacy:true},localStorage,indexedDB:idb(),claude:{use:async()=>online?db():null},addEventListener(){}};const c={window,indexedDB:window.indexedDB,document:{addEventListener(){},visibilityState:'visible'},localStorage,console,Promise,Date,JSON,Math,setTimeout,clearTimeout,LS_PREFIX:'v2_',claveLS:k=>k};vm.createContext(c);vm.runInContext(al+'\nglobalThis.Almacen=Almacen;',c);vm.runInContext(sync,c);c.FluxiaSync954=c.window.FluxiaSync954;return c}
+(async()=>{
+ const A=ctx('A'),a=A.Almacen;await a.iniciar();a.setItem('v2_ingresos',JSON.stringify([{id:'i1',importe:100,_fxManualEdit:true,_fxUpdatedAt:2}]));await a.flush();assert.equal(JSON.parse(cloud.get('planUsuarios/A/datos/v2_ingresos').v)[0].importe,100);console.log('OK CAS/readback');
+ loc.set('v2_ingresos','[{"id":"old","importe":999}]');const a2=ctx('A').Almacen;await a2.iniciar();assert.equal(JSON.parse(a2.getItem('v2_ingresos'))[0].importe,100);console.log('OK stale cache rejected');
+ loc.set('v2_usos','[{"id":"ghost"}]');const a3=ctx('A').Almacen;await a3.iniciar();assert.equal(a3.getItem('v2_usos'),null);console.log('OK local ghost quarantined');
+ const b=ctx('B').Almacen;await b.iniciar();assert.equal(b.getItem('v2_ingresos'),null);assert.equal(b.getItem('v2_provisiones'),null);console.log('OK profile B empty');
+ for(let n=0;n<3;n++){const bb=ctx('B').Almacen;await bb.iniciar();assert.equal(bb.getItem('v2_provisiones'),null);const aa=ctx('A').Almacen;await aa.iniciar();assert.equal(JSON.parse(aa.getItem('v2_ingresos'))[0].importe,100)}console.log('OK repeated A/B/A switches');
+ const p=(id)=>({id:'p',nombre:'Renta',aportaciones:{'2026-10':[{id,fecha:'2026-10-01',importe:50}]}});const m=JSON.parse(A.window.FluxiaSync954.mergeCloudValue('v2_provisiones',JSON.stringify([p('a1')]),JSON.stringify([p('a2')])));assert.equal(m[0].aportaciones['2026-10'].length,2);console.log('OK distinct equal contributions');
+ A.window.FluxiaSync954.registerDelete('v2_provisiones',p('a1').aportaciones['2026-10'][0],{nestedParentId:'p',nestedField:'aportaciones:2026-10',parentName:'Renta'});const after=JSON.parse(A.window.FluxiaSync954.mergeCloudValue('v2_provisiones',JSON.stringify([p('a1')]),JSON.stringify([p('a2')])));assert.equal(after[0].aportaciones['2026-10'].length,1);assert.equal(after[0].aportaciones['2026-10'][0].id,'a2');console.log('OK delete tombstone preserves legitimate twin');
+ const manual=[{id:'i2',importe:130,_fxManualEdit:true,_fxUpdatedAt:5}],bank=[{id:'i2',importe:80,_fxUpdatedAt:99}];let im=JSON.parse(A.window.FluxiaSync954.mergeCloudValue('v2_ingresos',JSON.stringify(manual),JSON.stringify(bank)));assert.equal(im[0].importe,130);console.log('OK manual income beats later bank refresh');
+ A.window.FluxiaSync954.registerDelete('v2_ingresos',manual[0]);im=JSON.parse(A.window.FluxiaSync954.mergeCloudValue('v2_ingresos','[]',JSON.stringify(bank)));assert.equal(im.length,0);console.log('OK deleted income does not resurrect');
+ const X=ctx('X').Almacen,Y=ctx('X').Almacen;await Promise.all([X.iniciar(),Y.iniciar()]);X.setItem('v2_movimientos',JSON.stringify([{id:'v1',importe:10,_fxUpdatedAt:1}]));Y.setItem('v2_movimientos',JSON.stringify([{id:'v2',importe:20,_fxUpdatedAt:2}]));await Promise.all([X.flush(),Y.flush()]);let both=JSON.parse(cloud.get('planUsuarios/X/datos/v2_movimientos').v);assert.deepEqual(both.map(z=>z.id).sort(),['v1','v2']);console.log('OK concurrent CAS preserves distinct variables');
+
+
+ quota=true;online=false;const c=ctx('C').Almacen;await c.iniciar();c.setItem('v2_movimientos','[{"id":"offline","importe":12}]');await new Promise(r=>setTimeout(r,5));assert(box.has('C::v2_movimientos'));const c2=ctx('C').Almacen;await c2.iniciar();assert.equal(JSON.parse(c2.getItem('v2_movimientos'))[0].id,'offline');online=true;await c2.reconectar();await c2.flush();assert.equal(JSON.parse(cloud.get('planUsuarios/C/datos/v2_movimientos').v)[0].id,'offline');console.log('OK full quota / offline / reopen / sync');
+})().catch(e=>{console.error(e);process.exitCode=1});
