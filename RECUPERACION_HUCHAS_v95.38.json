@@ -1,0 +1,22 @@
+{
+  "version": "v95.38-LAB",
+  "fuente_base": "fluxia_v94.26_LAB.zip + correcciones posteriores confirmadas por el usuario",
+  "modo": "reemplazo_exact_cloud",
+  "saldo_total": 2817.88,
+  "huchas": [
+    {"nombre":"Amortización","saldo":1690.58},
+    {"nombre":"Renta","saldo":656.20},
+    {"nombre":"Tributos (IBI, Basura, Vehículo)","saldo":150.00,"rescate_pendiente":240.48},
+    {"nombre":"Boda Ana","saldo":150.00},
+    {"nombre":"Mantenimiento Césped","saldo":70.00},
+    {"nombre":"Agua","saldo":1.10,"pago_definitivo":132.90,"fecha_pago":"2026-09-27"},
+    {"nombre":"Seguro de coche","saldo":100.00}
+  ],
+  "reglas": [
+    "No sumar este canon sobre la nube existente.",
+    "Guardar cuarentena antes del rebase.",
+    "Reemplazar exactamente v2_provisiones y v2_usos en Supabase.",
+    "Confirmar con lectura posterior antes de marcar migración terminada.",
+    "Después del rebase, 2817.88 deja de ser objetivo dinámico."
+  ]
+}
