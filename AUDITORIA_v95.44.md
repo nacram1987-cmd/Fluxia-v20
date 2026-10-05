@@ -1,0 +1,11 @@
+# Auditoría v95.44-LAB · estado de candidata
+
+Base funcional: HTML LAB v95.39. v94.26 consultada como fuente histórica; no se utilizó v95.40–43 como motor. El PROMPT MAESTRO v95.39 se leyó completo y se añadió la ley v95.44.
+
+Causas raíz verificadas: (1) el adaptador Supabase descartaba la ruta del perfil y usaba solo el nombre final de la clave; (2) el arranque subía claves locales sin mutación explícita; (3) la cola guardaba `set`/`del` sin valor cuando fallaba la caché; (4) las aportaciones se fusionaban por firma y podían colapsar dos movimientos conscientes; (5) un restaurador examinaba copias de todos los perfiles; (6) varios saneadores legacy seguían programados en boot. Se detallan líneas/rutas en la auditoría forense anterior.
+
+Arquitectura corregida en la candidata: outbox IndexedDB segregada por perfil, nube autoritativa sin rescate de claves locales huérfanas, CAS con relectura, identidades estables por ID, namespace remoto para perfiles no legados, recuperación sin banner y sin fusión automática de espejo. Los perfiles legados conservan las claves cloud antiguas para evitar una migración destructiva. No se ha migrado ni cambiado ningún dato real.
+
+Pruebas: 97 scripts inline parsean; simulación CAS/readback, caché vieja, fantasma local, A/B/A, aportaciones iguales y tombstone, ingreso manual y borrado, dos clientes concurrentes, cuota llena y outbox offline pasan. No se pudo abrir localhost en el navegador remoto (`ERR_BLOCKED_BY_CLIENT`); el repositorio no fue accesible desde git (`browser-proxy`). No hay pruebas visuales reales ni Supabase/RLS/iPhone. Los 16 casos del PROMPT siguen sin estar completamente acreditados. **No publicar ni promover.**
+
+Riesgos: asociación del perfil legado al usuario cloud requiere comprobación con cuenta real; firmas de clones sin linaje no permiten distinguir con certeza duplicado histórico de dos movimientos conscientes; capas legacy restantes en el HTML monolítico requieren más pruebas de navegación, banca y sincronización. Los perfiles no legados antiguos con datos cloud en claves sin prefijo necesitan una migración manual de propietario: la candidata no los importará automáticamente. La referencia 2.817,88 € no se fuerza.
