@@ -1,0 +1,8 @@
+{
+  "version": "v95.53-LAB",
+  "channel": "LAB",
+  "entry": "index_fluxia_v95.53_LAB.html?v=v95.53-LAB",
+  "stable": "v95.39",
+  "status": "lab_only",
+  "note": "Pago de Hucha transaccional: no puede hacer desaparecer Variables/Compartidos; estados más compactos y Dashboard con más aire."
+}

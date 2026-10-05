@@ -1,0 +1,26 @@
+{
+  "name": "Fluxia BETA v95.53-LAB",
+  "short_name": "Fluxia BETA",
+  "description": "Fluxia BETA · v95.53 LAB · pago de Hucha atómico + Dashboard premium con más aire",
+  "start_url": "./index_fluxia_v95.53_LAB.html?v=v95.53-LAB",
+  "scope": "/Fluxia-v20/",
+  "display": "standalone",
+  "background_color": "#F8F8F3",
+  "theme_color": "#0A7470",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "id": "./index_fluxia_v95.53_LAB.html?v=v95.53-LAB"
+}
