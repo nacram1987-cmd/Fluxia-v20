@@ -1,0 +1,476 @@
+# PROMPT MAESTRO FLUXIA · v95.39 LAB
+
+**Fecha de consolidación:** 4 de octubre de 2026  
+**Base:** v95.3.0-LAB  
+**Vigencia:** desde v95.22 en adelante  
+**Carácter:** LEY IMPERIAL DEL PROYECTO. Si una petición nueva no aparece aquí, se incorpora al PROMPT MAESTRO de la siguiente entrega antes de cerrar la versión.
+
+---
+
+## 0. DISCIPLINA DE VERSIONES Y ENTREGAS
+
+1. La numeración continúa desde **v95.22** y, a partir de aquí, será siempre correlativa. No reutilizar ni saltar una versión sin orden expresa.
+2. Toda entrega LAB debe incluir un ZIP autosuficiente con el HTML versionado, manifest versionado, service worker versionado, iconos PWA referenciados por el HTML, PROMPT MAESTRO vigente, changelog, README, auditoría y sumas SHA-256.
+3. Siempre se facilitan **dos enlaces completos y separados**:
+   - LAB: versión concreta que se está probando.
+   - ESTABLE: entrada pública estable.
+4. **LAB NO PROMUEVE ESTABLE.** Nunca sobrescribir `index.html`, el canal estable o sus assets por el mero hecho de preparar una LAB. Solo se promueve cuando el usuario ordena expresamente que esa versión sea ESTABLE.
+5. El HTML LAB debe usar assets PWA versionados para que iOS/Android no abran por error otra versión al añadir a pantalla de inicio.
+
+## 1. LEY IMPERIAL DE DATOS · CLOUD-FIRST
+
+1. **Supabase (`fluxia_datos`) es la fuente de verdad financiera.** `localStorage` es únicamente caché, cola offline y soporte técnico local.
+2. **TODO cambio funcional** realizado en Fluxia debe quedar encolado para Supabase inmediatamente, independientemente del tipo: ingresos, gastos/movimientos, fijos, financiaciones, provisiones/huchas, aportaciones, usos/reposiciones, compartidos/liquidaciones, presupuestos y preferencias funcionales que deban sobrevivir entre dispositivos.
+3. Datos puramente locales y sensibles/técnicos —PIN/bloqueo local, sesión efímera, cachés, logs de diagnóstico, hints de interfaz, backups pesados— no se suben salvo que una función concreta lo requiera.
+4. Ningún dato financiero se elimina destructivamente por defecto. Un borrado funcional debe generar **lápida/tombstone** y, cuando aplique, papelera/histórico recuperable. Una copia vieja nunca puede resucitar un elemento ya borrado.
+5. Cada elemento sincronizable debe tener identidad estable (`id`) y marca de modificación (`_fxUpdatedAt`). Las colecciones con hijos —aportaciones de huchas y liquidaciones compartidas— también se sincronizan por identidad de hijo.
+6. Las escrituras concurrentes entre dispositivos se resuelven con **lectura + fusión por elemento + compare-and-set (CAS) sobre la revisión remota + reintento**. Nunca hacer un `upsert` ciego que pueda pisar silenciosamente una edición concurrente.
+7. Si durante una subida el usuario hace otra modificación local, la respuesta de red antigua **no puede sobrescribirla**. La cola permanece pendiente hasta confirmar la revisión exacta.
+8. Si una escritura falla o hay conflicto después de los reintentos, conservar el cambio en `__pend__` y reintentarlo. Nunca declarar guardado en nube si no hay confirmación.
+9. La reconexión y el arranque usan una única reconciliación: si existe cambio local pendiente, ese cambio se conserva/fusiona; en ausencia de pendiente, la nube manda aunque sea más corta o vacía.
+10. Antes de reemplazar/vaciar datos locales desde nube se conserva backup técnico `__bak__<clave>` cuando proceda.
+11. PROHIBIDO reintroducir:
+    - «gana la lista más larga»;
+    - «una lista nunca puede quedar vacía» como restauración automática posterior al arranque;
+    - unión automática de huchas/listas por longitud;
+    - `_proteger`/restauradores periódicos que repongan memoria antigua;
+    - AntiCero automático/silencioso;
+    - resubida masiva de toda la memoria local al abrir;
+    - flush global tras cada `setItem`;
+    - interceptores duplicados de `Storage.prototype` que multipliquen escrituras.
+12. `Almacen.flush()` global queda reservado a puntos de seguridad/reparación explícitos: salida/cierre, reconexión controlada o importación. Una operación normal sube **solo su clave modificada**.
+13. Las lápidas solo se reescriben cuando cambian. Una edición normal no debe provocar una segunda escritura innecesaria del registro de borrados.
+14. El estado de guardado mostrado al usuario debe distinguir correctamente: pendiente/offline, sincronizando, nube confirmada y error. No mostrar “guardado” por mera escritura local.
+
+## 2. REGLA DE RECUPERACIÓN · MANTENIMIENTO CÉSPED
+
+1. La hucha **Mantenimiento Césped** no puede perderse.
+2. En v95.9 se aplica una reparación **idempotente**: asegurar al menos **35 € en septiembre de 2026 + 35 € en octubre de 2026**, aprovechando los datos existentes o el backup local si existe.
+3. Si ya existe total parcial o completo para uno de esos meses, añadir únicamente la diferencia hasta 35 €; nunca duplicar una aportación correcta.
+4. La reparación se ejecuta después de la reconciliación cloud y se guarda por la ruta cloud-first ordinaria.
+5. A partir de esa reparación, la protección general por elemento/lápidas debe impedir que una copia vieja vuelva a perder o resucitar aportaciones.
+
+## 3. SELECTOR DE MES Y NAVEGACIÓN
+
+1. No mostrar una línea independiente tipo «Hoy es…».
+2. El selector global de mes contiene mes/año y la referencia de hoy cuando corresponde.
+3. En cada pestaña dependiente del tiempo, el selector aparece **arriba del contenido al abrir la pestaña**, no flotando en una ubicación ajena al contexto.
+4. Pestañas con selector mensual: Ingresos, Fijos, Gastos variables, Compartidos, Provisiones, Financiaciones, Presupuestos, Efectivo, Análisis y Simulador.
+5. Dashboard/Resumen conserva su composición propia y no duplica el selector global.
+6. Eliminar ayudas invasivas o poco elegantes como «Toca Ingresos…». Los cuadros del Dashboard ya son affordances navegables y deben mantener icono, borde semántico y destino correcto.
+
+## 4. DISEÑO ÉLITE · SISTEMA VISUAL
+
+Objetivo: app financiera premium, tranquila y legible; jerarquía clara, sin sensación de castigo por ver muchos gastos.
+
+### Base
+- Fondo: `#F5F7F7`
+- Superficie: `#FFFFFF`
+- Texto principal: `#17343D`
+- Texto secundario: `#6B7E84`
+- Línea/divisor: `#DCE6E7`
+- Teal estructural: `#157F87`
+
+### Colores semánticos
+- Ingresos: `#157F87`
+- Fijos: `#67594D`
+- Provisiones: `#9A7133` (oro solo como acento)
+- Gastos variables: `#725E80`
+- Financiaciones: `#4F6575`
+- Compartidos: `#3E7078`
+- Presupuestos: `#5B6F79`
+- Efectivo: `#4D7566`
+- Análisis: `#46697A`
+- Simulador: `#5D647A`
+- Ajustes/Ayuda/Importar: `#637176`
+- Aviso/destructivo: vino suave `#A85858`
+
+### Criterios
+1. Oro reservado a provisiones y detalles puntuales; no usarlo como color estructural general.
+2. Sombras ligeras, radios coherentes, fondos limpios y tipografía con pesos moderados.
+3. Evitar bloques excesivamente saturados, números demasiado gruesos y ruido cromático.
+4. Inputs, foco, navegación y selector mensual comparten lenguaje visual teal/neutral.
+5. Mantener modo oscuro con el mismo sistema semántico, no invertir arbitrariamente colores.
+6. La última capa CSS de la versión debe ser la autoridad visual para evitar que estilos históricos ganen por orden de carga.
+
+## 5. RENDIMIENTO Y LAG
+
+1. Interacción local inmediata; red en segundo plano mediante cola persistente.
+2. Una acción = una actualización lógica y la mínima cantidad de escrituras cloud necesarias.
+3. Evitar `renderAll()` redundantes cuando basta un render de sección.
+4. Evitar flush global por movimiento; conservar `pagehide`/`visibilitychange` como red de seguridad.
+5. Evitar timers periódicos que recorran/restauren toda la memoria sin necesidad.
+6. No sacrificar integridad para ganar velocidad: primero eliminar duplicidades, escrituras masivas y renders repetidos.
+
+## 6. PREGUNTAS BANCARIAS Y «NO MOSTRAR MÁS»
+
+1. Las preguntas de clasificación repetitivas deben ofrecer `🚫 No mostrar más`/`🚫 Nunca más` cuando corresponda.
+2. La decisión se guarda por perfil y se sincroniza con la nube.
+3. Al marcarla, se elimina la pregunta pendiente actual y no debe reaparecer en otro dispositivo por una copia antigua.
+
+## 7. SEGURIDAD DE REINICIO Y RECUPERACIÓN
+
+1. `Almacen.reiniciarDesdeNube()` solo limpia caché local tras confirmar que nube y contenido esperado coinciden; nunca elimina sesión Supabase ni datos remotos.
+2. AntiCero queda exclusivamente como herramienta manual de recuperación en Ajustes. No se ejecuta al abrir, al reconectar ni al volver a primer plano.
+3. Los diagnósticos/backups pueden ayudar a recuperar, pero nunca deben imponerse automáticamente sobre nube confirmada.
+
+## 8. CHECKLIST OBLIGATORIO ANTES DE ENTREGAR
+
+- Sintaxis JavaScript de todos los scripts inline sin errores.
+- Pruebas de fusión concurrente por elemento.
+- Prueba de borrado y no resurrección mediante tombstone.
+- Prueba de borrado/alta de aportación de hucha.
+- Verificar que no exista `flush()` global en la ruta ordinaria de cada movimiento.
+- Verificar selector mensual arriba en las pestañas definidas.
+- Verificar ausencia de texto «Toca Ingresos…».
+- Verificar versión visible, manifest y service worker coherentes.
+- Verificar que LAB apunte al HTML versionado y ESTABLE no se haya promovido sin orden.
+- Generar SHA-256 de los archivos entregados.
+
+## 9. ROADMAP
+
+- **v95.9-LAB:** sincronización por elemento + lápidas + CAS + recuperación césped + selector por pestaña + revisión visual/rendimiento.
+- Próximas v95.x: únicamente incrementales/correlativas y siempre partiendo de este PROMPT MAESTRO.
+- **v96.0-LAB:** refactor estructural/TypeScript solo cuando el usuario lo autorice y sin migración destructiva.
+
+---
+
+**VIGENTE DESDE v95.11. Sustituye a PROMPT_MAESTRO_v95.3.txt.**
+
+
+REGLA IMPERIAL v95.9 — ARRANQUE Y CIERRE DEL ALMACÉN
+Toda función registrada en eventos de ciclo de vida (visibilitychange, pagehide, beforeunload) debe existir antes de registrarse. `vaciar()` jamás significa borrar: es cierre/sincronización segura de pendientes cloud-first. Cualquier borrado financiero debe seguir siendo explícito, reversible y protegido.
+
+=== LEY IMPERIAL · v95.9 · IDENTIDAD, ONBOARDING Y MEMORIA LOCAL ===
+1. CREAR NUEVO USUARIO debe comenzar SIEMPRE por el paso de credenciales/nube. Nunca puede saltar a Metas por existir una sesión Supabase previa de otro perfil.
+2. Ningún usuario nuevo puede heredar implícitamente identidad/sesión cloud de otro usuario. El aislamiento entre perfiles es obligatorio.
+3. La identidad visual oficial usa teal Fluxia (#157F87 / #174650) de forma coherente en TODOS los logos: cabecera, splash, landing, onboarding, bloqueo/Face ID, favicon, apple-touch-icon, PWA y cualquier aparición futura. No reintroducir el azul eléctrico legado.
+4. Paleta premium: teal como marca/acción primaria; oro sobrio para provisiones/ahorro; rojo coral únicamente para riesgo, negativos o acciones destructivas; neutros cálidos/fríos de baja saturación para fondos y superficies. Evitar saturación gratuita y gradientes multicolor incoherentes.
+5. Cloud-first sigue siendo ley absoluta. La memoria local es caché/soporte y nunca autoridad sobre la nube. Las rutinas de liberación solo pueden eliminar copias/cachés/diagnósticos prescindibles; jamás datos financieros reales no confirmados en nube.
+6. Las copias diarias locales prescindibles se podan agresivamente (conservar la más reciente) para evitar QuotaExceededError en Safari/iOS. Un aviso de cuota nunca debe ocultar el estado real de sincronización cloud.
+
+
+=== LEY IMPERIAL · v95.9 · BORRADOS EXPLÍCITOS Y CERO RESURRECCIONES ===
+1. Ninguna ausencia dentro de un array/lista se interpreta jamás como borrado: puede ser una copia obsoleta, carga parcial o carrera de sincronización.
+2. Solo una acción explícita del usuario puede crear una lápida de borrado. La lápida se persiste en nube y prevalece sobre backups, migraciones y dispositivos antiguos.
+3. Recuperadores/migradores históricos deben respetar las lápidas y no pueden reinsertar elementos eliminados.
+4. Las migraciones históricas son one-shot; queda prohibido volver a fusionar snapshots antiguos en cada evento de nube o foreground.
+5. Los rescates temporales pendientes son datos financieros vitales. Si una versión anterior los pierde por carrera de escritura, se recuperan de fuentes del mismo perfil siempre que no exista evidencia de borrado explícito.
+6. En octubre de 2026 el gasto fijo exacto «Revolut» de 9,99 € fue eliminado por orden del usuario y no debe volver a aparecer por seed, backup o migración.
+7. Todo borrado de gasto fijo, rescate/uso de hucha y aportación de hucha debe registrar explícitamente su lápida antes de guardar la lista resultante.
+8. Prioridad absoluta: integridad > recuperación > rendimiento > estética.
+
+=== LEY IMPERIAL · v95.9 · RENDIMIENTO ===
+1. Prohibidas las reconciliaciones históricas recurrentes tras cada señal de nube.
+2. Una operación normal sincroniza solo su bloque y sus metadatos de borrado cuando proceda.
+3. No se añaden timers/flushes globales que multipliquen escrituras o repintados.
+
+=== IDENTIDAD VISUAL · v95.9 ELITE+ ===
+Fluxia usa teal financiero profundo como identidad, superficies cálidas/neutras de alto contraste, oro reservado a ahorro/provisiones y rojo/coral solo para riesgo o destrucción. La jerarquía visual debe ser consistente en toda la app y el logo debe mantener la identidad teal en todos sus puntos de aparición.
+
+
+## 10. REGLA IMPERIAL v95.9 — LOGIN ÚNICO Y RESCATES RECUPERABLES
+1. Una autenticación correcta de un perfil solo se solicita una vez por entrada/sesión. No se puede encadenar una segunda pantalla de credenciales para el mismo perfil ya vinculado y autenticado.
+2. El onboarding nunca debe reiniciar su paso de credenciales por un repintado, reentrada de lifecycle o recarga técnica si la sesión Supabase válida pertenece al mismo perfil.
+3. Un rescate temporal existente no puede desaparecer por ausencia en una copia, por una tombstone generada automáticamente en versiones antiguas ni por reconciliación parcial. Solo una acción explícita de borrado del usuario (papelera) autoriza su eliminación funcional.
+4. La recuperación puede examinar backups/snapshots/cachés reales, pero no inventar importes, fechas ni huchas. Si existe una copia real recuperable, debe restaurarse y volver a nube.
+5. La capa visual final de cada versión debe producir un cambio perceptible cuando se solicite rediseño: jerarquía, superficies, cabecera, selector y navegación; no limitarse a variaciones cromáticas casi invisibles.
+
+
+=== LEY IMPERIAL v95.9 · DECISIONES BANCARIAS IRREVERSIBLES HASTA ACCIÓN CONTRARIA ===
+- Toda acción explícita sobre un cargo bancario (Nunca más, Descartar, Duplicado, Sí es ese, clasificación aprendida) debe persistir en nube inmediatamente y sobrevivir a reinicios, cambio de dispositivo y nuevas sincronizaciones.
+- La blacklist es monotónica y se resuelve por UNIÓN de todas las copias conocidas; una copia cloud antigua o más larga jamás puede ocultar una decisión local más reciente.
+- «Nunca más» se identifica además por banco + importe + comercio normalizado, no solo por el id bancario efímero o la fecha.
+- Ninguna sincronización bancaria puede resucitar un movimiento vetado ni regenerar una pregunta ya resuelta por la misma huella semántica.
+- Las colas de preguntas son derivadas y regenerables; las decisiones del usuario son datos autoritativos.
+
+
+=== LEY IMPERIAL v95.11 · HUCHAS Y LISTAS FINANCIERAS ATÓMICAS ===
+1. Una lista financiera protegida (huchas/provisiones, aportaciones, rescates/usos, movimientos, ingresos, fijos, financiaciones y compartidos) jamás puede sustituirse por una copia completa más corta durante una reconciliación.
+2. La reconciliación de listas protegidas es por elemento/ID; la ausencia no borra. Solo una lápida nacida de una acción explícita del usuario autoriza la eliminación.
+3. Las lápidas deben resolverse con la clave real del perfil (`claveLS`) y no solo con el nombre lógico sin prefijo. Queda prohibido cualquier desajuste de namespace que pueda resucitar o eliminar datos.
+4. Una recuperación desde una copia real aportada por el usuario es NO DESTRUCTIVA: añade únicamente huchas/aportaciones demostradas que falten y conserva cualquier dato posterior.
+5. La copia FLUXIA-copia-2026-10-03.json demuestra 7 huchas: Renta; Tributos (IBI, Basura, Vehículo); Amortización; Boda Ana; Agua; Seguro de coche; Mantenimiento césped. No es válido entregar una versión que reduzca ese conjunto por una migración o reconciliación defectuosa.
+6. Ningún reparador específico de una hucha puede reemplazar el array completo de huchas ni marcar como válida una recuperación parcial.
+
+=== LEY IMPERIAL v95.11 · BANCA IDEMPOTENTE ===
+1. Antes de renderizar movimientos importados del banco se aplica la blacklist/registro de decisiones autoritativo.
+2. `Nunca más`, `Descartar`, `Duplicado`, asociaciones y borrados explícitos sobreviven a nuevas sincronizaciones, IDs bancarios cambiantes, reinicios y segundo dispositivo.
+3. Las listas de decisiones son monotónicas por unión salvo acción explícita de deshacer del usuario.
+4. Un cargo vetado no puede aparecer ni transitoriamente en pantalla después de una sincronización.
+5. Integridad de huchas y banca es criterio de bloqueo de release: si falla, la versión no es candidata a ESTABLE.
+
+
+=== LEY IMPERIAL v95.11 · ESTABLE BETA, HUCHAS Y RESCATES CANÓNICOS ===
+1. A partir de v95.11, cada nueva entrega completa pasa a ser también la versión ESTABLE BETA, salvo orden expresa del usuario en contrario. Debe incluir `index.html` actualizado y el HTML LAB versionado.
+2. Al añadir Fluxia a la pantalla de inicio, el nombre visible es exactamente «Fluxia BETA» en manifest, short_name, apple-mobile-web-app-title y application-name.
+3. La referencia v94.67 corregida confirma siete huchas estructurales: Amortización, Renta, Tributos (IBI, Basura, Vehículo), Boda Ana, Mantenimiento Césped, Agua y Seguro de coche. La copia real 2026-10-03 prevalece para aportaciones/estado más reciente.
+4. La referencia v94.67 corregida contiene dos usos históricos reales de septiembre que no pueden perderse: Tributos 390,48 € (Pago tributos) y Boda Ana 100 € (Gasto boda). Si faltan, deben recuperarse de forma no destructiva.
+5. No inventar rescates temporales no presentes en una fuente real. Un rescate pendiente solo se recupera si existe evidencia real en nube, backup, papelera o fuente histórica aportada.
+6. Huchas, aportaciones y usos/rescates son bloques financieros protegidos: merge por identidad/huella, nunca reemplazo masivo por una copia parcial.
+7. El botón ☰ debe mantener contraste alto y área táctil mínima 44×44 px en cualquier tema o fondo; no puede quedar casi invisible por herencia cromática del header.
+8. Huchas + rescates + banca son gate de release. Si cualquiera falla, se corrige antes de nuevas mejoras estéticas o funcionales.
+
+VIGENTE DESDE v95.11. Sustituye a PROMPT_MAESTRO_v95.10.txt.
+
+
+## 14. LEY IMPERIAL v95.22 · CONTABILIDAD DE HUCHAS Y RESTAURACIÓN HISTÓRICA
+
+1. El saldo de una hucha es un **saldo histórico acumulado**: aportaciones históricas menos usos definitivos y rescates netos pendientes. Restaurar memoria histórica NO equivale a realizar una aportación nueva en el mes actual.
+2. Una recuperación de datos debe recolocar cada aportación en su fecha/mes original. Nunca insertar el acumulado histórico como una aportación del mes actual.
+3. El `Disponible` mensual solo puede variar por hechos contables de ese mes. Restaurar un dato que ya pertenecía a julio/agosto/septiembre no puede reducir el Disponible de octubre.
+4. Para el estado canónico conocido al 04/10/2026, la suma de aportaciones verificadas es **3.308,36 €**, los usos definitivos verificados son **490,48 €**, y el saldo total de provisiones resultante es **2.817,88 €**. Este valor se utiliza como control de integridad de la reparación v95.22, no como una cifra editable o inventada.
+5. Antes de corregir registros de huchas, conservar una copia de cuarentena/auditoría del estado anterior. No destruir silenciosamente datos.
+6. Los duplicados introducidos al intentar reconstruir memoria deben aislarse y tombstonearse cuando estén identificados como no canónicos, para impedir que la nube los vuelva a fusionar.
+7. Huchas y banca son capas críticas: una build que falle integridad de cualquiera de ambas no se considera apta para promoción.
+8. Desde esta etapa, la última entrega indicada por el usuario es la versión ESTABLE BETA y la instalación PWA debe llamarse **Fluxia BETA**.
+
+
+[LEY IMPERIAL · HUCHAS · BODA ANA · 04/10/2026]
+Boda Ana debe conservar 100 € NETOS de saldo histórico previo a octubre. La siguiente aportación de 50 € la introduce el usuario manualmente como aportación nueva de octubre. Las restauraciones o ajustes históricos deben marcarse como históricos/no impactantes para el Disponible actual; nunca deben contabilizarse como gasto o aportación nueva del mes en curso.
+
+
+## 15. LEY IMPERIAL v95.22 · DISPONIBLE Y PROVISIONES SIN DOBLE DESCUENTO
+1. Fórmula conceptual: Disponible = Ingresos − Gastos − Provisiones previstas − exceso de aportaciones sobre lo previsto.
+2. La provisión mensual prevista se descuenta una sola vez del Disponible por formar parte del presupuesto del mes.
+3. Aportar una cantidad igual o inferior a la provisión prevista NO vuelve a reducir el Disponible. La aportación real únicamente confirma/cumple el ahorro previsto.
+4. Si la suma de aportaciones reales del mes supera la provisión prevista, solo el exceso reduce adicionalmente el Disponible. Ejemplo: prevista 50 €, aportada 70 € => impacto adicional 20 €.
+5. Si la aportación real es inferior a la prevista, el importe restante queda pendiente; el Disponible no aumenta por no haberlo aportado todavía.
+6. La comparación se realiza contra el acumulado real de aportaciones del mes, no operación por operación, evitando dobles descuentos con aportaciones parciales.
+7. El saldo histórico y las restauraciones de meses anteriores no intervienen en el Disponible del mes actual.
+8. Esta regla se aplica a TODAS las huchas/provisiones, incluida Boda Ana. Boda Ana conserva 100 € netos de histórico; una aportación manual de 50 € en octubre cumple su previsión de 50 € y no reduce adicionalmente el Disponible.
+
+
+## 16. LEY IMPERIAL v95.22 · RESCATES, CONSISTENCIA Y ENTREGA GITHUB
+1. Esta sección prevalece sobre cualquier referencia histórica anterior incompatible con decisiones posteriores confirmadas por el usuario.
+2. Tributos (IBI, Basura, Vehículo) debe contener un único rescate temporal histórico pendiente de **240,48 €**. No pueden coexistir un uso definitivo y otro rescate temporal que representen el mismo hecho económico. La duplicidad se cuarentena y tombstonea.
+3. Boda Ana conserva **100,00 € de saldo histórico neto previo a octubre**. La aportación real de octubre la realiza el usuario; hasta 50,00 € cumple la provisión prevista y no reduce de nuevo el Disponible.
+4. Queda prohibido forzar el saldo total de huchas mediante movimientos inventados para alcanzar una cifra recordada. Si los hechos confirmados no reconcilian con una cifra objetivo, Fluxia conserva los hechos y muestra/diagnostica la diferencia hasta identificar su origen real.
+5. Las reparaciones de integridad posteriores a v95.15 deben ser quirúrgicas: modificar solo el bloque afectado y no reconstruir el array completo de huchas si éste ya está sano.
+6. Antes de credenciales/login, no deben aparecer toasts ni avisos operativos generados por sincronización, migraciones, backups o conectores. El acceso/credenciales tiene prioridad visual. Los errores propios del formulario deben mostrarse dentro del flujo de autenticación.
+7. El botón ☰ del menú debe mantener contraste alto permanente: icono teal oscuro sobre superficie clara, borde visible y área táctil mínima 48×48 px.
+8. Cada entrega incluye ZIP COMPLETO. En la respuesta de entrega se indicará siempre que en GitHub debe subirse/reemplazarse **todo el contenido del ZIP en la raíz del repositorio Fluxia-v20**, conservando la estructura y sustituyendo los archivos homónimos. No volver a pedir esta instrucción al usuario.
+9. La versión entregada continúa siendo simultáneamente LAB versionada y ESTABLE BETA (`index.html`), salvo orden expresa en contrario.
+
+
+## 17. LEY IMPERIAL v95.22 · CONCILIACIÓN FINAL CONTRA SALDO REAL
+1. El usuario confirma que el saldo físico/real de dinero reservado en la cuenta para provisiones es **2.817,88 €**. Esta cifra pasa a ser el control autoritativo de conciliación del histórico existente a 04/10/2026.
+2. Esta confirmación explícita sustituye la prohibición de ajuste del punto 16.4 únicamente para esta conciliación: cuando el detalle histórico no alcance a explicar la diferencia, Fluxia puede registrar una partida **Ajuste histórico de conciliación** claramente identificada y auditable para cuadrar el total con el saldo real confirmado.
+3. El ajuste de conciliación es histórico, nunca una aportación o gasto de octubre, y por tanto **NO modifica el Disponible de octubre**.
+4. La partida de conciliación se ubica en Amortización por ser la hucha de mayor saldo, pero debe conservar concepto/origen explícitos; no se presenta como un gasto real conocido ni se oculta su naturaleza.
+5. Tributos conserva un único rescate temporal pendiente de **240,48 €**. No pueden coexistir representaciones duplicadas del mismo rescate.
+6. Boda Ana conserva **100 € históricos** y las aportaciones de octubre que el usuario haya realizado. Hasta 50 € de aportación mensual prevista no reducen adicionalmente el Disponible.
+7. Tras la migración, `Saldo real en tus provisiones` debe ser **2.817,88 € ± 0,01 €**. Si una sincronización tardía altera el histórico, la conciliación se repite de forma idempotente retirando primero su propia partida anterior y recalculando la diferencia.
+8. Antes de cada corrección se conserva cuarentena/auditoría. La conciliación nunca elimina silenciosamente movimientos ajenos a Tributos o a la propia partida de ajuste.
+9. En todas las entregas se mantiene el ZIP completo y se indica subir/reemplazar TODO su contenido en la raíz de GitHub `Fluxia-v20`.
+
+VIGENTE DESDE v95.22. Esta sección prevalece sobre cualquier regla anterior incompatible con la conciliación explícitamente autorizada por el usuario.
+
+
+## 15. LEY IMPERIAL v95.22 · ACCESO LIMPIO SIN ROMPER LA APP
+- Antes de credenciales no deben aparecer rituales, tutoriales ni toasts funcionales.
+- Esta supresión se implementa en el origen de las funciones/condiciones, nunca ocultando la aplicación, borrando nodos del DOM ni forzando scroll/overflow con observadores globales.
+- La pantalla de credenciales, Face ID/PIN y selección de perfil tienen prioridad visual absoluta.
+- El Dashboard no debe quedar atrapado con `overflow:hidden` ni restaurado en una posición inferior por una capa oculta.
+- Pago histórico confirmado: Agua 132,90 € el 27/09/2026. Saldo real autoritativo de provisiones: 2.817,88 €.
+
+
+## 16. LEY IMPERIAL v95.22 · FASES 1+2 Y EDICIÓN HISTÓRICA
+- Cabecera: priorizar limpieza visual. Marca, saludo y estados deben respirar; los estados de bancos/nube se muestran una sola vez y con jerarquía compacta.
+- Dashboard: una cifra principal (Disponible), cuatro bloques de desglose y accesos rápidos. Se eliminan resúmenes duplicados.
+- El bloque “Datos protegidos y sincronizados / nube activa” no se duplica en Inicio si el estado ya aparece en cabecera.
+- Huchas/provisiones: toda aportación puede crearse o editarse con una fecha de cualquier mes válido del plan. El movimiento debe trasladarse al mes contable correspondiente a esa fecha.
+- Un uso/rescate puede editarse con fecha histórica. Una provisión puede modificar sus meses de inicio/fin.
+- Corregir un histórico nunca debe imputarse al mes actual salvo que su fecha real pertenezca al mes actual.
+- Toda entrega incluye ZIP completo y se indica subir TODO su contenido a la raíz del repositorio GitHub Fluxia-v20.
+
+
+## 16. LEY IMPERIAL v95.22 · CERO APORTACIONES AUTOMÁTICAS FANTASMA
+- Una cuenta ya establecida NUNCA puede crear aportaciones a huchas automáticamente por temporizadores, reconciliaciones, seeds, parches legacy o respuestas tardías de nube.
+- Las aportaciones nuevas nacen únicamente de una acción explícita del usuario o de una migración única, identificada e idempotente.
+- Toda migración de sistema debe usar ID estable y UPSERT; está prohibido hacer `push` repetido del mismo movimiento en cada reconciliación.
+- Una reconciliación que ya alcanzó el saldo autoritativo no puede volver a tocar aportaciones si el saldo sigue correcto.
+- Los seeds históricos y parches automáticos de Amortización/Tributos quedan sellados para cuentas ya establecidas.
+- La deduplicación automática solo puede afectar a movimientos marcados inequívocamente como generados por Fluxia; nunca debe borrar dos aportaciones manuales legítimas aunque coincidan en fecha e importe.
+
+
+## 18. LEY IMPERIAL v95.23 · CABECERA PREMIUM Y FASE 3 HUCHAS
+1. La cabecera debe mantener siempre visibles y con aire la marca Fluxia, la insignia BETA, el saludo/contexto, la versión y los estados de bancos/nube. Ningún breakpoint móvil puede ocultar o recortar la insignia BETA.
+2. Menú y notificaciones conservan áreas táctiles >=44×44 px, pero no deben competir visualmente con la marca.
+3. Huchas debe permitir entender el estado en tres segundos: saldo real reservado, importe pendiente de aportar en el mes, importe pendiente de reponer por rescates y número de huchas al día.
+4. Las tarjetas de Huchas muestran con jerarquía clara: nombre, meta mensual, saldo acumulado, progreso del mes, rescates pendientes y acciones. El historial completo sigue accesible sin sobrecargar la vista principal.
+5. Se mantiene la edición retroactiva de aportaciones/usos y la regla de que los históricos no alteran el Disponible del mes actual.
+
+## 19. LEY IMPERIAL v95.23 · PAGOS DE FINANCIACIONES PERSISTENTES
+1. Marcar una cuota de financiación como pagada es una decisión financiera persistente y NO puede perderse al cambiar de versión, refrescar, reconciliar nube o regenerar la lista de financiaciones.
+2. Además del objeto de financiación, Fluxia mantiene un ledger persistente por identidad semántica estable `financiación normalizada + AAAA-MM`. De este modo un cambio de ID técnico no resucita una cuota ya pagada.
+3. Al cargar/reconciliar, los pagos existentes se capturan al ledger y el ledger se reaplica a la financiación correspondiente antes de renderizar.
+4. Desmarcar explícitamente un pago elimina la entrada correspondiente del ledger. Ninguna migración puede volver a marcarlo sin evidencia persistida.
+5. Esta regla se aplica a Oney Leroy y a todas las financiaciones presentes/futuras, no como parche nominal.
+6. Los pagos de financiación no alteran por segunda vez el Disponible: la cuota ya forma parte de la planificación mensual; el estado pagado solo registra cumplimiento.
+
+VIGENTE DESDE v95.23. Mantiene todas las reglas de integridad v95.22 y posteriores no incompatibles.
+
+
+## 20. LEY IMPERIAL v95.25 · EVOLUCIÓN SIN REGRESIONES
+1. Principio rector: **cada mejora suma; ninguna mejora sacrifica integridad**.
+2. La integridad financiera y la preservación de datos tienen prioridad sobre estética, automatización, velocidad de desarrollo o nuevas funciones.
+3. Toda mejora debe ser aditiva y compatible con históricos. Cuando proceda, debe ser reversible y auditable.
+4. Ninguna mejora puede introducir regresiones en cálculos, Disponible, persistencia, sincronización, acceso, Huchas, Financiaciones o Banca.
+5. Los componentes ya estabilizados se consideran contratos de comportamiento: se modifican solo con una necesidad explícita y con validación específica.
+6. Antes de promover una versión, comprobar sintaxis, manifiestos, service workers, ZIP e invariantes financieras relevantes para el cambio.
+
+## 21. LEY IMPERIAL v95.25 · FASE 4A BANCA INTELIGENTE SEGURA
+1. La banca es **fuente de movimientos**, no autoridad sobre la planificación financiera del usuario.
+2. El Centro bancario puede resumir bancos conectados, movimientos recientes y preguntas pendientes, pero esta capa visual es de solo lectura y no puede crear, borrar ni reclasificar movimientos por sí sola.
+3. Las decisiones explícitas del usuario —por ejemplo «Nunca más», duplicado, vínculo con fijo o clasificación— deben persistir y prevalecer sobre sugerencias futuras equivalentes.
+4. La interfaz bancaria debe reducir preguntas repetidas y mostrar solo excepciones que requieran decisión real.
+5. El estado de nube/banco no se duplica innecesariamente en varias zonas de la misma pantalla.
+6. Cualquier futura automatización bancaria deberá ser idempotente, auditable y respetar tombstones/decisiones persistentes.
+
+VIGENTE DESDE v95.25. Mantiene todas las leyes de integridad anteriores no incompatibles.
+
+
+## LEY IMPERIAL v95.30 · DISEÑO FIEL + CERO REGENERACIÓN HISTÓRICA
+- La recuperación forense automática de rescates queda ELIMINADA. Nunca se escanean backups/snapshots para reinyectar movimientos por boot, sync o resume.
+- El conciliador histórico de 2.817,88 € queda ELIMINADO como rutina automática. Esa cifra es una referencia histórica, no un objetivo perpetuo.
+- Las aportaciones iguales a la cuota mensual dentro del mismo mes solo pueden repetirse tras confirmación explícita del usuario.
+- Duplicados retirados: cuarentena + tombstone.
+- Diseño LAB: implementar fielmente la referencia aprobada, no reinterpretarla. Cabecera centrada, saludo separado, tarjeta teal de Disponible, cuadrícula 2×2 Ingresos/Fijos/Huchas/Variables, sin accesos rápidos redundantes ni banners intrusivos.
+- La ESTABLE sigue siendo v95.25 hasta validación expresa.
+- Cada mejora suma; ninguna mejora sacrifica integridad.
+
+
+## LEY IMPERIAL v95.34 · HISTÓRICO CERRADO Y APORTACIONES EXPLÍCITAS
+- Prevalece sobre conciliadores y reparadores históricos anteriores: no generar aportaciones, reposiciones ni ajustes automáticos al abrir, sincronizar, recibir movimientos bancarios o reanudar.
+- Una edición conserva su ID incluso al cambiar de mes. La fusión elige una sola versión por ID en todos los meses de la hucha.
+- No deduplicar aportaciones manuales por importe, cuota o fecha. Dos IDs distintos no prueban duplicidad.
+- Las lápidas de aportaciones prevalecen sobre una copia antigua aunque esta reciba un timestamp reciente.
+- Confirmación actual del usuario: Boda prima Ana/Boda Ana debe tener 150 €, no 250 €, y el total global mostrado es correcto. Es necesario conciliar el detalle real antes de retirar/reasignar los 100 €: no inventar aportaciones, gastos ni transferencias para cuadrarlo.
+- No afirmar que se corrigió la nube si solo se entregó código. La corrección de duplicados preexistentes con IDs distintos exige el histórico actual y cuarentena previa.
+- ESTABLE permanece v95.25; v95.34 es LAB hasta orden expresa.
+
+
+## LEY IMPERIAL v95.34 · REFERENCIA REAL Y DASHBOARD
+- Captura bancaria aportada el 05/10/2026: saldo reservado 2.818,23 €. Diferencia frente a 2.817,88 €: +0,35 €. No atribuirla a intereses sin evidencia ni crear una aportación para cuadrarla.
+- La referencia bancaria es una fotografía fechada, no un saldo conectado en vivo, ni un objetivo perpetuo que deba restaurarse automáticamente.
+- Boda Ana: objetivo confirmado 150 €. La copia del 03/10 no tiene usos/rescates y no prueba el origen de los 100 € de diferencia actuales. Comparar sin borrar apuntes por su importe ni inventar compensaciones.
+- Dashboard compacto con logo oficial existente, marca centrada entre botones, saludo/versión y estados en filas separadas; sin superposiciones móviles.
+- Disponible con menor altura y sin barra porcentual fija ficticia. El bloque Huchas del Dashboard muestra la provisión mensual, no el saldo acumulado del banco.
+- Mantener ESTABLE v95.25 sin cambios; v95.34 solo LAB.
+
+
+## LEY IMPERIAL v95.34 · HUCHAS SIN CONCILIADOR Y DISEÑO COHERENTE
+- Por orden del usuario: dejar las Huchas como están. Retirar completamente la comparación/conciliación bancaria de la interfaz y su llamada al render. No corregir Boda Ana ni ajustar saldos en esta entrega.
+- Sigue prohibida toda aportación automática por arranque, temporizadores, cambios de mes, migraciones legacy o reposición bancaria. Ninguna mejora estética escribe movimientos financieros.
+- La cabecera respeta env(safe-area-inset-top) para evitar que el logo y el menú queden bajo la barra de estado de iOS; nunca sustituirlo por un padding fijo.
+- Logo oficial inline y botón de menú de alto contraste, siempre legibles y con objetivo táctil de al menos 44 px. No desenfocar la marca ni los controles.
+- Todas las pestañas comparten superficies cálidas, tipografía moderada, bordes finos, espaciado limpio y colores semánticos discretos. Mantener IDs, navegación y funcionalidad.
+- ESTABLE v95.25 permanece intacta; entrega v95.34 solo LAB.
+
+
+## LEY IMPERIAL v95.34 · EDICIÓN PERSISTENTE Y CABECERA FIJA
+- Al guardar una aportación, resolver la hucha/aportación vigente por ID. Una recarga de nube mientras el modal está abierto no puede desviar la edición a un objeto antiguo.
+- Ediciones con timestamp monotónico superior a la versión previa, incluso si el reloj retrocede. Normalizar claves lógicas/prefijadas sin duplicar namespace.
+- No declarar aportación realizada cuando se cancela su confirmación.
+- Solo la fila logo/menú/notificaciones permanece fija al desplazar; saludo, estados y contenido se desplazan. Respetar safe-area iOS.
+- Dashboard con emoticonos semánticos: Disponible 💶, Ingresos 💰, Fijos 📌, Huchas 🏺 y Variables 🛒. Selector de mes claro de alto contraste, tarjeta principal teal azulado.
+- Mantener patrón de superficies, bordes y jerarquía en todas las pestañas, sin conciliación ni aportaciones automáticas. ESTABLE v95.25 intacta.
+
+
+## LEY IMPERIAL v95.35 · BORRADO EXPLÍCITO DOMINANTE
+- Una edición, importación, reintento, copia antigua o timestamp posterior nunca anula un borrado explícito.
+- Solo la acción explícita Recuperar/Restaurar registra una restauración. Borrados y restauraciones se sincronizan por unión monotónica y se resuelven antes de las listas financieras.
+- Todo borrado de gasto/cargo, hucha, aportación y uso registra su identidad antes de guardar. Se conserva papelera/histórico según las rutas existentes.
+- Las decisiones bancarias y blacklist se fusionan por unión; no por longitud ni reemplazo completo. El filtro de decisiones usa la copia unida, antes de importar/renderizar.
+- Una restauración explícita revoca la marca de borrado correspondiente; un nuevo borrado explícito posterior vuelve a prevalecer.
+- Esta versión no modifica diseño ni reconstruye saldos. ESTABLE sigue v95.25 y v95.35 permanece LAB.
+
+
+## LEY IMPERIAL v95.37 · BORRADO EXPLÍCITO, NO SUPOSICIONES Y RECUPERACIÓN SEGURA
+1. Una lápida/tombstone solo puede ocultar o borrar un dato financiero si existe evidencia sincronizada de una acción EXPLÍCITA del usuario para ese registro. Tombstones legacy, heurísticos, de deduplicadores o migraciones antiguas no pueden borrar datos vivos.
+2. Un borrado explícito prevalece sobre timestamps posteriores de copias obsoletas. Un timestamp nuevo nunca significa «restaurado».
+3. En aportaciones de Huchas, el borrado debe persistir por ID y por firma semántica de la aportación (hucha, fecha, importe y nota), para impedir que una copia antigua con otro ID o trasladada de mes reaparezca. Las aportaciones duplicadas confirmadas expresamente por el usuario quedan excluidas de este veto semántico.
+4. Restaurar es una acción explícita distinta y versionada; nunca se consigue borrando silenciosamente la lápida.
+5. Ningún saneador, seed, arranque, sincronización, cambio de versión, visibilidad, temporizador o reconciliador puede crear aportaciones o retirar borrados por iniciativa propia.
+6. Las listas financieras no pueden quedar vacías o recortadas por metadatos legacy. Ante una regresión, Fluxia conserva cuarentena/auditoría y fusiona no destructivamente copias locales de seguridad, respetando siempre los borrados explícitos.
+7. Una versión que pierda movimientos variables, Huchas o cualquier histórico queda automáticamente INVALIDADA para promoción, aunque visualmente sea correcta.
+8. Cada mejora suma; ninguna mejora sacrifica integridad. Esta ley prevalece sobre cualquier optimización o migración anterior incompatible.
+
+
+## LEY IMPERIAL v95.37 · INTEGRIDAD CLOUD-FIRST Y RECUPERACIÓN AUTORIZADA
+
+1. La nube por clave (Supabase `fluxia_datos`) es la fuente de verdad. LocalStorage es caché/cola offline, nunca una autoridad paralela.
+2. Toda edición manual de Ingresos, Huchas, Gastos, Fijos, Financiaciones y Compartidos se encola inmediatamente y se confirma en nube por la clave modificada. No se hace flush global por cada cambio.
+3. Un cambio manual recibe `_fxUpdatedAt`; en Ingresos además `_fxManualEdit=true`. La sincronización bancaria puede enlazar un cobro, pero no puede sobrescribir importe/mes/concepto editados manualmente.
+4. Todo borrado financiero es explícito, reversible/auditable y crea tombstone. Borrar un Ingreso o una aportación de Hucha debe impedir su resurrección desde copias antiguas o nube.
+5. En aportaciones, la identidad usa primero `_fxMutationId`; los clones sin linaje se deduplican por firma exacta (fecha + importe + nota) salvo que el usuario confirme expresamente un duplicado legítimo.
+6. Quedan prohibidos recuperadores automáticos genéricos, `longest-list-wins`, recuperación entre prefijos para claves financieras, seeds/reparadores de una cuenta establecida y cualquier rutina que cree aportaciones sin acción explícita.
+7. Recuperación histórica v95.37: autorizada expresamente por el usuario a partir de `fluxia_v94.26_LAB.zip`. Se ejecuta una sola vez, guarda cuarentena antes de tocar nada y deja ledger determinista.
+8. Estado confirmado de control tras recuperación: saldo agregado de las siete Huchas históricas = 2.817,88 €. Incluye Boda Ana 100 € históricos + 50 € octubre, Agua con pago definitivo 132,90 € (27/09), Tributos con 240,48 € temporal pendiente y ajuste histórico de conciliación de 0,10 € en Amortización.
+9. Una migración no puede volver a ejecutarse tras su marker. Si hace falta otra corrección, se crea una nueva versión/marker; nunca se reutiliza el anterior.
+10. Cada mejora suma; ninguna mejora sacrifica integridad. Si una build duplica aportaciones, resucita un borrado o pierde una edición, queda invalidada para promoción.
+
+
+## LEY IMPERIAL v95.38 · CLOUD-FIRST REAL, REBASE EXACTO Y EDICIONES MANUALES
+1. La nube es fuente de verdad por clave. En el arranque, si NO existe una edición local pendiente, el valor remoto sustituye al local. Queda prohibida la unión local+nube de listas financieras al abrir o reconectar: esa unión resucitó aportaciones y multiplicó históricos.
+2. La concurrencia entre dispositivos se resuelve al ESCRIBIR mediante CAS y por identidad de elemento; no mediante acumulación indiscriminada en el arranque.
+3. Una migración histórica autorizada puede usar `reemplazo exacto` de una clave completa. Mientras el reemplazo exacto esté pendiente, Fluxia no fusiona esa clave con la nube anterior. La migración solo se da por terminada después de releer la nube y comprobar igualdad byte a byte del valor serializado.
+4. Rebase histórico autorizado v95.38 para las siete Huchas: el estado canónico total es 2.817,88 €. Antes del rebase se guarda cuarentena del estado contaminado. El rebase sustituye exactamente `v2_provisiones` y `v2_usos` tanto local como nube; no suma la reconstrucción a la copia remota anterior.
+5. Estado canónico tras rebase: Amortización 1.690,58 €; Renta 656,20 €; Tributos 150,00 € con rescate temporal pendiente 240,48 €; Boda Ana 150,00 €; Mantenimiento Césped 70,00 €; Agua 1,10 € tras pago definitivo 132,90 € del 27/09/2026; Seguro de coche 100,00 €.
+6. Tras confirmar el rebase, 2.817,88 € deja de ser objetivo dinámico: nuevas aportaciones o usos modifican el saldo normalmente y nunca se fuerza de nuevo esa cifra.
+7. Borrar una aportación crea tombstone explícito antes de guardar. Ninguna copia antigua, cambio de ID, refresh bancario, reapertura o cambio de versión puede volver a crearla sin una restauración explícita del usuario.
+8. En Ingresos, una edición manual (`_fxManualEdit=true`) prevalece sobre cualquier refresco bancario posterior para concepto, importe, tipo y mes. El banco puede enlazar el cobro, pero no deshacer la decisión manual.
+9. Toda edición crítica se encola de inmediato y se verifica por su misma clave en nube. Si la lectura posterior no coincide, permanece pendiente; nunca se muestra un éxito definitivo basado únicamente en localStorage.
+10. Si una build vuelve a sumar una reconstrucción histórica sobre la nube, resucita una aportación borrada o pierde una edición manual de Ingresos, la build queda INVALIDADA para promoción.
+11. ESTABLE permanece v95.25 hasta validación expresa. v95.38 es LAB de integridad; no incluye rediseño visual ni nuevas funciones no relacionadas.
+12. Principio rector vigente: **cada mejora suma; ninguna mejora sacrifica integridad**.
+
+
+## LEY IMPERIAL v95.39 · PAGOS CON FECHA REAL Y RENDER ESTABLE
+1. Todo pago definitivo realizado desde una Hucha debe permitir indicar la **fecha real del pago** antes de guardar. La fecha no se presume igual al día actual.
+2. El mes contable del pago se deriva de su fecha real. Registrar hoy un pago del 27/09/2026 lo coloca en septiembre y no altera artificialmente octubre.
+3. Convertir un rescate mediante «Era un pago» también exige poder confirmar/corregir la fecha real del pago.
+4. La fecha de pagos, rescates, aportaciones y reposiciones permanece editable históricamente y se sincroniza cloud-first con `_fxUpdatedAt`.
+5. El arranque debe ser visualmente estable: durante el primer render se silencian avisos rutinarios de fondo; los errores críticos sí se muestran.
+6. Los toasts son capas `position:fixed` reutilizables: no entran en el flujo, no empujan contenido y no se insertan/eliminan repetidamente del DOM.
+7. `renderAll()` no puede ejecutarse de forma solapada varias veces en el mismo frame. Las peticiones redundantes se coalescen sin sacrificar integridad.
+8. Una actualización de estado de nube no justifica por sí sola redibujar todas las pestañas. El estado se actualiza de forma localizada.
+9. Queda prohibido provocar scroll automático, animaciones de entrada o cambios de altura por avisos operativos durante una sincronización de fondo.
+10. La optimización de render jamás modifica el motor financiero, las fórmulas, la persistencia ni las reglas cloud-first.
+
+## LEY IMPERIAL v95.44 · AISLAMIENTO, OUTBOX Y RELEASE
+1. La v95.39 indicada por el usuario permanece ESTABLE hasta autorización expresa; el HTML LAB v95.44 nunca sustituye index.html.
+2. Ninguna caché o clave local sin una mutación explícita pendiente se sube por arranque, reconexión o cambio de versión. La nube confirmada manda tras reproducir la outbox.
+3. La outbox conserva perfil, operación y payload durables aun si localStorage está lleno. Si su persistencia falla, la interfaz no declara guardado en nube.
+4. Cada perfil no legado usa claves cloud propias; cambiar de perfil no vincula automáticamente la cuenta cloud previa.
+5. Las aportaciones manuales con identidades distintas sobreviven aunque coincidan importe, fecha y nota. Una firma semántica sola no autoriza borrar otra aportación.
+6. Recuperación, restauración, seed y saneadores legacy nunca crean ni eliminan movimientos financieros en boot, foreground o refresh. Recuperación manual muestra perfil propietario, fecha y contenido antes de confirmar.
+7. Una escritura cloud exige CAS y relectura de la revisión escrita antes de declarar guardado. Los fallos conservan pendiente.
+8. Una versión con pruebas faltantes se identifica como candidata sin publicación ni promoción; no se declara reparada.
+9. La fotografía de 2.817,88 € no es objetivo dinámico y no se genera ningún movimiento para alcanzarla.
+10. El onboarding de usuario nuevo, Metas, “Ahora no”, “Sin cuenta”, Cancelar y Cambio de usuario no pueden depender de escritura directa en localStorage. Deben usar un helper tolerante con fallback sessionStorage/memoria y preservar siempre el profile_id activo antes de crear cualquier dato financiero.
+
+
+## LEY IMPERIAL v95.46 · RECUPERACIÓN CLOUD LEGACY SIN PÉRDIDA
+1. v95.39 es la ESTABLE protegida y no se promociona ninguna LAB sin autorización expresa.
+2. El cambio a namespaces `profile:<profile_id>:` nunca puede hacer que un usuario existente parezca vacío si su misma cuenta Supabase autenticada contiene el plan legacy v95.39 en claves sin prefijo.
+3. Si un perfil no legado inicia sesión con credenciales válidas, su namespace está vacío y existen claves legacy recuperables bajo ESE MISMO `user_id` autenticado, Fluxia copia esas claves al namespace del perfil y verifica por lectura posterior cada payload antes de declarar recuperación.
+4. La migración es COPIA, no movimiento: las claves legacy originales permanecen intactas como respaldo hasta una futura limpieza manual auditada.
+5. Jamás se copian filas `profile:*` de otro perfil ni filas de otro `user_id`. La identidad Supabase autenticada es la frontera de seguridad.
+6. Antes de recuperar una cuenta existente se descartan únicamente escrituras vacías técnicas (`[]`, `{}`, `null`) creadas por el onboarding del perfil nuevo; nunca se descarta una mutación con contenido real.
+7. Tras la migración se reconecta Almacén, se vacía la outbox y se exige lectura cloud confirmada antes de mostrar `Guardado en nube`. Un fallo mantiene `Pendiente de sincronizar` y no crea un plan vacío.
+8. `tieneDatos` debe significar datos visibles del perfil activo, no cualquier fila histórica de la cuenta.
+9. El ZIP completo incluye la configuración pública del proyecto Supabase (URL + publishable key), manifests, service workers y JSON de canal. Contraseñas personales nunca se empaquetan ni se almacenan en texto plano.
+10. Cada mejora suma; ninguna mejora sacrifica integridad. Una build que muestre 0 tras login teniendo datos legacy confirmados queda INVALIDADA.
+
+
+## LEY IMPERIAL v95.46 · RECUPERACIÓN POR CLAVE Y COHERENCIA VISUAL
+
+1. Una migración cloud nunca puede ser “todo o nada” por namespace: si un perfil ya tiene algunas claves recuperadas pero falta una clave financiera concreta, Fluxia debe poder recuperar SOLO esa clave desde la misma cuenta autenticada, con backup previo y readback.
+2. Gastos fijos del Dashboard y de la pestaña Gastos fijos deben representar el mismo concepto contable. El total de compromisos = gastos fijos normales + financiación del mes. La pestaña debe mostrar el desglose.
+3. Nunca se insertarán datos personales dentro del código público como fallback. Una recuperación del usuario se hará desde su nube autenticada o mediante importación explícita de un backup privado.
+4. Dashboard aprobado: la cabecera principal conserva logo Fluxia, BETA oro, menú y campana. No duplicar saludo ni versión en el contenido. Bancos y nube se muestran en chips compactos.
+5. Todo selector mensual visible debe acompañarse de la fecha actual en formato “Hoy · día de mes” cuando proceda.
+6. Toda versión debe reflejar en README y Ayuda → Checklist los cambios realmente implementados y probados.
+7. Cada mejora suma; ninguna mejora sacrifica integridad. v95.39 permanece estable hasta autorización expresa.

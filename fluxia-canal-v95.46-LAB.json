@@ -1,0 +1,8 @@
+{
+  "version": "v95.46-LAB",
+  "channel": "LAB",
+  "entry": "index_fluxia_v95.46_LAB.html?v=v95.46-LAB",
+  "stable": "v95.39",
+  "status": "lab_only",
+  "note": "Recuperación quirúrgica de gastos fijos + coherencia Dashboard/Fijos + UI premium aprobada."
+}
