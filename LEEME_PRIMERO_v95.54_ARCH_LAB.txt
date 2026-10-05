@@ -1,0 +1,30 @@
+FLUXIA v95.54-ARCH-LAB · ENTREGA DE INTEGRIDAD
+Fecha: 05/10/2026
+
+IMPORTANTE
+- NO sobrescribe index.html.
+- NO promueve LAB a estable.
+- Estable protegida declarada: v95.39.
+- Entrada LAB exacta: index_fluxia_v95.54_ARCH_LAB.html?v=v95.54-ARCH-LAB
+- Los datos financieros existentes NO se reinicializan ni se hardcodean.
+
+CORRECCION DE IDENTIDAD PWA
+- HTML/title/meta/window.FLUXIA_VERSION: v95.54-ARCH-LAB
+- Manifest: manifest_v95.54_ARCH_LAB.webmanifest
+- start_url/id: archivo LAB explícito v95.54-ARCH
+- Service Worker: fluxia-sw-v95.54_ARCH.js
+- Texto visible de diagnóstico: v95.54-ARCH LAB
+- Canal LAB actualizado; estable v95.39 preservada.
+
+VALIDACION
+- 110 scripts inline: 0 errores de sintaxis.
+- Gate arquitectura v95.54-ARCH: 16/16 PASS.
+- Tests heredados de integridad/regresión: PASS.
+
+PRUEBA HUMANA PRIORITARIA
+1. Abrir el enlace LAB explícito.
+2. Confirmar que Ayuda/diagnóstico muestra v95.54-ARCH-LAB.
+3. Confirmar históricos sin editar nada.
+4. Comprobar Disponible.
+5. Usar una Hucha ya provisionada y verificar Disponible antes/después.
+6. Cerrar/reabrir y comprobar que borrados/aportaciones no reaparecen/desaparecen.

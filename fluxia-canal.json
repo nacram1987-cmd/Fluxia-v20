@@ -3,11 +3,11 @@
   "stable_version": "v95.39",
   "stable_file": "index.html",
   "stable_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index.html?v=v95.39",
-  "lab_version": "v95.47-LAB",
-  "lab_file": "index_fluxia_v95.47_LAB.html",
-  "lab_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index_fluxia_v95.47_LAB.html?v=v95.47-LAB",
+  "lab_version": "v95.54-ARCH-LAB",
+  "lab_file": "index_fluxia_v95.54_ARCH_LAB.html",
+  "lab_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index_fluxia_v95.54_ARCH_LAB.html?v=v95.54-ARCH-LAB",
   "pwa_name": "Fluxia BETA",
   "supabase_sync": true,
-  "integrity_gate": "fixed-key-recovery+version-coherence+profile-isolation+outbox+readback",
-  "notas": "v95.47: Gastos fijos premium aprobados y recuperación por clave; corrige referencias PWA/SW que abrían v95.44."
+  "integrity_gate": "v95.54-ARCH-single-authority+manual-recovery+profile-isolation+outbox+readback",
+  "notas": "v95.54-ARCH: recuperaciones automáticas legacy retiradas del boot; Disponible con autoridad única; identidad PWA/SW coherente. Estable v95.39 protegida."
 }

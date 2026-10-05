@@ -1,8 +1,8 @@
 {
   "name": "Fluxia BETA v95.54-ARCH-LAB",
   "short_name": "Fluxia BETA",
-  "description": "Fluxia BETA · v95.53 LAB · pago de Hucha atómico + Dashboard premium con más aire",
-  "start_url": "./index.html?v=v95.54-ARCH-LAB",
+  "description": "Fluxia BETA · v95.54-ARCH-LAB · autoridad financiera única y recuperación manual",
+  "start_url": "./index_fluxia_v95.54_ARCH_LAB.html?v=v95.54-ARCH-LAB",
   "scope": "/Fluxia-v20/",
   "display": "standalone",
   "background_color": "#F8F8F3",
@@ -22,5 +22,5 @@
       "purpose": "any maskable"
     }
   ],
-  "id": "./index_fluxia_v95.53_LAB.html?v=v95.53-LAB"
+  "id": "./index_fluxia_v95.54_ARCH_LAB.html?v=v95.54-ARCH-LAB"
 }
