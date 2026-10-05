@@ -1,0 +1,20 @@
+const fs=require('fs'),assert=require('assert');
+const s=fs.readFileSync(__dirname+'/index_fluxia_v95.54_ARCH_LAB.html','utf8');
+function ok(name,cond){assert.ok(cond,name);console.log('OK',name)}
+ok('v95.38 rebase manual only',s.includes('FluxiaRecovery9538={rebase:rebase')&&!s.includes('setTimeout(start,400)'));
+ok('v91.5 recovery manual only',s.includes('window.FluxiaRecuperarPlan = function()')&&!s.includes('setTimeout(function(){ applyBest(true); }, 600'));
+ok('fixed legacy recovery removed from boot',!s.includes('setTimeout(run,700)'));
+ok('missing-block recovery removed from boot',!s.includes('setTimeout(run,900)'));
+ok('Storage global monkey patch removed',!s.includes('P.setItem=function()')&&!s.includes('P.removeItem=function()')&&!s.includes('P.clear=function()'));
+ok('snapshot recovery remains manual',s.includes('restaurarManual'));
+ok('v95.52 available override removed',!s.includes('fluxia-v9552-real-available'));
+ok('single auditable available engine installed',s.includes('FluxiaDisponibleEngine')&&s.includes('ingresosCobrados')&&s.includes('impactoCajaCompartidos'));
+ok('no legacy shared fallback in final engine',!s.match(/FluxiaDisponibleEngine[\s\S]{0,3000}legacyCompartidos/));
+ok('full-state hucha transaction guard',s.includes('fluxia-v9554-financial-transaction-guard')&&s.includes("['ingresos',now.ingresos")&&s.includes("['movs',now.movs")&&s.includes("['comp',now.comp"));
+ok('hucha cash-neutral invariant is measured',s.includes("tipo:'disponible_no_neutro'"));
+ok('bank learned rules no delayed auto apply',!s.includes('setTimeout(function(){applyRules();refreshBankUI();},4200'));
+ok('bank no visibility auto reconciliation',!s.includes("setInterval(function(){if(document.visibilityState==='visible')autoSync();},20*60*1000"));
+ok('bank boot only paints known state',s.includes('el boot solo pinta el último estado conocido'));
+ok('empty profile not auto-filled by removed recoveries',!s.includes('fx48-safe-missing-blocks-salvage\">\n(function(){\n  async function run(){') || !s.includes('setTimeout(run,900)'));
+ok('stable v95.39 protected',fs.readFileSync(__dirname+'/fluxia-canal-v95.54-ARCH-LAB.json','utf8').includes('v95.39'));
+console.log('PASS v95.54-ARCH architecture gate');

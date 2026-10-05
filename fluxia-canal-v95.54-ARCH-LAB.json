@@ -1,0 +1,8 @@
+{
+  "version": "v95.54-ARCH-LAB",
+  "channel": "LAB",
+  "entry": "index.html?v=v95.54-ARCH-LAB",
+  "stableProtected": "v95.39",
+  "architecture": "single-authority/manual-recovery",
+  "generated": "2026-10-05"
+}
