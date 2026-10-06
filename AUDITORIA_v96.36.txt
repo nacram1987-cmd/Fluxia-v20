@@ -1,0 +1,1 @@
+Root cause: único uso de porBancoRef sin declaración en ese scope.\nFix: eliminado acceso al Map inexistente; se conserva dedupe equivalente mediante listaMovs().some(bancoRef===id).\n

@@ -1,0 +1,1 @@
+[OK] Eliminada referencia fuera de scope porBancoRef.\n[OK] Dedupe conserva comprobación real por bancoRef sobre listaMovs().\n[OK] NO-PURGE y motores financieros intactos.\n
