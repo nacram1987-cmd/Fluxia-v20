@@ -1,0 +1,10 @@
+FLUXIA v96.26-LAB
+[OK] Banco Push sin poll 30s.
+[OK] Backup 5min movido a idle/background.
+[OK] Sync ingresos/papelera 5min movido a foreground/online.
+[OK] Aviso presupuesto sin timer 6h residente.
+[OK] Fast lane táctil: sombras fuera durante gesto.
+[OK] Guardia de cargos retirados preservada.
+[OK] Idempotencia bancoRef preservada.
+[OK] Disponible claro/difuminado preservado.
+[OK] Variables/Bizum/Supabase/Huchas/Banco→Fijo preservados.

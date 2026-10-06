@@ -1,0 +1,4 @@
+JS blocks: 146
+Syntax errors: 0
+setInterval refs: 5
+Checks: {'guard': True, 'idempotent': True, 'fastlane': True, 'variables': True, 'bizum': True, 'brand': True, 'version': True}
