@@ -1,0 +1,5 @@
+NO-PURGE OK
+Toast ausente OK
+Menú 75ms OK
+Interaction budget 120ms OK
+Motores financieros intactos OK

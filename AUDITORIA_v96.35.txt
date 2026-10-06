@@ -1,0 +1,6 @@
+Syntax errors: 0 (node --check validado)
+setInterval refs: 3
+NO-PURGE: OK
+Toast retirada: AUSENTE
+Menú: 75 ms
+Interaction budget: 120 ms
