@@ -1,0 +1,30 @@
+CHECKLIST · FLUXIA v96.14-LAB
+
+CORRECCIONES
+[OK] “No mostrar más”/clasificaciones bancarias: restauración SELECTIVA desde nube.
+[OK] No se restauran colas pendientes antiguas.
+[OK] No se hace merge amplio de datos financieros por esta vía.
+[OK] Tras restaurar decisiones se resuelven pendientes y se repinta.
+[OK] Disponible NO hardcodeado ni compensado: sigue saliendo de la fórmula real.
+[OK] Auditoría contable local disponible mediante FluxiaFinancialAudit9614().
+
+RENDIMIENTO
+[OK] Cambio de pestaña muestra panel primero; selector/header se actualizan en requestAnimationFrame.
+[OK] Centro bancario deja de repintarse por cada click genérico de pestaña.
+[OK] Sin tocar persistencia ni sincronización para ganar velocidad.
+
+DISEÑO
+[OK] Disponible pasa de azul oscuro a azul cielo claro.
+[OK] Logo Fluxia coordinado con el nuevo azul.
+[OK] Wordmark y controles de cabecera armonizados.
+[OK] Scroll bancario sigue funcionando, scrollbar visual oculto.
+
+PRESERVADO
+[OK] Banco sincroniza; watchdog preservado.
+[OK] Banco→fijo, Huchas, Supabase, papelera y autenticación.
+[OK] Fórmula v95.93 de Disponible preservada.
+
+VALIDACIÓN
+[OK] Identidad v96.14-LAB.
+[OK] JavaScript sin errores sintácticos.
+[OK] ZIP CRC correcto.
