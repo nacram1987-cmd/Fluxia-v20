@@ -1,0 +1,7 @@
+[OK] Motores financieros congelados.
+[OK] NO-PURGE intacto.
+[OK] Sin toast histórico.
+[OK] Optimización estructural por retirada de observers cosméticos.
+ANTES: {'listeners': 485, 'mutation_observers': 6, 'intervals': 3, 'timeouts': 274, 'renderAll_refs': 84, 'renderDashboard_refs': 23, 'localStorage_sets': 249}
+DESPUÉS: {'listeners': 485, 'mutation_observers': 2, 'intervals': 3, 'timeouts': 273, 'renderAll_refs': 84, 'renderDashboard_refs': 23, 'localStorage_sets': 249}
+Retiradas: [('observer_compartidos', 1), ('observer_banco_global', 0), ('ui_observer_0', 1), ('ui_observer_1', 1), ('renderAll_nav_deferred', 0)]

@@ -1,0 +1,4 @@
+Syntax errors: 0
+Before: {'listeners': 485, 'mutation_observers': 6, 'intervals': 3, 'timeouts': 274, 'renderAll_refs': 84, 'renderDashboard_refs': 23, 'localStorage_sets': 249}
+After: {'listeners': 485, 'mutation_observers': 2, 'intervals': 3, 'timeouts': 273, 'renderAll_refs': 84, 'renderDashboard_refs': 23, 'localStorage_sets': 249}
+Removed: [('observer_compartidos', 1), ('observer_banco_global', 0), ('ui_observer_0', 1), ('ui_observer_1', 1), ('renderAll_nav_deferred', 0)]
