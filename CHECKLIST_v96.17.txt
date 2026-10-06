@@ -1,0 +1,10 @@
+FLUXIA v96.17-LAB
+[OK] Eliminados interceptores pointerup/click y monitor global de scroll v96.16.
+[OK] Scroll iOS nativo.
+[OK] HTML LAB network-first/no-store para evitar versión vieja.
+[OK] Disponible y logo azul cielo; wordmark sans premium.
+[OK] Dedupe de usuarios preservado.
+[OK] No mostrar más durable sin interceptar navegación.
+[OK] Fórmula Disponible preservada, sin hardcode.
+[OK] Traza forense FluxiaFinancialTrace9617 para aislar el desfase hacia ~218,96 €.
+[OK] Banco→fijo, Huchas, Supabase y watchdog preservados.
