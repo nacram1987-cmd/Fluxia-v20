@@ -1,0 +1,7 @@
+FLUXIA v96.34-LAB
+[OK] Interaction governor añadido.
+[OK] Presupuesto visual de 180 ms durante taps.
+[OK] Animaciones/blur/sombras no esenciales pausadas durante interacción.
+[OK] Menú fast-path y compositor cleanup preservados.
+[OK] NO-PURGE intacto; toast ausente.
+[OK] Cero cambios en motores financieros/sync/persistencia.

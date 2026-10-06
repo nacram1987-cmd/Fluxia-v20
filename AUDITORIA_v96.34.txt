@@ -1,0 +1,28 @@
+ANTES:
+{
+  "listeners": 484,
+  "timeouts": 271,
+  "intervals": 3,
+  "mutation_observers": 6,
+  "renderAll_calls": 54,
+  "renderDashboard_calls": 13,
+  "localStorage_sets": 249
+}
+DESPUES:
+{
+  "listeners": 485,
+  "timeouts": 274,
+  "intervals": 3,
+  "mutation_observers": 6,
+  "renderAll_calls": 54,
+  "renderDashboard_calls": 13,
+  "localStorage_sets": 249
+}
+CHECKS:
+{
+  "no_purge": true,
+  "toast_absent": true,
+  "governor": true,
+  "budget": true,
+  "version": true
+}
