@@ -1,0 +1,4 @@
+JS blocks: 149
+Syntax errors: 0
+setInterval refs: 3
+Checks: {'no_purge': True, 'toast_absent': True, 'idempotent': True, 'guard': True, 'variables': True, 'bizum': True, 'coalescer': True, 'finalspeed': True, 'version': True}

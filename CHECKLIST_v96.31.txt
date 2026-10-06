@@ -1,0 +1,9 @@
+FLUXIA v96.31-LAB
+[OK] NO-PURGE intacto y toast ausente.
+[OK] Disponible azul claro v96.29 intacto.
+[OK] Consolidación v96.30 preservada.
+[OK] Paneles inactivos fuera de layout/paint.
+[OK] Transiciones táctiles costosas desactivadas.
+[OK] touch-action vertical prioritario.
+[OK] Helper idle añadido sin alterar lógica.
+[OK] Motores financieros/sync/persistencia sin cambios.
