@@ -1,0 +1,16 @@
+FLUXIA · PROMPT MAESTRO v95.80
+
+LEY IMPERIAL: cada mejora suma; ninguna mejora sacrifica integridad. Nube Supabase principal; local fallback. Nunca perder datos, resetear a cero ni resucitar borrados.
+
+HUCHAS HISTÓRICAS:
+- Mantener 7 huchas y sus aportaciones.
+- El saldo visible resta usos/rescates.
+- Tributos: 390,48 aportados - 240,48 temporal = 150,00; por reponer 240,48.
+- Agua: 134,00 aportados - 132,90 definitivo = 1,10.
+- Amortización: 1.690,68 aportados - 0,10 definitivo = 1.690,58.
+- Total reservado: 2.817,88.
+- La reconciliación debe ser idempotente y sobrevivir a hidratación remota.
+
+CONTRASEÑA: tras cambio confirmado mostrar «La contraseña ha sido cambiada con éxito».
+
+ENTREGA: HTML + manifest + SW + iconos + PROMPT MAESTRO + README + CHANGELOG + CHECKLIST. Estable no se toca sin validación expresa.
