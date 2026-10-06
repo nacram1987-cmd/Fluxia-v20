@@ -1,0 +1,20 @@
+FLUXIA · PROMPT MAESTRO v95.79 · LEY IMPERIAL
+
+1. Cada mejora suma; ninguna mejora sacrifica integridad. La integridad financiera y la preservación de datos están por encima de diseño, automatizaciones o nuevas funciones.
+2. Supabase es la nube principal; local solo fallback. Nunca perder datos, nunca resetear a cero silenciosamente, nunca hacer reaparecer borrados.
+3. Dashboard debe reconciliar con el mismo estado central Almacen que las pestañas y repintar tras hidratación cloud.
+4. Recuperación de cuenta existente: autenticar primero; reconstruir el perfil únicamente desde filas del mismo UUID bajo RLS. Nunca mezclar perfiles.
+5. Si un bloque `profile:<id>:*` está tombstone pero existe una copia histórica viva `p_<id>__*` del MISMO perfil/UUID, se permite fallback de lectura seguro. No se escribirá automáticamente sobre la nube durante la detección.
+6. Huchas: en una recuperación histórica, si el mismo nombre aparece duplicado exclusivamente como pareja `excel` + `rebase_v9538`, se considera duplicación técnica de migración. Se conserva `rebase_v9538` y se fusionan solo aportaciones faltantes por fecha+importe. Nunca deduplicar huchas manuales o de orígenes ambiguos.
+7. Cualquier cargo/aporte/rescate de hucha puede asignarse a meses anteriores o cualquier mes válido. Borrados no reaparecen.
+8. Versionado correlativo. LAB se valida antes de promoción. ESTABLE protegida no se sustituye silenciosamente.
+9. Cada entrega incluye ZIP completo y enlaces LAB + ESTABLE.
+10. Cada entrega estabilizada debe incluir PROMPT MAESTRO, README, CHANGELOG y CHECKLIST. El README resume estado, arquitectura, valores autoritativos y siguiente fase; el CHECKLIST separa validaciones automáticas de las manuales.
+11. Valores autoritativos de recuperación histórica de Huchas validados en v95.77: 7 huchas; aportaciones brutas 3.191,36 €; octubre 671,72 €; Tributos saldo 150,00 € con rescate temporal 240,48 € por reponer; Agua saldo 1,10 € tras uso definitivo 132,90 € del 27/09/2026; saldo real reservado 2.817,88 €.
+12. Un saneamiento cloud excepcional debe ser idempotente, guardar cuarentena previa, actuar solo sobre el perfil autenticado y verificar lectura cloud antes de marcar éxito. Nunca modificar módulos no implicados.
+13. Un marcador local de migración nunca basta para considerar un saneamiento aplicado: antes de omitirlo se debe verificar el estado financiero efectivo en memoria/nube. Tras un reemplazo cloud confirmado, no se rehidratará inmediatamente una copia histórica que pueda revertir visualmente el canon.
+14. Mensajería de autenticación: un cambio de contraseña confirmado debe mostrar literalmente «La contraseña ha sido cambiada con éxito». Los errores reales de longitud o credenciales se mostrarán como tales; nunca disfrazar un error de Supabase con otro mensaje.
+
+15. En LAB no puede existir un Service Worker legacy que vuelva a registrar una versión anterior sobre el mismo scope. Todo registro debe apuntar exclusivamente al SW de la versión actual y usar actualización sin caché.
+16. La migración histórica de Huchas v95.79 está estrictamente limitada al perfil recuperado objetivo y usa marcador nuevo; una vez confirmada en nube, no debe interferir con ediciones posteriores del usuario.
+17. En recuperación de contraseña, el error Supabase `same_password` se interpreta como que la contraseña introducida ya es la vigente; el flujo continúa y muestra «La contraseña ha sido cambiada con éxito».
