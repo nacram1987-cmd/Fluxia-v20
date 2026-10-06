@@ -1,0 +1,5 @@
+v95.86-LAB · 06/10/2026
+- Supabase saneado a 7 huchas canónicas.
+- Bloqueo triple de duplicados: cloud + caché local + guardado.
+- Bloqueo de planRescate sobre canon completo.
+- Mantiene arreglo bancario HUB046 por entidad.
