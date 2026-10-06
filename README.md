@@ -1,35 +1,30 @@
 # Fluxia
 
 **Canal:** LAB  
-**Versión:** v95.77-LAB  
-**Base:** v95.76-LAB validada por el usuario  
+**Versión:** v95.78-LAB  
+**Base:** v95.77-LAB  
 **Principio rector:** cada mejora suma; ninguna mejora sacrifica integridad.
 
-## Estado de esta entrega
-Esta build consolida el saneamiento histórico de Huchas validado contra Supabase y prepara la base para la validación final previa a PWA.
+## Objetivo de esta entrega
+v95.78 corrige la causa por la que v95.77 podía seguir mostrando los importes antiguos aun conteniendo el canon correcto: el saneamiento confiaba en un marcador local y, tras confirmar la escritura cloud, llamaba de nuevo a `cargarTodo()`, pudiendo rehidratar el estado histórico inmediatamente.
 
-### Valores autoritativos de Huchas
+## Canon autoritativo de Huchas
 - 7 huchas reales.
-- Aportaciones históricas brutas: **3.191,36 €**.
-- Usos/rescates históricos: **373,48 €**.
+- Aportaciones brutas históricas: **3.191,36 €**.
+- Usos/rescates: **373,48 €**.
 - Saldo real reservado: **2.817,88 €**.
 - Octubre: **671,72 €** aportados.
-- Tributos: **150,00 €** de saldo y **240,48 € por reponer**.
-- Agua: **1,10 €** de saldo tras pago definitivo de **132,90 €** el 27/09/2026.
+- Tributos: **150,00 €** de saldo + **240,48 € por reponer**.
+- Agua: **1,10 €** tras pago definitivo de **132,90 €** del 27/09/2026.
 
-## Archivos de gobierno que acompañarán cada versión
-1. `PROMPT_MAESTRO_vXX.XX.txt` — reglas permanentes y leyes de integridad.
-2. `README.md` — estado de la versión, arquitectura y referencia rápida.
-3. `CHANGELOG_vXX.XX.md` — cambios concretos respecto a la anterior.
-4. `CHECKLIST_vXX.XX.md` — validaciones técnicas y manuales pendientes/completadas.
-5. HTML + manifest + Service Worker + iconos necesarios para la entrega.
+## Cambios v95.78
+- El marcador de saneamiento solo permite saltar la operación si el estado real ya coincide con el canon.
+- Nuevo marcador v95.78 para forzar una pasada limpia desde v95.77.
+- Tras verificación cloud, el estado canónico se mantiene en memoria y se repinta sin `cargarTodo()` inmediato.
+- El éxito del cambio de contraseña muestra: **«La contraseña ha sido cambiada con éxito»**.
 
-## Política de promoción
-Una LAB no se convierte en ESTABLE hasta validar datos, persistencia, cierre/reentrada y, cuando corresponda, instalación PWA. La ESTABLE existente nunca se sustituye silenciosamente.
+## Gobierno de entregas
+Cada versión completa incluye PROMPT MAESTRO, README, CHANGELOG, CHECKLIST, HTML, manifest, Service Worker e iconos.
 
 ## Próxima fase
-1. Validar v95.77 en Safari con los valores anteriores.
-2. Cerrar/reabrir y validar persistencia Supabase.
-3. Validar cierre de sesión/reentrada.
-4. Pasar a candidata PWA.
-5. Revisar módulo de bancos una vez estabilizada la PWA.
+Validar huchas y persistencia. Si pasa, preparar candidata PWA y después revisar bancos.

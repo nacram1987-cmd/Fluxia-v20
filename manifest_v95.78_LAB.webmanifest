@@ -1,0 +1,17 @@
+{
+  "name": "Fluxia BETA v95.78-LAB",
+  "short_name": "Fluxia BETA",
+  "description": "Fluxia · BETA v95.78-LAB · nube principal",
+  "start_url": "./index_fluxia_v95.78_LAB.html?v=v95.78-LAB",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F5F7F7",
+  "theme_color": "#157F87",
+  "lang": "es",
+  "categories": ["finance", "productivity"],
+  "icons": [
+    {"src":"./icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
+    {"src":"./icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"}
+  ]
+}
