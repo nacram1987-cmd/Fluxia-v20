@@ -1,0 +1,99 @@
+PROMPT MAESTRO · FLUXIA v96.00-LAB
+
+LEY IMPERIAL
+- Integridad financiera y preservación de datos por encima de cualquier mejora.
+- Cada mejora suma; ninguna mejora puede sacrificar datos, históricos, huchas, ingresos, fijos o sincronización.
+- Nube principal; local solo fallback.
+- Nunca duplicar un movimiento bancario ni un pago.
+- Borrado reversible cuando proceda.
+- v95.91 permanece como referencia histórica validada y no se sobrescribe.
+
+REGLA CONTABLE · DISPONIBLE REAL v96.00
+1. Un gasto fijo cuenta exactamente UNA vez en Disponible.
+2. Mientras no exista conciliación bancaria real, se reserva su importe planificado.
+3. Cuando existe movimiento bancario vinculado de verdad (cuentaComoFijo=true + vinculoFijoId), el importe bancario REAL sustituye al importe planificado de ese fijo en el cálculo de Disponible.
+4. El movimiento vinculado deja de pertenecer a Variables, pero no desaparece: se conserva como evidencia bancaria.
+5. Reclasificar Variable→Fijo jamás puede liberar dinero artificialmente ni duplicar el cargo.
+6. Una mera etiqueta «Fijo (banco)» sin vínculo real NO basta para excluir un movimiento de Variables.
+7. Si existen duplicados históricos apuntando al mismo fijo, el cálculo de Disponible usa una única evidencia bancaria.
+8. La conciliación banco→fijo debe reutilizar el motor general ya existente para cualquier fijo guardado; coincidencia inequívoca puede automatizarse, duda = preguntar.
+9. La conciliación debe ser idempotente: repetir sincronización no vuelve a pagar ni descontar el mismo fijo.
+10. No tocar huchas, rescates ni ingresos para corregir Disponible.
+
+OBJETIVO
+Que Dashboard muestre un Disponible coherente con los movimientos reales y las reservas, al céntimo, sin ajustes manuales inventados.
+
+
+OPTIMIZACIÓN v96.00 · LEY DE RENDIMIENTO
+- Optimizar nunca puede modificar el resultado contable ni sacrificar integridad.
+- Evitar cascadas de renderizados completos y reconciliaciones repetidas.
+- Agrupar repintados mediante requestAnimationFrame cuando sea seguro.
+- Tras hidratación, una reconciliación controlada; al volver a primer plano, aplicar cooldown.
+- Evitar trabajo continuo durante scroll.
+- Mantener scroll y modales estables en iOS/PWA y evitar flashes blancos.
+- No introducir parches globales sobre APIs del navegador que puedan romper módulos existentes.
+- No tocar huchas, ingresos, fijos, variables, bancos ni Supabase para obtener velocidad.
+- Toda optimización debe ser regresión-cero respecto a v95.93 en Disponible y persistencia.
+
+
+OPTIMIZACIÓN v96.00 · POLLING Y CICLO DE VIDA
+- No ejecutar sondeos frecuentes si el mismo estado puede reaccionar a eventos/MutationObserver.
+- Los sondeos de respaldo deben espaciarse y detener trabajo cuando document.visibilityState != visible.
+- No consultar banco/sincronización automática si el navegador está offline.
+- Evitar recorrer localStorage continuamente para pintar indicadores.
+- Priorizar delegación de eventos frente a rebinding periódico.
+- Mantener intactas seguridad, sincronización, integridad contable y fórmula de Disponible validada.
+- La v95.93 sigue siendo el punto funcional validado; v95.94 y v96.00 son checkpoints acumulativos de optimización.
+
+
+UX + RENDIMIENTO v96.00
+- Las vistas de Gastos Fijos y Variables deben mantener el diseño validado pero con densidad superior:
+  menos altura/padding por tarjeta y más movimientos visibles simultáneamente.
+- La compactación no puede reducir legibilidad, zonas táctiles críticas ni ocultar información.
+- Dashboard conserva su diseño; esta compactación afecta a las listas internas de Fijos/Variables.
+- Agrupar repintados de UI en requestAnimationFrame.
+- Debounce de MutationObserver ante ráfagas de cambios.
+- Reducir sondeos puramente visuales sin comprometer sincronización ni persistencia.
+- Reutilizar formateadores Intl cuando sea posible.
+- Aplicar containment únicamente a elementos visuales seguros.
+- Regresión cero respecto al Disponible validado en v95.93 (218,96 € en el estado de prueba del usuario).
+
+
+OPTIMIZACIÓN PROFUNDA v96.00
+- Mantener siempre PROMPT MAESTRO como autoridad.
+- La optimización no autoriza monkey-patches globales de localStorage, fetch, timers ni APIs del navegador.
+- Escrituras deduplicadas solo mediante helper opt-in y comparación exacta de valor.
+- Agrupar renders financieros relacionados en un único frame.
+- No renderizar paneles financieros cuando el documento está oculto.
+- Al volver a primer plano, refrescar solo lo necesario.
+- Mantener zonas táctiles de al menos 44 px aunque las tarjetas de Fijos/Variables sean compactas.
+- content-visibility/containment solo en listas puramente visuales; nunca envolver indiscriminadamente pantallas con formularios o modales.
+- No modificar fórmula financiera, huchas, ingresos, conciliación, Supabase ni reglas de borrado para ganar velocidad.
+- Referencia funcional: v95.93 validada; checkpoints acumulativos: v95.94, .95, .96, .97.
+
+
+TRAZABILIDAD DE ENTREGA v96.00
+- Cada nueva versión debe incluir CHECKLIST_vXX.XX.txt.
+- El checklist debe separar: integridad preservada, problemas solucionados, mejoras nuevas, validación realizada y pendientes conocidos.
+- En cada respuesta de entrega se resumirán exactamente esos cambios.
+- Ninguna optimización se considerará válida si rompe una ley del PROMPT MAESTRO.
+- Los checkpoints anteriores se conservan como rollback; nunca se sobrescriben.
+
+
+LEY DE IDENTIDAD DE VERSIÓN v96.00
+- El número mostrado en menú, título, meta fluxia-version, window.FLUXIA_VERSION, manifest/start_url y guard de build debe corresponder a la versión entregada.
+- La versión visible no puede depender de una etiqueta histórica heredada.
+- Cada build LAB tendrá manifest y service worker identificados con su versión cuando corresponda.
+- Antes de entregar, validar automáticamente que las fuentes activas de identidad contienen la versión actual.
+
+
+LEY DE IDENTIDAD VISUAL Y TIPOGRAFÍA v96.00
+- Fluxia tendrá un sistema tipográfico único, coherente y premium en toda la aplicación.
+- Familia oficial de interfaz: Georgia, con Times New Roman/serif únicamente como fallback de sistema.
+- No mezclar familias tipográficas por módulo salvo decisión expresa futura de rediseño global.
+- Jerarquía tipográfica centralizada mediante variables CSS: microtexto, auxiliar, cuerpo, títulos y cifra hero.
+- Importes usarán números tabulares para lectura financiera limpia y estable.
+- Inputs/selects/textarea conservarán 16 px para evitar zoom involuntario en iPhone.
+- Elegancia no puede sacrificar legibilidad, accesibilidad ni targets táctiles.
+- La tipografía no depende de fuentes externas/CDN: debe funcionar offline y en PWA.
+- Cualquier nueva pantalla debe reutilizar estas variables y la misma familia.

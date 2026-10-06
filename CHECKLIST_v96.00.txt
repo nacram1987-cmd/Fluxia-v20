@@ -1,0 +1,26 @@
+CHECKLIST · FLUXIA v96.00-LAB
+
+NUEVO · IDENTIDAD PREMIUM
+[OK] Sistema tipográfico único aplicado globalmente.
+[OK] Fuente oficial: Georgia; fallback de sistema serif.
+[OK] Escala tipográfica centralizada desde 12 px hasta hero responsive.
+[OK] Jerarquía homogénea para H1/H2/H3, labels, botones, navegación y microtexto.
+[OK] Importes con números tabulares/lining para alineación financiera.
+[OK] Disponible principal con escala hero premium.
+[OK] Inputs a 16 px para evitar zoom involuntario en iPhone.
+[OK] Fijos/Variables conservan compactación y mejoran jerarquía.
+[OK] Versión del menú/build actualizada a v96.00-LAB.
+[OK] Manifest/start_url y SW identificados como v96.00.
+
+INTEGRIDAD
+[OK] Fórmula de Disponible no modificada.
+[OK] Conciliación banco→fijo no modificada.
+[OK] Huchas, ingresos, variables, compartidos y Supabase no modificados.
+[OK] Borrados/papelera no modificados.
+[OK] Optimizaciones v95.94→v95.99 preservadas.
+
+VALIDACIÓN
+[OK] JavaScript sin errores sintácticos.
+[OK] Identidad activa v96.00-LAB.
+[OK] ZIP CRC correcto.
+[OK] PROMPT MAESTRO actualizado.
