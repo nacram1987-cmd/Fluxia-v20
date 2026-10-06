@@ -1,0 +1,3 @@
+JS blocks: 144
+Syntax errors: 0
+Checks: {'idempotent': True, 'no_old_existing_classify': True, 'variables': True, 'bizum': True, 'brand': True, 'perf': True, 'bankfixed': True, 'version': True}

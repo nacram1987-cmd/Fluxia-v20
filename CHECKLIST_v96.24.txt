@@ -1,0 +1,10 @@
+FLUXIA v96.24-LAB
+[OK] Reimportación idempotente por bancoRef.
+[OK] Movimiento bancario ya existente no vuelve a clasificarse ni borrarse.
+[OK] No vuelve a pasar por propio/puente/reponer_hucha.
+[OK] Lookup bancoRef O(1) y comparación normalizada.
+[OK] Variables 395,06 y reparación conservadora preservadas.
+[OK] Bizum → Variables/Bizums preservado.
+[OK] Rendimiento v96.23 preservado + contain/touch-action.
+[OK] Color Disponible/Logo intacto.
+[OK] Supabase/Huchas/Banco→Fijo/tombstones preservados.
