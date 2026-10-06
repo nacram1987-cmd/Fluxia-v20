@@ -1,42 +1,35 @@
-# Fluxia BETA v94.70-LAB
+# Fluxia
 
-## Objetivo
-Consolidación real del Inicio/Dashboard y del selector de meses, manteniendo la lógica financiera y el aislamiento de usuarios de versiones anteriores.
+**Canal:** LAB  
+**Versión:** v95.77-LAB  
+**Base:** v95.76-LAB validada por el usuario  
+**Principio rector:** cada mejora suma; ninguna mejora sacrifica integridad.
 
-## Cambios v94.70
-- Dashboard de Inicio con una sola jerarquía: Disponible real → desglose → acciones.
-- Se ocultan en Inicio los héroes/KPIs/resumen visual antiguos que duplicaban información.
-- Selector local del Dashboard: mes anterior, Hoy y mes siguiente.
-- El selector global se mantiene para el resto de pestañas y no duplica el control en Inicio.
-- Distinción explícita entre **REAL** (mes actual) y **PLAN** (mes seleccionado no actual).
-- Oro utilizado como acento funcional para provisiones/valor.
-- Notificaciones activadas por defecto y temporizador idempotente.
-- LAB y ESTABLE separados: LAB v94.70; ESTABLE v94.46 según PROMPT_MAESTRO.
-- manifest.webmanifest arranca explícitamente v94.70-LAB.
+## Estado de esta entrega
+Esta build consolida el saneamiento histórico de Huchas validado contra Supabase y prepara la base para la validación final previa a PWA.
 
-## Banco / Supabase
-**SIN CAMBIOS en Fluxia-banco-index.ts. No desplegar de nuevo.**
+### Valores autoritativos de Huchas
+- 7 huchas reales.
+- Aportaciones históricas brutas: **3.191,36 €**.
+- Usos/rescates históricos: **373,48 €**.
+- Saldo real reservado: **2.817,88 €**.
+- Octubre: **671,72 €** aportados.
+- Tributos: **150,00 €** de saldo y **240,48 € por reponer**.
+- Agua: **1,10 €** de saldo tras pago definitivo de **132,90 €** el 27/09/2026.
 
-## Pendiente de validación real
-- Movimiento Shell 7,50 €: comprobar banco → clasificación → gasto → Disponible real, sin duplicado.
-- CaixaBank/Revolut: comprobar continuidad de movimientos y estados.
-- Push bancario: validar entrega real en iPhone. Fluxia deja las preferencias activadas por defecto, pero el permiso del sistema y la entrega efectiva dependen del canal bancario/PWA.
-- Cierre de mes y cambio de octubre/noviembre.
+## Archivos de gobierno que acompañarán cada versión
+1. `PROMPT_MAESTRO_vXX.XX.txt` — reglas permanentes y leyes de integridad.
+2. `README.md` — estado de la versión, arquitectura y referencia rápida.
+3. `CHANGELOG_vXX.XX.md` — cambios concretos respecto a la anterior.
+4. `CHECKLIST_vXX.XX.md` — validaciones técnicas y manuales pendientes/completadas.
+5. HTML + manifest + Service Worker + iconos necesarios para la entrega.
 
-## Pruebas ejecutadas en esta entrega
-- Verificación de versión LAB en puntos obligatorios.
-- Verificación de ESTABLE en canal: v94.46-ESTABLE.
-- Verificación de manifest: start_url apunta a v94.70-LAB.
-- Verificación de ZIP: contenido y estructura.
-- Verificación de sintaxis JavaScript de bloques inline.
+## Política de promoción
+Una LAB no se convierte en ESTABLE hasta validar datos, persistencia, cierre/reentrada y, cuando corresponda, instalación PWA. La ESTABLE existente nunca se sustituye silenciosamente.
 
-No se declara la versión 100% verificada: las pruebas bancarias reales requieren ejecución con las cuentas conectadas del usuario.
-
-
-### Regla de datos v94.70
-Los registros financieros no se eliminan físicamente. La papelera es permanente y se sincroniza mediante Almacen cuando hay nube activa.
-
-
-## v94.70 · Dashboard
-- Eliminado del Dashboard el aviso visible «Para no perder nada»; las recomendaciones de copia/seguridad permanecen fuera del Dashboard.
-- Pinceladas visuales: misma tipografía heredada de la interfaz/pestañas, jerarquía más limpia, navegación mensual oro y tarjetas ligeramente refinadas sin rediseño.
+## Próxima fase
+1. Validar v95.77 en Safari con los valores anteriores.
+2. Cerrar/reabrir y validar persistencia Supabase.
+3. Validar cierre de sesión/reentrada.
+4. Pasar a candidata PWA.
+5. Revisar módulo de bancos una vez estabilizada la PWA.
