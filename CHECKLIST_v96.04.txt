@@ -1,0 +1,29 @@
+CHECKLIST · FLUXIA v96.04-LAB
+
+IDENTIDAD CROMÁTICA
+[OK] Dashboard fijado como fuente autoritativa de color.
+[OK] Ingresos = teal.
+[OK] Gastos Fijos = navy/ink.
+[OK] Huchas/Provisiones = oro.
+[OK] Variables = violeta.
+[OK] Títulos, cifras, acentos y botones principales heredan el color del módulo.
+[OK] Eliminado negro genérico como acento de los cuatro módulos.
+[OK] Texto secundario mantiene tono neutro para legibilidad.
+[OK] Fijos pendiente = navy; pagado = dorado.
+[OK] Variables usan el mismo violeta conceptual del Dashboard.
+[OK] Superficies de resumen reciben tinte suave del módulo.
+
+PRESERVADO
+[OK] Tipografía sans única y amable v96.03.
+[OK] Patrón compacto inspirado en Huchas.
+[OK] Densidad de Fijos/Variables.
+[OK] Disponible y motor financiero.
+[OK] Conciliación banco→fijo.
+[OK] Huchas, ingresos, variables y compartidos.
+[OK] Supabase/persistencia/papelera.
+
+VALIDACIÓN
+[OK] Identidad v96.04-LAB.
+[OK] JavaScript sin errores sintácticos.
+[OK] PROMPT MAESTRO actualizado.
+[OK] ZIP CRC correcto.
