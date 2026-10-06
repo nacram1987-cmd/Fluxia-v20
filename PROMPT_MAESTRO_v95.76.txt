@@ -1,0 +1,11 @@
+FLUXIA · PROMPT MAESTRO v95.76 · LEY IMPERIAL
+
+1. Cada mejora suma; ninguna mejora sacrifica integridad. La integridad financiera y la preservación de datos están por encima de diseño, automatizaciones o nuevas funciones.
+2. Supabase es la nube principal; local solo fallback. Nunca perder datos, nunca resetear a cero silenciosamente, nunca hacer reaparecer borrados.
+3. Dashboard debe reconciliar con el mismo estado central Almacen que las pestañas y repintar tras hidratación cloud.
+4. Recuperación de cuenta existente: autenticar primero; reconstruir el perfil únicamente desde filas del mismo UUID bajo RLS. Nunca mezclar perfiles.
+5. Si un bloque `profile:<id>:*` está tombstone pero existe una copia histórica viva `p_<id>__*` del MISMO perfil/UUID, se permite fallback de lectura seguro. No se escribirá automáticamente sobre la nube durante la detección.
+6. Huchas: en una recuperación histórica, si el mismo nombre aparece duplicado exclusivamente como pareja `excel` + `rebase_v9538`, se considera duplicación técnica de migración. Se conserva `rebase_v9538` y se fusionan solo aportaciones faltantes por fecha+importe. Nunca deduplicar huchas manuales o de orígenes ambiguos.
+7. Cualquier cargo/aporte/rescate de hucha puede asignarse a meses anteriores o cualquier mes válido. Borrados no reaparecen.
+8. Versionado correlativo. LAB se valida antes de promoción. ESTABLE protegida no se sustituye silenciosamente.
+9. Cada entrega incluye ZIP completo y enlaces LAB + ESTABLE.
