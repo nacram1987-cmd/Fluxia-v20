@@ -1,0 +1,9 @@
+{
+  "name":"Fluxia BETA",
+  "short_name":"Fluxia",
+  "start_url":"./index.html",
+  "scope":"./",
+  "display":"standalone",
+  "background_color":"#FBF8F2",
+  "theme_color":"#287C78"
+}

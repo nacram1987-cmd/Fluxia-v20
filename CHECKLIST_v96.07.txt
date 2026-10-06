@@ -1,0 +1,7 @@
+CHECKLIST v96.07
+[OK] index.html canónico.
+[OK] Bridges v96.04/v96.05/v96.06 -> index.html.
+[OK] SW canónico network-first y limpieza de registros históricos.
+[OK] Cabecera Fluxia/logo compactada y equilibrada.
+[OK] Banco pinta estado inmediato desde caché y reconcilia después.
+[OK] Sin cambios en fórmulas/importes financieros.
