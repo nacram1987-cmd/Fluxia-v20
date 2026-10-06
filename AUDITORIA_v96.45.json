@@ -1,0 +1,35 @@
+{
+  "version": "v96.45-LAB",
+  "syntax_errors": 0,
+  "invariants": {
+    "NO_PURGE": true,
+    "NO_TOAST": true,
+    "BANK_IDEMPOTENT": true,
+    "PUENTE_INGRESO": true,
+    "PUENTE_VARIABLE": true
+  },
+  "critical": {
+    "goToTab": true,
+    "renderDashboard": true,
+    "renderAll": true,
+    "cargarTodo": true,
+    "disponibleEfectivo": true,
+    "variablesTotal": true
+  },
+  "hazards": {
+    "purge_toast": false,
+    "v9641_engine": false,
+    "aggressive_content_visibility": false
+  },
+  "metrics": {
+    "html_bytes": 2269626,
+    "scripts": 152,
+    "listeners": 484,
+    "DOMContentLoaded": 80,
+    "visibilitychange": 30,
+    "observers": 2,
+    "intervals": 3,
+    "timeouts": 270
+  },
+  "validation_seconds": 4.33
+}

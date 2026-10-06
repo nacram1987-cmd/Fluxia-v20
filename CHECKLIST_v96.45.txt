@@ -1,0 +1,7 @@
+[OK] 0 errores JS
+[OK] NO-PURGE
+[OK] bankRef idempotente
+[OK] traspasos neutros
+[OK] motor 96.41 congelante ausente
+[OK] funciones críticas presentes
+[OK] ZIP CRC
