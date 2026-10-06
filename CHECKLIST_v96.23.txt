@@ -1,0 +1,9 @@
+FLUXIA v96.23-LAB
+[OK] Mantiene todas las optimizaciones v96.22.
+[OK] Paneles inactivos fuera de layout/paint en touch.
+[OK] Listados largos usan content-visibility:auto.
+[OK] will-change persistente neutralizado en cabecera/drawer.
+[OK] Sin cambios cromáticos: Disponible sigue exactamente igual que logo.
+[OK] Variables 395,06 reparación conservadora preservada.
+[OK] Bizum saliente → Variables/Bizums preservado.
+[OK] Supabase/Huchas/Banco→Fijo/tombstones preservados.

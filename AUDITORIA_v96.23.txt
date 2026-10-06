@@ -1,0 +1,6 @@
+JS blocks: 143
+JS syntax errors: 0
+body observers: 0
+setInterval refs: 9
+setTimeout refs: 260
+addEventListener refs: 465
