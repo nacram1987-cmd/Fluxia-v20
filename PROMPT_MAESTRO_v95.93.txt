@@ -1,0 +1,24 @@
+PROMPT MAESTRO · FLUXIA v95.93-LAB
+
+LEY IMPERIAL
+- Integridad financiera y preservación de datos por encima de cualquier mejora.
+- Cada mejora suma; ninguna mejora puede sacrificar datos, históricos, huchas, ingresos, fijos o sincronización.
+- Nube principal; local solo fallback.
+- Nunca duplicar un movimiento bancario ni un pago.
+- Borrado reversible cuando proceda.
+- v95.91 permanece como referencia histórica validada y no se sobrescribe.
+
+REGLA CONTABLE · DISPONIBLE REAL v95.93
+1. Un gasto fijo cuenta exactamente UNA vez en Disponible.
+2. Mientras no exista conciliación bancaria real, se reserva su importe planificado.
+3. Cuando existe movimiento bancario vinculado de verdad (cuentaComoFijo=true + vinculoFijoId), el importe bancario REAL sustituye al importe planificado de ese fijo en el cálculo de Disponible.
+4. El movimiento vinculado deja de pertenecer a Variables, pero no desaparece: se conserva como evidencia bancaria.
+5. Reclasificar Variable→Fijo jamás puede liberar dinero artificialmente ni duplicar el cargo.
+6. Una mera etiqueta «Fijo (banco)» sin vínculo real NO basta para excluir un movimiento de Variables.
+7. Si existen duplicados históricos apuntando al mismo fijo, el cálculo de Disponible usa una única evidencia bancaria.
+8. La conciliación banco→fijo debe reutilizar el motor general ya existente para cualquier fijo guardado; coincidencia inequívoca puede automatizarse, duda = preguntar.
+9. La conciliación debe ser idempotente: repetir sincronización no vuelve a pagar ni descontar el mismo fijo.
+10. No tocar huchas, rescates ni ingresos para corregir Disponible.
+
+OBJETIVO
+Que Dashboard muestre un Disponible coherente con los movimientos reales y las reservas, al céntimo, sin ajustes manuales inventados.
