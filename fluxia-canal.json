@@ -1,13 +1,23 @@
 {
-  "canal": "BETA",
-  "stable_version": "v95.39",
-  "stable_file": "index.html",
-  "stable_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index.html?v=v95.39",
-  "lab_version": "v95.54-ARCH-LAB",
-  "lab_file": "index_fluxia_v95.54_ARCH_LAB.html",
-  "lab_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index_fluxia_v95.54_ARCH_LAB.html?v=v95.54-ARCH-LAB",
-  "pwa_name": "Fluxia BETA",
-  "supabase_sync": true,
-  "integrity_gate": "v95.54-ARCH-single-authority+manual-recovery+profile-isolation+outbox+readback",
-  "notas": "v95.54-ARCH: recuperaciones automáticas legacy retiradas del boot; Disponible con autoridad única; identidad PWA/SW coherente. Estable v95.39 protegida."
+  "canal": "LAB",
+  "version": "v94.80-LAB",
+  "lab_version": "v94.80-LAB",
+  "stable_version": "v94.46-ESTABLE",
+  "timestamp": "2026-10-03T20:00:00Z",
+  "maintenance": false,
+  "update_url": "https://nacram1987-cmd.github.io/Fluxia-v20/index.html?v=v94.80-LAB",
+  "features": {
+    "mes_selector_unificado": {
+      "enabled": true,
+      "ubicacion": "todas_pestanas",
+      "color": "#8B6914 -> #6B5312",
+      "posicion": "sticky",
+      "scope": "global"
+    },
+    "supabase_sync": {
+      "enabled": true,
+      "auto_sync": true,
+      "retry_count": 5
+    }
+  }
 }

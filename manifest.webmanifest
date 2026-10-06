@@ -1,9 +1,32 @@
 {
-  "name": "Fluxia BETA",
+  "name": "Fluxia BETA v94.80-LAB",
   "short_name": "Fluxia",
-  "start_url": "./index.html",
-  "scope": "./",
+  "description": "Tu plan de dinero mes a mes: ingresos, gastos, provisiones y cuentas compartidas. Conexi\u00f3n bancaria PSD2 de solo lectura.",
+  "start_url": "./index.html?v=v94.80-LAB",
   "display": "standalone",
-  "background_color": "#FBF8F2",
-  "theme_color": "#7ABDB6"
+  "orientation": "portrait",
+  "scope": "./",
+  "lang": "es-ES",
+  "dir": "ltr",
+  "theme_color": "#0E7C90",
+  "background_color": "#FFFFFF",
+  "categories": [
+    "finance",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "version": "94.80",
+  "manifest_version": 2,
+  "prefer_related_applications": false
 }
