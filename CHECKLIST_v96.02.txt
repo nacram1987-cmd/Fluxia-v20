@@ -1,0 +1,34 @@
+CHECKLIST · FLUXIA v96.02-LAB
+
+SOLUCIONADO
+[OK] Tarjetas globales notablemente más estrechas.
+[OK] Dashboard reducido en altura y aire vertical.
+[OK] Fijos y Variables aún más compactos.
+[OK] Separación entre tarjetas reducida.
+[OK] Secciones con menor margen vertical.
+[OK] Eliminada parte de la sensación fría/clínica.
+
+NUEVO · CALIDEZ PREMIUM
+[OK] Fondo marfil/papel cálido.
+[OK] Tarjetas blanco cálido.
+[OK] Texto principal azul-verde oscuro.
+[OK] Oro apagado para detalles y jerarquía.
+[OK] Teal cálido para acciones principales.
+[OK] Bordes cálidos y sombras suaves.
+[OK] Badges/chips con superficie crema.
+[OK] Modales y formularios integrados en la misma paleta.
+
+PRESERVADO
+[OK] Tipografía única premium.
+[OK] Sistema de espaciado/radios.
+[OK] Disponible y motor financiero.
+[OK] Banco→fijo.
+[OK] Huchas, ingresos, variables y compartidos.
+[OK] Supabase, persistencia, papelera.
+[OK] Optimizaciones acumuladas.
+
+VALIDACIÓN
+[OK] Identidad v96.02-LAB.
+[OK] JavaScript sin errores sintácticos.
+[OK] PROMPT MAESTRO actualizado.
+[OK] ZIP CRC correcto.
