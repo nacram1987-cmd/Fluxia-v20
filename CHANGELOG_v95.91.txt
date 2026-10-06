@@ -1,0 +1,1 @@
+v95.91-LAB: Endesa/Securitas conciliación retroactiva; los fijos bancarios desaparecen de Variables sin borrar su evidencia; reintento post-nube.
