@@ -1,0 +1,4 @@
+[OK] Guard diagnóstico retirado: 1
+[OK] Fast-path CSS estable
+[OK] Finanzas intactas
+Métricas {'listeners': 484, 'DOMContentLoaded': 80, 'visibilitychange': 30, 'observers': 2, 'intervals': 3}

@@ -1,0 +1,3 @@
+0 syntax errors
+metrics={'listeners': 484, 'DOMContentLoaded': 80, 'visibilitychange': 30, 'observers': 2, 'intervals': 3}
+NO-PURGE OK
