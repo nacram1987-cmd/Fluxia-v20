@@ -1,0 +1,7 @@
+[OK] Render coordinator rAF.
+[OK] Fast paint goToTab: 0.
+[OK] Render pairs coalesced: 0.
+[OK] Interaction governor removed: 2.
+[OK] Financial engines frozen.
+ANTES {'scripts': 155, 'listeners': 485, 'DOMContentLoaded': 80, 'visibilitychange': 30, 'MutationObserver': 2, 'renderAll': 84, 'renderDashboard': 23, 'querySelectorAll': 161, 'innerHTML': 300, 'localStorage_set': 249}
+DESPUÉS {'scripts': 155, 'listeners': 484, 'DOMContentLoaded': 80, 'visibilitychange': 30, 'MutationObserver': 2, 'renderAll': 84, 'renderDashboard': 25, 'querySelectorAll': 161, 'innerHTML': 300, 'localStorage_set': 249}
