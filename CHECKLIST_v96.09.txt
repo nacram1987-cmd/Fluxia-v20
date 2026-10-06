@@ -1,0 +1,8 @@
+CHECKLIST v96.09
+[OK] Disponible: fondo claro cálido, sin modificar cálculo.
+[OK] Logo: mismo color base #7ABDB6 en toda la app.
+[OK] Legibilidad: texto oscuro #103D3F sobre Disponible claro.
+[OK] Manifest/theme-color alineados con marca.
+[OK] Colores semánticos no se alteran.
+[OK] PWA canónica y puentes históricos preservados.
+[OK] Bancos instantáneos y Nunca más cloud preservados.
