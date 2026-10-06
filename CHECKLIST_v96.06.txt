@@ -1,0 +1,9 @@
+[OK] PWA start_url canónico ./index.html
+[OK] Registro SW apunta a archivo real ./fluxia-sw.js
+[OK] Navegación network-first/no-store
+[OK] update() al abrir/volver a primer plano
+[OK] Ruta agregada de notificaciones silenciada; queda aviso por movimiento
+[OK] Tag bancario idempotente en SW
+[OK] Fijos/Financiaciones compactos
+[OK] No se modifican fórmulas financieras
+[PENDIENTE] Validación real iPhone/GitHub Pages y push servidor tras despliegue
