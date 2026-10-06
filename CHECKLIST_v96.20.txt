@@ -1,0 +1,10 @@
+FLUXIA v96.20-LAB · IDENTIDAD PWA BLINDADA
+[OK] Encontrado registrador activo que seguía apuntando a fluxia-sw-v95.81.js.
+[OK] Encontrado manifest dinámico activo con start_url v95.82-LAB.
+[OK] Version guard anterior sólo desregistraba SW v95.* y podía dejar otros históricos.
+[OK] Ahora se desregistran SW antiguos del mismo repo/scope y se registra sólo fluxia-sw-v96.20.js.
+[OK] Manifest dinámico antiguo deshabilitado; manifest estático manifest_v96.20_LAB.webmanifest autoritativo.
+[OK] HTML navigation = network/no-store.
+[OK] Sentinel de identidad repinta versión y evita identidad vieja.
+[OK] Motor v96.19 de rendimiento y reparación conservadora Variables preservados.
+[OK] Disponible no hardcodeado.
