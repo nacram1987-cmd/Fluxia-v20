@@ -1,0 +1,9 @@
+FLUXIA v95.65-LAB - GITHUB DIRECTO
+
+Subir TODOS los archivos de este ZIP a la raiz de Fluxia-v20. No borrar ni sustituir v95.39.
+
+Supabase Auth > URL Configuration debe permitir:
+https://nacram1987-cmd.github.io/Fluxia-v20/**
+
+Prueba: LAB en Safari > Olvidaste contraseña > ULTIMO email > Reset password > nueva contraseña.
+Esperado: no onboarding; recupera perfil cloud propio y recarga datos.
