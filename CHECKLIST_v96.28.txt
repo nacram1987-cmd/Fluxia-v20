@@ -1,0 +1,10 @@
+FLUXIA v96.28-LAB
+[OK] purgarAntiguos() = no-op permanente.
+[OK] FluxiaBancoLimpiar() = no-op permanente.
+[OK] Texto del toast de retirada eliminado del runtime.
+[OK] No hay llamada automática a purgarAntiguos.
+[OK] Disponible casi transparente con matiz azul.
+[OK] Fast path touch: sin smooth scroll, paneles inactivos fuera de layout.
+[OK] Idempotencia bancoRef v96.24 preservada.
+[OK] Guardia bancaria v96.25 preservada.
+[OK] Variables/Bizum/Supabase/Huchas/Banco→Fijo preservados.

@@ -1,0 +1,7 @@
+JS blocks: 146
+Syntax errors: 0
+setInterval refs: 3
+purgarAntiguos runtime: NO-OP
+FluxiaBancoLimpiar runtime: NO-OP
+toast retirada exacto presente: NO
+auto purge calls: 0
