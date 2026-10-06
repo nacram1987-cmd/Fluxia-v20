@@ -1,0 +1,7 @@
+v95.85-LAB · 06/10/2026
+- FIX CRÍTICO: huchas duplicadas Excel + rebase_v9538.
+- Canon sellado: 7 huchas fx38_prov_*.
+- Bloqueado fallback planRescate cuando el canon está completo.
+- Persistencia de colección deduplicada en nube al detectarse duplicidad.
+- Mantiene fix bancario HUB046 por entidad de v95.84.
+- Sin cambios destructivos sobre ingresos ni gastos fijos.
