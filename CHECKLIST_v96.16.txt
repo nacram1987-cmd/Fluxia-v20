@@ -1,0 +1,10 @@
+FLUXIA v96.16-LAB
+[OK] Scroll vertical nativo/táctil; listener pasivo.
+[OK] Navegación data-tab priorizada en pointerup.
+[OK] Doble ejecución click posterior bloqueada.
+[OK] Transiciones pesadas desactivadas.
+[OK] “No mostrar más” fuerza volcado durable tras la acción.
+[OK] Dedupe de usuarios v96.15 preservado.
+[OK] Disponible/logo azul cielo y wordmark sans preservados.
+[OK] Fórmula Disponible, banco→fijo, Huchas, Supabase y Bancos preservados.
+[OK] JS validado; ZIP CRC correcto.

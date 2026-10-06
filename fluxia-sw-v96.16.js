@@ -1,0 +1,1 @@
+const CACHE='fluxia-lab-v96.16-LAB';self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil((async()=>{const k=await caches.keys();await Promise.all(k.filter(x=>x.startsWith('fluxia-lab-')&&x!==CACHE).map(x=>caches.delete(x)));await self.clients.claim();})()));
