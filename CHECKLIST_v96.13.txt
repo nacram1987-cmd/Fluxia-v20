@@ -1,0 +1,26 @@
+CHECKLIST · FLUXIA v96.13-LAB · CANDIDATA DE PRUEBA
+
+OPTIMIZACIÓN DE CADENCIAS
+[OK] Manifest lock visual: True. Cadencia de vigilancia 5s → 30s y scheduler visual.
+[OK] Cabecera bancaria visual: False. Integrada en scheduler central 30s.
+[OK] Ambas se suspenden visualmente en background y reanudan sin ráfaga.
+[OK] Notificaciones diarias/presupuesto NO tratadas como visuales.
+[OK] Procesos de nube, backup, sesión, sincronización banco e ingresos NO modificados.
+[INFO] setInterval textuales restantes (incluidos fallbacks): 14.
+
+CANDIDATA
+[OK] Diagnóstico local FluxiaCandidate9613 disponible.
+[OK] Sin telemetría remota ni datos financieros.
+[OK] Preparada para prueba integral en iPhone.
+
+PRESERVADO
+[OK] Disponible 218,96 € como referencia validada si el dataset no cambia.
+[OK] Ingresos 2864,94 € / Fijos 1015,74 € / Huchas 918,88 € como referencias del snapshot validado.
+[OK] Banco→fijo, Huchas, Supabase, papelera, Bancos/watchdog.
+[OK] Diseño premium, azul de marca, tarjetas compactas, PWA/iOS.
+
+VALIDACIÓN
+[OK] Identidad v96.13-LAB.
+[OK] JavaScript sin errores sintácticos.
+[OK] PROMPT MAESTRO actualizado.
+[OK] ZIP CRC correcto.
