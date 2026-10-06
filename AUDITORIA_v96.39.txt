@@ -1,0 +1,4 @@
+Syntax errors: 0
+Metrics: {'listeners': 485, 'intervals': 3, 'observers': 6, 'scripts': 153}
+Timing replacements: {'transition-duration:\\s*\\.075s!important': 1, 'transition-duration:\\s*\\.06s!important': 1, '\\bmark\\(120\\)': 1, 'setTimeout\\(relax,\\s*140\\)': 1}
+NO-PURGE: OK

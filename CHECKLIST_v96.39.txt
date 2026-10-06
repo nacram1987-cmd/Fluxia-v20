@@ -1,0 +1,7 @@
+[OK] Menú 50 ms.
+[OK] Overlay 40 ms.
+[OK] Prioridad táctil 80 ms.
+[OK] Relax compositor 100 ms.
+[OK] Traspasos propios neutros preservados.
+[OK] NO-PURGE intacto.
+Reemplazos: {'transition-duration:\\s*\\.075s!important': 1, 'transition-duration:\\s*\\.06s!important': 1, '\\bmark\\(120\\)': 1, 'setTimeout\\(relax,\\s*140\\)': 1}
