@@ -1,4 +1,4 @@
-Fluxia v95.93-LAB
+Fluxia v95.94-LAB
 Corrección estructural del Disponible:
 - fijo pendiente = importe planificado;
 - fijo conciliado = importe bancario real;
