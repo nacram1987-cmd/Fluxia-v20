@@ -1,0 +1,8 @@
+CHECKLIST v96.05
+[OK] Integridad financiera: no se modifican fórmulas ni importes.
+[OK] Fijos/Financiaciones: tarjetas compactadas con targets >=44px.
+[OK] Huchas/Provisiones: compactación ligera.
+[OK] Nunca más/reconocido: decisión canónica persistida en nube.
+[OK] Ocultar 24h: until persistido en v2_ui_snoozes cloud-first.
+[OK] Identidad: v96.05 en HTML/manifest/SW.
+[PENDIENTE] Validación real contra Supabase requiere prueba autenticada del usuario tras despliegue.
