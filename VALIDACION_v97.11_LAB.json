@@ -1,0 +1,42 @@
+{
+  "build": "v97.11-LAB",
+  "base": "v97.10-LAB",
+  "visual_reference": "v97.6",
+  "rollback_commit": "d867b5425ce8165a9e88ceb6d65f30902745011b",
+  "canonical_update_commit": "90fb1303a75fc73575d65446ae5e697676274881",
+  "numbered_artifact_commit": "c3b5277320558a0a39d855fd03c015b05942b8a5",
+  "checks": {
+    "doctype": true,
+    "clean_html_close": true,
+    "nothing_after_html": true,
+    "native_menu_pointerdown_preserved": true,
+    "financial_markers_preserved": true,
+    "global_touchmove_fastlane_removed": true,
+    "redundant_menu_touch_layers_removed": true,
+    "bank_ui_polling_removed": true,
+    "bank_refresh_deferred_after_splash": true,
+    "visual_dom_not_redesigned": true
+  },
+  "metrics": {
+    "bytes_before": 2211786,
+    "bytes_after": 2208747,
+    "scripts_before": 159,
+    "scripts_after": 156,
+    "styles_before": 100,
+    "styles_after": 98,
+    "timeouts_before": 282,
+    "timeouts_after": 277,
+    "intervals_before": 4,
+    "intervals_after": 3,
+    "pointerdown_listeners_before": 5,
+    "pointerdown_listeners_after": 3,
+    "touchstart_listeners_before": 3,
+    "touchstart_listeners_after": 2
+  },
+  "not_claimed": [
+    "physical iPhone timing benchmark",
+    "real bank provider webhook timing",
+    "full financial dataset equality under live authenticated session"
+  ],
+  "verdict": "LAB structurally apt; physical PWA validation pending"
+}
