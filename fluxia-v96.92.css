@@ -1,0 +1,85 @@
+:root{
+--fx-font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",sans-serif;
+--sans:var(--fx-font)!important;--serif:var(--fx-font)!important;--mono:var(--fx-font)!important;
+--fx-blue:#0E7C90;--fx-blue-deep:#0A5F6E;--fx-blue-soft:#EAF5F7;
+--fx-gold:#C99A45;--fx-gold-deep:#8A622B;--fx-gold-soft:#F6EBD5;
+--fx-ink:#17383D;--fx-muted:#6E8287
+}
+html{-webkit-text-size-adjust:100%!important;text-size-adjust:100%!important}
+html,body,button,input,select,textarea{font-family:var(--fx-font)!important}
+body{font-size:14px!important}
+.panel .sec-title,.panel .section-title,.fx47-fijos-titlewrap h3{font-family:var(--fx-font)!important;font-weight:800!important;letter-spacing:-.02em!important}
+.panel .hint,.panel .sec-mes,.panel .eyebrow{font-family:var(--fx-font)!important;font-weight:500!important}
+.tm-val,.pv-hero-val,.fij-hero-val,.ing-hero-val,.gv-hero-val,.comp-hero-val,.kpi .v,.dashboard-card-value,.fx47-summary-total,.fx47-fin-amount,.fx47-fixed-amount{font-family:var(--fx-font)!important;font-weight:800!important;font-variant-numeric:tabular-nums!important}
+@media(max-width:700px){
+html body header.top#fx32Header{padding:calc(4px + env(safe-area-inset-top,0px)) 0 5px!important;margin:0 0 4px!important;min-height:0!important;border-radius:0!important}
+html body #fx32Header .fx30-headgrid{grid-template-columns:36px minmax(0,1fr) 36px!important;gap:8px!important;min-height:38px!important;align-items:center!important}
+html body #fx32Header .fx30-iconbtn{width:36px!important;height:36px!important;min-width:36px!important;min-height:36px!important;padding:0!important;border-radius:11px!important;box-shadow:none!important}
+html body #fx32Header .fx30-brandzone{justify-self:center!important;width:max-content!important;max-width:100%!important;height:34px!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;padding:3px 7px 3px 4px!important;border-radius:11px!important;background:rgba(255,255,255,.78)!important;border:1px solid rgba(14,124,144,.10)!important;box-sizing:border-box!important}
+html body #fx32Header .fx30-wordmark{display:flex!important;align-items:center!important;gap:6px!important;font-family:var(--fx-font)!important;font-size:18px!important;font-weight:800!important;line-height:1!important;letter-spacing:-.035em!important;color:var(--fx-ink)!important;white-space:nowrap!important}
+html body #fx32Header .fx32-logo{display:block!important;width:24px!important;height:24px!important;min-width:24px!important;max-width:24px!important;min-height:24px!important;max-height:24px!important;flex:0 0 24px!important;aspect-ratio:1/1!important;border-radius:7px!important;filter:none!important;box-shadow:none!important}
+html body #fx32Header #fluxiaBetaBadge{font-family:var(--fx-font)!important;font-size:6px!important;font-weight:850!important;line-height:1!important;padding:3px 4px!important;border-radius:5px!important;letter-spacing:.04em!important;box-shadow:none!important}
+html body #fx34Context{margin:0 0 6px!important;padding:0!important}
+html body #fx34Context .fx30-statusrow{display:grid!important;grid-template-columns:1fr 1fr!important;gap:6px!important;width:100%!important}
+html body #fx34Context .fx-banco-pill{min-height:28px!important;padding:5px 7px!important;border-radius:9px!important;font-size:9px!important;font-weight:700!important;box-shadow:none!important}
+.panel .sec-head{padding:9px 11px!important;margin:0 0 7px!important;border-radius:12px!important;min-height:42px!important}
+.panel .sec-icon{width:30px!important;height:30px!important;min-width:30px!important;font-size:15px!important;border-radius:9px!important}
+.panel .sec-title{font-size:15px!important;line-height:1.05!important}
+.panel .sec-mes{font-size:9px!important}
+.panel .hint{font-size:10px!important;line-height:1.35!important;margin:0 0 8px!important}
+.pv-hero{padding:11px 12px!important;margin:7px 0 9px!important;border-radius:14px!important}
+.pv-hero-lbl{font-size:10px!important}.pv-hero-val{font-size:24px!important;margin:1px 0 6px!important}.pv-chip{font-size:9px!important;padding:4px 7px!important}
+.pv-card{border-radius:15px!important;padding:12px!important;margin:0 0 9px!important;box-shadow:0 4px 14px rgba(20,30,44,.045)!important}
+.pv-card::before{height:54px!important}.pv-top{gap:9px!important}.pv-ico{width:36px!important;height:36px!important;flex:0 0 36px!important;border-radius:10px!important;font-size:17px!important}
+.pv-nombre{font-size:13px!important;font-weight:800!important}.pv-sub,.pv-lbl,.pv-mes{font-size:9px!important}.pv-pill{font-size:8px!important;padding:4px 7px!important}
+.pv-saldo{margin:11px 0 8px!important}.pv-big{font-size:20px!important}.pv-mes b{font-size:10px!important}.pv-bar{height:6px!important}
+.pv-acts{gap:6px!important;margin-top:9px!important}.pv-btn{min-height:34px!important;padding:7px 6px!important;border-radius:9px!important;font-size:10px!important}
+
+#panel-fijos .fx47-list-section{margin:0 0 8px!important;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;overflow:visible!important}
+#panel-fijos .fx47-section-head{padding:6px 3px!important;margin:0 0 4px!important;border:0!important;font-size:9px!important;font-weight:800!important;letter-spacing:.045em!important}
+#panel-fijos .fx47-fin-card,#panel-fijos .fx47-fixed-card{--fx-state:var(--fx-blue);--fx-tint:var(--fx-blue-soft);position:relative!important;overflow:hidden!important;margin:0 0 9px!important;padding:11px!important;border:1px solid rgba(14,124,144,.15)!important;border-radius:15px!important;background:#fff!important;box-shadow:0 4px 14px rgba(20,30,44,.045)!important}
+#panel-fijos .fx47-fin-card::before,#panel-fijos .fx47-fixed-card::before{content:""!important;position:absolute!important;left:0!important;right:0!important;top:0!important;height:54px!important;background:linear-gradient(180deg,var(--fx-tint),rgba(255,255,255,0))!important;pointer-events:none!important}
+#panel-fijos .fx47-fin-card:has(.fx47-status.paid),#panel-fijos .fx47-fixed-card:has(.fx47-status.paid){--fx-state:var(--fx-gold);--fx-tint:var(--fx-gold-soft);border-color:rgba(201,154,69,.28)!important}
+#panel-fijos .fx47-fin-card>*,#panel-fijos .fx47-fixed-card>*{position:relative!important}
+#panel-fijos .fx47-fin-main,#panel-fijos .fx47-fixed-main{grid-template-columns:38px minmax(0,1fr) auto!important;gap:9px!important;align-items:center!important}
+#panel-fijos .fx47-merchant{width:38px!important;height:38px!important;min-width:38px!important;border-radius:11px!important;font-size:16px!important;box-shadow:none!important;background:#fff!important}
+#panel-fijos .fx47-merchant .leroy{width:31px!important;height:20px!important;font-size:5px!important;padding-bottom:2px!important}
+#panel-fijos .fx47-fin-title,#panel-fijos .fx47-fixed-title{font-family:var(--fx-font)!important;font-size:12px!important;font-weight:800!important;line-height:1.1!important;margin:0!important}
+#panel-fijos .fx47-fin-sub,#panel-fijos .fx47-fixed-sub,#panel-fijos .fx47-fin-date,#panel-fijos .fx47-fixed-date,#panel-fijos .fx47-fin-meta{font-size:8px!important;line-height:1.2!important;margin-top:2px!important;color:var(--fx-muted)!important}
+#panel-fijos .fx47-fin-side,#panel-fijos .fx47-fixed-side{min-width:88px!important;text-align:right!important}
+#panel-fijos .fx47-fin-amount,#panel-fijos .fx47-fixed-amount{font-size:15px!important;line-height:1!important}
+#panel-fijos .fx47-status{margin-top:4px!important;padding:3px 6px!important;border-radius:999px!important;font-size:8px!important;font-weight:800!important;color:var(--fx-blue-deep)!important;background:var(--fx-blue-soft)!important;border-color:rgba(14,124,144,.20)!important}
+#panel-fijos .fx47-status.paid{color:var(--fx-gold-deep)!important;background:var(--fx-gold-soft)!important;border-color:rgba(201,154,69,.30)!important}
+#panel-fijos .fx47-card-actions{grid-template-columns:1fr 1fr!important;gap:6px!important;margin-top:8px!important}
+#panel-fijos .fx47-card-actions button{min-height:34px!important;height:34px!important;padding:5px 7px!important;border-radius:9px!important;font-size:9px!important;font-weight:800!important;box-shadow:none!important}
+#panel-fijos .fx47-fin-card:not(:has(.fx47-status.paid)) .fx47-card-actions .primary,#panel-fijos .fx47-fixed-card:not(:has(.fx47-status.paid)) .fx47-card-actions .primary{background:var(--fx-blue)!important;color:#fff!important}
+#panel-fijos .fx47-fin-card:has(.fx47-status.paid) .fx47-card-actions .primary,#panel-fijos .fx47-fixed-card:has(.fx47-status.paid) .fx47-card-actions .primary{background:var(--fx-gold-soft)!important;color:var(--fx-gold-deep)!important;border-color:rgba(201,154,69,.30)!important}
+#panel-fijos .fx47-card-actions .secondary{background:#fff!important;color:var(--fx-blue-deep)!important}
+#panel-fijos .fx47-card-actions .danger{min-height:24px!important;height:24px!important;font-size:8px!important;margin-top:-1px!important}
+
+#panel-fijos .fx47-fijos-hero{padding:10px 11px!important;margin:0 0 7px!important;border-radius:14px!important}
+#panel-fijos .fx47-fijos-titlewrap h3{font-size:15px!important}#panel-fijos .fx47-fijos-titlewrap p{font-size:9px!important}
+#panel-fijos .fx47-fijos-icon{width:32px!important;height:32px!important;min-width:32px!important;font-size:15px!important;border-radius:9px!important}
+#panel-fijos .fx47-fijos-monthbox{flex-basis:118px!important}#panel-fijos .fx47-fijos-monthctl button{min-height:28px!important;height:28px!important}
+#panel-fijos .fx47-fijos-monthctl strong{font-size:10px!important}#panel-fijos .fx47-fijos-today{font-size:8px!important}
+#panel-fijos .fx47-fijos-summary{padding:10px 11px!important;margin:0 0 8px!important;border-radius:14px!important}
+#panel-fijos .fx47-summary-total{font-size:25px!important}#panel-fijos .fx47-summary-sub{font-size:9px!important}
+#panel-fijos .fx47-summary-split{gap:6px!important}#panel-fijos .fx47-split-card{padding:7px!important;border-radius:10px!important}
+#panel-fijos .fx47-split-ico{font-size:13px!important}#panel-fijos .fx47-split-card span{font-size:8px!important}#panel-fijos .fx47-split-card b{font-size:11px!important}
+#panel-fijos .fx47-summary-divider{margin:7px 0!important}#panel-fijos .fx47-pay-pending span,#panel-fijos .fx47-paid-copy{font-size:8px!important}
+#panel-fijos .fx47-pay-pending strong{font-size:12px!important}#panel-fijos .fx47-progress-track{height:5px!important}
+
+#panel-financiaciones .fin-item{--fx-state:var(--fx-blue);--fx-tint:var(--fx-blue-soft);position:relative!important;overflow:hidden!important;padding:11px!important;margin:0 0 9px!important;border:1px solid rgba(14,124,144,.15)!important;border-radius:15px!important;background:#fff!important;box-shadow:0 4px 14px rgba(20,30,44,.045)!important;opacity:1!important}
+#panel-financiaciones .fin-item::before{content:""!important;position:absolute!important;left:0!important;right:0!important;top:0!important;height:54px!important;background:linear-gradient(180deg,var(--fx-tint),rgba(255,255,255,0))!important;pointer-events:none!important}
+#panel-financiaciones .fin-item>*{position:relative!important}
+#panel-financiaciones .fin-item.ya-pagado{--fx-state:var(--fx-gold);--fx-tint:var(--fx-gold-soft);border-color:rgba(201,154,69,.28)!important;opacity:1!important}
+#panel-financiaciones .fin-item.ya-pagado .nombre{text-decoration:none!important}
+#panel-financiaciones .fin-top{margin-bottom:6px!important;gap:8px!important}
+#panel-financiaciones .fin-top .nombre{font-size:12px!important;font-weight:800!important}#panel-financiaciones .fin-top .cuota{font-size:11px!important;font-weight:800!important}
+#panel-financiaciones .bar{height:6px!important;margin:6px 0!important}#panel-financiaciones .bar>div{background:var(--fx-state)!important}
+#panel-financiaciones .fin-meta{font-size:8px!important;gap:6px!important}#panel-financiaciones .badge{font-size:7px!important;padding:3px 6px!important}
+#panel-financiaciones .pago-row{margin-top:6px!important}
+#panel-financiaciones .pago-btn{padding:5px 8px!important;font-size:8px!important;background:var(--fx-blue-soft)!important;color:var(--fx-blue-deep)!important;border-color:rgba(14,124,144,.24)!important}
+#panel-financiaciones .fin-item.ya-pagado .pago-ok{color:var(--fx-gold-deep)!important;font-weight:800!important}
+#panel-financiaciones .reset-link{font-size:8px!important;margin-top:5px!important}
+}
