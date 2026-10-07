@@ -2,7 +2,7 @@ const VERSION='v96.98-LAB';
 const CACHE='fluxia-shell-'+VERSION;
 const APP_SHELL=[
   './',
-  './index_fluxia_v96.96_LAB.html?v=v96.98-LAB',
+  './index_fluxia_v96.98_LAB.html?v=v96.98-LAB',
   './fluxia-ui-v96.95.css',
   './manifest_v96.96_LAB.webmanifest'
 ];
@@ -43,7 +43,7 @@ self.addEventListener('fetch',event=>{
           caches.open(CACHE).then(cache=>cache.put(req,copy));
           return response;
         })
-        .catch(()=>caches.match(req).then(r=>r||caches.match('./index_fluxia_v96.96_LAB.html?v=v96.98-LAB')))
+        .catch(()=>caches.match(req).then(r=>r||caches.match('./index_fluxia_v96.98_LAB.html?v=v96.98-LAB')))
     );
     return;
   }
