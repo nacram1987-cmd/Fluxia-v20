@@ -1,0 +1,23 @@
+PROMPT MAESTRO FLUXIA v96.92
+BASE: v96.82 validada como punto de control financiero.
+LEY: los datos v96.82 saneados son autoridad histórica vigente y no se reconstruyen automáticamente.
+LEY RENDIMIENTO: navegación visible primero; cálculos secundarios después del primer paint.
+GASTOS VARIABLES: prohibido bloquear la entrada por Disponible, estadísticas, datalist, purgas o reconciliaciones.
+LOGOS: resolver de comercio central compartido por Variables/Fijos; activación visual en fase separada para no mezclar riesgos.
+PWA: objetivo permanente = actualizar la instalación existente sin reinstalar por versión. La migración de entrada permanente se activa tras validar esta LAB.
+DENSIDAD: Fijos se compactará en fase visual separada; revisar Huchas después, sin tocar contabilidad.
+
+
+═══════════════════════════════════════════════════════════════
+REGLAS IMPERIALES AÑADIDAS EN v96.92
+═══════════════════════════════════════════════════════════════
+1) PROMPT MAESTRO = LEY. Ningún cambio puede contradecir una regla vigente.
+2) BLOQUEO FUNCIONAL: lógica financiera, Supabase, persistencia, reconciliación, cálculos, fuentes de datos, render funcional y estructura ya validada NO se modifican salvo necesidad real, explicación previa y autorización expresa del usuario.
+3) CAMBIOS VISUALES AISLADOS: diseño/UX/CSS no pueden modificar lógica financiera ni datos.
+4) SISTEMA TIPOGRÁFICO ÚNICO: una familia global. Misma función visual = mismo tamaño, peso, interlineado y tratamiento en todas las pestañas.
+5) SISTEMA CROMÁTICO ÚNICO: mismo significado = mismo color. Para Gastos fijos y Financiaciones: PENDIENTE = azul/teal; PAGADO = oro.
+6) PATRÓN HUCHAS COMO REFERENCIA: Gastos fijos y Financiaciones deben usar el lenguaje visual de las tarjetas de Huchas: tarjeta compacta, radio, borde, tinte superior, jerarquía y densidad coherentes.
+7) CABECERA/LOGO: el isotipo Fluxia siempre conserva proporción 1:1 (cuadrado). El conjunto superior marca+nombre+BETA es horizontal, pequeño, centrado y proporcionado. Menú y campana simétricos.
+8) MOBILE-FIRST: reducir densidad global sin sacrificar legibilidad. Evitar grandes bloques, huecos y controles sobredimensionados.
+9) BASE SEGURA: v96.92 parte funcionalmente de v96.83 validada. Las versiones visuales descartadas v96.84–v96.91 no son base válida.
+10) CADA MEJORA SUMA; NINGUNA MEJORA SACRIFICA INTEGRIDAD.
