@@ -1,0 +1,1 @@
+v96.71: componente real fx30-dashboard del index historico 06-10-2026 sobre FAST-SAFE v96.67; scripts historicos excluidos; estable intacta.
