@@ -4130,6 +4130,16 @@ body .panel:not(#panel-dashboard) button{touch-action:manipulation;}
 .fx-month-wide button{height:38px;border:0;border-radius:11px;background:var(--surface-2);font-size:1.35rem;color:var(--ink);font-weight:700}.fx-month-wide .fxmw-label{text-align:center;font-weight:800;color:var(--ink);font-size:.9rem}.fx-month-wide .fxmw-label small{display:block;font-size:.67rem;color:var(--muted);font-weight:600;margin-top:1px}
 .pv-deficit{margin:8px 0;padding:8px 10px;border:1px solid var(--gold);border-radius:10px;background:var(--gold-soft);font-size:.76rem;color:var(--ink)}
 @media(max-width:600px){.panel{padding-left:12px!important;padding-right:12px!important}.fx-month-wide{width:100%;margin-left:0;margin-right:0}}
+</style><style id="fluxia-v9716-unified-tabs">
+:root{--fx-tab-card:#fff;--fx-tab-soft:#f7fafc;--fx-tab-border:rgba(20,62,85,.10)}
+#mesSelectGlobal{width:calc(100% - 24px)!important;max-width:760px!important;margin:8px auto 14px!important;box-sizing:border-box!important}
+#mesSelectGlobal>div{width:100%!important;display:flex!important;justify-content:space-between!important;align-items:center!important}
+.panel:not(#panel-resumen)>.sec-head{min-height:54px;padding:10px 12px!important;margin:0 0 8px!important;border:1px solid var(--fx-tab-border);border-radius:14px;background:var(--fx-tab-card);box-sizing:border-box}
+.panel:not(#panel-resumen)>.sec-head .sec-icon{font-size:1.15rem}
+.panel:not(#panel-resumen)>.sec-head .sec-title{font-size:1.02rem!important}
+.panel:not(#panel-resumen)>.hint{margin-top:6px!important}
+.panel:not(#panel-resumen) .tu-mes-like,.panel:not(#panel-resumen) .pv-hero,.panel:not(#panel-resumen) .cv-hero{border-radius:16px!important;border:1px solid var(--fx-tab-border)!important;box-shadow:0 4px 14px rgba(20,62,85,.05)!important}
+@media(max-width:520px){#mesSelectGlobal{width:calc(100% - 16px)!important;margin-left:8px!important;margin-right:8px!important}}
 </style></head>
 <script>
 window._offlineMode=!navigator.onLine;
@@ -15502,20 +15512,20 @@ function iconoProvision(nombre){
   return '🏺';
 }
 
-function fxReconciliarCesped70V9714(){
+function fxReconciliarCesped70V9716(){
   try{
     var p=(provisiones||[]).find(function(x){return /mantenimiento\s+c[eé]sped/i.test(String(x&&x.nombre||''));});
-    if(!p||p._fxCesped70V9714===true)return false;
+    if(!p||p._fxCesped70V9716===true)return false;
     p.aportaciones=p.aportaciones||{};
     var all=[];
     Object.keys(p.aportaciones).forEach(function(m){(p.aportaciones[m]||[]).forEach(function(a){all.push({mes:m,a:a});});});
     var total=all.reduce(function(t,x){return t+(Number(x.a&&x.a.importe)||0);},0);
-    if(total<=70.005){p._fxCesped70V9714=true;p._fxUpdatedAt=Date.now();guardarProvisiones();return false;}
+    if(total<=70.005){p._fxCesped70V9716=true;p._fxUpdatedAt=Date.now();guardarProvisiones();return false;}
     all.sort(function(a,b){return String(a.a&&a.a.fecha||'').localeCompare(String(b.a&&b.a.fecha||''));});
     var rebuilt={},running=0;
     all.forEach(function(x){var v=Number(x.a&&x.a.importe)||0;if(v>0&&running+v<=70.005){(rebuilt[x.mes]||(rebuilt[x.mes]=[])).push(x.a);running+=v;}});
-    if(running<69.995){var diff=_r2(70-running);(rebuilt.septiembre||(rebuilt.septiembre=[])).push({id:'fx9714_cesped_reconcile',fecha:'2026-09-30',importe:diff,origen:'conciliacion-confirmada-v97.14'});}
-    p.aportaciones=rebuilt;p._fxCesped70V9714=true;p._fxCesped70Before=_r2(total);p._fxUpdatedAt=Date.now();
+    if(running<69.995){var diff=_r2(70-running);(rebuilt.septiembre||(rebuilt.septiembre=[])).push({id:'fx9714_cesped_reconcile',fecha:'2026-09-30',importe:diff,origen:'conciliacion-confirmada-v97.16'});}
+    p.aportaciones=rebuilt;p._fxCesped70V9716=true;p._fxCesped70Before=_r2(total);p._fxUpdatedAt=Date.now();
     guardarProvisiones();
     try{mostrarToast('✓ Mantenimiento césped reconciliado a 70,00 €','var(--teal)',2600);}catch(e){}
     return true;
@@ -15524,7 +15534,7 @@ function fxReconciliarCesped70V9714(){
 
 function renderProvisiones(){
   if(window.FluxiaSync954){provisiones=JSON.parse(FluxiaSync954.mergeCloudValue('v2_provisiones',JSON.stringify(provisiones),'[]',Almacen.getItem('v2_sync_tombstones'),null,Almacen.getItem('v2_sync_restores'),null,Almacen.getItem('v2_explicit_deletions'),null));usosProvisiones=usosProvisiones.filter(function(x){return !FluxiaSync954.isDeleted('v2_usos',x.id);});}
-  try{ fxReconciliarCesped70V9714(); }catch(e){}
+  try{ fxReconciliarCesped70V9716(); }catch(e){}
   try{ pintarAvisoProvTab(); }catch(e){}
   document.getElementById('provMesLabel').textContent = MES_LABEL[mesSeleccionado];
   const hintEl = document.getElementById('provMesLabelHint');
@@ -15553,7 +15563,7 @@ function renderProvisiones(){
     const pill = completo ? '✓ Al día' : (aportMes > 0 ? 'Faltan ' + eur(est.falta, 2) : 'Sin aportar');
     const apts = aportacionesProvisionEnMes(p, mesSeleccionado);
     const prestamos = usosProvisiones.filter(u => u.provision === p.nombre && esTemporalPendiente(u));
-    const periodo = eur(meta, 2) + ' al mes' + (p.fin ? ' · hasta ' + MES_LABEL[p.fin] : '');
+    const deficitFx=fxDeficitProvision(p); const periodo = eur(meta, 2) + ' al mes' + (p.fin ? ' · hasta ' + MES_LABEL[p.fin] : '') + (deficitFx>0.005 ? ' · ⚠️ Pendiente de cubrir '+eur(deficitFx,2) : '');
     const deficitHTML = deficitProvision>0.005 ? '<div class="pv-deficit">⚠️ Pendiente de cubrir <b>'+eur(deficitProvision,2)+'</b> · no es un rescate</div>' : '';
 
     const _fxDeficitCardHTML = deficitHTML;
@@ -16879,7 +16889,7 @@ function renderGastosVariables(){
       const div = document.createElement('div');
       div.className = 'mov-item';
       const fechaTxt = mv.fecha ? mv.fecha.slice(8,10)+'/'+mv.fecha.slice(5,7) : MES_LABEL[mv.mes];
-      const metaTxt = fechaTxt + (mv.categoria ? ' · '+mv.categoria : '');
+      const metaTxt = fechaTxt + (mv.categoria ? ' · '+mv.categoria : '') + (mv.provisionVinculada ? ' · '+iconoProvision(mv.provisionVinculada)+' '+mv.provisionVinculada+(Number(mv.provisionDeficit)>0.005?' · déficit '+eur(mv.provisionDeficit,2):' · cubierto') : '');
       div.innerHTML = `
         <div>
           <div class="concepto">${FluxiaMerchant.html(mv.concepto,"fx-variable-merchant")}${escapeHtml(mv.concepto || 'Gasto variable')}${mv.origen==='excel' ? ' <span class="badge excel">Excel</span>' : ''}</div>
