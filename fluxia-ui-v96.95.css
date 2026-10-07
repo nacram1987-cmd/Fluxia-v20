@@ -125,3 +125,123 @@ html body #modalConexionBancaria #fxPushBancoBanner{margin:0 0 6px!important;pad
 :root[data-theme="dark"] body #panel-fijos :is(.fx47-fixed-card,.fx47-fin-card){--fx-state-bg:#1A3238}:root[data-theme="dark"] body #panel-fijos .is-paid{--fx-state-bg:#382E20}
 :root[data-theme="dark"] body #panel-fijos :is(.fx47-fijos-summary,.fx47-merchant){background:#1A2D2E!important}:root[data-theme="dark"] body #panel-fijos .fx47-fijos-summary{background:linear-gradient(150deg,#382E20 0%,#1A2D2E 52%,#1A3238 100%)!important}:root[data-theme="dark"] body #panel-fijos .fx47-split-card{background:rgba(19,29,53,.72)!important;border-color:#354747!important}:root[data-theme="dark"] body #panel-fijos :is(.fx47-fixed-title,.fx47-fin-title,.fx47-summary-total,.fx47-split-card b,.fx47-fijos-titlewrap h3){color:#DFEBE6!important}
 @media(max-width:350px){html body #fx32Header .fx30-wordmark{font-size:18px!important}html body #panel-fijos .fx47-fijos-monthbox{flex-basis:145px!important}html body #panel-fijos .fx47-status{font-size:8px!important}html body #panel-fijos :is(.fx47-fixed-title,.fx47-fin-title){font-size:12px!important}}
+
+
+/* ============================================================
+   FLUXIA v96.97-LAB · NORMALIZACION VISUAL GLOBAL
+   Solo presentacion. No modifica logica financiera ni datos.
+   ============================================================ */
+:root{
+  --fx-module-hero-min-h:176px;
+  --fx-module-hero-pad:16px;
+  --fx-module-hero-radius:18px;
+  --fx-module-title-size:17px;
+  --fx-module-title-weight:700;
+  --fx-module-label-size:10px;
+  --fx-module-label-weight:650;
+  --fx-module-value-size:28px;
+  --fx-module-value-weight:700;
+  --fx-module-gap:10px;
+}
+html body :is(
+ #fxDashboard67 .fx30-hero,
+ #panel-ingresos .pv-hero,
+ #panel-fijos .fx47-fijos-summary,
+ #panel-provisiones .pv-hero,
+ #panel-gastos-variables .gv-hero,
+ #panel-compartidos #compSaldoCard,
+ #panel-compartidos #compDetalleHero,
+ #panel-presupuestos #presupuestoHero,
+ #panel-efectivo #efectivoHero,
+ #panel-simulador #resultSimulador,
+ #panel-analisis #anHeroResumen
+){
+ box-sizing:border-box!important;
+ min-height:var(--fx-module-hero-min-h)!important;
+ padding:var(--fx-module-hero-pad)!important;
+ margin:0 0 14px!important;
+ border-radius:var(--fx-module-hero-radius)!important;
+ box-shadow:var(--fx-ui-shadow)!important;
+ font-family:var(--sans)!important;
+}
+html body .panel :is(.sec-title,h2,h3){font-family:var(--sans)!important}
+html body .panel .sec-head .sec-title{
+ font-size:var(--fx-module-title-size)!important;
+ font-weight:var(--fx-module-title-weight)!important;
+ line-height:1.2!important;
+}
+html body :is(
+ #panel-ingresos .pv-hero,
+ #panel-fijos .fx47-fijos-summary,
+ #panel-provisiones .pv-hero,
+ #panel-gastos-variables .gv-hero,
+ #panel-compartidos #compSaldoCard,
+ #panel-compartidos #compDetalleHero,
+ #panel-presupuestos #presupuestoHero,
+ #panel-efectivo #efectivoHero,
+ #panel-simulador #resultSimulador,
+ #panel-analisis #anHeroResumen
+) :is(h2,h3,.title,.pv-title,.gv-title,.label){
+ font-weight:var(--fx-module-title-weight)!important;
+}
+html body #panel-fijos .fx47-fijos-summary{
+ --fx-module-accent:#B58A45;
+ border-color:color-mix(in srgb,var(--fx-module-accent) 28%,transparent)!important;
+ border-left:4px solid var(--fx-module-accent)!important;
+ background:linear-gradient(150deg,#FBF4E7 0%,#FFFEFB 68%,#FBF4E7 100%)!important;
+}
+html body #panel-fijos .fx47-fijos-summary :is(
+ .fx47-summary-eyebrow,.fx47-summary-total,.fx47-split-card b,
+ .fx47-pay-pending strong
+){color:var(--fx-module-accent)!important}
+html body #panel-ingresos .pv-hero{--fx-module-accent:#2E9B83}
+html body #panel-provisiones .pv-hero{--fx-module-accent:#A88951}
+html body #panel-gastos-variables .gv-hero{--fx-module-accent:#C17D52}
+html body #panel-compartidos :is(#compSaldoCard,#compDetalleHero){--fx-module-accent:#617F9A}
+html body #panel-presupuestos #presupuestoHero{--fx-module-accent:#558DA2}
+html body #panel-efectivo #efectivoHero{--fx-module-accent:#2E9B83}
+html body #panel-simulador #resultSimulador{--fx-module-accent:#8176A0}
+html body #panel-analisis #anHeroResumen{--fx-module-accent:#768A74}
+html body :is(
+ #panel-ingresos .pv-hero,
+ #panel-provisiones .pv-hero,
+ #panel-gastos-variables .gv-hero,
+ #panel-compartidos #compSaldoCard,
+ #panel-compartidos #compDetalleHero,
+ #panel-presupuestos #presupuestoHero,
+ #panel-efectivo #efectivoHero,
+ #panel-simulador #resultSimulador,
+ #panel-analisis #anHeroResumen
+){
+ border-left-color:var(--fx-module-accent)!important;
+}
+html body :is(
+ #panel-ingresos .pv-hero,
+ #panel-provisiones .pv-hero,
+ #panel-gastos-variables .gv-hero,
+ #panel-compartidos #compSaldoCard,
+ #panel-compartidos #compDetalleHero,
+ #panel-presupuestos #presupuestoHero,
+ #panel-efectivo #efectivoHero,
+ #panel-simulador #resultSimulador,
+ #panel-analisis #anHeroResumen
+) :is(h2,h3,.title,.pv-title,.gv-title,.amount,.value,strong){
+ color:var(--fx-module-accent)!important;
+}
+html body #panel-fijos :is(.fx47-fixed-card,.fx47-fin-card){
+ margin:12px 0!important;
+}
+html body #panel-fijos :is(.fx47-fixed-title,.fx47-fin-title){
+ font-weight:700!important;
+}
+html body #panel-fijos :is(.fx47-fixed-card,.fx47-fin-card):not(.is-paid){
+ --fx-state:#2E7E91;
+ --fx-state-bg:#EDF6F7;
+}
+html body #panel-fijos :is(.fx47-fixed-card,.fx47-fin-card).is-paid{
+ --fx-state:#B58A45;
+ --fx-state-bg:#FBF4E7;
+}
+html body #panel-fijos :is(.fx47-fixed-title,.fx47-fin-title,.fx47-fixed-amount,.fx47-fin-amount,.fx47-status){
+ color:var(--fx-state)!important;
+}
