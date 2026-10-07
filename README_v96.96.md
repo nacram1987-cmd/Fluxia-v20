@@ -1,4 +1,4 @@
-# Fluxia v96.96-LAB
+# Fluxia v96.97-LAB
 
 Base funcional: v96.95-LAB.
 
@@ -17,3 +17,6 @@ Integridad:
 - Sin cambios de persistencia/Supabase.
 - Sin cambios de cálculos, reconciliación o datos.
 - Stable histórica no promovida.
+
+
+v96.97: normalización visual transversal de tarjetas principales, pesos tipográficos y color semántico de cada módulo. PWA versionada para refresco sin reinstalación.
