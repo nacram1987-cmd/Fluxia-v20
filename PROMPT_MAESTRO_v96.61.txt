@@ -1,0 +1,523 @@
+PROMPT MAESTRO FLUXIA v96.56-LAB — REGLAS VIGENTES 2026-10-07
+
+Precedencia: este bloque recoge la instrucción actual del propietario y prevalece sobre instrucciones históricas contradictorias conservadas al final. El histórico se conserva para trazabilidad; no autoriza reactivar capas retiradas.
+
+1. Integridad financiera, separación de usuarios, persistencia en Supabase y rendimiento, por ese orden. Cada mejora suma; ninguna sacrifica funcionalidad.
+2. Nube/Supabase es fuente de verdad. PWA, caché y localStorage no pueden causar pérdida, duplicación ni resurrección. Sin sesión válida no se cargan datos de otro usuario. Una cuenta nueva comienza a cero.
+3. NO-PURGE: la purga histórica permanece DESACTIVADA permanentemente. purgarAntiguos() y FluxiaBancoLimpiar() devuelven 0; tampoco una llamada manual puede reactivarlas.
+4. Deduplicación idempotente por bankRef (bancoRef en el código). Mantener Bancos y reconocimiento banco→fijo.
+5. Gastos bancarios internos: magnitud positiva antes de descontar, tal como v96.49. Un cargo real reduce Disponible exactamente una vez. Nunca restar un negativo para aumentar Disponible.
+6. Traspasos entre cuentas propias: impacto 0, con trazabilidad. Detector determinista con confirmación, fecha/hora bancaria y orden de Variables quedan pendientes después de la base rápida y estable.
+7. No modificar index.html, canales, manifest ni workers ESTABLE. LAB tampoco puede desregistrar su worker, reclamar su ámbito, borrar sus cachés ni dirigir notificaciones a ESTABLE.
+8. Cada LAB usa manifest, worker y ámbito específicos de su HTML. Un único registro autoritativo FluxiaSW. Esperar su propia activación, nunca aceptar el registro de ESTABLE mediante navigator.serviceWorker.ready durante la instalación.
+9. Prohibido acumular wrappers, observers, temporizadores o parches de rendimiento. Consolidar únicamente generaciones identificadas y sustituidas. Nada de borrados masivos por regex.
+10. v94.80 es referencia disponible de comparación; conteos estáticos no acreditan fluidez. Validar navegación, menú, desplegables, botones y scroll en el dispositivo objetivo antes de declarar equivalencia.
+11. Validación: sintaxis y errores JS, NO-PURGE, Supabase, bankRef, descuento único, banco→fijo sin duplicar, traspasos neutros y ESTABLE intacta. Distinguir pruebas sintéticas de validación autenticada real y de Safari/iPhone.
+12. Publicaciones correlativas LAB, con README, checklist, hashes y PROMPT MAESTRO; histórico ESTABLE preservado. No pedir al propietario que suba los archivos manualmente.
+13. Disponible incluye ingresos válidos menos gastos, provisiones previstas y exceso de aportaciones sobre lo previsto, más impacto real de compartidos. Aportar menos de lo previsto no libera reserva. Operaciones retroactivas afectan a su mes real.
+
+CAMBIO v96.56
+La candidata v96.55 no se publica sin corregir: su cleanAndOwn eliminaba cachés generales de Fluxia y desregistraba workers del repositorio; su worker real no contenía push/notificationclick. Se elimina esa autoridad duplicada, el worker v5 explícitamente inactivo y el fallback blob inválido, conservando la API FluxiaSW y trasladando los manejadores push existentes al archivo real de LAB. No se alteran motores contables, bancos o Supabase.
+
+ADDENDUM DE LA CANDIDATA RECIBIDA
+PROMPT MAESTRO FLUXIA v96.55 — ADDENDUM
+
+Se mantienen todas las leyes imperiales previas. v96.55 consolida identidad/versionado: una única autoridad de versión; queda prohibido añadir sentinelas/version painters duplicados. ESTABLE no se toca durante LAB. NO-PURGE, Supabase fuente de verdad, bankRef/idempotencia y normalización contable v96.49 son invariantes.
+
+
+HISTÓRICO ÍNTEGRO DEL REPOSITORIO — NO PREVALECE SOBRE EL BLOQUE VIGENTE
+PROMPT MAESTRO · FLUXIA v96.45-LAB
+
+LEY IMPERIAL
+- Integridad financiera y preservación de datos por encima de cualquier mejora.
+- Cada mejora suma; ninguna mejora puede sacrificar datos, históricos, huchas, ingresos, fijos o sincronización.
+- Nube principal; local solo fallback.
+- Nunca duplicar un movimiento bancario ni un pago.
+- Borrado reversible cuando proceda.
+- v95.91 permanece como referencia histórica validada y no se sobrescribe.
+
+REGLA CONTABLE · DISPONIBLE REAL v96.45
+1. Un gasto fijo cuenta exactamente UNA vez en Disponible.
+2. Mientras no exista conciliación bancaria real, se reserva su importe planificado.
+3. Cuando existe movimiento bancario vinculado de verdad (cuentaComoFijo=true + vinculoFijoId), el importe bancario REAL sustituye al importe planificado de ese fijo en el cálculo de Disponible.
+4. El movimiento vinculado deja de pertenecer a Variables, pero no desaparece: se conserva como evidencia bancaria.
+5. Reclasificar Variable→Fijo jamás puede liberar dinero artificialmente ni duplicar el cargo.
+6. Una mera etiqueta «Fijo (banco)» sin vínculo real NO basta para excluir un movimiento de Variables.
+7. Si existen duplicados históricos apuntando al mismo fijo, el cálculo de Disponible usa una única evidencia bancaria.
+8. La conciliación banco→fijo debe reutilizar el motor general ya existente para cualquier fijo guardado; coincidencia inequívoca puede automatizarse, duda = preguntar.
+9. La conciliación debe ser idempotente: repetir sincronización no vuelve a pagar ni descontar el mismo fijo.
+10. No tocar huchas, rescates ni ingresos para corregir Disponible.
+
+OBJETIVO
+Que Dashboard muestre un Disponible coherente con los movimientos reales y las reservas, al céntimo, sin ajustes manuales inventados.
+
+
+OPTIMIZACIÓN v96.45 · LEY DE RENDIMIENTO
+- Optimizar nunca puede modificar el resultado contable ni sacrificar integridad.
+- Evitar cascadas de renderizados completos y reconciliaciones repetidas.
+- Agrupar repintados mediante requestAnimationFrame cuando sea seguro.
+- Tras hidratación, una reconciliación controlada; al volver a primer plano, aplicar cooldown.
+- Evitar trabajo continuo durante scroll.
+- Mantener scroll y modales estables en iOS/PWA y evitar flashes blancos.
+- No introducir parches globales sobre APIs del navegador que puedan romper módulos existentes.
+- No tocar huchas, ingresos, fijos, variables, bancos ni Supabase para obtener velocidad.
+- Toda optimización debe ser regresión-cero respecto a v95.93 en Disponible y persistencia.
+
+
+OPTIMIZACIÓN v96.45 · POLLING Y CICLO DE VIDA
+- No ejecutar sondeos frecuentes si el mismo estado puede reaccionar a eventos/MutationObserver.
+- Los sondeos de respaldo deben espaciarse y detener trabajo cuando document.visibilityState != visible.
+- No consultar banco/sincronización automática si el navegador está offline.
+- Evitar recorrer localStorage continuamente para pintar indicadores.
+- Priorizar delegación de eventos frente a rebinding periódico.
+- Mantener intactas seguridad, sincronización, integridad contable y fórmula de Disponible validada.
+- La v95.93 sigue siendo el punto funcional validado; v95.94 y v96.45 son checkpoints acumulativos de optimización.
+
+
+UX + RENDIMIENTO v96.45
+- Las vistas de Gastos Fijos y Variables deben mantener el diseño validado pero con densidad superior:
+  menos altura/padding por tarjeta y más movimientos visibles simultáneamente.
+- La compactación no puede reducir legibilidad, zonas táctiles críticas ni ocultar información.
+- Dashboard conserva su diseño; esta compactación afecta a las listas internas de Fijos/Variables.
+- Agrupar repintados de UI en requestAnimationFrame.
+- Debounce de MutationObserver ante ráfagas de cambios.
+- Reducir sondeos puramente visuales sin comprometer sincronización ni persistencia.
+- Reutilizar formateadores Intl cuando sea posible.
+- Aplicar containment únicamente a elementos visuales seguros.
+- Regresión cero respecto al Disponible validado en v95.93 (218,96 € en el estado de prueba del usuario).
+
+
+OPTIMIZACIÓN PROFUNDA v96.45
+- Mantener siempre PROMPT MAESTRO como autoridad.
+- La optimización no autoriza monkey-patches globales de localStorage, fetch, timers ni APIs del navegador.
+- Escrituras deduplicadas solo mediante helper opt-in y comparación exacta de valor.
+- Agrupar renders financieros relacionados en un único frame.
+- No renderizar paneles financieros cuando el documento está oculto.
+- Al volver a primer plano, refrescar solo lo necesario.
+- Mantener zonas táctiles de al menos 44 px aunque las tarjetas de Fijos/Variables sean compactas.
+- content-visibility/containment solo en listas puramente visuales; nunca envolver indiscriminadamente pantallas con formularios o modales.
+- No modificar fórmula financiera, huchas, ingresos, conciliación, Supabase ni reglas de borrado para ganar velocidad.
+- Referencia funcional: v95.93 validada; checkpoints acumulativos: v95.94, .95, .96, .97.
+
+
+TRAZABILIDAD DE ENTREGA v96.45
+- Cada nueva versión debe incluir CHECKLIST_vXX.XX.txt.
+- El checklist debe separar: integridad preservada, problemas solucionados, mejoras nuevas, validación realizada y pendientes conocidos.
+- En cada respuesta de entrega se resumirán exactamente esos cambios.
+- Ninguna optimización se considerará válida si rompe una ley del PROMPT MAESTRO.
+- Los checkpoints anteriores se conservan como rollback; nunca se sobrescriben.
+
+
+LEY DE IDENTIDAD DE VERSIÓN v96.45
+- El número mostrado en menú, título, meta fluxia-version, window.FLUXIA_VERSION, manifest/start_url y guard de build debe corresponder a la versión entregada.
+- La versión visible no puede depender de una etiqueta histórica heredada.
+- Cada build LAB tendrá manifest y service worker identificados con su versión cuando corresponda.
+- Antes de entregar, validar automáticamente que las fuentes activas de identidad contienen la versión actual.
+
+
+LEY DE IDENTIDAD VISUAL Y TIPOGRAFÍA v96.45
+- Fluxia tendrá un sistema tipográfico único, coherente y premium en toda la aplicación.
+- Familia oficial de interfaz: Georgia, con Times New Roman/serif únicamente como fallback de sistema.
+- No mezclar familias tipográficas por módulo salvo decisión expresa futura de rediseño global.
+- Jerarquía tipográfica centralizada mediante variables CSS: microtexto, auxiliar, cuerpo, títulos y cifra hero.
+- Importes usarán números tabulares para lectura financiera limpia y estable.
+- Inputs/selects/textarea conservarán 16 px para evitar zoom involuntario en iPhone.
+- Elegancia no puede sacrificar legibilidad, accesibilidad ni targets táctiles.
+- La tipografía no depende de fuentes externas/CDN: debe funcionar offline y en PWA.
+- Cualquier nueva pantalla debe reutilizar estas variables y la misma familia.
+
+
+LEY DE COMPOSICIÓN VISUAL PREMIUM v96.45
+- Toda pantalla reutiliza una escala central de espaciados y radios.
+- Las tarjetas deben tener profundidad sutil; evitar sombras pesadas o decoración excesiva.
+- Información primaria, secundaria y auxiliar deben distinguirse por jerarquía, no por mezclar tipografías.
+- Fijos y Variables mantienen densidad compacta.
+- Cifras financieras deben permanecer estables visualmente y sin saltos de línea.
+- Modales/drawers deben compartir radios, sombra y espaciado.
+- Mejoras visuales no pueden modificar lógica financiera, persistencia, sincronización ni datos.
+
+
+LEY DE DENSIDAD Y CALIDEZ v96.45
+- Fluxia debe evitar tarjetas excesivamente altas: priorizar densidad informativa y visión de conjunto.
+- El lenguaje premium debe ser cálido, humano y sofisticado; evitar blanco/gris clínico o sensación fría.
+- Paleta base cálida: papel marfil, tarjetas blanco cálido, tinta azul-verde oscura, oro apagado y teal.
+- La calidez se logra con superficies, bordes, contraste y detalles; no con saturación excesiva.
+- Fijos y Variables deben ser especialmente compactos.
+- La reducción visual nunca puede ocultar datos ni afectar lógica, persistencia o sincronización.
+
+
+LEY DE PATRÓN VISUAL HUCHAS v96.45
+- Huchas pasa a ser la referencia de lenguaje visual para tarjetas financieras.
+- Gastos Fijos y Variables deben usar tarjetas compactas, suaves y cálidas inspiradas en Huchas.
+- Estado pendiente/no pagado: azul/teal.
+- Estado pagado: dorado cálido.
+- El cambio de color es únicamente representación del estado real existente; nunca cambia el estado financiero.
+- Fijos/Variables deben priorizar alta densidad: ver varios movimientos sin scroll continuo.
+- Tipografía oficial vuelve a sans-serif amable de sistema (SF Pro/Segoe UI/Roboto/Helvetica/Arial), única para TODA Fluxia.
+- Se prohíbe mezclar Georgia/serif con la interfaz principal salvo futura decisión expresa global.
+
+
+LEY DE IDENTIDAD CROMÁTICA POR MÓDULO v96.45
+- Los cuatro colores del Dashboard son la fuente autoritativa de identidad visual de sus pestañas.
+- Ingresos = verde azulado/teal.
+- Gastos Fijos = navy/ink.
+- Huchas/Provisiones = oro.
+- Variables = violeta.
+- Títulos, cifras principales, acentos, botones principales y superficies de resumen deben reutilizar el color del módulo.
+- No usar negro genérico como acento cuando el módulo tenga color propio.
+- El texto largo/secundario conserva tinta neutra para legibilidad.
+- Estados operativos pueden modular la identidad: en Fijos, pendiente conserva navy y pagado se comunica en dorado.
+- Nunca inventar un color distinto en una pestaña si el Dashboard ya define su identidad.
+
+
+LEY DE MARCA AZUL Y BANCOS v96.45
+- Verde dominante de marca sustituido por azul claro premium; logo y marca comparten el azul.
+- Gastos Fijos no mostrará grandes superficies verdes.
+- Bancos usará scroll vertical interno único, overflow horizontal bloqueado y fondo opaco en iOS.
+- La UI no puede quedar indefinidamente en 'Sincronizando': watchdog visual máximo 12 s.
+- El watchdog solo libera la interfaz: nunca confirma movimientos, cambia saldos ni altera conciliación/persistencia.
+
+
+LEY DE CONTROLES Y MICROINTERACCIONES v96.45
+- Inputs, selects, textareas, botones, estados, iconos y cabeceras deben compartir dimensiones, radios y comportamiento.
+- Los estados success/warning/error/info tendrán un lenguaje semántico único en toda Fluxia.
+- Las microinteracciones deben ser breves, discretas y nunca bloquear acciones ni lógica.
+- Iconos no pueden inflar la altura de tarjetas compactas.
+- Modales tendrán header/body/footer coherentes.
+- Respetar prefers-reduced-motion.
+- Ninguna microinteracción puede modificar cálculos, persistencia o sincronización.
+
+
+LEY DE RUNTIME/PWA v96.45
+- Navegación visual se agrupa a un único frame; no duplicar trabajo por un mismo gesto.
+- Reanudación iOS/PWA solo puede refrescar UI salvo necesidad financiera explícita.
+- Chart.js debe permitir reemplazo/destrucción controlada para evitar fugas; no destruir gráficos ajenos sin registro.
+- Telemetría de rendimiento será local, sin red y sin datos financieros.
+- Service Worker LAB puede limpiar únicamente caches LAB antiguos; nunca datos Supabase/locales ni caches ajenos.
+- Ninguna optimización de runtime puede retrasar o suprimir persistencia financiera crítica.
+
+
+LEY DE OPTIMIZACIÓN SELECTIVA v96.45
+- Prohibidas sustituciones globales de renderAll, addEventListener o localStorage.setItem.
+- Toda deduplicación debe ser explícita, contextual e idempotente.
+- Los renders puramente visuales pueden agruparse por frame/microtask.
+- Persistencia financiera crítica nunca se retrasa, omite ni deduplica por heurística.
+- Los listeners solo se deduplican mediante binder opt-in en puntos auditados.
+- Elementos ocultos no deben generar pintura innecesaria.
+
+
+LEY DE GATE DE RENDER v96.45
+- renderAll histórico no se sustituye globalmente.
+- Refrescos visuales nuevos/revisados deben pasar por un gate por clave cuando sean coalescibles.
+- Un gate nunca envuelve persistencia, sincronización, mutaciones financieras ni confirmaciones de usuario.
+- Listas largas pueden usar content-visibility únicamente para pintura offscreen; no cambia DOM/datos.
+- Cuando una capa nueva supersede un listener visual propio de una optimización anterior, eliminar la redundancia demostrable.
+
+
+LEY DE AUDITORÍA CONTEXTUAL v96.45
+- Proximidad textual entre renderAll no demuestra redundancia.
+- Se identifica callback, mutación y efecto antes de eliminar un render.
+- Métodos de subsistemas como FluxiaGraficosV81.renderAll no se confunden con renderAll global.
+- Inicializadores de gráficos serán idempotentes cuando sea seguro.
+- Gráficos ocultos/cerrados no se repintan.
+- Ninguna optimización visual modifica contabilidad, persistencia o sincronización.
+
+
+LEY DE LISTENERS Y TEMPORIZADORES v96.45
+- No se sustituyen setInterval/setTimeout históricos de negocio sin auditoría funcional.
+- Tareas periódicas puramente visuales nuevas/revisadas usarán scheduler central y se suspenderán en background.
+- Event delegation se usa de forma idempotente para controles dinámicos auditados.
+- Nunca suspender por visibilidad una sincronización, persistencia, guardado o mutación financiera ya iniciada.
+- Un listener delegado debe tener clave única y desmontaje explícito disponible.
+
+
+LEY DE CADENCIAS v96.45
+- setInterval nativo no se monkey-patchea.
+- Cada intervalo histórico se clasifica antes de modificarlo.
+- Cualquier intervalo relacionado con nube, banco, auth, guardado o persistencia se presume crítico hasta demostrar lo contrario.
+- Nuevas cadencias puramente visuales se registran y pasan por FluxiaVisualScheduler9611.
+- La optimización nunca convierte una comprobación de integridad en una tarea opcional visual.
+
+
+LEY CANDIDATA DE PRUEBA v96.45
+- La vigilancia visual del manifest puede reducir cadencia porque el lock se ejecuta también en arranque/DOMContentLoaded.
+- La cabecera bancaria es UI y debe usar scheduler visual, nunca un intervalo independiente si existe scheduler central.
+- Notificaciones diarias/presupuesto son comportamiento de producto, no pintura: no se degradan como tarea visual.
+- Antes de promover a estable, la candidata se valida en iPhone: arranque, navegación, scroll, background/foreground, Bancos, persistencia y cifras.
+
+
+LEY DE DECISIONES BANCARIAS v96.45
+- “No mostrar más” y clasificaciones bancarias son decisiones persistentes, no caché.
+- Se restauran selectivamente desde nube al arrancar; las colas pendientes NO se restauran.
+- No se hace merge amplio de datos financieros mediante el espejo.
+- El Disponible jamás se corrige con ajustes artificiales: debe resultar de ingresos/fijos/huchas/variables/compartidos reales.
+- Si una cifra cambia tras sincronizar, se corrige la fuente/decisión que causó la divergencia, nunca el resultado.
+LEY VISUAL v96.45
+- Disponible y logo comparten azul claro cálido; no usar bloque azul oscuro dominante.
+- El modal bancario conserva scroll funcional pero oculta scrollbar visual.
+- La transición de pestaña prioriza mostrar el panel y difiere repintados secundarios al frame siguiente.
+
+
+LEY v96.45: Disponible y logo comparten azul cielo #7FC1E8. Wordmark Fluxia usa sans premium bold como acceso. El selector de perfiles deduplica shells por id/nombre sin borrar datos financieros. Navegación prioriza contenido y elimina animaciones costosas. Decisiones bancarias persistentes se reaplican tras guardado/foreground.
+
+LEY DE VELOCIDAD v96.45
+- Scroll vertical debe ser nativo, táctil y fluido; listeners de scroll son pasivos.
+- Navegación principal responde en pointerup y evita doble click.
+- Ninguna optimización de interacción cancela persistencia, sync o mutaciones financieras.
+- “No mostrar más” es una decisión durable: tras pulsarla se fuerza el volcado de decisiones al espejo/nube disponible.
+- Disponible y logo permanecen en azul cielo #7FC1E8 y wordmark sans premium.
+
+LEY v96.45 CONSOLIDACION: no apilar interceptores globales de navegación/scroll. Scroll iOS nativo. HTML LAB network-first/no-store. Disponible nunca hardcodeado: debe salir de ingresos cobrables - fijos - huchas - variables + compartidos. Se incorpora traza forense para localizar cualquier divergencia respecto al estado validado (~218,96 €) sin falsear el saldo. Logo y Disponible comparten azul cielo #7FC1E8.
+
+
+LEY v96.45 — NO VOLVER A ROMPER UI/RENDIMIENTO
+- Prohibidos selectores visuales genéricos tipo [class*='hero']; se estiliza sólo .fx30-hero.
+- Los overrides finales de marca se colocan al final de la cascada.
+- No envolver renderDashboard con auditorías/timers; diagnóstico sólo bajo demanda.
+- Disponible jamás se hardcodea. El objetivo ~218,96 € debe recuperarse corrigiendo la clasificación origen.
+- FluxiaForensics9618() expone los movimientos excluidos de Variables para localizar el desfase sin alterar datos.
+
+
+LEY v96.45 — MOTOR DE RENDIMIENTO
+- Prohibido escribir localStorage en eventos scroll sin throttle; la sesión se renueva como máximo cada 30 s.
+- renderAll no repinta módulos ocultos. Sólo renderiza el panel activo y elementos globales imprescindibles.
+- Al abrir una pestaña, su render se ejecuta lazy en el siguiente frame.
+- Navegación no hace mediciones de layout ni scroll geométrico; cambia panel y sube al inicio de forma directa.
+- En iPhone/touch se eliminan animaciones/transiciones de tarjetas/listados que no aportan funcionalidad.
+LEY v96.45 — REPARACIÓN VARIABLES OCTUBRE
+- Estado históricamente validado: Variables 437,64 € antes de conciliar Securitas; Endesa 78,38 € ya estaba correctamente vinculada a Luz.
+- Securitas 42,58 € pasa de Variable a Fijo, por lo que Variables correctas quedan en 395,06 €.
+- La caída posterior 395,06 € → 291,78 € (−103,28 €) fue una regresión colateral al trabajar con Huchas, no un gasto real eliminado.
+- La reparación sólo actúa sobre la firma exacta 291,78 € y únicamente sobre exclusiones huérfanas o vínculos a fijos inexistentes que sumen exactamente 103,28 €.
+- Nunca hardcodear Disponible. Si Variables vuelven a 395,06 €, Disponible se recalcula por el motor normal.
+
+
+LEY IMPERIAL DE IDENTIDAD PWA v96.45-LAB
+- Sólo existe un Service Worker autoritativo por build LAB: fluxia-sw-v96.45.js.
+- Al cargar LAB se desregistran Service Workers antiguos del mismo scope/repositorio.
+- Ningún módulo histórico puede registrar v95.xx/v94.xx ni un blob SW alternativo si FluxiaSW está disponible.
+- El manifest estático manifest_v96.45_LAB.webmanifest es autoritativo; queda prohibido sustituirlo por un blob dinámico con versión antigua.
+- HTML de navegación nunca se sirve desde caché del SW LAB.
+- Menú, título, meta, window.FLUXIA_VERSION, manifest/start_url, SW y URL versionada deben coincidir exactamente.
+- Si vuelve a aparecer una versión anterior, la entrega se considera inválida.
+
+
+LEY IMPERIAL v96.45 — RENDIMIENTO
+- v94.80 queda como benchmark práctico de fluidez en iPhone.
+- Prohibidos observers globales sobre document.body para funciones auxiliares.
+- Prohibido envolver renderAll con dashboards legacy ocultos o coordinadores duplicados.
+- renderAll selectivo es la autoridad.
+- Los estados de nube se actualizan por eventos, no por polling visual frecuente.
+- Optimización nunca puede sacrificar Supabase, Huchas, tombstones, conciliación Banco→Fijo ni integridad financiera.
+
+LEY IMPERIAL v96.45 — COLOR DISPONIBLE
+- El cuadro Disponible usa exactamente el mismo gradiente del logo Fluxia (#9ED5F1 → #79BFE6).
+- No cambiar los colores de Ingresos, Fijos, Huchas, Variables ni ninguna otra tarjeta al corregir Disponible.
+- Prohibidos selectores genéricos del tipo [class*='hero'].
+
+LEY IMPERIAL v96.45 — VARIABLES / DISPONIBLE
+- La regresión conocida 291,78 € → 395,06 € se corrige al hidratar datos si y sólo si existen exclusiones de reposición huérfanas o vínculos a fijo inexistentes que suman exactamente 103,28 €.
+- No tocar exclusiones genéricas ni reposiciones válidas.
+- Disponible nunca se hardcodea; se recalcula con el motor normal.
+
+LEY IMPERIAL v96.45 — BIZUM
+- Bizum SALIENTE bancario de CaixaBank, Revolut o cualquier banco conectado → Gastos variables → categoría Bizums.
+- Bizum saliente no puede auto-clasificarse como traspaso propio, puente ni gasto fijo.
+- Deduplicar por bancoRef/huella.
+- Bizum RECIBIDO sigue el motor de ingresos.
+- Usar la fecha bancaria real y persistencia cloud normal.
+
+
+LEY v96.45 — FLUIDEZ DE INTERACCIÓN
+- Ninguna navegación de pestaña puede disparar escaneos globales de accesibilidad o sincronizadores cosméticos heredados.
+- El selector de mes se gestiona por el goToTab autoritativo, sin wrappers históricos adicionales.
+- Los polls puramente visuales deben ser event-driven o bajo demanda.
+- En dispositivos táctiles, animaciones/transiciones no esenciales quedan desactivadas; colores y geometría permanecen intactos.
+- Los paneles inactivos no participan en interacción/pintado visible.
+- Se preservan íntegramente nube, persistencia, Variables, Huchas, Banco→Fijo y Bizum.
+
+
+LEY v96.45 — PRESUPUESTO DE RENDER
+- Paneles inactivos en dispositivos táctiles deben quedar fuera del presupuesto de layout/paint mediante content-visibility/contain.
+- Listados financieros largos deben usar content-visibility:auto para no pintar filas fuera del viewport.
+- Prohibido usar will-change persistente en drawer/cabeceras.
+- No añadir optimizaciones que alteren colores, geometría, cálculos, persistencia o sincronización.
+
+
+LEY v96.45 — IMPORTACIÓN BANCARIA IDEMPOTENTE
+- bancoRef ya existente = movimiento ya reconciliado y autoridad financiera.
+- Reimportar el mismo movimiento no puede reclasificarlo, borrarlo, convertirlo en puente/traspaso/reposición ni volver a preguntarlo.
+- Una misma sincronización repetida N veces debe mantener exactamente Variables y Disponible.
+- Comparaciones bancoRef se normalizan a string y se indexan con Map O(1).
+- Bizum saliente conserva categoría Bizums.
+
+
+LEY v96.45 — LIMPIEZA BANCARIA SEGURA
+- La rutina «cargos repetidos o anteriores a tu inicio retirados» nunca puede retirar un movimiento bancario ya reconciliado/persistido por bancoRef.
+- La limpieza histórica sólo puede actuar sobre candidatos no reconciliados.
+- Una sincronización posterior no puede cambiar Variables/Disponible si no existen movimientos bancarios nuevos reales.
+LEY v96.45 — DISEÑO DISPONIBLE
+- Disponible pasa a azul cielo MUY CLARO y difuminado, manteniendo familia del logo.
+- No modificar colores de las otras tarjetas.
+LEY v96.45 — RENDIMIENTO
+- En touch, paneles no activos usan display:none para salir por completo de layout/paint.
+
+
+LEY v96.45 — FAST LANE
+- Mantenimiento no urgente no compite con interacción.
+- Preferir visibilitychange/online/pagehide/requestIdleCallback a polling residente.
+- Durante gesto táctil se simplifican sombras temporalmente sin alterar diseño en reposo.
+- Preservar guardia v96.25 e idempotencia v96.24.
+
+
+LEY v96.45 — NO PURGA AUTOMÁTICA
+- Prohibida la rutina “cargos repetidos o anteriores a tu inicio retirados” durante arranque, estado o sync.
+- FluxiaBancoLimpiar sólo puede ejecutarse manualmente con {manual:true}.
+LEY v96.45 — DISPONIBLE HIELO
+- Cuadro Disponible casi transparente, blanco-azulado muy suave.
+LEY v96.45 — EVENT-DRIVEN
+- Manifest y notificaciones internas sin polling residente.
+
+
+LEY IMPERIAL v96.45 — RETIRADA LEGACY PROHIBIDA
+- purgarAntiguos() queda desactivada permanentemente y devuelve 0.
+- FluxiaBancoLimpiar se conserva sólo como API de compatibilidad y devuelve 0.
+- El mensaje de retirada de cargos antiguos/repetidos no puede generarse desde este motor.
+- Nunca retirar movimientos reconciliados por fecha de inicio ni por una limpieza automática.
+LEY v96.45 — VELOCIDAD
+- No usar smooth scroll en iPhone/touch.
+- Panel inactivo queda completamente fuera de layout/paint.
+- Mantenimiento visual debe ser event-driven cuando sea posible.
+
+
+LEY v96.45 — AJUSTE FINO VALIDADO
+- Mantener intacto el blindaje NO-PURGE validado por usuario en v96.28.
+- Disponible: casi transparente, pero con un matiz azul ligeramente más visible.
+- No modificar colores del resto de tarjetas.
+- Desde este punto, optimización sólo conservadora: ninguna mejora de velocidad puede arriesgar integridad o comportamiento validado.
+
+
+LEY v96.45 — CONSOLIDACIÓN DE RENDIMIENTO
+- v96.29 es punto seguro de retorno.
+- Optimizar sólo render/pintado/navegación; no alterar cálculos, persistencia, reconciliación ni sync.
+- Coalescer renders visuales repetidos dentro del mismo frame.
+- Cachear colección de paneles y usar content-visibility en listas largas.
+- Mantener NO-PURGE v96.28 como invariante absoluta.
+
+
+LEY v96.45 — CIERRE DE OPTIMIZACIÓN PRE-SUBIDA
+- Mantener v96.28 NO-PURGE y v96.29 estética como invariantes.
+- Última optimización pre-subida sólo sobre composición/pintado/touch.
+- Paneles inactivos fuera de layout; transiciones táctiles pesadas desactivadas.
+- No tocar ningún motor financiero, reconciliación, persistencia o sincronización.
+
+
+LEY v96.45 — MENÚ FAST PATH
+- El botón de menú y drawer deben responder prioritariamente al gesto táctil.
+- El drawer no usará backdrop-filter ni efectos caros durante apertura/cierre.
+- La animación del menú será breve y limitada a transform/opacity.
+- No modificar navegación funcional, cálculos, persistencia, sync ni motores financieros.
+
+
+LEY v96.45 — CONSOLIDACIÓN PRUDENTE
+- Mantener menú fast-path v96.32.
+- Liberar will-change del compositor tras animación del menú.
+- Cache estructural disponible sólo para DOM estable; no cachear datos financieros.
+- Virtualizar únicamente pintura de filas fuera de viewport.
+- Prohibido alterar cálculo, persistencia, reconciliación, sync o NO-PURGE.
+
+
+LEY v96.45 — PRESUPUESTO DE INTERACCIÓN
+- Mientras el usuario toca menú, pestañas o botones, la UI tiene prioridad absoluta.
+- Animaciones, sombras y blur no esenciales se pausan durante ~180 ms.
+- Trabajo cosmético diferible debe usar FluxiaAfterInteraction9634.
+- No interceptar ni posponer guardado financiero, sync, reconciliación ni cálculos.
+- Mantener NO-PURGE y todos los blindajes validados.
+
+LEY v96.45 — ÚLTIMO PUNTO DE VELOCIDAD
+- Menú táctil con transform puro ~75 ms y overlay ~60 ms.
+- Presupuesto de interacción reducido a 120 ms.
+- Liberar compositor del menú a 140 ms.
+- Filas activas sin transiciones decorativas en touch.
+- Integridad, NO-PURGE, persistencia, sync y reconciliación son invariantes.
+
+LEY IMPERIAL v96.45 — TRASPASO PROPIO NEUTRO Y SIN LASTRE
+- Partir de la base rápida validada v96.35, no de capas experimentales posteriores.
+- Puente/traspaso entre cuentas propias tiene impacto 0 en Disponible.
+- Puente/traspaso no es ingreso y no es Variable.
+- Conservar ambas operaciones y trazabilidad; nunca hardcodear saldos.
+- Corregir bancoRef sin nuevos listeners, observers, polling ni motores O(n²).
+- NO-PURGE sigue siendo invariante absoluta.
+
+LEY v96.45 — PERFIL TÁCTIL ULTRARRÁPIDO
+- Menú táctil objetivo 50 ms.
+- Overlay objetivo 40 ms.
+- Ventana de prioridad de interacción 80 ms.
+- Liberación del compositor 100 ms.
+- Estos cambios son sólo de interacción/animación: prohibido alterar motores financieros, nube, NO-PURGE o traspasos.
+
+LEY v96.45 — RENDIMIENTO POR ELIMINACIÓN, NO POR CAPAS
+- Gastos, Bancos, traspasos, NO-PURGE y Supabase quedan congelados funcionalmente.
+- Prohibido añadir aceleradores periódicos para ocultar lag.
+- Retirar observers cosméticos que reaccionen a cada mutación cuando exista render explícito.
+- Navegación debe pintar sólo el panel activo.
+- En táctil evitar blur/backdrop costoso y pintura de paneles inactivos.
+
+LEY v96.45 — MOTOR DE RENDER
+- La respuesta visual de navegación precede al trabajo secundario.
+- Renderizar únicamente paneles solicitados; coalescer peticiones en requestAnimationFrame.
+- Paneles inactivos no participan en layout/paint.
+- Listas largas usan content-visibility.
+- Eliminar governors táctiles que añadan trabajo por cada toque.
+- Gastos, Bancos, Supabase, NO-PURGE y cálculos financieros permanecen congelados.
+
+LEY v96.45 — ESTABILIDAD DE INTERACCIÓN
+- Ante congelaciones, estabilidad prima sobre micro-optimizaciones experimentales.
+- Retirado motor rAF experimental v96.41.
+- En iOS/táctil no usar content-visibility/contain agresivo en panel activo.
+- Mantener motores financieros, Bancos, Gastos, Supabase, NO-PURGE y traspasos sin cambios.
+
+
+LEY IMPERIAL PERMANENTE — RENDIMIENTO
+Fluxia debe responder inmediatamente al entrar, navegar, abrir menú, botones y desplegables.
+Una versión con congelaciones o retrasos notorios NO es válida.
+Prohibido añadir wrappers/observers/timers/polling para maquillar rendimiento.
+Optimizar eliminando trabajo redundante sólo cuando esté identificado y validado.
+Persistencia/Supabase/tareas no visuales fuera de la ruta crítica siempre que la integridad lo permita.
+Nunca sacrificar integridad financiera, Bancos, Gastos, NO-PURGE, traspasos ni históricos.
+Toda LAB de rendimiento debe superar validación de sintaxis, estructura, invariantes y regresiones antes de entregarse.
+
+======================================================================
+LEY IMPERIAL DE FLUIDEZ — BENCHMARK VALIDADO v94.80 / v96.58 (07-10-2026)
+======================================================================
+VALIDACIÓN REAL DEL USUARIO:
+- v96.58-RECOVERY, reconstruida desde la arquitectura v94.80, funciona "perfectamente" y "como un tiro" en Safari/iPhone.
+- Esta fluidez pasa a ser requisito funcional obligatorio y benchmark de aceptación de Fluxia.
+
+REGLAS OBLIGATORIAS:
+1. Ninguna versión LAB o ESTABLE puede considerarse apta si menú, pestañas, desplegables, botones o scroll son perceptiblemente más lentos que v96.58-RECOVERY.
+2. La arquitectura rápida v94.80/v96.58 es la referencia de interacción. Las funciones modernas posteriores se portarán SELECTIVAMENTE sobre esta base, no se reintroducirá en bloque la arquitectura acumulada v94.81-v96.57.
+3. Cada portabilidad debe hacerse por bloques pequeños, identificables y reversibles, validando rendimiento antes de incorporar el siguiente.
+4. Prohibido reintroducir capas globales redundantes: wrappers de render, observers cosméticos, polling, timers periódicos, múltiples bootstraps, múltiples visibilitychange/DOMContentLoaded para una misma responsabilidad o renderAll en la ruta crítica de navegación.
+5. Touch/click -> feedback visual inmediato -> render exclusivo del módulo afectado. Persistencia, Supabase, reconciliación bancaria y trabajo no visual fuera de la ruta crítica siempre que la integridad lo permita.
+6. Si una función moderna degrada significativamente la fluidez, la versión FALLA aunque dicha función sea correcta. Se revierte/reescribe antes de continuar.
+7. La recuperación de funciones modernas nunca puede sacrificar: integridad financiera, nube como fuente de verdad, NO-PURGE, no-resurrección, bankRef/idempotencia, banco→fijo, separación de usuarios ni cálculo correcto de Disponible.
+8. Safari/iPhone es la primera prueba obligatoria. PWA solo se valida después de superar Safari.
+9. Checklist obligatorio por versión: AÑADIDO / MODIFICADO / ELIMINADO-CONSOLIDADO / BLINDADO-NO TOCADO / PRUEBAS / RESULTADOS.
+10. v96.58-RECOVERY es benchmark de RENDIMIENTO, no se asume automáticamente como base financiera completa: las protecciones posteriores deben portarse y probarse una a una.
+
+
+LEY IMPERIAL ABSOLUTA v96.60 — VELOCIDAD NO NEGOCIABLE
+- v96.58 y v96.59 han sido validadas por el usuario como funcionamiento correcto y ultrafluido.
+- Desde v96.60 queda PROHIBIDA cualquier regresión perceptible de velocidad.
+- Si menú, cambio de pestaña, desplegable, botón, entrada a Dashboard o scroll empeoran frente al benchmark, la versión queda RECHAZADA automáticamente.
+- Ninguna función nueva justifica lentitud: debe reescribirse o revertirse antes de continuar.
+- Funciones modernas se portan por bloques pequeños sobre FAST-SAFE; nunca se reincorpora en bloque la arquitectura lenta v94.81-v96.57.
+- Cero polling y cero capas globales de aceleración; rendimiento por arquitectura simple y eliminación de trabajo redundante.
+- Esta ley tiene la misma prioridad que integridad financiera y persistencia cloud: ambas deben coexistir.
+
+
+LEY v96.61 — PUERTA DE PROMOCIÓN FLUIDA
+- Ninguna candidata definitiva se promociona a ESTABLE hasta igualar el benchmark FAST-SAFE en Safari y después en PWA.
+- Dashboard y estética se implementan sin introducir trabajo JavaScript global cuando CSS sea suficiente.
+- La incorporación funcional posterior se hace módulo a módulo con rollback inmediato si aparece regresión de latencia.

@@ -1,0 +1,29 @@
+FLUXIA v96.61-LAB — DASHBOARD COMPLETO / FAST-SAFE
+
+AÑADIDO
+- Disponible a ancho completo y jerarquía visual principal.
+- Rejilla 2x2 compacta para KPIs/módulos del Dashboard.
+- Tipografía numérica estable y tamaños responsive.
+- Ajuste táctil sin animaciones ni trabajo JS.
+
+MODIFICADO
+- Exclusivamente CSS de Dashboard sobre v96.60.
+
+ELIMINADO / CONSOLIDADO
+- Ninguna capa funcional añadida; no se reintroduce arquitectura lenta.
+
+BLINDADO / NO TOCADO
+- Ruta de interacción FAST-SAFE v96.58-v96.60.
+- ESTABLE index.html.
+- Cero listeners, observers, polling, timers o render wrappers nuevos.
+- Motores de datos existentes de la base.
+
+PRUEBAS DE BUILD
+- Generación determinista desde v96.60.
+- Sin JavaScript nuevo.
+- Service worker LAB sin caché durante fase Safari-first.
+- Identidad v96.61 consistente.
+
+CRITERIO DE ACEPTACIÓN
+- Debe conservar la misma fluidez perceptible de v96.59/v96.60.
+- Cualquier regresión de menú, tabs, desplegables o scroll invalida esta versión.
