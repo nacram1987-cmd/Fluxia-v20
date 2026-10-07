@@ -1,0 +1,22 @@
+{
+  "checks": {
+    "document_closed_cleanly": true,
+    "no_visible_tail": true,
+    "scripts_reduced": true,
+    "styles_reduced": true,
+    "pageshow_reduced": true,
+    "financial_panels_present": true,
+    "rejected_978_absent": true,
+    "identified_only": true
+  },
+  "metrics": {
+    "length": 1855885,
+    "scripts": 104,
+    "styles": 67,
+    "timeouts": 183,
+    "intervals": 3,
+    "observers": 0,
+    "pageshow": 8
+  },
+  "removed": []
+}
