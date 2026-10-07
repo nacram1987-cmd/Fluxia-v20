@@ -1,0 +1,27 @@
+FLUXIA v96.64-LAB — CANDIDATA VISUAL FAST-SAFE
+
+AÑADIDO
+- Pulido premium final de header, logo/wordmark, superficies, botones, iconos, modales y navegación.
+- Safe-area iPhone y responsive <=430 px.
+- Tipografía/espaciado coherentes y accesibilidad prefers-reduced-motion.
+
+MODIFICADO
+- Exclusivamente CSS de presentación sobre v96.63.
+
+ELIMINADO / CONSOLIDADO
+- Sin capas JS nuevas; sin animaciones táctiles pesadas.
+
+BLINDADO / NO TOCADO
+- Arquitectura FAST-SAFE validada por usuario v96.58-v96.63.
+- ESTABLE index.html.
+- Cero listeners, observers, polling, timers o wrappers de render nuevos.
+- Datos/cálculos no se declaran validados en esta fase.
+
+PRUEBAS
+- Build determinista desde v96.63.
+- Cero JS funcional nuevo.
+- Identidad v96.64 consistente.
+- Safari-first; PWA solo después de validar esta candidata.
+
+SIGUIENTE FASE
+- Recuperación financiera/cloud selectiva: Disponible, ingresos, variables, fijos, huchas, banco→fijo, bankRef, NO-PURGE y Supabase, sin degradar velocidad.
