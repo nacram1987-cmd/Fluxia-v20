@@ -1,1 +1,0 @@
-v96.86-LAB: reducción fuerte adicional de cabecera/logo, hero/resumen/tarjetas Fijos; activos gráficos para Shell, Leroy Merlin, Levi's y Apple/iCloud; sin cambios financieros.

@@ -1,1 +1,0 @@
-FLUXIA v96.87. LEY DENSIDAD: móvil aprox mitad altura v96.86 en cabecera y Fijos. Logo no protagonista. Overrides finales ganan cascada. Sin tocar contabilidad/cloud/Huchas/Disponible/Variables. Logos gráficos v96.86 preservados.

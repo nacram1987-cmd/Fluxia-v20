@@ -1,1 +1,0 @@
-const VERSION='v96.86-LAB';self.addEventListener('install',()=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));

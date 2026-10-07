@@ -1,1 +1,0 @@
-v96.88-LAB: corrección estética basada en la captura real. Reduce cabecera/logo y recompone Fijos/Financiaciones con jerarquía compacta. Conserva logos/fallbacks y no cambia datos ni contabilidad.
