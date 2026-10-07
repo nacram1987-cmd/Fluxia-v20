@@ -1,0 +1,9 @@
+PROMPT MAESTRO FLUXIA v96.84
+BASE AUTORITATIVA: v96.83 validada, derivada de v96.82 con datos perfectos.
+DATOS: prohibido reconstruir, restaurar o modificar Huchas/Disponible por cambios visuales.
+RENDIMIENTO: Variables instantáneo v96.83 queda bloqueado como comportamiento mínimo.
+DENSIDAD: Fijos deben mostrar más elementos por pantalla con tarjetas compactas, sin perder acciones ni estado.
+BANCOS: interfaz visible minimalista; banco/cuenta, saldo, privacidad, estado y acciones imprescindibles. Complejidad de sincronización queda detrás.
+LOGOS: Variables y Fijos comparten resolver de comercio; si no hay coincidencia, fallback actual.
+BANK LIVE: arquitectura backend/push queda como fase separada; no simular tiempo real desde frontend.
+PWA: objetivo sigue siendo actualización de instalación existente sin reinstalación por versión.
