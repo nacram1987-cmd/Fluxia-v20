@@ -1,0 +1,1 @@
+v96.89-LAB. Reparación de causa raíz: sustituida la función merchant() antigua que solo dibujaba Leroy CSS y 💳 genérico. Resolver nativo de marcas/categorías. Cabecera móvil fijada a escala controlada 34px/21.5px. Fijos compactos con jerarquía estable. Sin cambios financieros.
