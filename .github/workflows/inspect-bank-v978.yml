@@ -1,0 +1,29 @@
+name: Inspect Fluxia banking core
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract banking snippets
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path("index_fluxia_v97.6_LAB.html")
+          s=p.read_text(encoding="utf-8",errors="ignore")
+          terms=["bancoRef","cuentaComoFijo","bankRef","transfer","traspas","movBanco","bankMovement","transaction","booking","fecha","hora"]
+          out=[]
+          for term in terms:
+              for m in list(re.finditer(term,s,re.I))[:12]:
+                  a=max(0,m.start()-1200); b=min(len(s),m.end()+2600)
+                  out.append("\n===== "+term+" @ "+str(m.start())+" =====\n"+s[a:b])
+          Path("DIAG_BANK_CORE_v97.8.txt").write_text("\n".join(out),encoding="utf-8")
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add DIAG_BANK_CORE_v97.8.txt
+          git diff --cached --quiet || (git commit -m "diag: inspect banking core for v97.8" && git push)
