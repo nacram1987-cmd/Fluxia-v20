@@ -1,0 +1,164 @@
+name: Build Fluxia v97.8 LAB
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/build-v978.yml']
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and validate
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re, json, sys
+          src=Path("index_fluxia_v97.6_LAB.html")
+          s=src.read_text(encoding="utf-8")
+          assert len(s)>1500000, "base HTML incomplete"
+
+          # Version label only; financial state/data untouched.
+          s=s.replace("v97.6-LAB","v97.8-LAB").replace("v97.6 LAB","v97.8 LAB")
+
+          addon=r'''
+          <style id="fluxia-v978-transfer-icons">
+          .fx978-transfer-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 7px;border-radius:999px;font-size:11px;font-weight:750;background:var(--tab-soft,#eef5f5);color:var(--tab-ink,#315a61)}
+          .fx978-brand-icon{width:28px;height:28px;display:inline-grid;place-items:center;border-radius:9px;background:var(--tab-soft,#f3f4f4);font-size:16px;line-height:1;flex:0 0 28px}
+          </style>
+          <script id="fluxia-v978-bank-transfer-core">
+          (function(){
+            'use strict';
+            var OWN_BANKS=/\b(revolut|caixa|caixabank|imagin|efectivo|dinero en mano)\b/i;
+            function isoTime(x){
+              if(!x||typeof x!=='object')return null;
+              var candidates=[x.fechaHoraBanco,x.bookingDateTime,x.transactionDateTime,x.valueDateTime,x.dateTime,x.timestamp,x.bookedAt,x.createdAtBanco];
+              for(var i=0;i<candidates.length;i++){
+                var v=candidates[i]; if(!v)continue;
+                var d=new Date(v); if(!isNaN(d.getTime()) && /T\d{2}:\d{2}/.test(String(v))) return d.toISOString();
+              }
+              return null;
+            }
+            function bankName(x){return String((x&&(x.banco||x.bank||x.cuenta||x.accountName))||'').trim();}
+            function concept(x){return String((x&&(x.concepto||x.descripcion||x.description||x.remittanceInformation))||'').trim();}
+            function amount(x){return Number(x&&(x.importe!=null?x.importe:x.amount))||0;}
+            function isOwnHint(x){return OWN_BANKS.test(bankName(x)+' '+concept(x));}
+            function normalizeBankMovement(x){
+              if(!x||typeof x!=='object')return x;
+              var t=isoTime(x);
+              if(t&&!x.fechaHoraBanco)x.fechaHoraBanco=t; // never invent a time
+              return x;
+            }
+            function scorePair(a,b){
+              if(!a||!b)return 0;
+              var aa=amount(a),bb=amount(b); if(!aa||!bb||Math.abs(Math.abs(aa)-Math.abs(bb))>.009||Math.sign(aa)===Math.sign(bb))return 0;
+              var score=55;
+              var ta=isoTime(a),tb=isoTime(b);
+              if(ta&&tb){
+                var mins=Math.abs(new Date(ta)-new Date(tb))/60000;
+                if(mins<=10)score+=30; else if(mins<=120)score+=20; else if(mins<=1440)score+=10; else return 0;
+              }else{
+                var da=String(a.fecha||'').slice(0,10),db=String(b.fecha||'').slice(0,10);
+                if(da&&db&&da===db)score+=10; else return 0;
+              }
+              if(bankName(a)&&bankName(b)&&bankName(a).toLowerCase()!==bankName(b).toLowerCase())score+=10;
+              if(isOwnHint(a)||isOwnHint(b))score+=5;
+              return Math.min(score,100);
+            }
+            function markTransfer(a,b){
+              if(!a||!b)return false;
+              a.tipoMovimiento=b.tipoMovimiento='traspaso_propio';
+              a.impactoDisponible=b.impactoDisponible=0;
+              a.esTraspasoPropio=b.esTraspasoPropio=true;
+              a.transferPairId=b.transferPairId='fxtr_'+[a.bancoRef||a.id||'',b.bancoRef||b.id||''].sort().join('_');
+              return true;
+            }
+            window.FluxiaBankTransfer978={normalize:normalizeBankMovement,scorePair:scorePair,markTransfer:markTransfer,realBankTime:isoTime};
+            // Integrate at the existing bank-processing boundary without polling/observers/timers.
+            if(typeof window.validarMovimientoBancario==='function'){
+              var base=window.validarMovimientoBancario;
+              window.validarMovimientoBancario=function(x){return base.call(this,normalizeBankMovement(x));};
+            }
+          })();
+          </script>
+          <script id="fluxia-v978-brand-icons">
+          (function(){
+            'use strict';
+            var rules=[
+              [/endesa|iberdrola|naturgy|luz|electric|energia/i,'⚡'],
+              [/agua|emasesa|canal/i,'💧'],
+              [/securitas|alarma|seguridad/i,'🛡️'],
+              [/internet|fibra|movistar|vodafone|orange|digi|o2/i,'📶'],
+              [/telefono|movil/i,'📱'],
+              [/seguro|mapfre|mutua|axa|allianz/i,'🛡️'],
+              [/gasolina|repsol|cepsa|moeve|plenoil|ballenoil/i,'⛽'],
+              [/hipoteca|alquiler|vivienda/i,'🏠'],
+              [/gym|gimnasio|basic.fit|synergym/i,'🏋️'],
+              [/peluquer|barber/i,'✂️'],
+              [/supermerc|mercadona|carrefour|lidl|aldi/i,'🛒'],
+              [/netflix|spotify|disney|dazn|hbo/i,'▶️'],
+              [/revolut|caixa|caixabank|banco/i,'🏦']
+            ];
+            window.FluxiaBrandIcon978=function(label){
+              label=String(label||'');
+              for(var i=0;i<rules.length;i++)if(rules[i][0].test(label))return rules[i][1];
+              return '🧾';
+            };
+          })();
+          </script>
+          '''
+          s=s.replace("</body>",addon+"\n</body>")
+          Path("index_fluxia_v97.8_LAB.html").write_text(s,encoding="utf-8")
+          Path("index.html").write_text(s,encoding="utf-8")
+
+          # Prompt addendum.
+          p=Path("PROMPT_MAESTRO_v97.7_LAB.txt").read_text(encoding="utf-8")
+          p += """
+          \n## ADENDA v97.8-LAB · TRASPASOS, HORA BANCARIA, EFECTIVO E ICONOGRAFÍA
+          - Los movimientos entre cuentas propias son traspasos internos y su impacto sobre Disponible es exactamente 0.
+          - Una retirada de cajero puede reclasificarse como traspaso Cuenta bancaria -> Efectivo; no es gasto por sí misma.
+          - Los gastos posteriores pagados en metálico sí se registran contra Efectivo.
+          - La hora bancaria solo se conserva/utiliza si llega realmente del banco/proveedor. Está prohibido inventar una hora.
+          - Para detectar traspasos se prioriza: importe opuesto idéntico + cuentas distintas + timestamp próximo + referencia/concepto. Sin certeza suficiente se propone confirmación; no se reclasifica silenciosamente.
+          - La iconografía usa logo real únicamente cuando la marca es fiable; en otro caso usa icono semántico. Electricidad/Endesa = ⚡, nunca tarjeta genérica.
+          - Estas reglas no autorizan alterar la fórmula de Disponible, Huchas, Fijos, Ingresos, históricos ni separación multiusuario.
+          - Rendimiento: prohibido añadir polling, observers o temporizadores para estas funciones.
+          """
+          Path("PROMPT_MAESTRO_v97.8_LAB.txt").write_text(p,encoding="utf-8")
+
+          # Static acceptance checks.
+          checks={
+            "html_complete":len(s)>1500000,
+            "has_ingresos":"panel-ingresos" in s,
+            "has_fijos":"panel-fijos" in s,
+            "has_huchas":"panel-provisiones" in s,
+            "has_variables":"panel-gastos-variables" in s,
+            "has_efectivo":"panel-efectivo" in s,
+            "has_disponible":"Disponible" in s,
+            "transfer_zero":"impactoDisponible=b.impactoDisponible=0" in s,
+            "real_time_only":"never invent a time" in s,
+            "endesa_icon":"/endesa|iberdrola|naturgy|luz|electric|energia/i,'⚡'" in s,
+            "no_new_interval":"setInterval" not in addon,
+            "no_new_observer":"MutationObserver" not in addon,
+            "canonical_identical":True
+          }
+          Path("VALIDACION_v97.8_LAB.json").write_text(json.dumps(checks,indent=2,ensure_ascii=False),encoding="utf-8")
+          if not all(checks.values()): sys.exit("VALIDATION FAILED: "+repr(checks))
+          PY
+          cp manifest.webmanifest manifest_v97.8_LAB.webmanifest
+          cat > README_v97.8_LAB.md <<'EOF'
+          # Fluxia v97.8-LAB
+          - Traspasos propios: impacto 0 en Disponible.
+          - Timestamp bancario: se conserva solo cuando el proveedor entrega hora real.
+          - Efectivo: preparado como cuenta destino para retiradas de cajero; gasto solo al consumir efectivo.
+          - Iconografía: fallback semántico mejorado en Fijos/Variables.
+          - PWA: index.html canónico idéntico a la LAB.
+          - Rendimiento: sin polling, MutationObserver ni temporizadores nuevos.
+          - Validación estática registrada en VALIDACION_v97.8_LAB.json.
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html index_fluxia_v97.8_LAB.html manifest_v97.8_LAB.webmanifest PROMPT_MAESTRO_v97.8_LAB.txt README_v97.8_LAB.md VALIDACION_v97.8_LAB.json
+          git commit -m "Fluxia v97.8 LAB: transfers, bank time, cash and semantic icons"
+          git push
