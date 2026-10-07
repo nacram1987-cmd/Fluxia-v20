@@ -1,4 +1,4 @@
-const CACHE_VERSION='fluxia-shell-v97.19';
+const CACHE_VERSION='fluxia-shell-v97.20';
 const ENTRY='./index.html';
 
 self.addEventListener('install',event=>{
