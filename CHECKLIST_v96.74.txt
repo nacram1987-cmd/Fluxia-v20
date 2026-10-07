@@ -1,0 +1,1 @@
+v96.74 sobre v96.73 validada. Cambios: []; sin cambios visuales; sin saldos hardcodeados; estable intacta.\n

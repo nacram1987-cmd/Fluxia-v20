@@ -1,0 +1,1 @@
+v96.45 referencia visual absoluta. v96.73 referencia de fluidez. v96.74: NO-PURGE permanente; gasto bancario real reduce Disponible exactamente una vez; traspaso propio impacto cero; nunca hardcodear saldos.\n
