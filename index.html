@@ -292,10 +292,10 @@ body.fx-dashboard-clean .fx-dashboard67-item.gold:after { content:""; position:a
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="telephone=no" name="format-detection"/>
 <meta content="no" name="msapplication-tap-highlight"/>
-<title>Fluxia BETA v97.8-LAB</title>
+<title>Fluxia BETA v97.6-LAB</title>
 
 <style id="fluxia-v95-75-auth-error-visibility">#fobError:not(:empty){display:block!important;}</style>
-<meta content="v97.8-LAB" name="fluxia-version"/>
+<meta content="v97.6-LAB" name="fluxia-version"/>
 <!-- Fluxia v91 · brand lock · datos jamás a 0 · compartidos saldo inicial · notif suaves · logo alineado · base v90.10 -->
 <script>
 (function(){window.FluxiaNative={isNative:function(){try{return!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())}catch(e){return false}},platform:function(){try{return(window.Capacitor&&Capacitor.getPlatform)?Capacitor.getPlatform():'web'}catch(e){return'web'}}};})();
@@ -609,13 +609,13 @@ window.fluxiaCuandoLibre = function(fn, intentos){
 };
 
 </script>
-<meta content="v97.8-LAB" name="fluxia-version"/>
+<meta content="v97.6-LAB" name="fluxia-version"/>
 <meta content="lab" name="fluxia-channel"/>
-<script>window.FLUXIA_VERSION = "v97.8-LAB";</script>
+<script>window.FLUXIA_VERSION = "v97.6-LAB";</script>
 <script id="fx47-version-integrity-guard">
 (function(){
   'use strict';
-  var EXPECT='v97.8-LAB', SW_FILE='fluxia-sw.js', CACHE='fluxia-root-'+EXPECT;
+  var EXPECT='v97.6-LAB', SW_FILE='fluxia-sw.js', CACHE='fluxia-root-'+EXPECT;
   window.FLUXIA_VERSION=EXPECT;
   try{
     var m=document.querySelector('meta[name="fluxia-build-id"]');
@@ -630,7 +630,7 @@ window.fluxiaCuandoLibre = function(fn, intentos){
           return /^fluxia(?:-lab|-v|-shell)/i.test(n) && n!==CACHE;
         }).map(function(n){return caches.delete(n);}));
       }
-    }catch(e){console.warn('[v97.8-LAB] cache cleanup',e);}
+    }catch(e){console.warn('[v97.6-LAB] cache cleanup',e);}
     try{
       if('serviceWorker' in navigator){
         var regs=await navigator.serviceWorker.getRegistrations();
@@ -646,9 +646,9 @@ window.fluxiaCuandoLibre = function(fn, intentos){
         try{
           var reg=await navigator.serviceWorker.register('./'+SW_FILE,{scope:'./',updateViaCache:'none'});
           if(reg&&reg.update) await reg.update();
-        }catch(_r){console.warn('[v97.8-LAB] register',_r);}
+        }catch(_r){console.warn('[v97.6-LAB] register',_r);}
       }
-    }catch(e){console.warn('[v97.8-LAB] sw cleanup',e);}
+    }catch(e){console.warn('[v97.6-LAB] sw cleanup',e);}
   }
   window.addEventListener('load',function(){setTimeout(cleanAndOwn,0);},{once:true});
   window.addEventListener('pageshow',function(){window.FLUXIA_VERSION=EXPECT;},{passive:true});
@@ -3892,10 +3892,10 @@ html body #fxDashboard67 .fx30-hero *,html body #fxDashboard67 .fx67-hero * *{co
 </style>
 
 
-<style id='fluxia-v9676-variables-contain'>#panel-gastos-variables{contain:layout style paint}</style><!-- v97.8-LAB · Huchas canónicas en lectura normal + persistencia; Variables v96.76 preservado -->
-<!-- v97.8-LAB · Reconciliación histórica 2.817,88 € de las 7 Huchas legacy; Variables preservado -->
-<!-- v97.8-LAB · Disponible: autoridad real de Fijos conciliados; Huchas v96.78 preservadas -->
-<!-- v97.8-LAB · Disponible auditado contra nube: dedupe bancario de Ingresos por bancoRef; objetivo derivado 111,96 € -->
+<style id='fluxia-v9676-variables-contain'>#panel-gastos-variables{contain:layout style paint}</style><!-- v97.6-LAB · Huchas canónicas en lectura normal + persistencia; Variables v96.76 preservado -->
+<!-- v97.6-LAB · Reconciliación histórica 2.817,88 € de las 7 Huchas legacy; Variables preservado -->
+<!-- v97.6-LAB · Disponible: autoridad real de Fijos conciliados; Huchas v96.78 preservadas -->
+<!-- v97.6-LAB · Disponible auditado contra nube: dedupe bancario de Ingresos por bancoRef; objetivo derivado 111,96 € -->
 <style id="fluxia-v9696-design-system">
 /* v96.99 · ÚNICA capa visual final. Solo presentación; lógica financiera intacta. */
 :root{
@@ -8327,7 +8327,7 @@ function initPwaYBeta(){
     }
   }catch(e){}
 
-  // v97.8-LAB · Manifest de build autoritativo. No sustituir por blob dinámico histórico.
+  // v97.6-LAB · Manifest de build autoritativo. No sustituir por blob dinámico histórico.
   try{
     var link = document.getElementById('fluxiaManifestLink');
     if(link) link.setAttribute('href','./manifest.webmanifest');
@@ -22098,7 +22098,7 @@ function arrancarApp(){
       if(ayuda&&!document.getElementById('fxChecklist9544')){
         var details=document.createElement('details');details.id='fxChecklist9544';
         details.style.cssText='margin:16px 0;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)';
-        details.innerHTML='<summary>Checklist v97.8-LAB</summary>'+
+        details.innerHTML='<summary>Checklist v97.6-LAB</summary>'+
           '<p>Outbox por perfil: IMPLEMENTADO · PROBADO en simulación · conserva edición offline con cuota local llena.</p>'+
           '<p>Cloud autoritativa y CAS: IMPLEMENTADO · PROBADO en simulación · caché vieja no se sube al arrancar.</p>'+
           '<p>Huchas y borrados: IMPLEMENTADO · PROBADO en simulación · dos aportaciones iguales sobreviven y un borrado por ID prevalece.</p>'+
@@ -23174,7 +23174,7 @@ window.FluxiaDiag = (function(){
   /* v95.70: la misma reconstrucción segura debe poder usarse también al iniciar sesión normal
      desde Safari cuando se perdió el registro local del perfil. */
   window.FluxiaRecuperarPerfilCloud = reconstruirPerfilCloud;
-  function limpiarRecoveryYRecargar(){try{window.FLUXIA_RECOVERY_ACTIVO=false;sessionStorage.removeItem('fluxia_recovery_activo');history.replaceState(null,'',location.pathname+'?v=v97.8-LAB');}catch(e){}location.reload();}
+  function limpiarRecoveryYRecargar(){try{window.FLUXIA_RECOVERY_ACTIVO=false;sessionStorage.removeItem('fluxia_recovery_activo');history.replaceState(null,'',location.pathname+'?v=v97.6-LAB');}catch(e){}location.reload();}
   async function completarRecovery(nueva){
     nueva=String(nueva||'');
     if(nueva.length<6){try{showModalError('La contraseña debe tener al menos 6 caracteres.');}catch(e){fxAviso('La contraseña debe tener al menos 6 caracteres.','info');}return;}
@@ -27514,7 +27514,7 @@ window.FluxiaAuditoriaDisponible9616=function(mes){
 /* v95.99 · La versión visible SIEMPRE sale de esta constante de build. */
 (function(){
   'use strict';
-  var V='v97.8-LAB';
+  var V='v97.6-LAB';
   window.FLUXIA_VERSION=V;
   function paint(){
     try{ document.title='Fluxia BETA '+V; }catch(e){}
@@ -27784,7 +27784,7 @@ window.FluxiaCadence9612.visual=function(key,ms,fn,note){
 'use strict';
 /* Diagnóstico local de candidato: no toca datos, solo expone contadores de runtime. */
 window.FluxiaCandidate9613={
- version:'v97.8-LAB',
+ version:'v97.6-LAB',
  snapshot:function(){
    return {
      hidden:document.visibilityState==='hidden',
@@ -27878,7 +27878,7 @@ button,a,[role="button"],[data-tab]{touch-action:manipulation;-webkit-tap-highli
 <script id="fluxia-v9620-identity-sentinel">
 (function(){
  'use strict';
- var V='v97.8-LAB', K='fluxia_identity_reload_v97.8-LAB';
+ var V='v97.6-LAB', K='fluxia_identity_reload_v97.6-LAB';
  window.FLUXIA_VERSION=V;
  function paint(){
    try{document.title='Fluxia BETA '+V;}catch(e){}
@@ -27914,7 +27914,7 @@ button,a,[role="button"],[data-tab]{touch-action:manipulation;-webkit-tap-highli
 
 <script id="fluxia-v971-interaction-priority">
 (function(){'use strict';
- window.FLUXIA_BUILD='v97.8-LAB';
+ window.FLUXIA_BUILD='v97.6-LAB';
  window.FluxiaIdle=function(fn,timeout){if(typeof fn!=='function')return;if('requestIdleCallback'in window)requestIdleCallback(function(){fn()},{timeout:timeout||1400});else setTimeout(fn,120);};
  // El primer gesto sobre menú se atiende en captura antes de cualquier trabajo secundario.
  document.addEventListener('pointerdown',function(e){var b=e.target&&e.target.closest?e.target.closest('#btnMenu'):null;if(!b)return;try{if(typeof openDrawer==='function')openDrawer();}catch(_){}},true);
@@ -27941,7 +27941,7 @@ button,a,[role="button"],[data-tab]{touch-action:manipulation;-webkit-tap-highli
 </style>
 <script id="fluxia-v972-bank-fast-refresh">
 (function(){'use strict';
- window.FLUXIA_BUILD='v97.8-LAB';
+ window.FLUXIA_BUILD='v97.6-LAB';
  var last=0,busy=false,T=90*1000;
  function visible(){return document.visibilityState==='visible'&&!document.hidden}
  async function refresh(){
@@ -27961,92 +27961,6 @@ button,a,[role="button"],[data-tab]{touch-action:manipulation;-webkit-tap-highli
  setInterval(refresh,T);
 })();
 </script>
-
-<style id="fluxia-v978-transfer-icons">
-.fx978-transfer-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 7px;border-radius:999px;font-size:11px;font-weight:750;background:var(--tab-soft,#eef5f5);color:var(--tab-ink,#315a61)}
-.fx978-brand-icon{width:28px;height:28px;display:inline-grid;place-items:center;border-radius:9px;background:var(--tab-soft,#f3f4f4);font-size:16px;line-height:1;flex:0 0 28px}
-</style>
-<script id="fluxia-v978-bank-transfer-core">
-(function(){
-  'use strict';
-  var OWN_BANKS=/\b(revolut|caixa|caixabank|imagin|efectivo|dinero en mano)\b/i;
-  function isoTime(x){
-    if(!x||typeof x!=='object')return null;
-    var candidates=[x.fechaHoraBanco,x.bookingDateTime,x.transactionDateTime,x.valueDateTime,x.dateTime,x.timestamp,x.bookedAt,x.createdAtBanco];
-    for(var i=0;i<candidates.length;i++){
-      var v=candidates[i]; if(!v)continue;
-      var d=new Date(v); if(!isNaN(d.getTime()) && /T\d{2}:\d{2}/.test(String(v))) return d.toISOString();
-    }
-    return null;
-  }
-  function bankName(x){return String((x&&(x.banco||x.bank||x.cuenta||x.accountName))||'').trim();}
-  function concept(x){return String((x&&(x.concepto||x.descripcion||x.description||x.remittanceInformation))||'').trim();}
-  function amount(x){return Number(x&&(x.importe!=null?x.importe:x.amount))||0;}
-  function isOwnHint(x){return OWN_BANKS.test(bankName(x)+' '+concept(x));}
-  function normalizeBankMovement(x){
-    if(!x||typeof x!=='object')return x;
-    var t=isoTime(x);
-    if(t&&!x.fechaHoraBanco)x.fechaHoraBanco=t; // never invent a time
-    return x;
-  }
-  function scorePair(a,b){
-    if(!a||!b)return 0;
-    var aa=amount(a),bb=amount(b); if(!aa||!bb||Math.abs(Math.abs(aa)-Math.abs(bb))>.009||Math.sign(aa)===Math.sign(bb))return 0;
-    var score=55;
-    var ta=isoTime(a),tb=isoTime(b);
-    if(ta&&tb){
-      var mins=Math.abs(new Date(ta)-new Date(tb))/60000;
-      if(mins<=10)score+=30; else if(mins<=120)score+=20; else if(mins<=1440)score+=10; else return 0;
-    }else{
-      var da=String(a.fecha||'').slice(0,10),db=String(b.fecha||'').slice(0,10);
-      if(da&&db&&da===db)score+=10; else return 0;
-    }
-    if(bankName(a)&&bankName(b)&&bankName(a).toLowerCase()!==bankName(b).toLowerCase())score+=10;
-    if(isOwnHint(a)||isOwnHint(b))score+=5;
-    return Math.min(score,100);
-  }
-  function markTransfer(a,b){
-    if(!a||!b)return false;
-    a.tipoMovimiento=b.tipoMovimiento='traspaso_propio';
-    a.impactoDisponible=b.impactoDisponible=0;
-    a.esTraspasoPropio=b.esTraspasoPropio=true;
-    a.transferPairId=b.transferPairId='fxtr_'+[a.bancoRef||a.id||'',b.bancoRef||b.id||''].sort().join('_');
-    return true;
-  }
-  window.FluxiaBankTransfer978={normalize:normalizeBankMovement,scorePair:scorePair,markTransfer:markTransfer,realBankTime:isoTime};
-  // Integrate at the existing bank-processing boundary without polling/observers/timers.
-  if(typeof window.validarMovimientoBancario==='function'){
-    var base=window.validarMovimientoBancario;
-    window.validarMovimientoBancario=function(x){return base.call(this,normalizeBankMovement(x));};
-  }
-})();
-</script>
-<script id="fluxia-v978-brand-icons">
-(function(){
-  'use strict';
-  var rules=[
-    [/endesa|iberdrola|naturgy|luz|electric|energia/i,'⚡'],
-    [/agua|emasesa|canal/i,'💧'],
-    [/securitas|alarma|seguridad/i,'🛡️'],
-    [/internet|fibra|movistar|vodafone|orange|digi|o2/i,'📶'],
-    [/telefono|movil/i,'📱'],
-    [/seguro|mapfre|mutua|axa|allianz/i,'🛡️'],
-    [/gasolina|repsol|cepsa|moeve|plenoil|ballenoil/i,'⛽'],
-    [/hipoteca|alquiler|vivienda/i,'🏠'],
-    [/gym|gimnasio|basic.fit|synergym/i,'🏋️'],
-    [/peluquer|barber/i,'✂️'],
-    [/supermerc|mercadona|carrefour|lidl|aldi/i,'🛒'],
-    [/netflix|spotify|disney|dazn|hbo/i,'▶️'],
-    [/revolut|caixa|caixabank|banco/i,'🏦']
-  ];
-  window.FluxiaBrandIcon978=function(label){
-    label=String(label||'');
-    for(var i=0;i<rules.length;i++)if(rules[i][0].test(label))return rules[i][1];
-    return '🧾';
-  };
-})();
-</script>
-
 </body>
 
 
@@ -32553,93 +32467,7 @@ window.FluxiaIntegracionV86 = {
       });
       
       html += '</table>';
-      html += '
-<style id="fluxia-v978-transfer-icons">
-.fx978-transfer-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 7px;border-radius:999px;font-size:11px;font-weight:750;background:var(--tab-soft,#eef5f5);color:var(--tab-ink,#315a61)}
-.fx978-brand-icon{width:28px;height:28px;display:inline-grid;place-items:center;border-radius:9px;background:var(--tab-soft,#f3f4f4);font-size:16px;line-height:1;flex:0 0 28px}
-</style>
-<script id="fluxia-v978-bank-transfer-core">
-(function(){
-  'use strict';
-  var OWN_BANKS=/\b(revolut|caixa|caixabank|imagin|efectivo|dinero en mano)\b/i;
-  function isoTime(x){
-    if(!x||typeof x!=='object')return null;
-    var candidates=[x.fechaHoraBanco,x.bookingDateTime,x.transactionDateTime,x.valueDateTime,x.dateTime,x.timestamp,x.bookedAt,x.createdAtBanco];
-    for(var i=0;i<candidates.length;i++){
-      var v=candidates[i]; if(!v)continue;
-      var d=new Date(v); if(!isNaN(d.getTime()) && /T\d{2}:\d{2}/.test(String(v))) return d.toISOString();
-    }
-    return null;
-  }
-  function bankName(x){return String((x&&(x.banco||x.bank||x.cuenta||x.accountName))||'').trim();}
-  function concept(x){return String((x&&(x.concepto||x.descripcion||x.description||x.remittanceInformation))||'').trim();}
-  function amount(x){return Number(x&&(x.importe!=null?x.importe:x.amount))||0;}
-  function isOwnHint(x){return OWN_BANKS.test(bankName(x)+' '+concept(x));}
-  function normalizeBankMovement(x){
-    if(!x||typeof x!=='object')return x;
-    var t=isoTime(x);
-    if(t&&!x.fechaHoraBanco)x.fechaHoraBanco=t; // never invent a time
-    return x;
-  }
-  function scorePair(a,b){
-    if(!a||!b)return 0;
-    var aa=amount(a),bb=amount(b); if(!aa||!bb||Math.abs(Math.abs(aa)-Math.abs(bb))>.009||Math.sign(aa)===Math.sign(bb))return 0;
-    var score=55;
-    var ta=isoTime(a),tb=isoTime(b);
-    if(ta&&tb){
-      var mins=Math.abs(new Date(ta)-new Date(tb))/60000;
-      if(mins<=10)score+=30; else if(mins<=120)score+=20; else if(mins<=1440)score+=10; else return 0;
-    }else{
-      var da=String(a.fecha||'').slice(0,10),db=String(b.fecha||'').slice(0,10);
-      if(da&&db&&da===db)score+=10; else return 0;
-    }
-    if(bankName(a)&&bankName(b)&&bankName(a).toLowerCase()!==bankName(b).toLowerCase())score+=10;
-    if(isOwnHint(a)||isOwnHint(b))score+=5;
-    return Math.min(score,100);
-  }
-  function markTransfer(a,b){
-    if(!a||!b)return false;
-    a.tipoMovimiento=b.tipoMovimiento='traspaso_propio';
-    a.impactoDisponible=b.impactoDisponible=0;
-    a.esTraspasoPropio=b.esTraspasoPropio=true;
-    a.transferPairId=b.transferPairId='fxtr_'+[a.bancoRef||a.id||'',b.bancoRef||b.id||''].sort().join('_');
-    return true;
-  }
-  window.FluxiaBankTransfer978={normalize:normalizeBankMovement,scorePair:scorePair,markTransfer:markTransfer,realBankTime:isoTime};
-  // Integrate at the existing bank-processing boundary without polling/observers/timers.
-  if(typeof window.validarMovimientoBancario==='function'){
-    var base=window.validarMovimientoBancario;
-    window.validarMovimientoBancario=function(x){return base.call(this,normalizeBankMovement(x));};
-  }
-})();
-</script>
-<script id="fluxia-v978-brand-icons">
-(function(){
-  'use strict';
-  var rules=[
-    [/endesa|iberdrola|naturgy|luz|electric|energia/i,'⚡'],
-    [/agua|emasesa|canal/i,'💧'],
-    [/securitas|alarma|seguridad/i,'🛡️'],
-    [/internet|fibra|movistar|vodafone|orange|digi|o2/i,'📶'],
-    [/telefono|movil/i,'📱'],
-    [/seguro|mapfre|mutua|axa|allianz/i,'🛡️'],
-    [/gasolina|repsol|cepsa|moeve|plenoil|ballenoil/i,'⛽'],
-    [/hipoteca|alquiler|vivienda/i,'🏠'],
-    [/gym|gimnasio|basic.fit|synergym/i,'🏋️'],
-    [/peluquer|barber/i,'✂️'],
-    [/supermerc|mercadona|carrefour|lidl|aldi/i,'🛒'],
-    [/netflix|spotify|disney|dazn|hbo/i,'▶️'],
-    [/revolut|caixa|caixabank|banco/i,'🏦']
-  ];
-  window.FluxiaBrandIcon978=function(label){
-    label=String(label||'');
-    for(var i=0;i<rules.length;i++)if(rules[i][0].test(label))return rules[i][1];
-    return '🧾';
-  };
-})();
-</script>
-
-</body></html>';
+      html += '</body></html>';
       
       const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
       const url = URL.createObjectURL(blob);
@@ -33003,7 +32831,7 @@ window.FluxiaConfianzaV88 = {
     } catch(e){}
     box.innerHTML = '<details class="bank-details"><summary>Diagnóstico</summary><div class="fluxia-salud-card">' +
       '<div class="fluxia-salud-grid">' +
-      '<div><span>Versión</span><strong>BETA v97.8-LAB</strong></div>' +
+      '<div><span>Versión</span><strong>BETA v97.6-LAB</strong></div>' +
       '<div><span>Bancos</span><strong>' + s.bancos + '</strong></div>' +
       '<div><span>Gastos variables</span><strong>' + s.movimientos + '</strong></div>' +
       '<div><span>Con ref. banco</span><strong>' + s.bancoRefs + '</strong></div>' +
@@ -33096,7 +32924,7 @@ console.log('✅ Fluxia v91 · Confianza + Salud listos');
       panel.dataset.v91 = '1';
       var versionTxt = document.getElementById('ayudaVersionTxt');
       if(versionTxt){
-        versionTxt.textContent = 'Fluxia BETA ' + (window.FLUXIA_VERSION||'v97.8-LAB') + ' · laboratorio · nube principal';
+        versionTxt.textContent = 'Fluxia BETA ' + (window.FLUXIA_VERSION||'v97.6-LAB') + ' · laboratorio · nube principal';
         versionTxt.style.cssText = 'font-size:.88rem;font-weight:600;color:var(--ink);margin:0 0 12px;';
       }
       // Recoger todos los details de versiones/checklist antiguos
@@ -33199,7 +33027,7 @@ console.log('✅ Fluxia v91 · Confianza + Salud listos');
     var inp = document.getElementById('fluxiaStableUrlInput');
     if (inp && !inp._filled){ inp.value = u; inp._filled = true; }
     var labV = document.getElementById('fluxiaLabVersionLabel');
-    if (labV) labV.textContent = (window.FLUXIA_VERSION ? ('v'+String(window.FLUXIA_VERSION).replace(/^v/,'')) : 'v97.8-LAB');
+    if (labV) labV.textContent = (window.FLUXIA_VERSION ? ('v'+String(window.FLUXIA_VERSION).replace(/^v/,'')) : 'v97.6-LAB');
   }
 
   // Notificación sistema al estilo Revolut (permiso + show)
@@ -33512,7 +33340,7 @@ console.log('✅ Fluxia v91 · Confianza + Salud listos');
     if (!btn || btn._v91) return;
     btn._v91 = true;
     btn.addEventListener('click', function(){
-      var ver = (window.FLUXIA_VERSION || 'v97.8-LAB').toString().replace(/^v/,'');
+      var ver = (window.FLUXIA_VERSION || 'v97.6-LAB').toString().replace(/^v/,'');
       var fileName = 'index_fluxia_v' + ver.replace(/\./g,'_').replace(/^v/,'') + '.html';
       // Normalize: v91 -> index_fluxia_v90_10.html style
       fileName = 'index_fluxia_v' + ver.replace(/\./g, '_') + '.html';
@@ -38283,7 +38111,7 @@ html body #fx50AvailableNote{font-size:.7rem!important;font-weight:600!important
         '<p>✅ Más aire visual: IMPLEMENTADO entre cabecera, estados, hero, cuadrícula y secundarios.</p>'+
         '<p>✅ Menos saturación numérica: IMPLEMENTADO · cifras secundarias reducen peso, Disponible mantiene prioridad.</p>'+
         '<p>✅ Texto de pensión simplificado: IMPLEMENTADO.</p>'+
-        '<p>✅ Build coherente v97.8-LAB: PROBADO · HTML, manifest, SW y canal LAB coinciden.</p>'+
+        '<p>✅ Build coherente v97.6-LAB: PROBADO · HTML, manifest, SW y canal LAB coinciden.</p>'+
         '<p>✅ ESTABLE v95.39: INTACTA.</p>';
     }catch(e){}
   }
@@ -38294,7 +38122,7 @@ html body #fx50AvailableNote{font-size:.7rem!important;font-weight:600!important
 <script id="fluxia-v9554-arch-authority">
 (function(){
  'use strict';
- window.FLUXIA_ARCH_VERSION='v97.8-LAB';
+ window.FLUXIA_ARCH_VERSION='v97.6-LAB';
  window.FLUXIA_RECOVERY_POLICY='github-direct-secure-profile-recovery';
  window.FLUXIA_BANK_RECONCILIATION_POLICY='explicit-only';
  window.FluxiaDisponibleEngine={
@@ -38704,7 +38532,7 @@ window.FLUXIA_V9682=Object.freeze({base:'v96.80-LAB',currentCloudHuchas:true,fix
 
 <script id="fluxia-v9683-pwa-policy">
 window.FLUXIA_PWA_POLICY=Object.freeze({
-  current:'v97.8-LAB',
+  current:'v97.6-LAB',
   updateExistingAfterValidation:true,
   reinstallEveryVersion:false,
   permanentEntryPlanned:true
@@ -38744,7 +38572,7 @@ window.FLUXIA_PWA_POLICY=Object.freeze({
 </style>
 
 <style id="fluxia-v974-available-hybrid-7-5">
-/* v97.8 LAB · Disponible híbrido 7+5 aprobado: misma identidad, más ligero y translúcido. */
+/* v97.6 LAB · Disponible híbrido 7+5 aprobado: misma identidad, más ligero y translúcido. */
 html body #fxDashboard67 > .fx30-hero,
 html body #fxDashboard67 .fx30-hero{
   border-radius:16px!important;
@@ -38772,7 +38600,7 @@ html body #fxDashboard67 .fx30-hero-label{letter-spacing:.11em!important}
 </style>
 
 <style id="fluxia-v976-model3-faithful">
-/* v97.8 LAB — faithful Model 3 visual correction only. Financial logic untouched. */
+/* v97.6 LAB — faithful Model 3 visual correction only. Financial logic untouched. */
 html body #fx34Context{margin:4px 0 12px!important;padding:0!important}
 html body #fx34Context .fx30-statusrow{
   display:flex!important;align-items:center!important;justify-content:space-between!important;
@@ -38869,93 +38697,7 @@ html body #fxDashboard67 #fx50AvailableNote{font-size:10px!important;color:#5d76
   setTimeout(placeMonthSelector,600);
 })();
 </script>
-<!-- FLUXIA_BUILD: v97.8-LAB | MODEL3_FAITHFUL -->
-
-<style id="fluxia-v978-transfer-icons">
-.fx978-transfer-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 7px;border-radius:999px;font-size:11px;font-weight:750;background:var(--tab-soft,#eef5f5);color:var(--tab-ink,#315a61)}
-.fx978-brand-icon{width:28px;height:28px;display:inline-grid;place-items:center;border-radius:9px;background:var(--tab-soft,#f3f4f4);font-size:16px;line-height:1;flex:0 0 28px}
-</style>
-<script id="fluxia-v978-bank-transfer-core">
-(function(){
-  'use strict';
-  var OWN_BANKS=/\b(revolut|caixa|caixabank|imagin|efectivo|dinero en mano)\b/i;
-  function isoTime(x){
-    if(!x||typeof x!=='object')return null;
-    var candidates=[x.fechaHoraBanco,x.bookingDateTime,x.transactionDateTime,x.valueDateTime,x.dateTime,x.timestamp,x.bookedAt,x.createdAtBanco];
-    for(var i=0;i<candidates.length;i++){
-      var v=candidates[i]; if(!v)continue;
-      var d=new Date(v); if(!isNaN(d.getTime()) && /T\d{2}:\d{2}/.test(String(v))) return d.toISOString();
-    }
-    return null;
-  }
-  function bankName(x){return String((x&&(x.banco||x.bank||x.cuenta||x.accountName))||'').trim();}
-  function concept(x){return String((x&&(x.concepto||x.descripcion||x.description||x.remittanceInformation))||'').trim();}
-  function amount(x){return Number(x&&(x.importe!=null?x.importe:x.amount))||0;}
-  function isOwnHint(x){return OWN_BANKS.test(bankName(x)+' '+concept(x));}
-  function normalizeBankMovement(x){
-    if(!x||typeof x!=='object')return x;
-    var t=isoTime(x);
-    if(t&&!x.fechaHoraBanco)x.fechaHoraBanco=t; // never invent a time
-    return x;
-  }
-  function scorePair(a,b){
-    if(!a||!b)return 0;
-    var aa=amount(a),bb=amount(b); if(!aa||!bb||Math.abs(Math.abs(aa)-Math.abs(bb))>.009||Math.sign(aa)===Math.sign(bb))return 0;
-    var score=55;
-    var ta=isoTime(a),tb=isoTime(b);
-    if(ta&&tb){
-      var mins=Math.abs(new Date(ta)-new Date(tb))/60000;
-      if(mins<=10)score+=30; else if(mins<=120)score+=20; else if(mins<=1440)score+=10; else return 0;
-    }else{
-      var da=String(a.fecha||'').slice(0,10),db=String(b.fecha||'').slice(0,10);
-      if(da&&db&&da===db)score+=10; else return 0;
-    }
-    if(bankName(a)&&bankName(b)&&bankName(a).toLowerCase()!==bankName(b).toLowerCase())score+=10;
-    if(isOwnHint(a)||isOwnHint(b))score+=5;
-    return Math.min(score,100);
-  }
-  function markTransfer(a,b){
-    if(!a||!b)return false;
-    a.tipoMovimiento=b.tipoMovimiento='traspaso_propio';
-    a.impactoDisponible=b.impactoDisponible=0;
-    a.esTraspasoPropio=b.esTraspasoPropio=true;
-    a.transferPairId=b.transferPairId='fxtr_'+[a.bancoRef||a.id||'',b.bancoRef||b.id||''].sort().join('_');
-    return true;
-  }
-  window.FluxiaBankTransfer978={normalize:normalizeBankMovement,scorePair:scorePair,markTransfer:markTransfer,realBankTime:isoTime};
-  // Integrate at the existing bank-processing boundary without polling/observers/timers.
-  if(typeof window.validarMovimientoBancario==='function'){
-    var base=window.validarMovimientoBancario;
-    window.validarMovimientoBancario=function(x){return base.call(this,normalizeBankMovement(x));};
-  }
-})();
-</script>
-<script id="fluxia-v978-brand-icons">
-(function(){
-  'use strict';
-  var rules=[
-    [/endesa|iberdrola|naturgy|luz|electric|energia/i,'⚡'],
-    [/agua|emasesa|canal/i,'💧'],
-    [/securitas|alarma|seguridad/i,'🛡️'],
-    [/internet|fibra|movistar|vodafone|orange|digi|o2/i,'📶'],
-    [/telefono|movil/i,'📱'],
-    [/seguro|mapfre|mutua|axa|allianz/i,'🛡️'],
-    [/gasolina|repsol|cepsa|moeve|plenoil|ballenoil/i,'⛽'],
-    [/hipoteca|alquiler|vivienda/i,'🏠'],
-    [/gym|gimnasio|basic.fit|synergym/i,'🏋️'],
-    [/peluquer|barber/i,'✂️'],
-    [/supermerc|mercadona|carrefour|lidl|aldi/i,'🛒'],
-    [/netflix|spotify|disney|dazn|hbo/i,'▶️'],
-    [/revolut|caixa|caixabank|banco/i,'🏦']
-  ];
-  window.FluxiaBrandIcon978=function(label){
-    label=String(label||'');
-    for(var i=0;i<rules.length;i++)if(rules[i][0].test(label))return rules[i][1];
-    return '🧾';
-  };
-})();
-</script>
-
+<!-- FLUXIA_BUILD: v97.6-LAB | MODEL3_FAITHFUL -->
 </body>
 </html>
 
