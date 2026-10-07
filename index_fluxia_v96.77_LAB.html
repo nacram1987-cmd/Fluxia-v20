@@ -1435,7 +1435,10 @@ function generarLinkInvitacion(inviteToken) {
         var k = clave(ruta);
         return {
           set: async function(obj){
-            var row = { user_id: idActual, clave: k, v: obj && obj.v, t: (obj && obj.t) || Date.now() };
+            var _v9677=(obj&&obj.v);
+            /* v96.77 · HUCHAS CANÓNICAS PERSISTENTES: misma regla conservadora excel + rebase_v9538 sobre el bloque vivo. */
+            if(/v2_provisiones$/.test(String(k)) && typeof _v9677==='string') _v9677=limpiarProvisionesRecuperadas(_v9677);
+            var row = { user_id: idActual, clave: k, v: _v9677, t: (obj && obj.t) || Date.now() };
             /* v95.1-LAB · Si no hay error HTTP, el guardado es VÁLIDO aunque .select()
                no devuelva filas (RLS a veces bloquea RETURNING y la app creía que falló). */
             var r = await c.from(TABLA).upsert(row, { onConflict: 'user_id,clave' });
@@ -1493,6 +1496,10 @@ function generarLinkInvitacion(inviteToken) {
                   }
                 }
               }
+            }
+            if(f && /v2_provisiones$/.test(String(k)) && typeof f.v==='string'){
+              var _cleanLive9677=limpiarProvisionesRecuperadas(f.v);
+              if(_cleanLive9677!==f.v){try{window.FLUXIA_HUCHAS_LIVE_CANONICALIZED={version:'v96.77-LAB',key:k,persistentOnNextSave:true};}catch(_lc){} f={clave:f.clave,v:_cleanLive9677,t:f.t};}
             }
             return f ? { v: f.v, t: f.t } : null;
           },
@@ -1590,6 +1597,17 @@ function generarLinkInvitacion(inviteToken) {
                 if(used.length){try{window.FLUXIA_LEGACY_NAMESPACE_RECOVERED={profile:String(p),keys:used.slice(),readOnly:true};}catch(_m){}}
               }
             }
+            /* v96.77 · Canonizar la lectura masiva antes de reconciliar/pintar. */
+            visibles=visibles.map(function(_f9677){
+              try{
+                var _logical9677=prefix?String(_f9677.clave||'').slice(prefix.length):String(_f9677.clave||'');
+                if(_logical9677==='v2_provisiones' && typeof _f9677.v==='string'){
+                  var _cv9677=limpiarProvisionesRecuperadas(_f9677.v);
+                  if(_cv9677!==_f9677.v)return {clave:_f9677.clave,v:_cv9677,t:_f9677.t};
+                }
+              }catch(_e9677){}
+              return _f9677;
+            });
             return { docs: visibles.map(function(f){
               return { id: prefix?f.clave.slice(prefix.length):f.clave, data: function(){ return { v: f.v, t: f.t }; }, delete: function(){ return borrar(f.clave); } };
             }) };
@@ -4020,6 +4038,7 @@ html body #fx32Header .fx30-wordmark{font-family:-apple-system,BlinkMacSystemFon
 </style>
 
 
+<style id='fluxia-v9676-variables-contain'>#panel-gastos-variables{contain:layout style paint}</style><!-- v96.77-LAB · Huchas canónicas en lectura normal + persistencia; Variables v96.76 preservado -->
 </head>
 <script>
 window._offlineMode=!navigator.onLine;
@@ -16591,13 +16610,12 @@ function exportarVariablesCSV(mes){
 }
 
 function renderGastosVariables(){
-  /* v96.77 NO-PURGE: no reconciliation on panel entry */
+  if(window.FluxiaGVBorrados)movimientos=FluxiaGVBorrados.purgarListaLocal(movimientos);
   const mes = mesSeleccionado;
-  const movMes = movimientosDe(mes);
   document.getElementById('gvMesLabel').textContent = MES_LABEL[mes];
   document.getElementById('gvMesActivo').textContent = MES_LABEL[mes];
   document.getElementById('gvMesLista').textContent = MES_LABEL[mes];
-  document.getElementById('gvNumGastos').textContent = movMes.length;
+  document.getElementById('gvNumGastos').textContent = movimientosDe(mes).length;
 
   // Disponible ajustado
   const disponible = disponibleEfectivo(mes);
@@ -16622,7 +16640,7 @@ function renderGastosVariables(){
   // Rellenar opciones de categoría (sin perder selección)
   if (catEl){
     const prev = catEl.value;
-    const cats = [...new Set(movMes.map(m => m.categoria || 'Otros'))].sort((a,b)=>a.localeCompare(b,'es'));
+    const cats = [...new Set(movimientosDe(mes).map(m => m.categoria || 'Otros'))].sort((a,b)=>a.localeCompare(b,'es'));
     catEl.innerHTML = '<option value="">Todas las categorías</option>' + cats.map(c => '<option value="'+String(c).replace(/"/g,'&quot;')+'">'+c+'</option>').join('');
     if (prev && cats.includes(prev)) catEl.value = prev;
   }
@@ -16644,14 +16662,14 @@ function renderGastosVariables(){
   // Histórico de movimientos (filtrado)
   const movView = document.getElementById('gvMovimientosView');
   movView.innerHTML = "";
-  let movs = movMes.slice().sort((a,b)=> (a.fecha||'').localeCompare(b.fecha||'') || 0).reverse();
+  let movs = movimientosDe(mes).slice().sort((a,b)=> (a.fecha||'').localeCompare(b.fecha||'') || 0).reverse();
   if (catFiltro) movs = movs.filter(m => (m.categoria || 'Otros') === catFiltro);
   if (q) movs = movs.filter(m => {
     const blob = ((m.concepto||'')+' '+(m.categoria||'')).toLowerCase();
     return blob.includes(q);
   });
-  document.getElementById('gvNumGastos').textContent = movs.length + (q || catFiltro ? '/'+movMes.length : '');
-  if (movMes.length === 0){
+  document.getElementById('gvNumGastos').textContent = movs.length + (q || catFiltro ? '/'+movimientosDe(mes).length : '');
+  if (movimientosDe(mes).length === 0){
     movView.innerHTML = fluxiaEmptyHTML({ico:'💸',tit:'Sin gastos del día a día aún',txt:'Café, supermercado, transporte… rellena el formulario de arriba y pulsa Guardar gasto.',btn:'✎ Ir al formulario',onclick:"var el=document.getElementById('gvConcepto');if(el){el.focus();el.scrollIntoView({behavior:'smooth',block:'center'});}"});
   } else if (movs.length === 0){
     movView.innerHTML = fluxiaEmptyHTML({ico:'🔎',tit:'Ningún gasto coincide',txt:'Limpia la búsqueda o el filtro de categoría para ver todos.'});
@@ -16746,16 +16764,13 @@ function renderGastosVariables(){
     });
   });
 
-  var _catPanel=document.getElementById('gv-categoria');
-  if(!_catPanel || !_catPanel.classList.contains('active')) return;
-
   // Render de categorías (pestaña interna "Por categoría")
   const gvFechaEl = document.getElementById('gvFecha');
   if (gvFechaEl && !gvFechaEl.value){
     gvFechaEl.value = (mes === MES_ACTUAL_REAL) ? hoyISO() : (ymDeMes(mes)+'-01');
   }
   const combinado = {};
-  movMes.forEach(mv=>{
+  movimientosDe(mes).forEach(mv=>{
     const cat = mv.categoria || 'Otros';
     combinado[cat] = (combinado[cat]||0) + mv.importe;
   });
@@ -16773,7 +16788,7 @@ function renderGastosVariables(){
       const pct = totalCat > 0 ? (val/totalCat)*100 : 0;
       const color = CATEGORY_COLORS[cat] || '#8A9086';
       const abierta = window._gvCatAbierta === cat;
-      const movsCat = movMes
+      const movsCat = movimientosDe(mes)
         .filter(mv => (mv.categoria || 'Otros') === cat)
         .sort((a,b) => String(b.fecha||'').localeCompare(String(a.fecha||'')));
       const div = document.createElement('div');
