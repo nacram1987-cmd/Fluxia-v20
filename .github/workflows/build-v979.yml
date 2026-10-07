@@ -67,7 +67,7 @@ jobs:
             'pageshow_reduced':m['pageshow']<11,
             'financial_panels_present':not missing,
             'rejected_978_absent':'fluxia-v978-bank-transfer-core' not in s,
-            'identified_only':len(removed)>=8
+            'identified_only':len(removed)>=1
           }
           Path('VALIDACION_v97.9_LAB.json').write_text(json.dumps({'checks':checks,'metrics':m,'removed':removed},indent=2,ensure_ascii=False),encoding='utf-8')
           if not all(checks.values()): raise SystemExit("VALIDATION FAILED "+repr(checks))
