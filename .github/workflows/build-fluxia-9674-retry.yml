@@ -18,8 +18,8 @@ jobs:
           python-version: '3.12'
       - run: python tools/build_9674.py
       - run: |
-          git config user.name github-actions
-          git config user.email actions@github.com
+          git config --local user.name github-actions
+          git config --local user.email actions@github.com
           git add index_fluxia_v96.74_LAB.html CHECKLIST_v96.74.txt PROMPT_MAESTRO_v96.74.txt manifest_v96.74_LAB.webmanifest fluxia-sw-v96.74.js README_v96.74.md SHA256SUMS_v96.74.txt Fluxia_v96.74_LAB.zip
           git commit -m "build v96.74 accounting recovery" || true
           git fetch origin main
