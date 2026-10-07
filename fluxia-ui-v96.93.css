@@ -1,0 +1,107 @@
+:root{--sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--serif:var(--sans);--mono:var(--sans);--font-serif:var(--sans);--font-sans:var(--sans);--font-mono:var(--sans);--fx-font:var(--sans);--fx-ui-blue:#2E7E91;--fx-ui-blue-bg:#EDF6F7;--fx-ui-gold:#B58A45;--fx-ui-gold-bg:#FBF4E7;--fx-ui-radius:14px;--fx-ui-space:10px;--fx-ui-shadow:0 3px 12px rgba(30,59,57,.045)}
+html body #fx32Header{position:sticky!important;top:0!important;z-index:150!important;display:block!important;padding:calc(7px + env(safe-area-inset-top,0px)) 0 7px!important;margin:0!important;background:#F7F6F2!important;border:0!important;border-bottom:1px solid #E2E7E2!important;border-radius:0!important;box-shadow:none!important;overflow:visible!important}
+html body #fx32Header .fx30-headgrid{display:grid!important;grid-template-columns:38px minmax(0,1fr) 38px!important;grid-template-areas:'menu brand bell'!important;gap:8px!important;align-items:center!important}
+html body #fx32Header #btnMenu{grid-area:menu!important}
+html body #fx32Header #headerNotifications{grid-area:bell!important;justify-self:end!important;position:relative!important}
+html body #fx32Header .fx30-iconbtn{width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important;padding:0!important;border-radius:12px!important;background:#FFFEFB!important;color:#2E7E91!important;border:1px solid #CBDCD6!important;box-shadow:none!important;display:grid!important;place-items:center!important}
+html body #fx32Header .fx30-iconbtn svg{width:20px!important;height:20px!important}
+html body #fx32Header .fx30-brandzone{grid-area:brand!important;display:flex!important;align-items:center!important;justify-content:center!important;justify-self:center!important;gap:6px!important;padding:0!important;min-width:0!important}
+html body #fx32Header .fx30-wordmark{display:flex!important;align-items:center!important;gap:6px!important;font:700 20px/1.15 var(--sans)!important;color:#397FA9!important;letter-spacing:-.4px!important}
+html body #fx32Header .fx32-logo{display:block!important;width:28px!important;height:28px!important;flex:0 0 28px!important;border-radius:8px!important;box-shadow:none!important;filter:none!important;transform:none!important;background:#8EC5E5!important}
+html body #fx32Header #fluxiaBetaBadge{display:inline-flex!important;position:static!important;margin:0!important;padding:3px 4px!important;border:1px solid #E0D2B5!important;border-radius:5px!important;background:#FBF4E7!important;color:#9B722F!important;font:700 8px/1.1 var(--sans)!important;letter-spacing:.04em!important;box-shadow:none!important}
+html body #fx32Header .fx30-greeting,html body #fluxiaHeaderSub,html body #fluxiaVersion,html body .fx30-tagline{display:none!important}
+html body #fx34Context{display:block!important;padding:6px 0 8px!important;margin:0!important;min-height:0!important;border:0!important;background:transparent!important}
+html body #fx34Context .fx34-context-grid{display:block!important;min-height:0!important}
+html body #fx34Context .fx30-greeting{display:none!important}
+html body #fx34Context .fx30-statusrow{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:6px!important;margin:0!important;padding:0!important;width:100%!important}
+html body #fx34Context .fx-banco-pill{display:inline-flex!important;align-items:center!important;gap:5px!important;position:static!important;width:auto!important;max-width:100%!important;min-height:24px!important;height:24px!important;padding:3px 8px!important;margin:0!important;border:1px solid #E2E7E2!important;border-radius:999px!important;background:#FFFEFB!important;color:#526C65!important;font:600 10px/1.2 var(--sans)!important;white-space:nowrap!important;box-shadow:none!important}
+html body #fx34Context .fx-dot{width:6px!important;height:6px!important;flex-basis:6px!important;animation:none!important;box-shadow:none!important}
+html body #fx34Context .fx-banco-pill[style*="display:none"],html body #fx34Context .fx-banco-pill[style*="display: none"]{display:none!important}
+html body #fxDashboard67{padding-top:4px!important}
+html body #fxDashboard67 .fx30-hero{padding:14px 16px!important;margin-bottom:12px!important;min-height:0!important;border-radius:var(--fx-ui-radius)!important;background:linear-gradient(135deg,#DCEFFA,#8EC5E5)!important;color:#153E55!important}
+html body #fxDashboard67 .fx30-hero *{color:#153E55!important}
+html body #fxDashboard67 .fx30-amount{font:700 32px/1.15 var(--sans)!important;margin-top:7px!important}
+html body #fxDashboard67 .fx30-grid{gap:10px!important;margin:0 0 12px!important}
+html body #fxDashboard67 .fx30-card{min-height:104px!important;padding:12px!important;border-radius:var(--fx-ui-radius)!important}
+html body #fxDashboard67 .fx30-card .label{font:600 13px/1.2 var(--sans)!important}
+html body #fxDashboard67 .fx30-card .value{font:700 22px/1.2 var(--sans)!important}
+html body #fxDashboard67 .fx30-card-icon{width:28px!important;height:28px!important;margin-bottom:5px!important;font-size:17px!important}
+html body #fxDashboard67 .fx30-secondary{gap:10px!important;margin-bottom:12px!important}
+html body #fxDashboard67 .fx30-secondary .fx-dashboard67-action{min-height:62px!important;padding:10px!important}
+html body .panel .sec-head{margin-bottom:10px!important;padding:10px 0!important}
+html body .panel .sec-head .sec-title{font-size:18px!important}
+/* Same surface, border, radius, typography and shadow as the Huchas reference. */
+html body #panel-fijos :is(.fx47-fixed-card,.fx47-fin-card){--fx-state:var(--fx-ui-blue);--fx-state-bg:var(--fx-ui-blue-bg);margin:8px 0!important;padding:10px!important;border:1px solid color-mix(in srgb,var(--fx-state) 25%,transparent)!important;border-radius:var(--fx-ui-radius)!important;background:var(--fx-state-bg)!important;box-shadow:var(--fx-ui-shadow)!important}
+html body #panel-fijos :is(.fx47-fixed-card,.fx47-fin-card).is-paid{--fx-state:var(--fx-ui-gold);--fx-state-bg:var(--fx-ui-gold-bg)}
+html body #panel-fijos :is(.fx47-fin-main,.fx47-fixed-main){display:grid!important;grid-template-columns:36px minmax(0,1fr) auto!important;gap:8px!important;align-items:start!important}
+html body #panel-fijos .fx47-merchant{width:36px!important;height:36px!important;display:flex!important;align-items:center!important;justify-content:center!important;grid-row:auto!important;border:1px solid #DDE8E5!important;border-radius:10px!important;background:#FFFEFB!important;font-size:21px!important;overflow:hidden!important}
+.fx-merchant img{width:26px!important;height:26px!important;object-fit:contain!important}.fx-merchant [hidden]{display:none!important}
+.fx-variable-merchant,.fx-finance-merchant{display:inline-flex!important;width:30px!important;height:30px!important;align-items:center!important;justify-content:center!important;flex:0 0 30px!important;margin-right:6px!important;background:#FFFEFB!important;border-radius:8px!important;vertical-align:middle!important;font-size:20px!important}
+html body #panel-financiaciones .fin-item{--fx-state:var(--fx-ui-blue);--fx-state-bg:var(--fx-ui-blue-bg);padding:10px!important;margin:8px 0!important;border-radius:var(--fx-ui-radius)!important;border:1px solid color-mix(in srgb,var(--fx-state) 25%,transparent)!important;background:var(--fx-state-bg)!important;box-shadow:var(--fx-ui-shadow)!important}
+html body #panel-financiaciones .fin-item.ya-pagado{--fx-state:var(--fx-ui-gold);--fx-state-bg:var(--fx-ui-gold-bg);opacity:1!important}
+html body #panel-financiaciones .fin-item :is(.nombre,.cuota){font:600 14px/1.3 var(--sans)!important;color:var(--fx-state)!important}
+html body #panel-financiaciones .fin-item :is(.fin-meta,.pago-fila){font-size:10px!important;margin-top:6px!important;gap:5px!important}
+html body #panel-financiaciones .fin-item .bar{height:5px!important;margin:6px 0!important}
+html body #panel-financiaciones .fin-item .bar>div{background:var(--fx-state)!important}
+html body #panel-financiaciones .fin-item .reset-link{margin-top:4px!important;font-size:10px!important}
+html body #panel-financiaciones .fin-item button{min-height:36px!important;padding:6px 8px!important;font-size:11px!important}
+html body #panel-fijos :is(.fx47-fin-title,.fx47-fixed-title){font:600 14px/1.22 var(--sans)!important;color:#203F40!important;margin:0 0 3px!important;overflow-wrap:anywhere!important}
+html body #panel-fijos :is(.fx47-fin-sub,.fx47-fixed-sub){display:none!important}
+html body #panel-fijos :is(.fx47-fin-date,.fx47-fixed-date,.fx47-fin-meta){font:400 10px/1.3 var(--sans)!important;color:#657B77!important;margin-top:3px!important;white-space:normal!important}
+html body #panel-fijos :is(.fx47-fin-side,.fx47-fixed-side){text-align:right!important;min-width:0!important;max-width:124px!important;grid-column:auto!important}
+html body #panel-fijos :is(.fx47-fin-amount,.fx47-fixed-amount){font:700 16px/1.2 var(--sans)!important;font-variant-numeric:tabular-nums!important;color:var(--fx-state)!important;white-space:nowrap!important}
+html body #panel-fijos .fx47-status{display:inline-flex!important;padding:3px 5px!important;margin-top:4px!important;border-radius:6px!important;font:600 9px/1.2 var(--sans)!important;white-space:nowrap!important;color:var(--fx-state)!important;background:var(--fx-state-bg)!important;border:1px solid color-mix(in srgb,var(--fx-state) 25%,transparent)!important}
+html body #panel-fijos .fx47-card-actions{display:flex!important;gap:6px!important;margin-top:7px!important;align-items:center!important}
+html body #panel-fijos .fx47-card-actions button{min-height:36px!important;flex:1!important;padding:5px 6px!important;border-radius:8px!important;border:1px solid color-mix(in srgb,var(--fx-state) 25%,transparent)!important;background:#FFFEFB!important;color:var(--fx-state)!important;font:600 10px/1.2 var(--sans)!important;box-shadow:none!important;cursor:pointer!important}
+html body #panel-fijos .fx47-card-actions .primary{flex:2!important;background:var(--fx-state)!important;color:#fff!important}
+html body #panel-fijos .fx47-card-actions .danger{flex:1!important;color:#9C4545!important;border-color:#E8CECE!important;margin:0!important;min-height:36px!important}
+html body #panel-fijos .fx47-list-section{margin:0 0 10px!important;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+html body #panel-fijos .fx47-section-head{display:flex!important;justify-content:space-between!important;gap:6px!important;padding:8px 0 4px!important;font:600 11px/1.3 var(--sans)!important;color:#657B77!important}
+html body #panel-fijos .fx47-fijos-hero{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;min-height:0!important;padding:10px 0!important;margin:0 0 8px!important;border-radius:0!important;border:0!important;background:transparent!important;color:#203F40!important;box-shadow:none!important}
+html body #panel-fijos .fx47-fijos-hero:after{display:none!important}
+html body #panel-fijos .fx47-fijos-titlewrap{display:flex!important;gap:8px!important;align-items:center!important;min-width:0!important}
+html body #panel-fijos .fx47-fijos-icon{width:32px!important;height:32px!important;flex:0 0 32px!important;font-size:18px!important;border-radius:10px!important;background:#EDF6F7!important}
+html body #panel-fijos .fx47-fijos-titlewrap h3{font:600 17px/1.2 var(--sans)!important;color:#203F40!important;margin:0!important}
+html body #panel-fijos .fx47-fijos-titlewrap p{display:none!important}
+html body #panel-fijos .fx47-fijos-monthbox{flex:0 0 160px!important;text-align:center!important}
+html body #panel-fijos .fx47-fijos-monthctl{display:grid!important;grid-template-columns:30px 1fr 30px!important;align-items:center!important;padding:0!important;border:1px solid #E2DDCF!important;border-radius:10px!important;background:#F0EFE7!important;box-shadow:none!important}
+html body #panel-fijos .fx47-fijos-monthctl button{width:30px!important;height:36px!important;border:0!important;background:transparent!important;color:#203F40!important;font-size:20px!important}
+html body #panel-fijos .fx47-fijos-monthctl strong{font:600 12px/1.2 var(--sans)!important;color:#203F40!important}
+html body #panel-fijos .fx47-fijos-today{font:400 9px/1.2 var(--sans)!important;color:#657B77!important;margin-top:3px!important}
+html body #panel-fijos .fx47-fijos-summary{padding:10px!important;margin:0 0 8px!important;border:1px solid #E2E7E2!important;border-radius:var(--fx-ui-radius)!important;background:#FFFEFB!important;box-shadow:var(--fx-ui-shadow)!important}
+html body #panel-fijos .fx47-summary-top{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;align-items:start!important}
+html body #panel-fijos .fx47-summary-eyebrow{font:600 9px/1.3 var(--sans)!important;color:#657B77!important;letter-spacing:.03em!important;margin:0 0 4px!important}
+html body #panel-fijos .fx47-summary-total{font:700 25px/1.1 var(--sans)!important;color:#203F40!important;margin:0!important}
+html body #panel-fijos .fx47-summary-sub{font:400 9px/1.3 var(--sans)!important;color:#657B77!important;margin-top:4px!important}
+html body #panel-fijos .fx47-summary-split{display:grid!important;grid-template-columns:1fr!important;gap:4px!important}
+html body #panel-fijos .fx47-split-card{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:5px!important;background:transparent!important;padding:4px 0!important;border:0!important;border-radius:0!important}
+html body #panel-fijos .fx47-split-ico{display:none!important}
+html body #panel-fijos .fx47-split-card span{font:400 10px/1.2 var(--sans)!important;color:#657B77!important}
+html body #panel-fijos .fx47-split-card b{font:600 12px/1.2 var(--sans)!important;margin:0!important;color:#203F40!important;white-space:nowrap!important}
+html body #panel-fijos .fx47-summary-divider{height:1px!important;background:#E2E7E2!important;margin:8px 0!important}
+html body #panel-fijos .fx47-pay-summary{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;align-items:center!important}
+html body #panel-fijos .fx47-pay-pending span{font:400 10px/1.2 var(--sans)!important;color:#657B77!important}
+html body #panel-fijos .fx47-pay-pending strong{display:block!important;font:700 17px/1.2 var(--sans)!important;margin-top:3px!important;color:var(--fx-ui-blue)!important}
+html body #panel-fijos .fx47-progress-track{height:5px!important;background:#EDF2F1!important;border-radius:999px!important;overflow:hidden!important}
+html body #panel-fijos .fx47-progress-track span{display:block!important;height:100%!important;background:var(--fx-ui-gold)!important}
+html body #panel-fijos .fx47-paid-copy{font:400 9px/1.3 var(--sans)!important;color:#657B77!important;margin-top:4px!important}
+html body #panel-fijos.fx47-panel-fijos{padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important}
+html body #panel-fijos .fx47-fin-meta{max-width:124px!important}
+html body #panel-provisiones .pv-card{border-radius:var(--fx-ui-radius)!important;box-shadow:var(--fx-ui-shadow)!important}
+html body #panel-provisiones .pv-card.pv-ok{--pv-acc:var(--fx-ui-blue);--pv-tint:var(--fx-ui-blue-bg)}
+html body #panel-provisiones .pv-card.pv-pend{--pv-acc:var(--fx-ui-gold);--pv-tint:var(--fx-ui-gold-bg)}
+html body #modalConexionBancaria .fluxia-banco-header{padding:12px 14px!important}
+html body #modalConexionBancaria .fluxia-banco-header h2{font-size:18px!important}
+html body #modalConexionBancaria :is(.fluxia-banco-form,.fluxia-banco-connected){padding:12px 14px!important}
+html body #modalConexionBancaria .fluxia-banco-accounts{margin-bottom:8px!important;padding-bottom:8px!important}
+html body #modalConexionBancaria .fluxia-banco-actions{margin-top:8px!important}
+html body #modalConexionBancaria :is(.fluxia-banco-btn-primary,.fluxia-banco-btn-secondary,.fluxia-banco-btn-danger){min-height:40px!important;padding:8px 12px!important;font-size:12px!important;margin-bottom:6px!important;box-shadow:none!important}
+html body #modalConexionBancaria .fx-banco-estado{padding:6px 8px!important;font-size:11px!important;margin:4px 0 8px!important;box-shadow:none!important}
+html body #modalConexionBancaria .fx-banco-estado small{font-size:10px!important}
+html body #modalConexionBancaria .fluxia-banco-cuenta{padding:8px 10px!important;background:#EDF6F7!important;font-size:12px!important;line-height:1.3!important;border-radius:10px!important}
+.bank-details{border:1px solid #E2E7E2!important;border-radius:10px!important;padding:6px 8px!important;margin:6px 0!important;color:#657B77!important;font-size:12px!important}.bank-details summary{padding:5px 0!important;cursor:pointer!important;min-height:28px!important}.bank-details .fluxia-banco-info{margin:8px 0!important;padding:8px!important}.bank-details .fluxia-banco-info p{font-size:11px!important}
+#fluxiaBancoLoading{padding:20px 14px!important;color:#657B77!important;font-size:13px!important}
+:root[data-theme="dark"] body #fx32Header{background:#122224!important}:root[data-theme="dark"] body #fx32Header .fx30-iconbtn{background:#1A2D2E!important;border-color:#354747!important;color:#8EC5E5!important}
+:root[data-theme="dark"] body #panel-fijos :is(.fx47-fixed-card,.fx47-fin-card){--fx-state-bg:#1A3238}:root[data-theme="dark"] body #panel-fijos .is-paid{--fx-state-bg:#382E20}
+:root[data-theme="dark"] body #panel-fijos :is(.fx47-fijos-summary,.fx47-merchant){background:#1A2D2E!important}:root[data-theme="dark"] body #panel-fijos :is(.fx47-fixed-title,.fx47-fin-title,.fx47-summary-total,.fx47-split-card b,.fx47-fijos-titlewrap h3){color:#DFEBE6!important}
+@media(max-width:350px){html body #fx32Header .fx30-wordmark{font-size:18px!important}html body #panel-fijos .fx47-fijos-monthbox{flex-basis:145px!important}html body #panel-fijos .fx47-status{font-size:8px!important}html body #panel-fijos :is(.fx47-fixed-title,.fx47-fin-title){font-size:12px!important}}

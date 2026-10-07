@@ -1,0 +1,1 @@
+LAB apta para prueba visual, no promovida a ESTABLE. Ver README para límites y pendientes. No se atribuye 100% de fiabilidad ni una puntuación artificial. Sin cambios en fórmulas, cargas, persistencia, reconciliaciones y arrays financieros. Cambios de plantilla limitados a iconos/clases visuales y estados de presentación del modal bancario.

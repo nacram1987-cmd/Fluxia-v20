@@ -1,0 +1,76 @@
+{
+  "geometry": {
+    "header": {
+      "width": 358,
+      "height": 53,
+      "color": "rgb(18, 51, 48)",
+      "bg": "rgb(247, 246, 242)",
+      "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+      "y": 8
+    },
+    "logo": {
+      "width": 28,
+      "height": 28,
+      "color": "rgb(57, 127, 169)",
+      "bg": "rgb(142, 197, 229)",
+      "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+      "y": 20
+    },
+    "menu": {
+      "width": 38,
+      "height": 38,
+      "color": "rgb(46, 126, 145)",
+      "bg": "rgb(255, 254, 251)",
+      "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+      "y": 15
+    },
+    "bell": {
+      "width": 38,
+      "height": 38,
+      "color": "rgb(46, 126, 145)",
+      "bg": "rgb(255, 254, 251)",
+      "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+      "y": 15
+    },
+    "card": {
+      "width": 356,
+      "height": 106.984375,
+      "color": "rgb(32, 63, 64)",
+      "bg": "rgb(237, 246, 247)",
+      "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+      "y": 590.46875
+    },
+    "paid": {
+      "width": 356,
+      "height": 106.984375,
+      "color": "rgb(32, 63, 64)",
+      "bg": "rgb(251, 244, 231)",
+      "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+      "y": 935.421875
+    },
+    "summary": {
+      "width": 356,
+      "height": 166.09375,
+      "color": "rgb(32, 63, 64)",
+      "bg": "rgb(255, 254, 251)",
+      "font": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+      "y": 201.796875
+    },
+    "overflow": false
+  },
+  "states": {
+    "state": "CONNECTED",
+    "form": "none",
+    "bank": "🏦 Banco de prueba · 1 cuenta\n✅ Activo · sincroniza con los demás\nQuitar"
+  },
+  "loading": {
+    "state": "LOADING",
+    "form": "none"
+  },
+  "empty": "EMPTY",
+  "error": {
+    "state": "ERROR",
+    "form": "none"
+  },
+  "errors": []
+}
