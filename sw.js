@@ -1,58 +1,90 @@
-/* Fluxia · funcionamiento sin conexión
- * - La app (HTML): primero la red, para recibir siempre la última versión; si no hay red, la copia guardada.
- * - Iconos y tipografías: primero la copia guardada (no cambian).
- * - La API (/auth, /v1, /health) nunca se guarda: son tus datos y deben ir siempre al servidor.
+/* Fluxia · PWA canónica permanente
+ * La PWA siempre abre ./index.html (última LAB publicada).
+ * Los HTML numerados quedan como histórico/rollback, no como entrada PWA.
+ * API y datos financieros nunca se cachean.
  */
-const CACHE = 'fluxia-v19';
-const BASE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
+const CACHE = 'fluxia-canonical-v20';
+const CANONICAL = './index.html';
+const BASE = [CANONICAL, './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 
-self.addEventListener('install', e => {
+self.addEventListener('install', event => {
   self.skipWaiting();
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(BASE)).catch(() => {}));
+  event.waitUntil(
+    caches.open(CACHE).then(cache => cache.addAll(BASE)).catch(() => {})
+  );
 });
 
-self.addEventListener('activate', e => {
-  e.waitUntil(
+self.addEventListener('activate', event => {
+  event.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });
 
-self.addEventListener('fetch', e => {
-  const req = e.request;
+self.addEventListener('fetch', event => {
+  const req = event.request;
   if (req.method !== 'GET') return;
+
   const url = new URL(req.url);
 
-  // Nunca interceptar la API
+  // Datos/autenticación: siempre servidor, jamás caché.
   if (url.origin === self.location.origin && /^\/(auth|v1|health)(\/|$)/.test(url.pathname)) return;
 
-  // Tipografías de Google: copia guardada primero
   if (/fonts\.(googleapis|gstatic)\.com$/.test(url.hostname)) {
-    e.respondWith(caches.match(req).then(hit => hit || fetch(req).then(res => {
-      const copia = res.clone(); caches.open(CACHE).then(c => c.put(req, copia)); return res;
-    })));
-    return;
-  }
-  if (url.origin !== self.location.origin) return;
-
-  // Páginas: red primero (actualizaciones), copia si no hay conexión
-  if (req.mode === 'navigate' || /\.html$/.test(url.pathname) || url.pathname.endsWith('/')) {
-    e.respondWith(
-      fetch(req).then(res => {
-        if (res && res.ok) { const copia = res.clone(); caches.open(CACHE).then(c => c.put('./index.html', copia)); }
+    event.respondWith(
+      caches.match(req).then(hit => hit || fetch(req).then(res => {
+        const copy = res.clone();
+        caches.open(CACHE).then(cache => cache.put(req, copy));
         return res;
-      }).catch(() => caches.match('./index.html').then(r => r || caches.match('./')))
+      }))
     );
     return;
   }
 
-  // Resto de archivos propios: copia primero, se actualiza por detrás
-  e.respondWith(caches.match(req).then(hit => {
-    const red = fetch(req).then(res => {
-      if (res && res.ok) { const copia = res.clone(); caches.open(CACHE).then(c => c.put(req, copia)); }
-      return res;
-    }).catch(() => hit);
-    return hit || red;
-  }));
+  if (url.origin !== self.location.origin) return;
+
+  // PWA: cualquier navegación dentro del scope abre SIEMPRE la entrada canónica.
+  // Así una instalación antigua cuyo start_url fuese index_fluxia_vXX_LAB.html
+  // recibe la LAB actual sin reinstalar.
+  if (req.mode === 'navigate') {
+    event.respondWith(
+      fetch(CANONICAL, { cache: 'no-store' }).then(res => {
+        if (res && res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE).then(cache => cache.put(CANONICAL, copy));
+        }
+        return res;
+      }).catch(() => caches.match(CANONICAL).then(r => r || caches.match('./')))
+    );
+    return;
+  }
+
+  // Peticiones HTML no navegacionales: red primero.
+  if (/\.html$/.test(url.pathname) || url.pathname.endsWith('/')) {
+    event.respondWith(
+      fetch(req, { cache: 'no-store' }).then(res => {
+        if (res && res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE).then(cache => cache.put(req, copy));
+        }
+        return res;
+      }).catch(() => caches.match(req).then(r => r || caches.match(CANONICAL)))
+    );
+    return;
+  }
+
+  // Assets propios: caché rápida + actualización en segundo plano.
+  event.respondWith(
+    caches.match(req).then(hit => {
+      const network = fetch(req).then(res => {
+        if (res && res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE).then(cache => cache.put(req, copy));
+        }
+        return res;
+      }).catch(() => hit);
+      return hit || network;
+    })
+  );
 });
