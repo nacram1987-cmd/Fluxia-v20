@@ -1,0 +1,40 @@
+name: Audit Fluxia variables
+on:
+  push:
+    branches: [main]
+    paths:
+      - tools/audit_variables.flag
+permissions:
+  contents: write
+concurrency:
+  group: fluxia-publisher
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re,json
+          s=Path("index_fluxia_v96.74_LAB.html").read_text(encoding="utf-8")
+          keys=["variables","variable","gastos variables","renderAll","render","movimientos","bancoRef","cuentaComoFijo","vinculoFijoId","disponible","ingresos","provisiones"]
+          out={}
+          for k in keys:
+            hits=[]
+            for m in list(re.finditer(re.escape(k),s,re.I))[:120]:
+              a=max(0,m.start()-180); b=min(len(s),m.end()+500)
+              hits.append(s[a:b].replace("\n"," "))
+            out[k]=hits
+          Path("AUDIT_VARIABLES_v96.76.json").write_text(json.dumps(out,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: audit-variables-v9676
+          path: AUDIT_VARIABLES_v96.76.json
