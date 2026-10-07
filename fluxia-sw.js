@@ -1,4 +1,4 @@
-const CACHE_VERSION='fluxia-shell-v97.13';
+const CACHE_VERSION='fluxia-shell-v97.14';
 const ENTRY='./index.html';
 self.addEventListener('install',event=>{self.skipWaiting();});
 self.addEventListener('activate',event=>{event.waitUntil((async()=>{for(const key of await caches.keys()){if(key.startsWith('fluxia-shell-')&&key!==CACHE_VERSION)await caches.delete(key);}await self.clients.claim();})());});
