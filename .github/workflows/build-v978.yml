@@ -2,7 +2,7 @@ name: Build Fluxia v97.8 LAB
 on:
   push:
     branches: [main]
-    paths: ['.github/workflows/build-v978.yml']
+    paths: ['.github/workflows/build-v978.yml','TRIGGER_v978']
 permissions:
   contents: write
 jobs:
