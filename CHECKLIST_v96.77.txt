@@ -1,0 +1,8 @@
+v96.77
+- Gastos Variables: eliminado purgarListaLocal al entrar.
+- movimientosDe(mes): una derivación por render.
+- Vista Por categoría: no se construye mientras está oculta.
+- Retirada capa CSS v96.76 inefectiva.
+- Sin cambios visuales.
+- Contabilidad/invariantes v96.76 preservados.
+- ESTABLE no tocada.
