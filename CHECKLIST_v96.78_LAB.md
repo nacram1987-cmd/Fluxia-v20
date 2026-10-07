@@ -1,0 +1,15 @@
+# CHECKLIST v96.78-LAB
+- Histórico Huchas objetivo: 2.817,88 €
+- Amortización: 1.268,01 €
+- Renta: 492,15 €
+- Tributos: 390,48 €
+- Boda Ana: 150,00 €
+- Mantenimiento Césped: 70,00 €
+- Agua: 110,00 €
+- Seguro de coche: 337,24 €
+- Suma verificada: 2.817,88 €
+- Corrección retroactiva (30/09/2026 si necesita partida de conciliación), no octubre.
+- Solo se activa con exactamente las 7 huchas legacy + huella excel/rebase.
+- Variables v96.76 preservado.
+- Interfaz v96.45 preservada.
+- No promoción a ESTABLE.
