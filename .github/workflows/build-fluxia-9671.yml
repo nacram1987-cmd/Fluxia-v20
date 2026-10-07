@@ -1,0 +1,21 @@
+name: Build Fluxia v96.71
+on:
+  push:
+    branches: [main]
+    paths: ['tools/build_9671.py']
+permissions: {contents: write}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python tools/build_9671.py
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index_fluxia_v96.71_LAB.html CHECKLIST_v96.71.txt PROMPT_MAESTRO_v96.71.txt manifest_v96.71_LAB.webmanifest fluxia-sw-v96.71.js
+          git diff --cached --quiet || git commit -m "build: Fluxia v96.71 real dashboard component port"
+          git push
