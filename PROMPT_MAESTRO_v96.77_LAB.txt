@@ -1,0 +1,23 @@
+# PROMPT MAESTRO FLUXIA · v96.77-LAB
+Fecha: 7 de octubre de 2026
+Carácter: LEY IMPERIAL DEL PROYECTO
+
+## Leyes vigentes reforzadas
+- Integridad financiera antes que diseño, rendimiento o automatización.
+- Supabase/nube es fuente de verdad. Local es caché/cola offline; nunca fuente de resurrección.
+- IDs estables, tombstones, CAS y reconciliación idempotente.
+- Disponible se calcula con movimientos reales y reglas contables; prohibido fabricar ajustes para cuadrar.
+- Gastos bancarios vinculados a Fijos cuentan una sola vez.
+- Variables excluye Fijos vinculados, traspasos propios, puentes y reposiciones ya clasificadas.
+- Huchas: nunca duplicar entidades por rehidratación, migración o recuperación. Solo consolidar duplicados demostrables; coincidencias ambiguas se conservan.
+- Huchas históricas excel + rebase_v9538 del mismo nombre son representaciones del mismo registro cuando cumplen la regla conservadora ya validada. Se conserva el canon y se fusionan solo aportaciones no repetidas por fecha+importe.
+- La canonicalización de Huchas debe aplicarse tanto en lectura normal de nube como antes de persistir, para impedir reaparición.
+- El motor de Gastos Variables validado fluido en v96.76 no se degrada ni se sustituye.
+- Interfaz v96.45 se conserva salvo petición expresa.
+- LAB nunca promueve ESTABLE sin orden expresa.
+
+## Ley de entrega y recuperación de versiones
+Cada nueva versión generada debe entregarse también como archivo completo descargable en la conversación, aunque el usuario no lo descargue. Debe conservarse además en GitHub/LAB cuando proceda. La entrega incluye build, PROMPT MAESTRO vigente, checklist y archivos necesarios. Ninguna versión se considera completamente entregada si falta su copia descargable en el chat.
+
+## v96.77
+Objetivo: eliminar la duplicación demostrable de Huchas en la ruta viva cloud-first sin tocar la optimización validada de Variables.
