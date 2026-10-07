@@ -1,0 +1,25 @@
+FLUXIA · ADENDA IMPERIAL DE COHERENCIA VISUAL Y BLOQUEO ESTRUCTURAL
+
+PRIORIDAD: estas reglas son obligatorias para toda versión futura y prevalecen sobre cualquier mejora incompatible.
+
+1. PROMPT MAESTRO = LEY. Toda modificación de Fluxia debe comprobarse contra el PROMPT MAESTRO antes de implementarse. Una petición nueva no contemplada se incorpora al Prompt Maestro de la siguiente versión.
+
+2. BLOQUEO FUNCIONAL POR DEFECTO. Toda lógica financiera, persistencia, Supabase/nube, cálculos, reconciliación, reglas contables, fuentes de datos, Huchas, Fijos, Variables, Ingresos, Compartidos, Financiaciones y Bancos ya validados quedan bloqueados. Un cambio visual, de UX o rendimiento NO autoriza a modificar lógica funcional.
+
+3. AUTORIZACIÓN PREVIA. Si una mejora exige realmente cambiar lógica/estructura ya validada, se explica previamente al usuario qué se tocaría, por qué, impacto y riesgo. No se modifica sin autorización expresa.
+
+4. DISEÑO AISLADO. Los cambios visuales se realizan sin alterar datos, render funcional ni reglas financieras. No acumular parches CSS contradictorios. Antes de modificar una pantalla se identifica la regla/selector fuente.
+
+5. SISTEMA TIPOGRÁFICO ÚNICO. Toda Fluxia usa una única familia tipográfica global y una escala tipográfica común. La misma función visual debe tener el mismo peso, tamaño, interlineado y tratamiento en todas las pestañas. Si un título equivalente es negrita en una pestaña, los títulos equivalentes de las demás también. No mezclar serif/sans o pesos arbitrariamente salvo elemento de marca explícitamente definido.
+
+6. SISTEMA DE COLOR ÚNICO. Los colores se asignan por función semántica y se reutilizan en toda la aplicación. El mismo estado/acción/categoría conserva el mismo color en Dashboard y todas las pestañas. No introducir colores aislados sin pertenecer al sistema.
+
+7. COMPONENTES COHERENTES. Títulos, selectores de mes, tarjetas, estados, importes, botones, iconos, márgenes, radios, sombras y densidad siguen tokens/patrones comunes. Una pestaña no puede parecer otra aplicación.
+
+8. ESCALA MÓVIL. Fluxia es mobile-first: interfaz compacta, centrada, proporcionada y premium. Cabecera discreta; menú/logo/campana simétricos; poco espacio muerto; resúmenes compactos; varias tarjetas visibles por viewport cuando el contenido lo permita.
+
+9. IDENTIDAD DE COMERCIOS. Logo gráfico real solo con coincidencia fiable. Si no existe activo fiable, usar icono semántico acorde al gasto (electricidad ⚡, combustible ⛽, agua 💧, gas 🔥, telecom 📶, seguro 🛡️, impuestos 🏛️, supermercado 🛒, hogar 🏠, transporte 🚇, suscripción ▶️, financiación 💳). No usar iniciales o falsos logos.
+
+10. VALIDACIÓN. No considerar una versión visual válida por compilar/publicarse. Debe preservar íntegramente la base funcional y mantener coherencia tipográfica, cromática, espacial y de componentes.
+
+Principio: CADA MEJORA SUMA; NINGUNA MEJORA SACRIFICA INTEGRIDAD.
