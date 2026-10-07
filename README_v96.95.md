@@ -8,11 +8,9 @@ Versión de prueba con tarjetas principales coherentes y acceso a financiaciones
 - Chart.js usa `defer` para descargar en paralelo sin bloquear el parseo inicial.
 - ESTABLE v95.25 queda sin cambios.
 
-## LAB
+## Probar
 
-https://nacram1987-cmd.github.io/Fluxia-v20/index_fluxia_v96.95_LAB.html?v=v96.95-LAB
-
-La primera apertura puede tardar unos minutos después de publicarse en GitHub Pages.
+Abre la [versión LAB v96.95](https://nacram1987-cmd.github.io/Fluxia-v20/index_fluxia_v96.95_LAB.html?v=v96.95-LAB). La publicación se comprobó: la página muestra Fluxia BETA v96.95-LAB.
 
 ## Probar en local
 
@@ -20,4 +18,4 @@ Descomprime este ZIP, abre una terminal en esa carpeta y ejecuta `python3 -m htt
 
 ## Verificación
 
-151 bloques JavaScript inline pasan `node --check`; CSS, manifest y ZIP son válidos. La comprobación visual en GitHub Pages se realiza tras el despliegue. No se usaron datos financieros reales ni se probó en iPhone físico.
+151 bloques JavaScript inline pasan `node --check`; CSS, manifest y ZIP son válidos. Smoke test en GitHub Pages confirmó el título, el menú sin pestaña Financiación y el botón «Añadir financiación» en Gastos fijos. Sin datos financieros reales ni prueba física en iPhone.

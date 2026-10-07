@@ -10,5 +10,5 @@
 - 151 bloques JavaScript inline pasan `node --check`.
 - CSS parseado por tinycss2 sin errores; manifest válido.
 - Entrada LAB y entrada heredada idénticas; ZIP verificado íntegro.
-- Prueba visual tras completar GitHub Pages.
-- Sin datos reales ni prueba física en iPhone.
+- GitHub Pages workflow finalizado con éxito. Smoke test real: título v96.95-LAB, sin Financiación en menú y CTA disponible en Gastos fijos.
+- No se introdujeron datos financieros; sin prueba física en iPhone.

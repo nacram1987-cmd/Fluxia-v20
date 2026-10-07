@@ -13,8 +13,8 @@
     "css_rules": 134,
     "css_parse_errors": 0,
     "manifest_start_url": "./index_fluxia_v96.95_LAB.html?v=v96.95-LAB",
-    "published_browser_smoke_test": "pending after GitHub Pages deployment",
-    "github_publication": "uploaded to main; GitHub Pages deployment pending"
+    "published_browser_smoke_test": "passed: page title v96.95-LAB; financing absent from menu; Gastos fijos displays Añadir financiación; no user data created",
+    "github_publication": "published on main; GitHub Pages workflow succeeded"
   },
   "scope": "visual consistency, navigation and non-blocking chart resource; no financial calculations, persistence or cloud logic changed."
 }
