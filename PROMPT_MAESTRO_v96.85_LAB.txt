@@ -1,0 +1,6 @@
+FLUXIA v96.85 · BASE v96.84/v96.83 VALIDADA
+LEY: densidad móvil prioritaria. Cabecera, heroes, resúmenes y tarjetas no pueden impedir ver varios elementos por pantalla.
+LEY BANCOS: si existe estado conectado cacheado, nunca mostrar primero selector de banco. Render inmediato del estado conocido y verificación asíncrona.
+LEY BANCOS UX: vista cliente minimalista; cuenta/saldo/privacidad/estado. Opciones destructivas o técnicas no dominan la interfaz.
+Integridad cloud/contabilidad/Huchas/Disponible bloqueada. Variables fast path v96.83 no se degrada.
+Logos comerciales: usar marca gráfica fiable cuando exista activo permitido/local; fallback neutro. No falsificar logo mediante siglas como si fuera activo real.
