@@ -292,10 +292,10 @@ body.fx-dashboard-clean .fx-dashboard67-item.gold:after { content:""; position:a
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="telephone=no" name="format-detection"/>
 <meta content="no" name="msapplication-tap-highlight"/>
-<title>Fluxia BETA v97.12-LAB</title>
+<title>Fluxia BETA v97.13-LAB</title>
 
 <style id="fluxia-v95-75-auth-error-visibility">#fobError:not(:empty){display:block!important;}</style>
-<meta content="v97.12-LAB" name="fluxia-version"/>
+<meta content="v97.13-LAB" name="fluxia-version"/>
 <!-- Fluxia v91 · brand lock · datos jamás a 0 · compartidos saldo inicial · notif suaves · logo alineado · base v90.10 -->
 <script>
 (function(){window.FluxiaNative={isNative:function(){try{return!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())}catch(e){return false}},platform:function(){try{return(window.Capacitor&&Capacitor.getPlatform)?Capacitor.getPlatform():'web'}catch(e){return'web'}}};})();
@@ -609,13 +609,13 @@ window.fluxiaCuandoLibre = function(fn, intentos){
 };
 
 </script>
-<meta content="v97.12-LAB" name="fluxia-version"/>
+<meta content="v97.13-LAB" name="fluxia-version"/>
 <meta content="lab" name="fluxia-channel"/>
-<script>window.FLUXIA_VERSION = "v97.12-LAB";</script>
+<script>window.FLUXIA_VERSION = "v97.13-LAB";</script>
 <script id="fx47-version-integrity-guard">
 (function(){
   'use strict';
-  var EXPECT='v97.12-LAB', SW_FILE='fluxia-sw.js', CACHE='fluxia-root-'+EXPECT;
+  var EXPECT='v97.13-LAB', SW_FILE='fluxia-sw.js', CACHE='fluxia-root-'+EXPECT;
   window.FLUXIA_VERSION=EXPECT;
   try{
     var m=document.querySelector('meta[name="fluxia-build-id"]');
@@ -630,7 +630,7 @@ window.fluxiaCuandoLibre = function(fn, intentos){
           return /^fluxia(?:-lab|-v|-shell)/i.test(n) && n!==CACHE;
         }).map(function(n){return caches.delete(n);}));
       }
-    }catch(e){console.warn('[v97.12-LAB] cache cleanup',e);}
+    }catch(e){console.warn('[v97.13-LAB] cache cleanup',e);}
     try{
       if('serviceWorker' in navigator){
         var regs=await navigator.serviceWorker.getRegistrations();
@@ -646,9 +646,9 @@ window.fluxiaCuandoLibre = function(fn, intentos){
         try{
           var reg=await navigator.serviceWorker.register('./'+SW_FILE,{scope:'./',updateViaCache:'none'});
           if(reg&&reg.update) await reg.update();
-        }catch(_r){console.warn('[v97.12-LAB] register',_r);}
+        }catch(_r){console.warn('[v97.13-LAB] register',_r);}
       }
-    }catch(e){console.warn('[v97.12-LAB] sw cleanup',e);}
+    }catch(e){console.warn('[v97.13-LAB] sw cleanup',e);}
   }
   window.addEventListener('load',function(){setTimeout(cleanAndOwn,0);},{once:true});
   window.addEventListener('pageshow',function(){window.FLUXIA_VERSION=EXPECT;},{passive:true});
@@ -3892,10 +3892,10 @@ html body #fxDashboard67 .fx30-hero *,html body #fxDashboard67 .fx67-hero * *{co
 </style>
 
 
-<style id='fluxia-v9676-variables-contain'>#panel-gastos-variables{contain:layout style paint}</style><!-- v97.12-LAB · Huchas canónicas en lectura normal + persistencia; Variables v96.76 preservado -->
-<!-- v97.12-LAB · Reconciliación histórica 2.817,88 € de las 7 Huchas legacy; Variables preservado -->
-<!-- v97.12-LAB · Disponible: autoridad real de Fijos conciliados; Huchas v96.78 preservadas -->
-<!-- v97.12-LAB · Disponible auditado contra nube: dedupe bancario de Ingresos por bancoRef; objetivo derivado 111,96 € -->
+<style id='fluxia-v9676-variables-contain'>#panel-gastos-variables{contain:layout style paint}</style><!-- v97.13-LAB · Huchas canónicas en lectura normal + persistencia; Variables v96.76 preservado -->
+<!-- v97.13-LAB · Reconciliación histórica 2.817,88 € de las 7 Huchas legacy; Variables preservado -->
+<!-- v97.13-LAB · Disponible: autoridad real de Fijos conciliados; Huchas v96.78 preservadas -->
+<!-- v97.13-LAB · Disponible auditado contra nube: dedupe bancario de Ingresos por bancoRef; objetivo derivado 111,96 € -->
 <style id="fluxia-v9696-design-system">
 /* v96.99 · ÚNICA capa visual final. Solo presentación; lógica financiera intacta. */
 :root{
@@ -6493,9 +6493,10 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <div id="saldoEfectivo" style="font-size:2.2rem; font-weight:700; margin:8px 0; font-family:var(--mono); letter-spacing:-0.02em;">0,00 €</div>
 <div id="statsEfectivo" style="font-size:0.8rem; opacity:0.85;">Sin movimientos aún</div>
 </div>
-<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:0 0 18px;">
-<button class="pv-btn pv-btn-main" id="btnAgregarEfectivo" style="padding:14px 10px;" type="button">➕ Meter dinero</button>
-<button class="pv-btn pv-btn-use" id="btnGastarEfectivo" style="padding:14px 10px;" type="button">🛒 Gastar</button>
+<div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:0 0 18px;">
+<button class="pv-btn pv-btn-main" id="btnAgregarEfectivo" style="padding:12px 6px;" type="button">➕ Meter</button>
+<button class="pv-btn pv-btn-use" id="btnGastarEfectivo" style="padding:12px 6px;" type="button">🛒 Gastar</button>
+<button class="pv-btn pv-btn-ghost" id="btnProvisionEfectivo" style="padding:12px 6px;" type="button">🏺 Provisión</button>
 </div>
 <h4 style="margin:0 0 8px; font-size:0.9rem; font-weight:700; color:var(--ink);">Últimos movimientos</h4>
 <p class="ef-hint" style="margin-top:-2px;">Hoy y los días anteriores (no solo el día de hoy).</p>
@@ -8328,7 +8329,7 @@ function initPwaYBeta(){
     }
   }catch(e){}
 
-  // v97.12-LAB · Manifest de build autoritativo. No sustituir por blob dinámico histórico.
+  // v97.13-LAB · Manifest de build autoritativo. No sustituir por blob dinámico histórico.
   try{
     var link = document.getElementById('fluxiaManifestLink');
     if(link) link.setAttribute('href','./manifest.webmanifest');
@@ -19736,6 +19737,44 @@ function agregarEfectivo(importe, concepto) {
   try{ if (typeof mostrarToast==='function') mostrarToast('➕ Cartera actualizada · el disponible del mes no cambia', 'var(--teal)', 2800); }catch(e){}
 }
 
+function usarProvisionDesdeEfectivo(){
+  try{
+    if(typeof efectivo==='undefined'||!efectivo)return;
+    var saldoCartera=Number(efectivo.saldo)||0;
+    var opts=(provisiones||[]).map(function(p){
+      var saldo=_r2(provisionAportadoTotal(p)-provisionUsadoTotal(p));
+      return {p:p,saldo:saldo};
+    }).filter(function(x){return x.saldo>0.005;}).sort(function(a,b){return b.saldo-a.saldo;});
+    if(!opts.length){mostrarToast('No hay provisiones con saldo disponible','var(--gold)',2600);return;}
+    openFormModal({
+      title:'🏺 Pagar con provisión desde efectivo',
+      hint:'Cartera: '+eur(saldoCartera,2)+' · Este pago usa dinero ya provisionado: no vuelve a bajar Disponible.',
+      fields:[
+        {name:'provision',label:'Provisión',type:'select',required:true,value:opts[0].p.nombre,options:opts.map(function(x){return {value:x.p.nombre,label:x.p.nombre+' · '+eur(x.saldo,2)};})},
+        {name:'importe',label:'Importe pagado (€)',type:'number',min:0.01,step:'0.01',required:true,value:''},
+        {name:'concepto',label:'¿Qué has pagado?',type:'text',required:false,value:''},
+        {name:'fecha',label:'Fecha real del pago',type:'date',required:true,value:hoyISO()}
+      ],
+      submitLabel:'Pagar desde efectivo',
+      onSubmit:function(v){
+        var p=(provisiones||[]).find(function(x){return x.nombre===v.provision;});
+        var imp=_r2(Number(v.importe)||0); if(!p||!(imp>0))return;
+        var saldoProv=_r2(provisionAportadoTotal(p)-provisionUsadoTotal(p));
+        if(imp>saldoProv+0.005){mostrarToast('La provisión solo tiene '+eur(saldoProv,2),'var(--wine)',3000);return;}
+        if(imp>(Number(efectivo.saldo)||0)+0.005){mostrarToast('Solo tienes '+eur(efectivo.saldo||0,2)+' en mano','var(--wine)',3000);return;}
+        var fecha=v.fecha||hoyISO(), mes=mesFromFechaISO(fecha)||mesSeleccionado, id=uid(), efid='efprov-'+id;
+        usosProvisiones.push({id:id,mes:mes,fecha:fecha,provision:p.nombre,concepto:(v.concepto||'Pago en efectivo').trim(),importe:imp,obs:'Pagado desde Dinero en mano',origen:'efectivo',tipo:'definitivo',devolver:null,repuesto:0,efectivoId:efid,_fxUpdatedAt:Date.now()});
+        efectivo.saldo=_r2((Number(efectivo.saldo)||0)-imp);
+        efectivo.movimientos=Array.isArray(efectivo.movimientos)?efectivo.movimientos:[];
+        efectivo.movimientos.push({id:efid,fecha:fecha,concepto:(v.concepto||p.nombre).trim(),importe:imp,tipo:'salida_provision',provision:p.nombre,usoProvisionId:id});
+        guardarUsos(); guardarEfectivo();
+        try{renderEfectivo();renderProvisiones();renderKPIs();renderHero();}catch(e){}
+        mostrarToast('🏺 '+eur(imp,2)+' pagados desde «'+p.nombre+'» · Disponible sin doble descuento','var(--teal)',3000);
+      }
+    });
+  }catch(e){console.warn('[v97.13 efectivo/provision]',e);}
+}
+
 function gastarEfectivo(importe, concepto, categoria) {
   importe = Number(importe)||0;
   if (importe <= 0) { fxAviso('Indica una cantidad mayor que 0', 'info'); return; }
@@ -19906,12 +19945,12 @@ function renderEfectivo() {
       return;
     }
     histEl.innerHTML = ordenados.map(m => {
-      const salida = m.tipo === 'salida';
+      const salida = m.tipo === 'salida' || m.tipo === 'salida_provision';
       const fecha = String(m.fecha||'').slice(0,10);
       const imp = (typeof eur==='function') ? eur(m.importe||0, 2) : ((Number(m.importe)||0).toFixed(2)+' €');
       const concepto = String(m.concepto||(salida?'Gasto':'Ingreso')).replace(/</g,'&lt;').replace(/"/g,'&quot;');
       const cat = m.categoria ? (' · '+String(m.categoria).replace(/</g,'&lt;')) : '';
-      const nota = salida
+      const nota = m.tipo === 'salida_provision' ? '<span style="color:var(--muted);">Pagado con provisión · no vuelve a bajar Disponible</span>' : salida
         ? '<span style="color:var(--wine-ink);">Afecta al disponible del mes</span>'
         : '<span style="color:var(--muted);">Solo cartera · no toca el disponible</span>';
       const idAttr = String(m.id).replace(/"/g,'&quot;');
@@ -22109,7 +22148,7 @@ function arrancarApp(){
       if(ayuda&&!document.getElementById('fxChecklist9544')){
         var details=document.createElement('details');details.id='fxChecklist9544';
         details.style.cssText='margin:16px 0;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)';
-        details.innerHTML='<summary>Checklist v97.12-LAB</summary>'+
+        details.innerHTML='<summary>Checklist v97.13-LAB</summary>'+
           '<p>Outbox por perfil: IMPLEMENTADO · PROBADO en simulación · conserva edición offline con cuota local llena.</p>'+
           '<p>Cloud autoritativa y CAS: IMPLEMENTADO · PROBADO en simulación · caché vieja no se sube al arrancar.</p>'+
           '<p>Huchas y borrados: IMPLEMENTADO · PROBADO en simulación · dos aportaciones iguales sobreviven y un borrado por ID prevalece.</p>'+
@@ -23185,7 +23224,7 @@ window.FluxiaDiag = (function(){
   /* v95.70: la misma reconstrucción segura debe poder usarse también al iniciar sesión normal
      desde Safari cuando se perdió el registro local del perfil. */
   window.FluxiaRecuperarPerfilCloud = reconstruirPerfilCloud;
-  function limpiarRecoveryYRecargar(){try{window.FLUXIA_RECOVERY_ACTIVO=false;sessionStorage.removeItem('fluxia_recovery_activo');history.replaceState(null,'',location.pathname+'?v=v97.12-LAB');}catch(e){}location.reload();}
+  function limpiarRecoveryYRecargar(){try{window.FLUXIA_RECOVERY_ACTIVO=false;sessionStorage.removeItem('fluxia_recovery_activo');history.replaceState(null,'',location.pathname+'?v=v97.13-LAB');}catch(e){}location.reload();}
   async function completarRecovery(nueva){
     nueva=String(nueva||'');
     if(nueva.length<6){try{showModalError('La contraseña debe tener al menos 6 caracteres.');}catch(e){fxAviso('La contraseña debe tener al menos 6 caracteres.','info');}return;}
@@ -23516,6 +23555,12 @@ document.addEventListener('DOMContentLoaded', function(){
   const btnCancelarAgregar = document.getElementById('btnCancelarAgregar');
   const btnConfirmarGasto = document.getElementById('btnConfirmarGasto');
   const btnCancelarGasto = document.getElementById('btnCancelarGasto');
+
+  const btnProvisionEfectivo = document.getElementById('btnProvisionEfectivo');
+  if (btnProvisionEfectivo && !btnProvisionEfectivo._bound) {
+    btnProvisionEfectivo._bound = true;
+    btnProvisionEfectivo.addEventListener('click', usarProvisionDesdeEfectivo);
+  }
 
   if (btnAgregarEfectivo) {
     btnAgregarEfectivo.addEventListener('click', () => {
@@ -27525,7 +27570,7 @@ window.FluxiaAuditoriaDisponible9616=function(mes){
 /* v95.99 · La versión visible SIEMPRE sale de esta constante de build. */
 (function(){
   'use strict';
-  var V='v97.12-LAB';
+  var V='v97.13-LAB';
   window.FLUXIA_VERSION=V;
   function paint(){
     try{ document.title='Fluxia BETA '+V; }catch(e){}
@@ -27795,7 +27840,7 @@ window.FluxiaCadence9612.visual=function(key,ms,fn,note){
 'use strict';
 /* Diagnóstico local de candidato: no toca datos, solo expone contadores de runtime. */
 window.FluxiaCandidate9613={
- version:'v97.12-LAB',
+ version:'v97.13-LAB',
  snapshot:function(){
    return {
      hidden:document.visibilityState==='hidden',
@@ -27889,7 +27934,7 @@ button,a,[role="button"],[data-tab]{touch-action:manipulation;-webkit-tap-highli
 <script id="fluxia-v9620-identity-sentinel">
 (function(){
  'use strict';
- var V='v97.12-LAB', K='fluxia_identity_reload_v97.12-LAB';
+ var V='v97.13-LAB', K='fluxia_identity_reload_v97.13-LAB';
  window.FLUXIA_VERSION=V;
  function paint(){
    try{document.title='Fluxia BETA '+V;}catch(e){}
@@ -27925,7 +27970,7 @@ button,a,[role="button"],[data-tab]{touch-action:manipulation;-webkit-tap-highli
 
 <script id="fluxia-v971-interaction-priority">
 (function(){'use strict';
- window.FLUXIA_BUILD='v97.12-LAB';
+ window.FLUXIA_BUILD='v97.13-LAB';
  window.FluxiaIdle=function(fn,timeout){if(typeof fn!=='function')return;if('requestIdleCallback'in window)requestIdleCallback(function(){fn()},{timeout:timeout||1400});else setTimeout(fn,120);};
  // El primer gesto sobre menú se atiende en captura antes de cualquier trabajo secundario.
  /* v97.10: duplicate pointerdown removed; single native menu path below */
@@ -27952,7 +27997,7 @@ button,a,[role="button"],[data-tab]{touch-action:manipulation;-webkit-tap-highli
 </style>
 <script id="fluxia-v9711-bank-background-refresh">
 (function(){'use strict';
- window.FLUXIA_BUILD='v97.12-LAB';
+ window.FLUXIA_BUILD='v97.13-LAB';
  var started=false;
  function refresh(){
    if(started||document.visibilityState==='hidden')return;
@@ -32839,7 +32884,7 @@ window.FluxiaConfianzaV88 = {
     } catch(e){}
     box.innerHTML = '<details class="bank-details"><summary>Diagnóstico</summary><div class="fluxia-salud-card">' +
       '<div class="fluxia-salud-grid">' +
-      '<div><span>Versión</span><strong>BETA v97.12-LAB</strong></div>' +
+      '<div><span>Versión</span><strong>BETA v97.13-LAB</strong></div>' +
       '<div><span>Bancos</span><strong>' + s.bancos + '</strong></div>' +
       '<div><span>Gastos variables</span><strong>' + s.movimientos + '</strong></div>' +
       '<div><span>Con ref. banco</span><strong>' + s.bancoRefs + '</strong></div>' +
@@ -32932,7 +32977,7 @@ console.log('✅ Fluxia v91 · Confianza + Salud listos');
       panel.dataset.v91 = '1';
       var versionTxt = document.getElementById('ayudaVersionTxt');
       if(versionTxt){
-        versionTxt.textContent = 'Fluxia BETA ' + (window.FLUXIA_VERSION||'v97.12-LAB') + ' · laboratorio · nube principal';
+        versionTxt.textContent = 'Fluxia BETA ' + (window.FLUXIA_VERSION||'v97.13-LAB') + ' · laboratorio · nube principal';
         versionTxt.style.cssText = 'font-size:.88rem;font-weight:600;color:var(--ink);margin:0 0 12px;';
       }
       // Recoger todos los details de versiones/checklist antiguos
@@ -33035,7 +33080,7 @@ console.log('✅ Fluxia v91 · Confianza + Salud listos');
     var inp = document.getElementById('fluxiaStableUrlInput');
     if (inp && !inp._filled){ inp.value = u; inp._filled = true; }
     var labV = document.getElementById('fluxiaLabVersionLabel');
-    if (labV) labV.textContent = (window.FLUXIA_VERSION ? ('v'+String(window.FLUXIA_VERSION).replace(/^v/,'')) : 'v97.12-LAB');
+    if (labV) labV.textContent = (window.FLUXIA_VERSION ? ('v'+String(window.FLUXIA_VERSION).replace(/^v/,'')) : 'v97.13-LAB');
   }
 
   // Notificación sistema al estilo Revolut (permiso + show)
@@ -33348,7 +33393,7 @@ console.log('✅ Fluxia v91 · Confianza + Salud listos');
     if (!btn || btn._v91) return;
     btn._v91 = true;
     btn.addEventListener('click', function(){
-      var ver = (window.FLUXIA_VERSION || 'v97.12-LAB').toString().replace(/^v/,'');
+      var ver = (window.FLUXIA_VERSION || 'v97.13-LAB').toString().replace(/^v/,'');
       var fileName = 'index_fluxia_v' + ver.replace(/\./g,'_').replace(/^v/,'') + '.html';
       // Normalize: v91 -> index_fluxia_v90_10.html style
       fileName = 'index_fluxia_v' + ver.replace(/\./g, '_') + '.html';
@@ -38119,7 +38164,7 @@ html body #fx50AvailableNote{font-size:.7rem!important;font-weight:600!important
         '<p>✅ Más aire visual: IMPLEMENTADO entre cabecera, estados, hero, cuadrícula y secundarios.</p>'+
         '<p>✅ Menos saturación numérica: IMPLEMENTADO · cifras secundarias reducen peso, Disponible mantiene prioridad.</p>'+
         '<p>✅ Texto de pensión simplificado: IMPLEMENTADO.</p>'+
-        '<p>✅ Build coherente v97.12-LAB: PROBADO · HTML, manifest, SW y canal LAB coinciden.</p>'+
+        '<p>✅ Build coherente v97.13-LAB: PROBADO · HTML, manifest, SW y canal LAB coinciden.</p>'+
         '<p>✅ ESTABLE v95.39: INTACTA.</p>';
     }catch(e){}
   }
@@ -38130,7 +38175,7 @@ html body #fx50AvailableNote{font-size:.7rem!important;font-weight:600!important
 <script id="fluxia-v9554-arch-authority">
 (function(){
  'use strict';
- window.FLUXIA_ARCH_VERSION='v97.12-LAB';
+ window.FLUXIA_ARCH_VERSION='v97.13-LAB';
  window.FLUXIA_RECOVERY_POLICY='github-direct-secure-profile-recovery';
  window.FLUXIA_BANK_RECONCILIATION_POLICY='explicit-only';
  window.FluxiaDisponibleEngine={
@@ -38464,7 +38509,7 @@ window.FLUXIA_V9682=Object.freeze({base:'v96.80-LAB',currentCloudHuchas:true,fix
 
 <script id="fluxia-v9683-pwa-policy">
 window.FLUXIA_PWA_POLICY=Object.freeze({
-  current:'v97.12-LAB',
+  current:'v97.13-LAB',
   updateExistingAfterValidation:true,
   reinstallEveryVersion:false,
   permanentEntryPlanned:true
@@ -38631,7 +38676,7 @@ html body #fxDashboard67 #fx50AvailableNote{font-size:10px!important;color:#5d76
 </script>
 <script id="fluxia-v9712-cash-withdrawal-authority">
 (function(){'use strict';
- window.FLUXIA_BUILD='v97.12-LAB';
+ window.FLUXIA_BUILD='v97.13-LAB';
  function key(m){return 'bankcash:'+String(m.bancoRef||m.id||[m.fecha,m.importe,m.concepto].join('|'));}
  function apply(){
    try{
@@ -38662,6 +38707,6 @@ html body #fxDashboard67 #fx50AvailableNote{font-size:10px!important;color:#5d76
  document.addEventListener('fluxia:splash-fin',function(){if(typeof FluxiaIdle==='function')FluxiaIdle(apply,800);else setTimeout(apply,80);},{once:true});
 })();
 </script>
-<!-- FLUXIA_BUILD: v97.12-LAB | MODEL3_FAITHFUL | PERF_CONSOLIDATED | CASH_TRANSFER_AUTHORITY -->
+<!-- FLUXIA_BUILD: v97.13-LAB | MODEL3_FAITHFUL | PERF_CONSOLIDATED | CASH_TRANSFER_AUTHORITY -->
 </body>
 </html>
