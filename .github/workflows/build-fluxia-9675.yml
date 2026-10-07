@@ -1,0 +1,30 @@
+name: Build Fluxia v96.75
+on:
+  push:
+    branches: [main]
+    paths:
+      - tools/build_9675.py
+permissions:
+  contents: write
+concurrency:
+  group: fluxia-publisher
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python tools/build_9675.py
+      - run: |
+          git config --local user.name github-actions
+          git config --local user.email actions@github.com
+          git add index_fluxia_v96.75_LAB.html CHECKLIST_v96.75.txt PROMPT_MAESTRO_v96.75.txt README_v96.75.md manifest_v96.75_LAB.webmanifest fluxia-sw-v96.75.js SHA256SUMS_v96.75.txt AUDITORIA_FUNCIONES_v96.75.json Fluxia_v96.75_LAB.zip
+          git commit -m "build v96.75 accounting inventory"
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
