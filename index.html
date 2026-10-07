@@ -9401,7 +9401,12 @@ Almacen.onGuardado(mostrarNotificacionGuardado);
 let _estadoPrevio = null;
 Almacen.onEstado((e)=>{
   if (typeof pintarEstadoAlmacen === 'function') pintarEstadoAlmacen();
-  if (e === 'error' && _estadoPrevio !== 'error') mostrarNotificacionError('No se pudo sincronizar. Tus datos siguen en este dispositivo.');
+  if (e === 'error' && _estadoPrevio !== 'error') {
+    clearTimeout(window.__fluxiaCloudErrorTimer);
+    window.__fluxiaCloudErrorTimer=setTimeout(function(){
+      try{if(typeof Almacen!=='undefined'&&Almacen.estado==='error')mostrarNotificacionError('No se pudo sincronizar. Tus datos siguen en este dispositivo.');}catch(_){}
+    },4500);
+  } else if(e!=='error'){ clearTimeout(window.__fluxiaCloudErrorTimer); }
   _estadoPrevio = e;
 });
 
@@ -22570,7 +22575,11 @@ window.FluxiaEspejo = (function(){
       if (e === 'nube' && !pend){ t = '☁️ Guardado en nube'; cls = 'ok'; }
       else if (e === 'nube' && pend){ t = '🔄 Sincronizando'; cls = 'sync'; }
       else if (e === 'sincronizando'){ t = '🔄 Sincronizando'; cls = 'sync'; }
-      else if (e === 'error'){ t = '⚠️ Error de sincronización'; cls = 'err'; }
+      else if (e === 'error'){
+         var _bootAge=(performance&&performance.now)?performance.now():99999;
+         if(_bootAge<5000){t='🔄 Reconectando';cls='sync';}
+         else{t='⚠️ Error de sincronización';cls='err';}
+       }
       else if (e === 'local'){ t = pend ? '📱 Pendiente de sincronizar' : '📱 Solo en este dispositivo'; cls = 'sync'; el.title = 'Sin conexión o sin sesión. Los datos se sincronizarán al recuperar conexión.'; }
       else if (e === 'cargando'){ t = 'Cargando…'; cls = 'sync'; }
       else { el.style.display = 'none'; return; }
@@ -38830,5 +38839,15 @@ html body #fxDashboard67 #fx50AvailableNote{font-size:10px!important;color:#5d76
 })();
 </script>
 <!-- FLUXIA_BUILD: v97.16-LAB | MODEL3_FAITHFUL | PERF_CONSOLIDATED | CASH_PROVISION | PWA_FAST_RESUME -->
+<style id="fluxia-v9716-variables-compact">
+#gvMovimientosView .mov-item{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:7px 10px!important;align-items:start!important;padding:10px 11px!important}
+#gvMovimientosView .mov-item>div:first-child{min-width:0!important}
+#gvMovimientosView .mov-item>div:first-child .concepto{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:100%!important}
+#gvMovimientosView .mov-item>div:first-child .meta{white-space:normal!important;line-height:1.25!important}
+#gvMovimientosView .mov-item>div:last-child{display:grid!important;grid-template-columns:auto repeat(4,30px)!important;grid-column:1/-1!important;width:100%!important;align-items:center!important;gap:5px!important}
+#gvMovimientosView .mov-item>div:last-child .importe{justify-self:start!important;margin-right:auto!important;font-size:.92rem!important}
+#gvMovimientosView .mov-item button[data-action]{width:30px!important;height:30px!important;min-width:30px!important;padding:0!important;border-radius:9px!important;display:grid!important;place-items:center!important;font-size:.86rem!important}
+</style>
+<!-- FLUXIA_BUILD: v97.16-LAB | PWA_CACHE_FIRST | CLOUD_TRANSIENT_GUARD | VARIABLES_COMPACT -->
 </body>
 </html>
