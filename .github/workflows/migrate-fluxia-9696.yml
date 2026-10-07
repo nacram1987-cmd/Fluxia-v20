@@ -1,0 +1,29 @@
+name: Migrate legacy Fluxia v96.96
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/migrate-fluxia-9696.yml']
+permissions:
+  contents: write
+concurrency:
+  group: fluxia-publisher
+  cancel-in-progress: false
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Replace legacy 96.96 launch page with canonical migrator
+        run: |
+          cat > index_fluxia_v96.96_LAB.html <<'EOF'
+          <!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Fluxia BETA</title></head><body><script>
+          (async()=>{try{if('serviceWorker'in navigator){const rs=await navigator.serviceWorker.getRegistrations();for(const r of rs){try{await r.update()}catch(e){}}}}catch(e){}location.replace('./?v=v96.99-LAB&t='+Date.now())})();
+          </script></body></html>
+          EOF
+          git config --local user.name github-actions
+          git config --local user.email actions@github.com
+          git add index_fluxia_v96.96_LAB.html
+          git commit -m "v96.99 migrate legacy 96.96 launch page to canonical PWA"
+          for i in 1 2 3 4 5; do git fetch origin main; git rebase origin/main; git push origin HEAD:main && exit 0; sleep 3; done
+          exit 1
