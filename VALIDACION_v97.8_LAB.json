@@ -1,0 +1,15 @@
+{
+  "html_complete": true,
+  "has_ingresos": true,
+  "has_fijos": true,
+  "has_huchas": true,
+  "has_variables": true,
+  "has_efectivo": true,
+  "has_disponible": true,
+  "transfer_zero": true,
+  "real_time_only": true,
+  "endesa_icon": true,
+  "no_new_interval": true,
+  "no_new_observer": true,
+  "canonical_identical": true
+}
