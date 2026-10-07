@@ -1,0 +1,1 @@
+v96.76: eliminado reparador hardcodeado v96.21 si existe; variablesTotal normaliza gasto bancario y excluye fijo vinculado/traspaso/puente/reposicion; containment CSS en Gastos Variables; UI v96.45 intacta; sin saldos objetivo. Cambios: ["v96.21-variable-regression"]\n
