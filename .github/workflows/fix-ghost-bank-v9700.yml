@@ -1,6 +1,5 @@
 name: Publish Fluxia v97.00 LAB
 on:
-  workflow_dispatch:
   push:
     branches: [main]
     paths: ['.github/workflows/fix-ghost-bank-v9700.yml']
