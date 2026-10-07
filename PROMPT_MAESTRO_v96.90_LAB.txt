@@ -1,0 +1,6 @@
+FLUXIA v96.90 · SAFE VISUAL REBUILD
+Base funcional: v96.82 validada con datos correctos.
+Esta versión NO modifica JavaScript, renderizadores, Supabase, reconciliación, Huchas, Disponible ni fuente de datos de Fijos.
+Única modificación: capa CSS móvil final.
+Ley de escala: UI móvil compacta y centrada; cabecera no domina el viewport; controles simétricos; estados compactos; hero/resumen/tarjetas reducidos de forma coordinada.
+Prohibido volver a mezclar cambios visuales con lógica financiera/render en una misma iteración.
