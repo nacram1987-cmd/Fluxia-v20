@@ -1,0 +1,8 @@
+PROMPT MAESTRO FLUXIA v96.83
+BASE: v96.82 validada como punto de control financiero.
+LEY: los datos v96.82 saneados son autoridad histórica vigente y no se reconstruyen automáticamente.
+LEY RENDIMIENTO: navegación visible primero; cálculos secundarios después del primer paint.
+GASTOS VARIABLES: prohibido bloquear la entrada por Disponible, estadísticas, datalist, purgas o reconciliaciones.
+LOGOS: resolver de comercio central compartido por Variables/Fijos; activación visual en fase separada para no mezclar riesgos.
+PWA: objetivo permanente = actualizar la instalación existente sin reinstalar por versión. La migración de entrada permanente se activa tras validar esta LAB.
+DENSIDAD: Fijos se compactará en fase visual separada; revisar Huchas después, sin tocar contabilidad.
