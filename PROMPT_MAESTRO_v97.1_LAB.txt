@@ -1,0 +1,550 @@
+FLUXIA v96.96-LAB · 07/10/2026
+Base: index_fluxia_v96.92_LAB.html; continuidad visual desde v96.94-LAB.
+Prioridad: instrucciones adjuntas actuales prevalecen sobre normas históricas incompatibles.
+Fuente cloud vigente única; prohibida restauración automática de backups. Cada mejora suma; ninguna sacrifica integridad.
+Disponible: ingresos - gastos - provisiones previstas - exceso de aportaciones sobre lo previsto. Mantener código de v96.92 sin cambios financieros. Usuarios aislados, nuevos usuarios a 0, histórico y borrados preservados.
+ESTABLE histórica v95.25 se conserva; ninguna promoción automática de esta LAB.
+Petición explícita v96.95: retirar la pestaña Financiación e integrar su acceso en Gastos fijos; conservar íntegros datos, pagos, edición y cálculos.
+
+FLUXIA · PROMPT DE EJECUCIÓN VISUAL / UX / PWA / BANCOS PRIORIDAD
+ABSOLUTA · PROMPT MAESTRO = LEY
+
+OBJETIVO GENERAL
+
+Realizar una evolución visual y de experiencia de usuario de Fluxia
+manteniendo INTACTA toda la lógica financiera y funcional ya validada.
+
+El resultado debe sentirse: - Compacto. - Premium. - Limpio. -
+Coherente. - Mobile-first. - Rápido. - Visualmente equilibrado. - Fácil
+de leer de un vistazo. - Con varias operaciones visibles simultáneamente
+en pantalla.
+
+NO se considera terminado simplemente porque compile o se publique. Debe
+verse correctamente en un iPhone real.
+
+======================================================================
+0. REGLA SUPREMA · BLOQUEO FUNCIONAL
+======================================================================
+
+PROMPT MAESTRO = LEY.
+
+La lógica financiera, estructura de datos, Supabase, persistencia,
+sincronización cloud, cálculos, Disponible, Huchas, Ingresos, Gastos
+Variables, Gastos Fijos, Financiaciones, Compartidos, reconciliación
+bancaria y cualquier comportamiento funcional que ya esté validado
+quedan BLOQUEADOS.
+
+Una petición visual NO autoriza a modificar lógica.
+
+NO modificar: - fórmulas; - arrays de datos; - filtros; - guardados; -
+cargas de Supabase; - reconciliaciones; - reglas contables; -
+identificadores; - históricos; - aportaciones; - pagos; - estados; -
+fechas; - tombstones; - fuente cloud; - funciones de persistencia; -
+mecanismos de recuperación.
+
+Si para realizar alguna mejora fuese absolutamente imprescindible tocar
+una parte funcional ya validada: 1. DETENER la ejecución. 2. Explicar
+exactamente qué habría que modificar. 3. Explicar por qué. 4. Explicar
+el riesgo. 5. Esperar autorización expresa del usuario.
+
+SIN autorización expresa, NO se modifica.
+
+Cada mejora suma. Ninguna mejora sacrifica integridad.
+
+====================================================================== 1.
+BASE DE TRABAJO
+======================================================================
+
+Usar como autoridad funcional la base donde: - los datos financieros
+están correctos; - las Huchas están correctas; - Disponible está
+correcto; - Fijos, Variables, Ingresos y Financiaciones existen
+correctamente; - Gastos Variables abre rápidamente; - la nube es la
+fuente de verdad.
+
+NO utilizar como base funcional una versión posterior que haya provocado
+desaparición de Gastos Fijos, alteración de Huchas, cambios de
+Disponible, tarjetas rotas, errores de layout o regresiones visuales.
+
+Las últimas versiones visuales fallidas NO son referencia estética.
+
+======================================================================
+2. SISTEMA VISUAL GLOBAL ÚNICO
+======================================================================
+
+Fluxia debe utilizar un DESIGN SYSTEM global. No diseñar cada pestaña de
+forma independiente.
+
+Crear y utilizar tokens comunes para: TIPOGRAFÍA, ESPACIADO, RADIOS,
+SOMBRAS, COLORES, ALTURAS, BOTONES, ICONOS, ESTADOS, TARJETAS, TÍTULOS,
+SUBTÍTULOS, IMPORTES y FECHAS.
+
+Una misma función visual debe verse igual en toda la aplicación.
+
+Si un título de tarjeta utiliza un determinado peso en Huchas, el título
+equivalente de Fijos, Financiaciones, Variables, Compartidos, etc. debe
+seguir la misma jerarquía.
+
+NO mezclar arbitrariamente serif y sans-serif.
+
+La aplicación utilizará UNA familia tipográfica principal. Únicamente el
+branding “Fluxia” podrá tener tratamiento especial si realmente mejora
+la identidad visual.
+
+======================================================================
+3. CABECERA / LOGO SUPERIOR · PRIORIDAD ALTA
+======================================================================
+
+La cabecera actual sigue siendo excesivamente grande. Debe rehacerse.
+
+OBJETIVO: [ menú ] [ icono Fluxia + Fluxia + BETA ] [ campana ]
+
+Debe ser horizontal, pequeña, centrada, elegante, alargada,
+proporcionada y visualmente ligera.
+
+El logo NO debe parecer una tarjeta gigante. El símbolo Fluxia debe ser
+pequeño y proporcionado al nombre. El texto “Fluxia” no debe dominar la
+pantalla. BETA debe ser pequeño, discreto y dorado.
+
+Menú y campana: - mismo tamaño; - mismo radio; - misma altura; -
+alineación simétrica.
+
+La cabecera completa debe consumir MUCHO MENOS espacio vertical que la
+mostrada actualmente.
+
+Referencia orientativa: - símbolo Fluxia: 26–30 px; - wordmark Fluxia:
+18–20 px; - menú/campana: 36–40 px.
+
+Los valores son orientativos: manda la proporción visual.
+
+NO usar transform: scale(…) o zoom como solución. Debe funcionar
+correctamente con la escala normal de Safari/iOS.
+
+Evitar acumulaciones de reglas !important contradictorias. Localizar
+primero la regla fuente que controla el componente.
+
+======================================================================
+4. INDICADORES BANCOS / NUBE
+======================================================================
+
+Los indicadores “Bancos conectados” y “Guardado en nube” deben reducir
+considerablemente su presencia.
+
+Convertirlos en pills pequeñas y discretas. Deben comunicar estado, no
+convertirse en tarjetas protagonistas.
+
+Altura pequeña, texto compacto, sin sombras exageradas y sin grandes
+márgenes.
+
+======================================================================
+5. GASTOS FIJOS Y FINANCIACIONES · MISMO ESTILO EXACTO QUE HUCHAS
+======================================================================
+
+REGLA DE DISEÑO OBLIGATORIA.
+
+No hacer una interpretación parecida. Inspeccionar el diseño real de las
+tarjetas de Huchas existentes y reutilizar su lenguaje visual.
+
+GASTO / FINANCIACIÓN PENDIENTE: mismo azul suave utilizado en Huchas.
+
+Referencia: #2E7E91 Fondo aproximado: #EDF6F7
+
+GASTO / FINANCIACIÓN PAGADO: ORO.
+
+Referencia: #B58A45 Fondo aproximado: #FBF4E7
+
+PENDIENTE = AZUL. PAGADO = ORO.
+
+NO verde para “Pagado”.
+
+El estado de pago ya existe en la aplicación. La capa visual únicamente
+lo representa. NO cambiar cómo se calcula si algo está pagado.
+
+======================================================================
+6. TARJETAS DE FIJOS / FINANCIACIONES
+======================================================================
+
+Las tarjetas actuales siguen siendo demasiado grandes.
+
+Objetivo: ver VARIOS gastos sin tener que hacer scroll gasto por gasto.
+
+Composición compacta: [icono/logo] Nombre Importe información secundaria
+Estado
+
+Debajo, solo si es necesario: [ acción principal ] [ editar ]
+
+Reducir padding, márgenes, separaciones, altura de botones, espacio
+muerto y radios excesivos.
+
+Mantener superficie táctil suficiente sin inflar visualmente el
+contenedor.
+
+El nombre, importe y estado deben identificarse en menos de un segundo.
+
+======================================================================
+7. RESUMEN SUPERIOR DE GASTOS FIJOS
+======================================================================
+
+“TOTAL COMPROMISOS DEL MES” no puede ocupar casi una pantalla.
+
+Conservar Total, Gastos Fijos, Financiación, Pendiente/Pagado y barra de
+progreso, pero en composición compacta.
+
+Evitar grandes tarjetas anidadas, tipografías enormes, huecos verticales
+y bordes exagerados.
+
+======================================================================
+8. IDENTIDAD VISUAL DE COMERCIOS
+======================================================================
+
+Crear UN único Merchant Resolver para Gastos Variables, Gastos Fijos y
+Financiaciones cuando corresponda.
+
+Prioridad: 1. LOGO REAL reconocido. 2. ICONO GENÉRICO SEMÁNTICO. 3.
+Icono neutro como último recurso.
+
+Nunca utilizar letras o falsas marcas intentando simular un logo.
+
+======================================================================
+9. LOGOS REALES
+======================================================================
+
+Cuando la coincidencia sea fiable: Shell → Shell Leroy Merlin → Leroy
+Merlin Apple/iCloud → Apple Levi’s → Levi’s Carrefour → Carrefour Amazon
+→ Amazon Netflix → Netflix Spotify → Spotify PayPal → PayPal IKEA → IKEA
+etc.
+
+Preferencia técnica: guardar activos fiables localmente dentro de Fluxia
+en /assets/brands/.
+
+Evitar depender permanentemente de un CDN externo. No inventar un logo
+si no existe un activo fiable.
+
+======================================================================
+10. ICONOS GENÉRICOS SEMÁNTICOS
+======================================================================
+
+Cuando no haya logo real fiable:
+
+Endesa / electricidad / luz → ⚡ Gasolinera / combustible → ⛽ Agua → 💧
+Gas → 🔥 Fibra / móvil / internet → 📶 Seguro → 🛡️ Tributos / IBI /
+impuestos → 🏛️ Supermercado → 🛒 Hogar / alquiler / hipoteca → 🏠
+Transporte → 🚇 Suscripción → ▶️ Financiación / préstamo → 💳
+
+El icono debe describir el gasto. NO mostrar una tarjeta 💳 para una
+factura de electricidad.
+
+======================================================================
+11. HUCHAS
+======================================================================
+
+NO modificar lógica, datos, histórico, aportaciones ni rescates.
+
+Huchas sirven como REFERENCIA VISUAL para color, densidad, estado,
+borde, fondo y jerarquía.
+
+Si su diseño funciona, reutilizar su patrón en otros módulos en lugar de
+inventar uno nuevo.
+
+======================================================================
+12. GASTOS VARIABLES
+======================================================================
+
+La apertura rápida conseguida queda BLOQUEADA.
+
+No introducir ninguna modificación que vuelva a provocar congelación al
+entrar.
+
+First paint primero. Cálculos secundarios después.
+
+No ejecutar reconciliaciones pesadas, reconstrucciones, blacklist
+completa, datalist o estadísticas antes de mostrar la pantalla.
+
+======================================================================
+13. BANCOS · INTERFAZ
+======================================================================
+
+La pantalla de Bancos debe simplificarse radicalmente.
+
+Mostrar principalmente: - Banco. - Cuenta. - Saldo. - Ocultar/mostrar
+saldo. - Última sincronización. - Estado. - Opcionalmente: + Añadir
+banco.
+
+Todo lo técnico debe quedar en opciones secundarias.
+
+No mostrar bloques técnicos, información redundante, controles
+innecesarios, textos largos ni grandes paneles de sincronización.
+
+======================================================================
+14. BANCOS · CERO FLASH / CERO PANTALLA INCORRECTA
+======================================================================
+
+INCIDENCIA CONCRETA QUE DEBE CORREGIRSE:
+
+Cuando el usuario YA tiene bancos conectados y pulsa “Bancos
+conectados”, Fluxia muestra durante un instante la pantalla/interfaz de
+“Conectar bancos” o “Seleccionar banco” y después la sustituye por los
+bancos realmente conectados.
+
+ESTE COMPORTAMIENTO NO ES ACEPTABLE.
+
+Aunque dure unas décimas de segundo, se considera un fallo de UX.
+
+Si el usuario ya tiene bancos conectados, Fluxia debe saberlo ANTES de
+pintar la pantalla de Bancos.
+
+FLUJO CORRECTO:
+
+Usuario pulsa “Bancos conectados” ↓ Fluxia conoce inmediatamente el
+último estado bancario válido ↓ Renderiza directamente los bancos
+conectados ↓ Revalida/sincroniza información actualizada en segundo
+plano
+
+FLUJO PROHIBIDO:
+
+Usuario pulsa “Bancos conectados” ↓ aparece “Conectar bancos” ↓ aparece
+“Seleccionar banco” ↓ espera ↓ se descubren bancos conectados ↓ se
+sustituye la pantalla
+
+PROHIBIDO ESTE FLASH.
+
+No utilizar como estado visual inicial banks = [] si todavía no se ha
+terminado de recuperar el estado bancario.
+
+Diferenciar obligatoriamente entre: LOADING CONNECTED EMPTY ERROR
+
+LOADING NO significa EMPTY.
+
+Mientras se recupera/revalida la información bancaria: - conservar el
+último estado conectado conocido; - o mostrar un skeleton discreto si no
+existe estado previo.
+
+NUNCA mostrar “Conectar banco” mientras todavía se está comprobando si
+existen bancos conectados.
+
+“Conectar banco” únicamente puede aparecer cuando el sistema haya
+confirmado realmente: CONNECTED_BANKS = 0
+
+La información bancaria persistida/cloud debe permitir reconstruir
+inmediatamente la pantalla después del login.
+
+La revalidación del proveedor/Open Banking se realiza EN SEGUNDO PLANO y
+no debe bloquear ni sustituir innecesariamente el primer render.
+
+OBJETIVO UX:
+
+PULSAR “BANCOS CONECTADOS” ↓ VER INMEDIATAMENTE LOS BANCOS
+
+Sin flash. Sin salto. Sin pantalla equivocada. Sin parpadeo. Sin
+“Seleccionar banco”. Sin esperar a una sincronización para pintar la
+interfaz.
+
+La navegación debe sentirse instantánea.
+
+======================================================================
+15. BANK LIVE · AUTOSINCRONIZACIÓN
+======================================================================
+
+Arquitectura objetivo:
+
+BANCO ↓ OPEN BANKING ↓ BACKEND / WEBHOOK ↓ SUPABASE ↓ RECONCILIACIÓN
+IDEMPOTENTE ↓ PUSH ↓ FLUXIA
+
+La sincronización debe ocurrir aunque la PWA esté cerrada.
+
+No depender del teléfono para consultar continuamente.
+
+Cuando el proveedor bancario informe de una nueva operación: -
+guardarla; - deduplicarla; - clasificarla; - reconciliarla; - actualizar
+nube; - generar UNA notificación.
+
+Nunca tres avisos del mismo movimiento.
+
+Al abrir Fluxia, la transacción debe estar ya disponible siempre que el
+banco/proveedor la haya comunicado.
+
+======================================================================
+16. PWA
+======================================================================
+
+Objetivo permanente: NO reinstalar Fluxia para cada versión.
+
+Debe existir UNA instalación.
+
+Flujo esperado: publicar nueva build ↓ service worker detecta
+actualización ↓ actualiza assets ↓ Fluxia abre nueva versión
+
+Datos siempre desde nube. La PWA nunca será autoridad financiera.
+Cache/localStorage únicamente como soporte temporal.
+
+======================================================================
+17. CONSISTENCIA ENTRE TODAS LAS PESTAÑAS
+======================================================================
+
+Dashboard, Ingresos, Fijos, Variables, Huchas, Compartidos,
+Financiaciones, Bancos, etc. deben parecer partes de LA MISMA
+APLICACIÓN.
+
+Misma tipografía, jerarquía, densidad, paleta, radios, sombras, botones,
+etiquetas, estados y espaciado.
+Las tarjetas principales de las pestañas comparten una altura mínima, padding, radio, borde y sombra; cada módulo conserva su color de acento. El contenido nunca se recorta para forzar una altura idéntica.
+Financiación se gestiona dentro de Gastos fijos y no tiene una pestaña independiente; los accesos internos heredados llevan a Gastos fijos.
+
+======================================================================
+18. PROHIBIDO
+======================================================================
+
+PROHIBIDO: - modificar lógica financiera para arreglar diseño; -
+reconstruir Huchas; - recuperar datos desde backups automáticamente; -
+hardcodear importes financieros; - cambiar Disponible; - eliminar Fijos
+durante un rediseño; - duplicar movimientos; - añadir CSS encima de CSS
+indefinidamente; - crear otra escala tipográfica por pestaña; - usar
+colores arbitrarios; - cargar de forma bloqueante recursos pesados que no se necesitan en la primera pantalla; - romper rendimiento; - cambiar la nube como fuente
+de verdad; - hacer regresiones visuales silenciosas.
+
+======================================================================
+19. METODOLOGÍA DE EJECUCIÓN
+======================================================================
+
+ANTES de escribir código: 1. Identificar la base funcional válida. 2.
+Identificar los selectores CSS reales. 3. Identificar estilos
+duplicados/conflictivos. 4. Determinar qué reglas son autoridad. 5.
+Diseñar los tokens globales.
+
+DESPUÉS: Aplicar el diseño SIN modificar lógica financiera.
+
+DESPUÉS DEL CAMBIO: Verificar que siguen existiendo exactamente: -
+Fijos. - Financiaciones. - Huchas. - Variables. - Ingresos. -
+Disponible. - Estados pagado/pendiente. - Histórico.
+
+Si desaparece un solo dato: RECHAZAR LA BUILD.
+
+======================================================================
+20. CRITERIO DE ACEPTACIÓN VISUAL
+======================================================================
+
+En un iPhone normal, la primera pantalla debe permitir entender
+inmediatamente: - qué módulo estoy viendo; - qué mes; - cuánto tengo; -
+qué está pendiente; - qué está pagado.
+
+Debe comenzar a mostrar operaciones SIN recorrer enormes bloques.
+
+La cabecera NO debe dominar la pantalla. Un gasto individual NO debe
+ocupar una porción desproporcionada del viewport.
+
+Fijos y Financiaciones deben verse como Huchas: PENDIENTE = AZUL PAGADO
+= ORO
+
+Ese patrón es obligatorio.
+
+======================================================================
+21. CHECKLIST OBLIGATORIO ANTES DE ENTREGAR
+======================================================================
+
+NO entregar la nueva versión hasta comprobar:
+
+□ Cabecera Fluxia realmente pequeña, horizontal y proporcionada. □ Logo
+Fluxia discreto y correctamente centrado. □ Menú y campana simétricos. □
+Indicadores “Bancos conectados” y “Guardado en nube” compactos. □ Una
+única familia y jerarquía tipográfica coherente. □ Gastos Fijos
+compactos. □ Financiaciones compactas dentro de Gastos fijos, sin pestaña independiente. □ Fijos y Financiaciones utilizan
+REALMENTE el patrón de Huchas. □ Pendiente = AZUL. □ Pagado = ORO. □ Se
+visualizan varios gastos simultáneamente. □ Logos reales aparecen cuando
+la marca se reconoce de forma fiable. □ Cuando no existe logo fiable
+aparece el icono genérico correspondiente. □ Endesa/electricidad muestra
+⚡ y NO 💳. □ Gastos Variables continúa abriendo inmediatamente. □ Al
+pulsar “Bancos conectados” NO aparece ni durante unas décimas de segundo
+“Conectar bancos” o “Seleccionar banco”. □ Si existen bancos conectados,
+se muestran directamente. □ Bancos está limpio, sencillo y sin
+información innecesaria. □ No existen notificaciones bancarias
+duplicadas. □ Ninguna modificación visual ha alterado lógica financiera.
+□ Disponible continúa siendo correcto. □ Huchas continúan intactas. □
+Fijos y Financiaciones continúan intactos. □ Persistencia cloud continúa
+funcionando. □ No existen duplicaciones ni resurrecciones.
+
+======================================================================
+RESULTADO ESPERADO
+======================================================================
+
+Fluxia debe sentirse como una aplicación financiera premium terminada,
+no como una web con tarjetas grandes.
+
+Compacta. Coherente. Rápida. Elegante. Predecible. Visualmente ordenada.
+
+Y, por encima de todo:
+
+LOS DATOS Y LA LÓGICA FINANCIERA VALIDADA NO SE TOCAN.
+
+
+ESTADO v96.95: tarjetas principales con geometría común y acentos propios; financiación accesible desde Gastos fijos; carga diferida del script de gráficos para no bloquear el parseo inicial. El panel y modelo heredados de financiación siguen presentes sin acceso independiente. Sin cambios de lógica financiera, datos o nube. No se certifica el checklist completo: pendiente prueba iPhone físico, datos cloud reales, push único, webhooks y actualización permanente PWA. Bank Live requiere autorización explícita de cambio funcional conforme al apartado 0.
+
+
+======================================================================
+16. v96.96 · COHERENCIA ENTRE PESTAÑAS · REGLA IMPERIAL
+======================================================================
+
+Los cuadros/cabeceras principales de todas las pestañas deben compartir
+la misma geometría visual: altura equivalente, padding, radio, sombra,
+alineación y jerarquía tipográfica.
+
+Cada pestaña conserva SU color semántico, pero todos sus elementos
+principales deben derivar de ese color: icono, título, mes, borde,
+fondo suave y acentos. No se permite que el título de una pestaña use un
+color ajeno a su propia familia cromática.
+
+MISMA FUNCIÓN = MISMO ESTILO:
+- título equivalente -> mismo tamaño y peso;
+- importe principal -> mismo peso y escala;
+- etiqueta secundaria -> mismo peso;
+- estado -> mismo patrón;
+- botón equivalente -> misma altura/radio;
+- cabecera equivalente -> misma altura y composición.
+
+Gastos Fijos y Financiaciones mantienen el patrón visual de Huchas:
+PENDIENTE = azul suave; PAGADO = oro. El estado solo se representa
+visualmente; no se modifica su cálculo.
+
+La cabecera Fluxia mantiene símbolo CUADRADO sin deformación, pequeño,
+seguido del wordmark horizontal. Nunca estirar el símbolo para crear un
+logo rectangular.
+
+v96.96 es una intervención EXCLUSIVAMENTE VISUAL sobre v96.95.
+No cambia lógica financiera, persistencia, Supabase, cálculos,
+reconciliación, datos, históricos ni render funcional.
+
+
+======================================================================
+22. v96.97 · NORMALIZACIÓN VISUAL TRANSVERSAL · LEY IMPERIAL
+======================================================================
+
+Toda tarjeta principal de módulo usa el mismo contrato visual: altura mínima, padding, radio, sombra y jerarquía tipográfica comunes. Cada módulo conserva su color semántico y título, importe, iconografía y acentos deben derivar de esa familia cromática. Gastos Fijos mantiene pendiente azul y pagado oro, con títulos e importes coherentes con el estado. La separación vertical de tarjetas debe preservar legibilidad sin perder densidad. Esta regla es exclusivamente visual y no autoriza cambios en lógica financiera, datos, nube, históricos o reconciliación.
+
+PWA: una única instalación debe recibir nuevas builds mediante actualización del service worker; no exigir reinstalación para cada versión.
+
+
+======================================================================
+23. v96.98 · ACTUALIZACIÓN PWA REAL · LEY IMPERIAL
+======================================================================
+La PWA instalada debe actualizarse sin desinstalación. El service worker usa versión de shell explícita, elimina caches Fluxia antiguos al activar, reclama clientes inmediatamente y sirve navegaciones con estrategia network-first/no-store. Los assets locales se revalidan por red antes de recurrir a cache. La cache PWA nunca es fuente de verdad financiera: datos y persistencia continúan exclusivamente bajo las reglas cloud existentes.
+
+
+## LEY IMPERIAL · ARRANQUE E INTERACCIÓN INMEDIATA (v97.00)
+- Tras desaparecer la pantalla de carga, la interfaz principal debe quedar interactiva inmediatamente; no se permiten tareas pesadas síncronas que bloqueen el primer toque.
+- El botón del menú lateral es interacción crítica: debe responder al primer toque de forma inmediata, incluso mientras continúan en segundo plano sincronización bancaria, reconciliación, render secundario o cálculos no críticos.
+- Separar first paint/first interaction de hidratación secundaria. Diferir con requestIdleCallback/setTimeout las tareas no necesarias para mostrar y abrir navegación.
+- Evitar renderAll/reconciliaciones repetidas durante bootstrap; agruparlas y aplicar debounce/locks.
+- La sincronización bancaria al arrancar será no bloqueante y nunca podrá impedir abrir/cerrar menú ni navegar.
+- Criterio de aceptación: al terminar loading, menú y navegación responden desde el primer toque sin espera perceptible.
+
+
+======================================================================
+24. v97.1 · CONSOLIDACIÓN REAL · LEY IMPERIAL
+======================================================================
+- La versión se construye únicamente desde un artefacto completo validado; nunca se promociona un HTML vacío o una etiqueta de versión sin contenido real.
+- Arranque: navegación y menú tienen prioridad de interacción. El primer gesto del menú se atiende antes del trabajo secundario; sincronización y reconciliación bancaria no pueden bloquearlo.
+- Bancos: la consulta de movimientos usa una ventana de seguridad mínima de 40 días cuando el cliente no solicita un histórico mayor, para recoger cargos contabilizados con retraso.
+- Estado bancario: una sesión Caixa sana con comprobación reciente no fuerza refresco remoto en cada apertura; TTL 15 minutos.
+- Decisiones bancarias: Nunca más y Duplicado se consolidan como decisiones terminales persistentes y se fuerzan a nube tras la acción. No pueden regenerar la sugerencia en siguientes sincronizaciones.
+- Reconocimiento de fijos: Securitas/alarma/seguridad se incorpora a las pistas semánticas; un cargo correctamente vinculado usa el flujo existente de fijo pagado y evita doble conteo como variable.
+- Integridad: ninguna de estas optimizaciones modifica la fórmula de Disponible, históricos de huchas, ingresos, fijos ni separación multiusuario.
+- PWA: shell network-first, actualización sin reinstalar y caché nunca como fuente de verdad financiera.
+- Publicación: LAB se valida antes de promoverse; ESTABLE anterior se conserva hasta validación expresa del usuario.

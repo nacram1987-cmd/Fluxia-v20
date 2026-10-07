@@ -1,0 +1,13 @@
+FLUXIA v97.1 LAB · CHECKLIST
+[x] Base HTML completa, no 0 bytes
+[x] Versión interna v97.1-LAB
+[x] Menú con prioridad de primer gesto
+[x] Nunca más fuerza persistencia nube
+[x] Duplicado queda como decisión terminal
+[x] Ventana movimientos banco 40 días
+[x] Caixa evita refresh remoto repetido <15 min
+[x] Securitas/alarma reconocido como pista de fijo
+[x] Fórmula Disponible sin modificar
+[x] Histórico financiero sin hardcode
+[x] Multiusuario sin modificación
+[x] ESTABLE anterior preservada

@@ -509,7 +509,10 @@ async function accionEstado(_body: any, userId: string, sb: any) {
     const esCaixa = String(r.banco || "").toLowerCase().includes("caixa");
     const vto = r.valido_hasta ? new Date(r.valido_hasta) : null;
     const porFecha = vto ? vto.getTime() < Date.now() : false;
-    if (sinCuentas || esCaixa || porFecha) {
+    const ultima = r.ultima_sync_fondo ? new Date(r.ultima_sync_fondo).getTime() : 0;
+    const refrescoReciente = ultima && (Date.now() - ultima) < 15 * 60 * 1000;
+    // v97.1: Caixa no hace una llamada remota en cada apertura si el estado reciente es sano.
+    if (sinCuentas || porFecha || (esCaixa && !refrescoReciente)) {
       try {
         const refreshed = await refreshCuentasDesdeSesion(r, sb);
         if (refreshed && (refreshed.cuentas?.length || refreshed.account_uids?.length)) {
@@ -671,7 +674,12 @@ async function fetchMovsSesion(
 }
 
 async function accionMovimientos(body: any, userId: string, sb: any) {
-  const desde = String(body.desde || hoyISO()).slice(0, 10);
+  // v97.1: ventana de seguridad para cargos contabilizados con retraso por el banco.
+  const fallback = new Date(); fallback.setUTCDate(fallback.getUTCDate() - 40);
+  const solicitado = String(body.desde || fallback.toISOString().slice(0, 10)).slice(0, 10);
+  const pedido = new Date(solicitado + "T00:00:00Z");
+  const limite = new Date(); limite.setUTCDate(limite.getUTCDate() - 40);
+  const desde = (!isNaN(pedido.getTime()) && pedido < limite) ? solicitado : limite.toISOString().slice(0, 10);
   const all = await listSesiones(sb, userId);
   const activas = all.filter(
     (r: any) => !String(r.session_id).startsWith("pending:"),
