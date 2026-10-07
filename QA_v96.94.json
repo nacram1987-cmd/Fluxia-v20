@@ -7,7 +7,7 @@
     "css_rules": 121,
     "css_parse_errors": 0,
     "manifest_start_url": "./index_fluxia_v96.94_LAB.html?v=v96.94-LAB",
-    "browser_visual_qa": "pending published-site check; local Chromium and loopback server blocked by sandbox"
+    "browser_visual_qa": "published smoke test passed: live title and v96.94 stylesheet loaded; summary computed padding 16px, radius 18px, matching the Variables hero surface. Fixed cards not exercised with sample financial data; no iPhone physical test."
   },
   "scope": "CSS-only change; no financial or cloud logic changed."
 }

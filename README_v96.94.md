@@ -17,4 +17,4 @@ El informe indica que su lectura de v96.93 fue estática y que las mediciones de
 
 ## Verificación
 
-Capturas de prueba con Chromium headless a 375, 390 y 430 px; revisión de desbordamiento horizontal y errores de JavaScript. Sin datos reales ni operaciones bancarias. No sustituye la prueba en iPhone físico.
+Validación sintáctica de 151 scripts inline, CSS y manifest; smoke test en la URL publicada confirmó título v96.94 y estilos cargados (resumen: 16 px de padding y radio de 18 px). No se introdujeron datos financieros para probar las tarjetas. Sin operaciones bancarias ni prueba en iPhone físico.
