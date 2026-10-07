@@ -1,0 +1,22 @@
+name: Build Fluxia v96.74
+on:
+  push:
+    branches: [main]
+    paths: ['tools/build_9674.py']
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python tools/build_9674.py
+      - run: |
+          git config user.name github-actions
+          git config user.email actions@github.com
+          git add index_fluxia_v96.74_LAB.html CHECKLIST_v96.74.txt PROMPT_MAESTRO_v96.74.txt manifest_v96.74_LAB.webmanifest fluxia-sw-v96.74.js README_v96.74.md SHA256SUMS_v96.74.txt Fluxia_v96.74_LAB.zip
+          git diff --cached --quiet || git commit -m "build v96.74 first accounting recovery block"
+          git pull --rebase origin main
+          git push origin HEAD:main
