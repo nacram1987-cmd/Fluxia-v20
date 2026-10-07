@@ -1,0 +1,37 @@
+FLUXIA v96.57-LAB — CAMBIOS REALES
+
+AÑADIDO
+- Capa CSS móvil de estabilidad Safari sin listeners, observers ni polling.
+- Flujo de publicación automática desde GitHub Actions para las siguientes LAB.
+
+MODIFICADO
+- Nota de pensión: inicialización directa; eliminado setTimeout innecesario en arranque.
+- Identidad completa de versión a v96.57-LAB.
+
+ELIMINADO / CONSOLIDADO
+- Listener legacy de diagnóstico namespace que despertaba 1,8 s tras cada carga.
+- Listener global visibilitychange dedicado únicamente a repintar un texto estático.
+- Timer de 80 ms asociado a ese listener.
+
+BLINDADO / NO TOCADO
+- index.html ESTABLE.
+- Supabase y persistencia cloud.
+- NO-PURGE.
+- bankRef/bancoRef y banco→fijo.
+- Corrección contable v96.49 y motor Disponible.
+- Módulo Bancos y Gastos validado.
+
+PRUEBAS AUTOMÁTICAS DEL BUILD
+- Identidad v96.57-LAB presente.
+- Invariantes purgarAntiguos, FluxiaBancoLimpiar, bancoRef y disponibleEfectivo presentes.
+- Build falla si desaparece cualquiera de esos invariantes.
+
+PENDIENTE DE VALIDACIÓN REAL
+- Fluidez en Safari/iPhone: entrada, menú, desplegables, pestañas y scroll.
+- Solo después de validar Safari se prueba como PWA en pantalla de inicio.
+
+SIGUIENTE FASE TRAS FLUIDEZ
+- Perfil cloud: mostrar Nacho y deduplicar shells sin tocar datos financieros.
+- Fecha/hora bancaria real cuando exista; nunca inventar hora.
+- Motor local de identidad/logos de comercios.
+- Traspasos propios inteligentes y ordenación de Variables.
