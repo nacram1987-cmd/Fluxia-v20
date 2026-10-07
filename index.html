@@ -292,10 +292,10 @@ body.fx-dashboard-clean .fx-dashboard67-item.gold:after { content:""; position:a
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="telephone=no" name="format-detection"/>
 <meta content="no" name="msapplication-tap-highlight"/>
-<title>Fluxia BETA v97.14-LAB</title>
+<title>Fluxia BETA v97.15-LAB</title>
 
 <style id="fluxia-v95-75-auth-error-visibility">#fobError:not(:empty){display:block!important;}</style>
-<meta content="v97.14-LAB" name="fluxia-version"/>
+<meta content="v97.15-LAB" name="fluxia-version"/>
 <!-- Fluxia v91 · brand lock · datos jamás a 0 · compartidos saldo inicial · notif suaves · logo alineado · base v90.10 -->
 <script>
 (function(){window.FluxiaNative={isNative:function(){try{return!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())}catch(e){return false}},platform:function(){try{return(window.Capacitor&&Capacitor.getPlatform)?Capacitor.getPlatform():'web'}catch(e){return'web'}}};})();
@@ -609,13 +609,13 @@ window.fluxiaCuandoLibre = function(fn, intentos){
 };
 
 </script>
-<meta content="v97.14-LAB" name="fluxia-version"/>
+<meta content="v97.15-LAB" name="fluxia-version"/>
 <meta content="lab" name="fluxia-channel"/>
-<script>window.FLUXIA_VERSION = "v97.14-LAB";</script>
+<script>window.FLUXIA_VERSION = "v97.15-LAB";</script>
 <script id="fx47-version-integrity-guard">
 (function(){
   'use strict';
-  var EXPECT='v97.14-LAB', SW_FILE='fluxia-sw.js', CACHE='fluxia-root-'+EXPECT;
+  var EXPECT='v97.15-LAB', SW_FILE='fluxia-sw.js', CACHE='fluxia-root-'+EXPECT;
   window.FLUXIA_VERSION=EXPECT;
   try{
     var m=document.querySelector('meta[name="fluxia-build-id"]');
@@ -630,7 +630,7 @@ window.fluxiaCuandoLibre = function(fn, intentos){
           return /^fluxia(?:-lab|-v|-shell)/i.test(n) && n!==CACHE;
         }).map(function(n){return caches.delete(n);}));
       }
-    }catch(e){console.warn('[v97.14-LAB] cache cleanup',e);}
+    }catch(e){console.warn('[v97.15-LAB] cache cleanup',e);}
     try{
       if('serviceWorker' in navigator){
         var regs=await navigator.serviceWorker.getRegistrations();
@@ -646,9 +646,9 @@ window.fluxiaCuandoLibre = function(fn, intentos){
         try{
           var reg=await navigator.serviceWorker.register('./'+SW_FILE,{scope:'./',updateViaCache:'none'});
           if(reg&&reg.update) await reg.update();
-        }catch(_r){console.warn('[v97.14-LAB] register',_r);}
+        }catch(_r){console.warn('[v97.15-LAB] register',_r);}
       }
-    }catch(e){console.warn('[v97.14-LAB] sw cleanup',e);}
+    }catch(e){console.warn('[v97.15-LAB] sw cleanup',e);}
   }
   window.addEventListener('load',function(){setTimeout(cleanAndOwn,0);},{once:true});
   window.addEventListener('pageshow',function(){window.FLUXIA_VERSION=EXPECT;},{passive:true});
@@ -3892,10 +3892,10 @@ html body #fxDashboard67 .fx30-hero *,html body #fxDashboard67 .fx67-hero * *{co
 </style>
 
 
-<style id='fluxia-v9676-variables-contain'>#panel-gastos-variables{contain:layout style paint}</style><!-- v97.14-LAB · Huchas canónicas en lectura normal + persistencia; Variables v96.76 preservado -->
-<!-- v97.14-LAB · Reconciliación histórica 2.817,88 € de las 7 Huchas legacy; Variables preservado -->
-<!-- v97.14-LAB · Disponible: autoridad real de Fijos conciliados; Huchas v96.78 preservadas -->
-<!-- v97.14-LAB · Disponible auditado contra nube: dedupe bancario de Ingresos por bancoRef; objetivo derivado 111,96 € -->
+<style id='fluxia-v9676-variables-contain'>#panel-gastos-variables{contain:layout style paint}</style><!-- v97.15-LAB · Huchas canónicas en lectura normal + persistencia; Variables v96.76 preservado -->
+<!-- v97.15-LAB · Reconciliación histórica 2.817,88 € de las 7 Huchas legacy; Variables preservado -->
+<!-- v97.15-LAB · Disponible: autoridad real de Fijos conciliados; Huchas v96.78 preservadas -->
+<!-- v97.15-LAB · Disponible auditado contra nube: dedupe bancario de Ingresos por bancoRef; objetivo derivado 111,96 € -->
 <style id="fluxia-v9696-design-system">
 /* v96.99 · ÚNICA capa visual final. Solo presentación; lógica financiera intacta. */
 :root{
@@ -8329,7 +8329,7 @@ function initPwaYBeta(){
     }
   }catch(e){}
 
-  // v97.14-LAB · Manifest de build autoritativo. No sustituir por blob dinámico histórico.
+  // v97.15-LAB · Manifest de build autoritativo. No sustituir por blob dinámico histórico.
   try{
     var link = document.getElementById('fluxiaManifestLink');
     if(link) link.setAttribute('href','./manifest.webmanifest');
@@ -15499,8 +15499,8 @@ function fxReconciliarCesped70V9714(){
 }
 
 function renderProvisiones(){
-  try{ fxReconciliarCesped70V9714(); }catch(e){}
   if(window.FluxiaSync954){provisiones=JSON.parse(FluxiaSync954.mergeCloudValue('v2_provisiones',JSON.stringify(provisiones),'[]',Almacen.getItem('v2_sync_tombstones'),null,Almacen.getItem('v2_sync_restores'),null,Almacen.getItem('v2_explicit_deletions'),null));usosProvisiones=usosProvisiones.filter(function(x){return !FluxiaSync954.isDeleted('v2_usos',x.id);});}
+  try{ fxReconciliarCesped70V9714(); }catch(e){}
   try{ pintarAvisoProvTab(); }catch(e){}
   document.getElementById('provMesLabel').textContent = MES_LABEL[mesSeleccionado];
   const hintEl = document.getElementById('provMesLabelHint');
@@ -22128,7 +22128,7 @@ function arrancarApp(){
     const s = document.getElementById('splashCarga');
     if (!s || s.dataset.saliendo) return;
     s.dataset.saliendo = '1';
-    const MIN_MS = 900;
+    const MIN_MS = 180;
     const trans = (window.performance && performance.now) ? performance.now() : MIN_MS;
     const espera = Math.max(0, MIN_MS - trans);
     setTimeout(() => {
@@ -22136,7 +22136,7 @@ function arrancarApp(){
       setTimeout(() => {
         if (s.parentElement) s.remove();
         try{ document.dispatchEvent(new Event('fluxia:splash-fin')); }catch(e){}
-      }, 650);
+      }, 120);
     }, espera);
   }
 
@@ -22169,7 +22169,7 @@ function arrancarApp(){
       if(ayuda&&!document.getElementById('fxChecklist9544')){
         var details=document.createElement('details');details.id='fxChecklist9544';
         details.style.cssText='margin:16px 0;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)';
-        details.innerHTML='<summary>Checklist v97.14-LAB</summary>'+
+        details.innerHTML='<summary>Checklist v97.15-LAB</summary>'+
           '<p>Outbox por perfil: IMPLEMENTADO · PROBADO en simulación · conserva edición offline con cuota local llena.</p>'+
           '<p>Cloud autoritativa y CAS: IMPLEMENTADO · PROBADO en simulación · caché vieja no se sube al arrancar.</p>'+
           '<p>Huchas y borrados: IMPLEMENTADO · PROBADO en simulación · dos aportaciones iguales sobreviven y un borrado por ID prevalece.</p>'+
@@ -23245,7 +23245,7 @@ window.FluxiaDiag = (function(){
   /* v95.70: la misma reconstrucción segura debe poder usarse también al iniciar sesión normal
      desde Safari cuando se perdió el registro local del perfil. */
   window.FluxiaRecuperarPerfilCloud = reconstruirPerfilCloud;
-  function limpiarRecoveryYRecargar(){try{window.FLUXIA_RECOVERY_ACTIVO=false;sessionStorage.removeItem('fluxia_recovery_activo');history.replaceState(null,'',location.pathname+'?v=v97.14-LAB');}catch(e){}location.reload();}
+  function limpiarRecoveryYRecargar(){try{window.FLUXIA_RECOVERY_ACTIVO=false;sessionStorage.removeItem('fluxia_recovery_activo');history.replaceState(null,'',location.pathname+'?v=v97.15-LAB');}catch(e){}location.reload();}
   async function completarRecovery(nueva){
     nueva=String(nueva||'');
     if(nueva.length<6){try{showModalError('La contraseña debe tener al menos 6 caracteres.');}catch(e){fxAviso('La contraseña debe tener al menos 6 caracteres.','info');}return;}
@@ -27593,7 +27593,7 @@ window.FluxiaAuditoriaDisponible9616=function(mes){
 /* v95.99 · La versión visible SIEMPRE sale de esta constante de build. */
 (function(){
   'use strict';
-  var V='v97.14-LAB';
+  var V='v97.15-LAB';
   window.FLUXIA_VERSION=V;
   function paint(){
     try{ document.title='Fluxia BETA '+V; }catch(e){}
@@ -27863,7 +27863,7 @@ window.FluxiaCadence9612.visual=function(key,ms,fn,note){
 'use strict';
 /* Diagnóstico local de candidato: no toca datos, solo expone contadores de runtime. */
 window.FluxiaCandidate9613={
- version:'v97.14-LAB',
+ version:'v97.15-LAB',
  snapshot:function(){
    return {
      hidden:document.visibilityState==='hidden',
@@ -27957,7 +27957,7 @@ button,a,[role="button"],[data-tab]{touch-action:manipulation;-webkit-tap-highli
 <script id="fluxia-v9620-identity-sentinel">
 (function(){
  'use strict';
- var V='v97.14-LAB', K='fluxia_identity_reload_v97.14-LAB';
+ var V='v97.15-LAB', K='fluxia_identity_reload_v97.15-LAB';
  window.FLUXIA_VERSION=V;
  function paint(){
    try{document.title='Fluxia BETA '+V;}catch(e){}
@@ -27993,20 +27993,29 @@ button,a,[role="button"],[data-tab]{touch-action:manipulation;-webkit-tap-highli
 
 <script id="fluxia-v971-interaction-priority">
 (function(){'use strict';
- window.FLUXIA_BUILD='v97.14-LAB';
+ window.FLUXIA_BUILD='v97.15-LAB';
  window.FluxiaIdle=function(fn,timeout){if(typeof fn!=='function')return;if('requestIdleCallback'in window)requestIdleCallback(function(){fn()},{timeout:timeout||1400});else setTimeout(fn,120);};
  // El primer gesto sobre menú se atiende en captura antes de cualquier trabajo secundario.
  /* v97.10: duplicate pointerdown removed; single native menu path below */
 })();
 </script>
 
-<script id="fluxia-v971-pwa-resilience">
+<script id="fluxia-v9715-pwa-resilience">
 (function(){'use strict';
- // iOS PWA: nunca dejar un splash huérfano si la reanudación o una tarea secundaria se atasca.
- function killStaleSplash(){var s=document.getElementById('splashCarga');if(!s)return;try{s.classList.add('splash-out');}catch(_){}setTimeout(function(){try{if(s&&s.parentElement)s.remove();document.dispatchEvent(new Event('fluxia:splash-fin'));}catch(_){}},180);}
- window.addEventListener('pageshow',function(e){if(e.persisted)setTimeout(killStaleSplash,700);},{passive:true});
- document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')setTimeout(killStaleSplash,1800);},{passive:true});
- setTimeout(killStaleSplash,6500);
+ var released=false;
+ function releaseSplash(){
+   if(released)return; var s=document.getElementById('splashCarga');
+   if(!s){released=true;return;} released=true;
+   try{s.classList.add('splash-out');s.dataset.saliendo='1';}catch(_){}
+   setTimeout(function(){try{if(s.parentElement)s.remove();document.dispatchEvent(new Event('fluxia:splash-fin'));}catch(_){}},90);
+ }
+ // iOS standalone cold/resume: UI shell must never wait for bank/cloud secondary work.
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(releaseSplash,220);},{once:true});
+ else setTimeout(releaseSplash,80);
+ window.addEventListener('pageshow',function(){setTimeout(releaseSplash,40);},{passive:true});
+ document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')setTimeout(releaseSplash,40);},{passive:true});
+ setTimeout(releaseSplash,900);
+ window.FluxiaSplash9715={release:releaseSplash};
 })();
 </script>
 
@@ -28020,7 +28029,7 @@ button,a,[role="button"],[data-tab]{touch-action:manipulation;-webkit-tap-highli
 </style>
 <script id="fluxia-v9711-bank-background-refresh">
 (function(){'use strict';
- window.FLUXIA_BUILD='v97.14-LAB';
+ window.FLUXIA_BUILD='v97.15-LAB';
  var started=false;
  function refresh(){
    if(started||document.visibilityState==='hidden')return;
@@ -32907,7 +32916,7 @@ window.FluxiaConfianzaV88 = {
     } catch(e){}
     box.innerHTML = '<details class="bank-details"><summary>Diagnóstico</summary><div class="fluxia-salud-card">' +
       '<div class="fluxia-salud-grid">' +
-      '<div><span>Versión</span><strong>BETA v97.14-LAB</strong></div>' +
+      '<div><span>Versión</span><strong>BETA v97.15-LAB</strong></div>' +
       '<div><span>Bancos</span><strong>' + s.bancos + '</strong></div>' +
       '<div><span>Gastos variables</span><strong>' + s.movimientos + '</strong></div>' +
       '<div><span>Con ref. banco</span><strong>' + s.bancoRefs + '</strong></div>' +
@@ -33000,7 +33009,7 @@ console.log('✅ Fluxia v91 · Confianza + Salud listos');
       panel.dataset.v91 = '1';
       var versionTxt = document.getElementById('ayudaVersionTxt');
       if(versionTxt){
-        versionTxt.textContent = 'Fluxia BETA ' + (window.FLUXIA_VERSION||'v97.14-LAB') + ' · laboratorio · nube principal';
+        versionTxt.textContent = 'Fluxia BETA ' + (window.FLUXIA_VERSION||'v97.15-LAB') + ' · laboratorio · nube principal';
         versionTxt.style.cssText = 'font-size:.88rem;font-weight:600;color:var(--ink);margin:0 0 12px;';
       }
       // Recoger todos los details de versiones/checklist antiguos
@@ -33103,7 +33112,7 @@ console.log('✅ Fluxia v91 · Confianza + Salud listos');
     var inp = document.getElementById('fluxiaStableUrlInput');
     if (inp && !inp._filled){ inp.value = u; inp._filled = true; }
     var labV = document.getElementById('fluxiaLabVersionLabel');
-    if (labV) labV.textContent = (window.FLUXIA_VERSION ? ('v'+String(window.FLUXIA_VERSION).replace(/^v/,'')) : 'v97.14-LAB');
+    if (labV) labV.textContent = (window.FLUXIA_VERSION ? ('v'+String(window.FLUXIA_VERSION).replace(/^v/,'')) : 'v97.15-LAB');
   }
 
   // Notificación sistema al estilo Revolut (permiso + show)
@@ -33416,7 +33425,7 @@ console.log('✅ Fluxia v91 · Confianza + Salud listos');
     if (!btn || btn._v91) return;
     btn._v91 = true;
     btn.addEventListener('click', function(){
-      var ver = (window.FLUXIA_VERSION || 'v97.14-LAB').toString().replace(/^v/,'');
+      var ver = (window.FLUXIA_VERSION || 'v97.15-LAB').toString().replace(/^v/,'');
       var fileName = 'index_fluxia_v' + ver.replace(/\./g,'_').replace(/^v/,'') + '.html';
       // Normalize: v91 -> index_fluxia_v90_10.html style
       fileName = 'index_fluxia_v' + ver.replace(/\./g, '_') + '.html';
@@ -38187,7 +38196,7 @@ html body #fx50AvailableNote{font-size:.7rem!important;font-weight:600!important
         '<p>✅ Más aire visual: IMPLEMENTADO entre cabecera, estados, hero, cuadrícula y secundarios.</p>'+
         '<p>✅ Menos saturación numérica: IMPLEMENTADO · cifras secundarias reducen peso, Disponible mantiene prioridad.</p>'+
         '<p>✅ Texto de pensión simplificado: IMPLEMENTADO.</p>'+
-        '<p>✅ Build coherente v97.14-LAB: PROBADO · HTML, manifest, SW y canal LAB coinciden.</p>'+
+        '<p>✅ Build coherente v97.15-LAB: PROBADO · HTML, manifest, SW y canal LAB coinciden.</p>'+
         '<p>✅ ESTABLE v95.39: INTACTA.</p>';
     }catch(e){}
   }
@@ -38198,7 +38207,7 @@ html body #fx50AvailableNote{font-size:.7rem!important;font-weight:600!important
 <script id="fluxia-v9554-arch-authority">
 (function(){
  'use strict';
- window.FLUXIA_ARCH_VERSION='v97.14-LAB';
+ window.FLUXIA_ARCH_VERSION='v97.15-LAB';
  window.FLUXIA_RECOVERY_POLICY='github-direct-secure-profile-recovery';
  window.FLUXIA_BANK_RECONCILIATION_POLICY='explicit-only';
  window.FluxiaDisponibleEngine={
@@ -38532,7 +38541,7 @@ window.FLUXIA_V9682=Object.freeze({base:'v96.80-LAB',currentCloudHuchas:true,fix
 
 <script id="fluxia-v9683-pwa-policy">
 window.FLUXIA_PWA_POLICY=Object.freeze({
-  current:'v97.14-LAB',
+  current:'v97.15-LAB',
   updateExistingAfterValidation:true,
   reinstallEveryVersion:false,
   permanentEntryPlanned:true
@@ -38699,7 +38708,7 @@ html body #fxDashboard67 #fx50AvailableNote{font-size:10px!important;color:#5d76
 </script>
 <script id="fluxia-v9712-cash-withdrawal-authority">
 (function(){'use strict';
- window.FLUXIA_BUILD='v97.14-LAB';
+ window.FLUXIA_BUILD='v97.15-LAB';
  function key(m){return 'bankcash:'+String(m.bancoRef||m.id||[m.fecha,m.importe,m.concepto].join('|'));}
  function apply(){
    try{
@@ -38730,6 +38739,6 @@ html body #fxDashboard67 #fx50AvailableNote{font-size:10px!important;color:#5d76
  document.addEventListener('fluxia:splash-fin',function(){if(typeof FluxiaIdle==='function')FluxiaIdle(apply,800);else setTimeout(apply,80);},{once:true});
 })();
 </script>
-<!-- FLUXIA_BUILD: v97.14-LAB | MODEL3_FAITHFUL | PERF_CONSOLIDATED | CASH_TRANSFER_AUTHORITY -->
+<!-- FLUXIA_BUILD: v97.15-LAB | MODEL3_FAITHFUL | PERF_CONSOLIDATED | CASH_PROVISION | PWA_FAST_RESUME -->
 </body>
 </html>
