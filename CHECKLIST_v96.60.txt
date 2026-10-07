@@ -1,0 +1,26 @@
+FLUXIA v96.60-LAB — DASHBOARD + VELOCIDAD BLINDADA
+
+AÑADIDO
+- Dashboard visual premium sobre la base FAST-SAFE validada.
+- Disponible en azul hielo muy claro, cálido y coherente con marca Fluxia.
+- Wordmark sans premium/negrita y tarjetas más compactas.
+- Nueva ley imperial: cualquier regresión perceptible respecto a v96.58/v96.59 invalida la versión.
+
+MODIFICADO
+- Solo CSS del Dashboard/branding. Sin modificar motores de datos.
+
+ELIMINADO / CONSOLIDADO
+- Ningún motor nuevo de rendimiento. Cero wrappers/observers/polling/timers añadidos.
+
+BLINDADO / NO TOCADO
+- Ruta de navegación rápida v96.58/v96.59.
+- ESTABLE index.html.
+- Datos financieros, Supabase existente, bancos y cálculos de la base.
+
+PRUEBAS
+- Build determinista desde v96.59.
+- Sin JavaScript nuevo de interacción.
+- Cero listeners/observers/timers nuevos por esta versión.
+
+RESULTADO ESPERADO
+- Misma fluidez de v96.59 con Dashboard visualmente alineado con Fluxia.
