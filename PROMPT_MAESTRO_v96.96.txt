@@ -510,3 +510,12 @@ logo rectangular.
 v96.96 es una intervención EXCLUSIVAMENTE VISUAL sobre v96.95.
 No cambia lógica financiera, persistencia, Supabase, cálculos,
 reconciliación, datos, históricos ni render funcional.
+
+
+======================================================================
+22. v96.97 · NORMALIZACIÓN VISUAL TRANSVERSAL · LEY IMPERIAL
+======================================================================
+
+Toda tarjeta principal de módulo usa el mismo contrato visual: altura mínima, padding, radio, sombra y jerarquía tipográfica comunes. Cada módulo conserva su color semántico y título, importe, iconografía y acentos deben derivar de esa familia cromática. Gastos Fijos mantiene pendiente azul y pagado oro, con títulos e importes coherentes con el estado. La separación vertical de tarjetas debe preservar legibilidad sin perder densidad. Esta regla es exclusivamente visual y no autoriza cambios en lógica financiera, datos, nube, históricos o reconciliación.
+
+PWA: una única instalación debe recibir nuevas builds mediante actualización del service worker; no exigir reinstalación para cada versión.
