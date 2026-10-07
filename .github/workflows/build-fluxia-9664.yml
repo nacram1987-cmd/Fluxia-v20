@@ -1,0 +1,20 @@
+name: Build Fluxia v96.64
+on:
+  push:
+    branches: [main]
+    paths: ['tools/build_9664.py']
+permissions: {contents: write}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python tools/build_9664.py
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index_fluxia_v96.64_LAB.html CHECKLIST_v96.64.txt PROMPT_MAESTRO_v96.64.txt manifest_v96.64_LAB.webmanifest fluxia-sw-v96.64.js
+          git diff --cached --quiet || git commit -m "build: Fluxia v96.64 premium visual candidate"
+          git push
