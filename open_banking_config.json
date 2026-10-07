@@ -5,7 +5,7 @@
     "provider": "psd2_aggregator",
     "settings": {
       "consent_lifetime_days": 90,
-      "auto_sync_on_launch": false,
+      "auto_sync_on_launch": true,
       "allow_standalone_ios_redirect": true
     },
     "connected_institutions": [
