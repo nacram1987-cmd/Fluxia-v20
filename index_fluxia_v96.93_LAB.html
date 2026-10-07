@@ -32628,16 +32628,16 @@ window.FluxiaConfianzaV88 = {
     try {
       if (s.ultimaSync) syncTxt = new Date(s.ultimaSync).toLocaleString('es-ES',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
     } catch(e){}
-    box.innerHTML = '<div class="fluxia-salud-card"><h3>🩺 Salud Fluxia</h3>' +
+    box.innerHTML = '<details class="bank-details"><summary>Diagnóstico</summary><div class="fluxia-salud-card">' +
       '<div class="fluxia-salud-grid">' +
-      '<div><span>Versión</span><strong>BETA v95.54-ARCH LAB</strong></div>' +
+      '<div><span>Versión</span><strong>BETA v96.93-LAB</strong></div>' +
       '<div><span>Bancos</span><strong>' + s.bancos + '</strong></div>' +
       '<div><span>Gastos variables</span><strong>' + s.movimientos + '</strong></div>' +
       '<div><span>Con ref. banco</span><strong>' + s.bancoRefs + '</strong></div>' +
       '<div><span>Duplicados</span><strong style="color:' + (s.duplicados?'#b45309':'#1b7a4a') + '">' + s.duplicados + '</strong></div>' +
       '<div><span>Corte</span><strong>' + (s.corte||'—') + '</strong></div>' +
       '<div style="grid-column:1/-1"><span>Última sync</span><strong>' + syncTxt + '</strong></div>' +
-      '</div></div>';
+      '</div></div></details>';
   },
   montarPanelSiFalta: function(){
     try {
@@ -33654,10 +33654,10 @@ window.FluxiaProtegerDatos = {
     var div = document.createElement('div');
     div.id = 'fxPushBancoBanner';
     div.style.cssText = 'margin:12px 0;padding:14px;border-radius:14px;border:1px solid rgba(14,124,144,.25);background:linear-gradient(135deg,rgba(14,124,144,.08),rgba(15,58,92,.04));';
-    div.innerHTML = '<b style="color:var(--teal);">🔔 Avisos de cargos</b>'+
+    div.innerHTML = '<details class="bank-details"><summary>Avisos de cargos</summary><b style="color:var(--teal);">🔔 Avisos de cargos</b>'+
       '<p style="margin:6px 0 10px;font-size:.82rem;color:var(--muted);line-height:1.4;">Con la app <b>abierta</b>: notificación al sincronizar un cargo (concepto + importe). Con la app <b>cerrada</b>: requiere activar avisos y el servidor del banco (en progreso).</p>'+
       '<button type="button" id="fxPushBancoBtn" style="width:100%;min-height:44px;border:none;border-radius:12px;background:var(--teal);color:#fff;font-weight:800;cursor:pointer;">Activar avisos en este iPhone</button>'+
-      '<p id="fxPushBancoEstado" style="margin:8px 0 0;font-size:.75rem;color:var(--muted);"></p>';
+      '<p id="fxPushBancoEstado" style="margin:8px 0 0;font-size:.75rem;color:var(--muted);"></p></details>';
     host.insertBefore(div, host.firstChild);
     document.getElementById('fxPushBancoBtn').onclick = async function(){
       var st = document.getElementById('fxPushBancoEstado');
