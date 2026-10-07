@@ -519,3 +519,9 @@ reconciliación, datos, históricos ni render funcional.
 Toda tarjeta principal de módulo usa el mismo contrato visual: altura mínima, padding, radio, sombra y jerarquía tipográfica comunes. Cada módulo conserva su color semántico y título, importe, iconografía y acentos deben derivar de esa familia cromática. Gastos Fijos mantiene pendiente azul y pagado oro, con títulos e importes coherentes con el estado. La separación vertical de tarjetas debe preservar legibilidad sin perder densidad. Esta regla es exclusivamente visual y no autoriza cambios en lógica financiera, datos, nube, históricos o reconciliación.
 
 PWA: una única instalación debe recibir nuevas builds mediante actualización del service worker; no exigir reinstalación para cada versión.
+
+
+======================================================================
+23. v96.98 · ACTUALIZACIÓN PWA REAL · LEY IMPERIAL
+======================================================================
+La PWA instalada debe actualizarse sin desinstalación. El service worker usa versión de shell explícita, elimina caches Fluxia antiguos al activar, reclama clientes inmediatamente y sirve navegaciones con estrategia network-first/no-store. Los assets locales se revalidan por red antes de recurrir a cache. La cache PWA nunca es fuente de verdad financiera: datos y persistencia continúan exclusivamente bajo las reglas cloud existentes.
