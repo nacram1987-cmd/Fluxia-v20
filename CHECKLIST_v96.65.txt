@@ -1,0 +1,27 @@
+FLUXIA v96.65-LAB — TRASPLANTE DE ESTÉTICA MODERNA
+
+FUENTES
+- Motor/interacción: v96.64 FAST-SAFE validada por usuario.
+- Referencia visual moderna: v96.56-LAB, última arquitectura moderna completa previa al recovery.
+
+AÑADIDO
+- Trasplante CSS de las capas visuales modernas sobre el motor rápido.
+- Bridge final Fluxia para branding azul hielo, Disponible y wordmark.
+
+MODIFICADO
+- Presentación únicamente.
+
+ELIMINADO / CONSOLIDADO
+- Se excluyen explícitamente capas CSS identificadas como performance/render/content-visibility/will-change.
+- No se trasplanta ningún script de v96.56.
+
+BLINDADO / NO TOCADO
+- Navegación y runtime v96.64.
+- Cero JS moderno importado.
+- Cero listeners, observers, polling, timers o render wrappers añadidos.
+- ESTABLE index.html intacto.
+
+CONTROL
+- Bloques style fuente encontrados: 18
+- Bloques visuales portados: 17
+- La aceptación exige conservar velocidad v96.64 y recuperar visualmente la Fluxia moderna.
