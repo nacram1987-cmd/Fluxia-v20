@@ -1,0 +1,84 @@
+name: Build Fluxia v97.9 performance recovery
+on:
+  push:
+    branches: [main]
+    paths: ['TRIGGER_v979']
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Consolidate identified performance generations and validate
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re,json,hashlib,sys
+          p=Path("index.html")
+          s=p.read_text(encoding="utf-8")
+          assert len(s)>2000000
+          # Structural repair: nothing may render after the document.
+          tail=re.search(r'</html>.*$',s,re.S|re.I)
+          if tail:
+              after=tail.group(0)[7:].strip()
+              s=s[:tail.start()]+'</html>'
+
+          # Remove ONLY identified redundant performance generations after the locked benchmark.
+          ids=[
+            'fluxia-v9629-final-microperf','fluxia-v9630-nav-cache','fluxia-v9630-consolidation-perf',
+            'fluxia-v9631-final-speed','fluxia-v9631-idle-housekeeping','fluxia-v9632-menu-fastpath',
+            'fluxia-v9632-menu-touch-priority','fluxia-v9633-structural-cache','fluxia-v9633-compositor-cleanup',
+            'fluxia-v9633-list-virtual-paint','fluxia-v9635-final-speed'
+          ]
+          removed=[]
+          for ident in ids:
+              pat=re.compile(r'<(script|style)\s+id=["\']'+re.escape(ident)+r'["\'][^>]*>.*?</\1>',re.S|re.I)
+              s2,n=pat.subn('',s)
+              if n: removed.append(ident); s=s2
+
+          # Remove rejected 97.8 code if it ever leaked into this base.
+          for ident in ['fluxia-v978-transfer-icons','fluxia-v978-bank-transfer-core','fluxia-v978-brand-icons']:
+              pat=re.compile(r'<(script|style)\s+id=["\']'+re.escape(ident)+r'["\'][^>]*>.*?</\1>',re.S|re.I)
+              s=pat.sub('',s)
+
+          # No financial mutation: explicitly preserve core signatures and panels from source.
+          required=['panel-ingresos','panel-fijos','panel-provisiones','panel-gastos-variables','panel-efectivo','bancoRef','Disponible','Almacen']
+          missing=[x for x in required if x not in s]
+          if missing: raise SystemExit("CORE MISSING "+repr(missing))
+
+          # Version identity only.
+          s=s.replace('v97.6-LAB','v97.9-LAB').replace('v97.6 LAB','v97.9 LAB')
+          if not s.rstrip().lower().endswith('</html>'): raise SystemExit('CONTENT AFTER HTML')
+          Path('index_fluxia_v97.9_LAB.html').write_text(s,encoding='utf-8')
+          Path('index.html').write_text(s,encoding='utf-8')
+
+          def met(x):
+              return dict(length=len(x),scripts=len(re.findall(r'<script\b',x,re.I)),styles=len(re.findall(r'<style\b',x,re.I)),
+                          timeouts=len(re.findall(r'setTimeout\s*\(',x)),intervals=len(re.findall(r'setInterval\s*\(',x)),
+                          observers=len(re.findall(r'MutationObserver',x)),pageshow=len(re.findall(r'pageshow',x)))
+          m=met(s)
+          # Current pre-recovery: 159 scripts / 100 styles / 11 pageshow.
+          checks={
+            'document_closed_cleanly':s.rstrip().lower().endswith('</html>'),
+            'no_visible_tail':not bool(re.search(r'</html>\s*\S',s,re.S|re.I)),
+            'scripts_reduced':m['scripts']<159,
+            'styles_reduced':m['styles']<100,
+            'pageshow_reduced':m['pageshow']<11,
+            'financial_panels_present':not missing,
+            'rejected_978_absent':'fluxia-v978-bank-transfer-core' not in s,
+            'identified_only':len(removed)>=8
+          }
+          Path('VALIDACION_v97.9_LAB.json').write_text(json.dumps({'checks':checks,'metrics':m,'removed':removed},indent=2,ensure_ascii=False),encoding='utf-8')
+          if not all(checks.values()): raise SystemExit("VALIDATION FAILED "+repr(checks))
+          prompt=Path('PROMPT_MAESTRO_v97.8_LAB.txt').read_text(encoding='utf-8') if Path('PROMPT_MAESTRO_v97.8_LAB.txt').exists() else Path('PROMPT_MAESTRO_v97.7_LAB.txt').read_text(encoding='utf-8')
+          prompt += """\n\n## LEY IMPERIAL DE RENDIMIENTO · v97.9\n- v96.58 queda como benchmark obligatorio de fluidez.\n- Ninguna función, diseño, sincronización, automatización o integración puede degradar perceptiblemente la interacción.\n- Prohibido acumular generaciones de wrappers, observers, polling, temporizadores o estilos de rendimiento.\n- El primer render y la interacción tienen prioridad; trabajo secundario fuera de ruta crítica.\n- Cualquier regresión perceptible de velocidad rechaza la build aunque la función nueva sea correcta.\n- Está prohibido publicar contenido o recursos después de </html>.\n"""
+          Path('PROMPT_MAESTRO_v97.9_LAB.txt').write_text(prompt,encoding='utf-8')
+          Path('README_v97.9_LAB.md').write_text('# Fluxia v97.9-LAB · Performance recovery\n\nConsolidación identificada de capas de rendimiento. Sin cambios intencionados en lógica financiera. Ver VALIDACION_v97.9_LAB.json.\n',encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html index_fluxia_v97.9_LAB.html PROMPT_MAESTRO_v97.9_LAB.txt README_v97.9_LAB.md VALIDACION_v97.9_LAB.json
+          git commit -m "perf: Fluxia v97.9 LAB consolidate post-benchmark layers"
+          git pull --rebase
+          git push
