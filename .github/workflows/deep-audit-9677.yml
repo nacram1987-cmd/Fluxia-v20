@@ -1,0 +1,32 @@
+name: Deep audit Fluxia v96.76
+on:
+  push:
+    branches: [main]
+    paths: ['tools/deep_audit_9677.flag']
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re,json
+          s=Path("index_fluxia_v96.76_LAB.html").read_text(encoding="utf-8")
+          pats=["gastos variables","variablesTotal","movimientosDe","disponibleEfectivo","renderAll","renderVariables","pintar","tab","panel-gastos-variables","setItem","flush","MutationObserver","setInterval","setTimeout","addEventListener"]
+          o={}
+          for p in pats:
+            a=[]
+            for m in list(re.finditer(re.escape(p),s,re.I))[:200]:
+              a.append(s[max(0,m.start()-350):min(len(s),m.end()+900)].replace("\n"," "))
+            o[p]=a
+          Path("deep.json").write_text(json.dumps(o,ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: deep-audit-9677
+          path: deep.json
