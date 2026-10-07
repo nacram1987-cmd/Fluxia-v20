@@ -1,0 +1,28 @@
+FLUXIA v96.62-LAB — RECUPERACIÓN VISUAL FASE 1
+
+AÑADIDO
+- Lenguaje visual Fluxia: azul hielo + tinta azul petróleo + oro BETA.
+- Header blanco cálido y compacto; wordmark sans premium.
+- Disponible real protagonista, ancho completo, azul hielo.
+- Selector de mes integrado visualmente.
+- Dashboard 2x2 compacto y jerarquía de módulos.
+- Menú lateral visualmente limpio.
+
+MODIFICADO
+- CSS/estética principal exclusivamente.
+
+ELIMINADO / CONSOLIDADO
+- Sin nuevas capas JS de rendimiento.
+- Sin observers, polling, timers o wrappers de render.
+
+BLINDADO / NO TOCADO
+- FAST-SAFE v96.58-v96.61.
+- ESTABLE index.html.
+- Ruta crítica de navegación.
+- Motores funcionales de la base.
+
+PRUEBAS
+- Build desde v96.61.
+- Cero JS nuevo.
+- Identidad v96.62.
+- Criterio: misma velocidad perceptible que v96.61.
