@@ -1,0 +1,15 @@
+FLUXIA v96.82-LAB · LEY IMPERIAL
+Integridad financiera primero; nube fuente de verdad; cero duplicados/resurrecciones.
+Disponible se deriva de datos reales, nunca de una cifra objetivo.
+Un bancoRef de ingreso representa una única transacción: duplicados con el mismo bancoRef cuentan una sola vez. Ingresos manuales sin bancoRef nunca se deduplican automáticamente.
+Octubre auditado en nube: plan de ingresos sin duplicados 2.864,94 €; pensión pendiente 316,30 €; efectivos 2.548,64 €; fijos+financiación 1.015,74 €; huchas 918,88 €; variables 502,06 €; Disponible derivado 111,96 €.
+Huchas v96.78 preservadas (histórico 2.817,88 €). Variables v96.76 e interfaz v96.45 preservadas.
+LAB no sustituye ESTABLE sin validación.
+
+
+LEY IMPERIAL v96.82 · CERO CONGELACIÓN + IMPACTO ÚNICO
+- Gastos Variables abre por fast path; no purga blacklists/tombstones en cada render.
+- cuentaComoFijo O vinculoFijoId bastan para excluir un movimiento de Variables.
+- Huchas usan exclusivamente la fila cloud viva saneada; backups solo recuperación manual.
+- Rendimiento monótono obligatorio: ninguna versión puede ser más lenta que la validada.
+- Estética v96.80+ bloqueada frente a regresiones funcionales.
