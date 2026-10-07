@@ -1,0 +1,12 @@
+# v96.80-LAB
+- Auditoría directa de nube realizada.
+- Ingresos octubre almacenados: 2.874,17 €; detectados duplicados bancarios de 9,00 € y 0,23 €.
+- Ingresos plan sin duplicados: 2.864,94 €.
+- Pensión pendiente excluida de Disponible: 316,30 €.
+- Ingresos efectivos para Disponible: 2.548,64 €.
+- Fijos + financiación: 1.015,74 €.
+- Huchas mensuales: 918,88 €; histórico 2.817,88 € preservado.
+- Variables actuales: 502,06 €.
+- Disponible derivado: 111,96 €.
+- Dedupe únicamente por bancoRef; ingresos manuales no se fusionan.
+- Sin ajuste ficticio ni hardcode del Disponible.
