@@ -1,0 +1,23 @@
+FLUXIA v96.66-LAB — CORRECCIÓN DEL TRASPLANTE VISUAL
+
+DIAGNÓSTICO
+- v96.65 seguía mostrando la composición antigua. Portar CSS desde v96.56 no recuperó la estructura visual moderna.
+- Se corrige la referencia: v96.35 contiene la rama visual completa previa a la poda estructural.
+
+AÑADIDO
+- Portado del conjunto de estilos de diseño de v96.35 sobre el motor FAST-SAFE v96.64.
+- Se conserva el orden original de los estilos para respetar la cascada real.
+
+EXCLUIDO
+- Capas identificadas de performance/render/content-visibility/will-change e interacción experimental.
+- Cero scripts de v96.35.
+
+BLINDADO
+- Runtime/navegación v96.64.
+- Cero listeners, observers, polling, timers o wrappers nuevos.
+- ESTABLE intacta.
+
+CONTROL
+- Styles detectados en referencia: 18
+- Styles de diseño portados: 17
+- Si la composición moderna requiere markup y no solo CSS, la siguiente iteración portará exclusivamente ese markup, manteniendo los handlers del motor rápido.
