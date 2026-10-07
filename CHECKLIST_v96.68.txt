@@ -1,0 +1,20 @@
+FLUXIA v96.68-LAB — DASHBOARD MODERNO FAST-SAFE
+
+AÑADIDO
+- Recomposición visual del Dashboard usando exclusivamente el DOM existente.
+- Disponible protagonista en azul hielo.
+- Selector de mes simplificado visualmente.
+- Grid compacto 2x2 con superficies diferenciadas.
+- Se ocultan en Dashboard elementos legacy de fecha/backup/ayuda cuando existen.
+
+MODIFICADO
+- Solo CSS del Dashboard.
+
+BLINDADO
+- Identidad v96.67 preservada.
+- Diseño moderno de módulos v96.66 preservado.
+- Cero JS nuevo, listeners, observers, polling, timers o render wrappers.
+- ESTABLE intacta.
+
+CRITERIO
+- Dashboard debe dar un salto visual sin perder la velocidad validada.
