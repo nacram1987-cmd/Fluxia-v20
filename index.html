@@ -4122,7 +4122,15 @@ body .panel:not(#panel-dashboard) .mov-item{padding:11px 12px!important;margin-b
 body .panel:not(#panel-dashboard) .hint{color:var(--muted);line-height:1.4;}
 body .panel:not(#panel-dashboard) button{touch-action:manipulation;}
 </style>
-</head>
+<style id="fluxia-v9716-unified-ui">
+/* v97.16 · lenguaje visual común; Dashboard conserva su cromática propia */
+.panel:not(#panel-dashboard){max-width:100%;}.panel:not(#panel-dashboard)>.sec-head{min-height:52px;padding:10px 12px;margin:0 0 10px;border:1px solid var(--line);border-radius:14px;background:var(--surface);}
+.panel:not(#panel-dashboard)>.sec-head .sec-title{font-size:1.02rem;margin:0}.panel:not(#panel-dashboard)>.sec-head .sec-icon{font-size:1.15rem}
+.fx-month-wide{width:100%;box-sizing:border-box;display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:8px;margin:0 0 14px;padding:6px;border:1px solid var(--line);border-radius:15px;background:var(--surface);box-shadow:0 3px 12px rgba(20,30,24,.04)}
+.fx-month-wide button{height:38px;border:0;border-radius:11px;background:var(--surface-2);font-size:1.35rem;color:var(--ink);font-weight:700}.fx-month-wide .fxmw-label{text-align:center;font-weight:800;color:var(--ink);font-size:.9rem}.fx-month-wide .fxmw-label small{display:block;font-size:.67rem;color:var(--muted);font-weight:600;margin-top:1px}
+.pv-deficit{margin:8px 0;padding:8px 10px;border:1px solid var(--gold);border-radius:10px;background:var(--gold-soft);font-size:.76rem;color:var(--ink)}
+@media(max-width:600px){.panel{padding-left:12px!important;padding-right:12px!important}.fx-month-wide{width:100%;margin-left:0;margin-right:0}}
+</style></head>
 <script>
 window._offlineMode=!navigator.onLine;
 window.addEventListener('online',()=>{window._offlineMode=false;});
@@ -15539,13 +15547,16 @@ function renderProvisiones(){
     const aportMes = Number(est.aportado) || 0;
     aportadoMesTotal += aportMes;
     const saldo = provisionAportadoAcumulado(p, mesSeleccionado) - provisionUsadoAcumulado(p, mesSeleccionado);
+    const deficitProvision = fxDeficitProvision(p);
     const pct = meta > 0 ? Math.min(100, aportMes / meta * 100) : (aportMes > 0 ? 100 : 0);
     const completo = meta <= 0.005 || est.falta <= 0.005;
     const pill = completo ? '✓ Al día' : (aportMes > 0 ? 'Faltan ' + eur(est.falta, 2) : 'Sin aportar');
     const apts = aportacionesProvisionEnMes(p, mesSeleccionado);
     const prestamos = usosProvisiones.filter(u => u.provision === p.nombre && esTemporalPendiente(u));
     const periodo = eur(meta, 2) + ' al mes' + (p.fin ? ' · hasta ' + MES_LABEL[p.fin] : '');
+    const deficitHTML = deficitProvision>0.005 ? '<div class="pv-deficit">⚠️ Pendiente de cubrir <b>'+eur(deficitProvision,2)+'</b> · no es un rescate</div>' : '';
 
+    const _fxDeficitCardHTML = deficitHTML;
     const loansHTML = prestamos.map(u => {
       const falta = pendienteDeReponer(u);
       const parcial = (Number(u.repuesto) || 0) > 0.005;
@@ -16743,6 +16754,7 @@ function exportarVariablesCSV(mes){
 function fxDeficitProvision(p){return _r2((p&&p._fxDeficitPendiente)||0);}
 function fxVincularVariableProvision(mv){
   if(!mv)return;
+  if(mv.provisionVinculada){mostrarToast('Este gasto ya está vinculado a '+mv.provisionVinculada,'var(--gold)',2600);return;}
   var opts=(provisiones||[]).map(function(p){return {p:p,saldo:_r2(provisionAportadoTotal(p)-provisionUsadoTotal(p))};}).filter(function(x){return x.saldo>0.005;});
   if(!opts.length){mostrarToast('No hay provisiones con saldo disponible','var(--gold)',2500);return;}
   var suggested=opts.slice().sort(function(a,b){
@@ -28096,7 +28108,25 @@ button,a,[role="button"],[data-tab]{touch-action:manipulation;-webkit-tap-highli
  document.addEventListener('fluxia:splash-fin',refresh,{once:true});
 })();
 </script>
-</body>
+<script id="fluxia-v9716-wide-month">
+(function(){'use strict';
+ function draw(){
+  try{
+   document.querySelectorAll('.panel').forEach(function(p){
+    if(p.querySelector(':scope > .fx-month-wide'))return;
+    var bar=document.createElement('div');bar.className='fx-month-wide';
+    bar.innerHTML='<button type="button" data-fxmw="-1" aria-label="Mes anterior">‹</button><div class="fxmw-label"></div><button type="button" data-fxmw="1" aria-label="Mes siguiente">›</button>';
+    var anchor=p.querySelector(':scope > .sec-head')||p.firstElementChild;p.insertBefore(bar,anchor?anchor.nextSibling:p.firstChild);
+    bar.addEventListener('click',function(e){var b=e.target.closest('[data-fxmw]');if(!b)return;try{var i=MESES.indexOf(mesSeleccionado),n=Math.max(0,Math.min(MESES.length-1,i+Number(b.dataset.fxmw)));if(n!==i){mesSeleccionado=MESES[n];try{localStorage.setItem('v2_mes_seleccionado',mesSeleccionado);}catch(_){};if(typeof renderAll==='function')renderAll();refresh();}}catch(_){}});
+   });refresh();
+  }catch(e){}
+ }
+ function refresh(){try{document.querySelectorAll('.fxmw-label').forEach(function(el){el.innerHTML=(MES_LABEL[mesSeleccionado]||mesSeleccionado)+'<small>'+(mesSeleccionado===MES_ACTUAL_REAL?'Mes actual':'Mes seleccionado')+'</small>';});}catch(e){}}
+ window.FluxiaWideMonth9716={draw:draw,refresh:refresh};
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',draw,{once:true});else draw();
+ document.addEventListener('fluxia:splash-fin',draw,{once:true});
+})();
+</script></body>
 
 
 
