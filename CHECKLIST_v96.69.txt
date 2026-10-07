@@ -1,0 +1,27 @@
+FLUXIA v96.69-LAB — RECUPERACIÓN VISUAL CONJUNTA
+
+OBJETIVO
+- Dejar de hacer microparches y aplicar conjuntamente la referencia visual moderna sobre FAST-SAFE.
+
+REFERENCIA
+- Runtime: v96.67 validada rápida.
+- Diseño: v96.35, rama completa previa a cirugía de rendimiento.
+
+APLICADO
+- 17 bloques de diseño modernos, en orden.
+- Skin estructural de Dashboard para retirar piezas legacy visibles y recomponer selector/Disponible/resumen.
+- Identidad/nombre de v96.67 preservada.
+- Módulos modernos preservados.
+
+NO IMPORTADO
+- Ningún script de v96.35.
+- Ninguna capa performance/render/content-visibility/will-change conocida.
+- Cero polling/observers/timers globales.
+
+INVENTARIO REFERENCIA
+- IDs dashboard/home/resumen detectados: ['anBlockResumen', 'anHeroResumen', 'btnTcResumen', 'compDeudasHistorial', 'dashAlert', 'dashAvisoReponer', 'dashAvisoReponerGo', 'dashAvisoReponerSnooze', 'dashAvisosInicio', 'dashCompChips', 'dashCompartidoCard', 'dashCompartidoDetalle', 'dashCompartidoNeto', 'dashConsejero', 'dashConsejeroLista', 'dashGastoRapido', 'dashInformeSemana', 'dashPresMini', 'dashProximo', 'dashProximoFecha']
+- Clases dashboard/home/resumen detectadas: ['dash-comp-chip ', 'dash-comp-chips', 'dashboard-alert', 'dashboard-alert show', 'dashboard-card', 'dashboard-card solo-completa', 'dashboard-card-detail', 'dashboard-card-label', 'dashboard-card-value', 'dashboard-grid dashboard-legacy-summary', 'fx-dashboard67-action', 'fx-dashboard67-actions fx30-secondary', 'fx30-dashboard', 'fx47-empty-home', 'kpis dashboard-legacy-summary', 'lnd-resumen', 'tc-resumen-btn', 'wz-resumen']
+
+ACEPTACIÓN
+- Debe verse como una recuperación conjunta, no como microajustes.
+- Debe conservar velocidad FAST-SAFE.
