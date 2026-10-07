@@ -1,0 +1,12 @@
+FLUXIA v96.91 · PROMPT MAESTRO — BLOQUEO + SISTEMA VISUAL ÚNICO
+1. PROMPT MAESTRO MANDA. Toda versión se verifica contra él.
+2. Lógica financiera/funcional validada queda bloqueada: datos, Supabase, persistencia, cálculos, reconciliación, Huchas, Fijos, Variables, Ingresos, Compartidos, Financiaciones y Bancos. No se modifica salvo necesidad real + explicación previa + autorización expresa del usuario.
+3. Diseño aislado de lógica. Una petición visual no autoriza cambios de render/datos.
+4. Una sola familia tipográfica global. Elementos con la misma función usan mismo tamaño, peso, interlineado y tratamiento en todas las pestañas.
+5. Sistema cromático semántico único. Mismo significado = mismo color en toda Fluxia.
+6. Componentes coherentes: cabecera, selector mensual, tarjetas, botones, iconos, estados, importes, radios, sombras y espaciados comparten tokens/patrones.
+7. Mobile-first: compacto, centrado, premium, varias operaciones visibles por viewport. Cabecera discreta y simétrica.
+8. Identidad comercios: logo real solo con coincidencia fiable; sin activo fiable, icono semántico. Esta capa nunca puede cambiar fuente de datos ni lógica.
+9. No acumular parches contradictorios. Corregir selector/regla fuente y validar especificidad.
+10. CADA MEJORA SUMA; NINGUNA MEJORA SACRIFICA INTEGRIDAD.
+v96.91 parte funcionalmente de v96.82 validada y solo añade sistema CSS visual.
