@@ -1,4 +1,4 @@
-name: Fix ghost bank decisions v97.00
+name: Fix ghost bank decisions v97.00 retry
 on:
   push:
     branches: [main]
