@@ -1,0 +1,69 @@
+name: Fix ghost bank decisions v97.00
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/fix-ghost-bank-v9700.yml']
+permissions:
+  contents: write
+concurrency:
+  group: fluxia-publisher
+  cancel-in-progress: false
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Patch durable bank decisions
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html'); s=p.read_text()
+          marker='</body>'
+          patch=r'''
+<script id="fluxia-v9700-ghost-bank-kill">
+(function(){
+'use strict';
+var K='fluxia_bank_final_decisions_v9700_';
+function pid(){try{return String(window.FLUXIA_PROFILE&&FLUXIA_PROFILE.id||'global')}catch(e){return'global'}}
+function norm(x){try{return String(x||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'').slice(0,80)}catch(e){return String(x||'').toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,80)}}
+function sig(x){return norm(x&&x.banco||'')+'|'+Math.round(Math.abs(Number(x&&x.importe)||0)*100)+'|'+norm(x&&x.concepto||'')}
+function read(){var o={};try{var raw=localStorage.getItem(K+pid());if(raw)o=JSON.parse(raw)||{}}catch(e){}try{if(typeof Almacen!=='undefined'&&Almacen.getItem){var raw2=Almacen.getItem(K+pid());var n=typeof raw2==='string'?JSON.parse(raw2):raw2;if(n&&typeof n==='object')Object.assign(o,n)}}catch(e){}return o}
+function save(o){var raw=JSON.stringify(o||{});try{localStorage.setItem(K+pid(),raw)}catch(e){}try{if(typeof Almacen!=='undefined'&&Almacen.setItem)Almacen.setItem(K+pid(),raw)}catch(e){}try{if(window.FluxiaEspejo&&FluxiaEspejo.decisionANube)FluxiaEspejo.decisionANube()}catch(e){}}
+function lookup(id){try{var a=(typeof movimientos!=='undefined'&&Array.isArray(movimientos))?movimientos:[];var m=a.find(function(x){return x&&String(x.id)===String(id)});if(m)return m}catch(e){}try{var q=JSON.parse(localStorage.getItem('fluxia_banco_fijos_pend_v1_'+pid())||'[]');return q.find(function(x){return x&&String(x.movId)===String(id)})||null}catch(e){return null}}
+function remember(id,action){var x=lookup(id);if(!x)return;var f=sig(x);if(!f)return;var o=read();o[f]={action:action,ts:Date.now(),id:String(id)};save(o)}
+function purge(){
+ try{
+  var o=read(), key='fluxia_banco_fijos_pend_v1_'+pid(), a=JSON.parse(localStorage.getItem(key)||'[]');if(!Array.isArray(a))return 0;
+  var b=a.filter(function(x){return !o[sig(x)]});if(b.length!==a.length){localStorage.setItem(key,JSON.stringify(b));try{if(typeof Almacen!=='undefined'&&Almacen.setItem)Almacen.setItem(key,JSON.stringify(b))}catch(e){}}
+  return a.length-b.length;
+ }catch(e){return 0}
+}
+document.addEventListener('click',function(e){
+ var b=e.target&&e.target.closest?e.target.closest('[data-bf-never],[data-bf-dup],[data-bf-no],[data-bf-ok]'):null;if(!b)return;
+ var id=b.getAttribute('data-bf-never')||b.getAttribute('data-bf-dup')||b.getAttribute('data-bf-no')||b.getAttribute('data-bf-ok');
+ var action=b.hasAttribute('data-bf-never')?'never':b.hasAttribute('data-bf-dup')?'duplicate':b.hasAttribute('data-bf-no')?'other':'yes';
+ remember(id,action);setTimeout(purge,0);
+},true);
+window.FluxiaGhostBank9700={purge:purge,read:read};
+function run(){var n=purge();if(n){try{if(window.FluxiaBancoFijos&&FluxiaBancoFijos.pintarBanner)FluxiaBancoFijos.pintarBanner()}catch(e){}}}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(run,400)},{once:true});else setTimeout(run,400);
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')setTimeout(run,0)},{passive:true});
+try{if(typeof Almacen!=='undefined'&&Almacen.onGuardado)Almacen.onGuardado(function(){setTimeout(run,0)})}catch(e){}
+})();
+</script>
+'''
+          if 'fluxia-v9700-ghost-bank-kill' not in s:s=s.replace(marker,patch+'\n'+marker)
+          s=s.replace('v96.99-LAB','v97.00-LAB').replace('96.99-LAB','97.00-LAB')
+          p.write_text(s)
+          Path('index_fluxia_v97.00_LAB.html').write_text(s)
+          PY
+          cp index.html index_fluxia_v96.99_LAB.html
+          git config --local user.name github-actions
+          git config --local user.email actions@github.com
+          git add index.html index_fluxia_v96.99_LAB.html index_fluxia_v97.00_LAB.html
+          git commit -m "v97.00 stop ghost bank prompts with durable final decisions"
+          for i in 1 2 3 4 5; do git fetch origin main; git rebase origin/main; git push origin HEAD:main && exit 0; sleep 3; done
+          exit 1
