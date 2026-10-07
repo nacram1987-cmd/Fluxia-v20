@@ -1,0 +1,27 @@
+name: Build Fluxia LAB
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/build_lab.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build-lab:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build v96.57 LAB
+        run: python tools/build_lab.py
+      - name: Commit generated LAB
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index_fluxia_v96.57_LAB.html CHECKLIST_v96.57.txt manifest_v96.57_LAB.webmanifest fluxia-sw-v96.57.js
+          git diff --cached --quiet || git commit -m "build: Fluxia v96.57 LAB"
+          git push
