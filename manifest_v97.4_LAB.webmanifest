@@ -1,0 +1,9 @@
+{
+  "name": "Fluxia BETA",
+  "short_name": "Fluxia BETA",
+  "start_url": "./index_fluxia_v97.4_LAB.html?v=97.4&pwa=1",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7fbfa",
+  "theme_color": "#8EC5E5"
+}
