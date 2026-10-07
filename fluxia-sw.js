@@ -1,6 +1,6 @@
-const VERSION='v97.01-RECOVERY';
+const VERSION='v97.1-LAB';
 const CACHE='fluxia-root-'+VERSION;
-const ENTRY='./index.html?recovery=15fb65f';
+const ENTRY='./index_fluxia_v97.1_LAB.html?v=97.1';
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.add(ENTRY).catch(()=>undefined)));});
 self.addEventListener('activate',e=>{e.waitUntil(Promise.all([caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('fluxia-root-')&&k!==CACHE).map(k=>caches.delete(k)))),self.clients.claim()]));});
 self.addEventListener('message',e=>{if(e.data&&e.data.type==='SKIP_WAITING')self.skipWaiting();});
