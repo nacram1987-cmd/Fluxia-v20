@@ -1,0 +1,25 @@
+FLUXIA v96.58-LAB — RECOVERY DE RENDIMIENTO
+
+CAMBIO DE ESTRATEGIA
+- Se abandona v96.57 como base de navegación: el usuario reporta retardos cercanos a un minuto.
+- v96.58 se reconstruye desde index_fluxia_v94.80_LAB.html, benchmark que el usuario validó expresamente como rápido.
+
+AÑADIDO
+- Identidad v96.58-LAB y distintivo RECOVERY para evitar confundirla con otras LAB.
+
+ELIMINADO POR ARQUITECTURA
+- No se arrastra ninguna capa global añadida entre v94.81 y v96.57.
+- No se añaden nuevos observers, polling, wrappers de rendimiento ni listeners globales.
+
+OBJETIVO DE ESTA LAB
+- Aislar si la regresión extrema de menú/pestañas/scroll está en las capas acumuladas posteriores a v94.80.
+- Recuperar navegación inmediata antes de portar, de forma selectiva, las funciones financieras modernas.
+
+IMPORTANTE
+- Esta LAB NO se promueve a estable.
+- NO se usa todavía como fuente de verdad para introducir datos financieros nuevos hasta validar qué funciones modernas faltan respecto a v96.57.
+- La estable index.html no se toca.
+
+PRUEBA SOLICITADA
+- Safari: login, Dashboard, menú, Dashboard→Variables→Fijos→Bancos, abrir/cerrar desplegables y scroll.
+- La pregunta de esta LAB es una sola: ¿ha vuelto la velocidad de v94.80?
