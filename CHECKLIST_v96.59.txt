@@ -1,0 +1,24 @@
+FLUXIA v96.59-LAB — FAST-SAFE BASE
+
+AÑADIDO
+- Primera base de trabajo derivada de la v96.58 validada como ultrarrápida.
+- Blindaje NO-PURGE aplicado únicamente si los símbolos legacy existen, sin añadir listeners/timers/observers.
+
+MODIFICADO
+- Identidad v96.59-LAB / FAST-SAFE.
+
+ELIMINADO / CONSOLIDADO
+- Ninguna capa moderna de v96.57 se reintroduce en bloque.
+
+BLINDADO / NO TOCADO
+- Arquitectura de navegación v94.80/v96.58.
+- index.html ESTABLE.
+- Cero nuevos listeners, observers, polling o render wrappers.
+
+PRUEBAS DE BUILD
+- Fuente v96.58 -> v96.59 generada sin reconstruir navegación.
+- Build determinista y publicación automática.
+- La validación funcional real de datos/cloud/bancos sigue siendo obligatoria antes de promover.
+
+SIGUIENTE PORTABILIDAD
+- Persistencia cloud e integridad financiera moderna, por bloques pequeños y medibles.
