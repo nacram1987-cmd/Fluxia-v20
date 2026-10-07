@@ -1,90 +1,46 @@
-/* Fluxia · PWA canónica permanente
- * La PWA siempre abre ./index.html (última LAB publicada).
- * Los HTML numerados quedan como histórico/rollback, no como entrada PWA.
- * API y datos financieros nunca se cachean.
- */
-const CACHE = 'fluxia-canonical-v20';
-const CANONICAL = './index.html';
-const BASE = [CANONICAL, './manifest.webmanifest', './icon-192.png', './icon-512.png'];
+const CACHE_VERSION='fluxia-shell-v97.6-fast';
+const ENTRY='./index.html';
 
-self.addEventListener('install', event => {
-  self.skipWaiting();
-  event.waitUntil(
-    caches.open(CACHE).then(cache => cache.addAll(BASE)).catch(() => {})
-  );
+self.addEventListener('install',event=>{self.skipWaiting();});
+
+self.addEventListener('activate',event=>{
+  event.waitUntil((async()=>{
+    for(const key of await caches.keys()){
+      if(key.startsWith('fluxia-shell-')&&key!==CACHE_VERSION) await caches.delete(key);
+    }
+    await self.clients.claim();
+  })());
 });
 
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key))))
-      .then(() => self.clients.claim())
-  );
-});
+self.addEventListener('fetch',event=>{
+  const r=event.request;
+  if(r.method!=='GET') return;
 
-self.addEventListener('fetch', event => {
-  const req = event.request;
-  if (req.method !== 'GET') return;
+  const u=new URL(r.url);
+  if(u.origin!==self.location.origin) return;
 
-  const url = new URL(req.url);
+  // Datos/API: no intervenir.
+  if(/^\/(auth|v1|health)(\/|$)/.test(u.pathname)) return;
 
-  // Datos/autenticación: siempre servidor, jamás caché.
-  if (url.origin === self.location.origin && /^\/(auth|v1|health)(\/|$)/.test(url.pathname)) return;
-
-  if (/fonts\.(googleapis|gstatic)\.com$/.test(url.hostname)) {
-    event.respondWith(
-      caches.match(req).then(hit => hit || fetch(req).then(res => {
-        const copy = res.clone();
-        caches.open(CACHE).then(cache => cache.put(req, copy));
-        return res;
-      }))
-    );
+  // Navegación: respetar la página ya abierta. Red primero sin reescribir
+  // cada apertura a index.html; fallback a la shell canónica si no hay red.
+  if(r.mode==='navigate'){
+    event.respondWith((async()=>{
+      try{
+        const response=await fetch(r);
+        if(response&&response.ok){
+          const cache=await caches.open(CACHE_VERSION);
+          cache.put(ENTRY,response.clone()).catch(()=>{});
+        }
+        return response;
+      }catch(e){
+        return (await caches.match(r))||(await caches.match(ENTRY))||Response.error();
+      }
+    })());
     return;
   }
 
-  if (url.origin !== self.location.origin) return;
-
-  // PWA: cualquier navegación dentro del scope abre SIEMPRE la entrada canónica.
-  // Así una instalación antigua cuyo start_url fuese index_fluxia_vXX_LAB.html
-  // recibe la LAB actual sin reinstalar.
-  if (req.mode === 'navigate') {
-    event.respondWith(
-      fetch(CANONICAL, { cache: 'no-store' }).then(res => {
-        if (res && res.ok) {
-          const copy = res.clone();
-          caches.open(CACHE).then(cache => cache.put(CANONICAL, copy));
-        }
-        return res;
-      }).catch(() => caches.match(CANONICAL).then(r => r || caches.match('./')))
-    );
-    return;
-  }
-
-  // Peticiones HTML no navegacionales: red primero.
-  if (/\.html$/.test(url.pathname) || url.pathname.endsWith('/')) {
-    event.respondWith(
-      fetch(req, { cache: 'no-store' }).then(res => {
-        if (res && res.ok) {
-          const copy = res.clone();
-          caches.open(CACHE).then(cache => cache.put(req, copy));
-        }
-        return res;
-      }).catch(() => caches.match(req).then(r => r || caches.match(CANONICAL)))
-    );
-    return;
-  }
-
-  // Assets propios: caché rápida + actualización en segundo plano.
-  event.respondWith(
-    caches.match(req).then(hit => {
-      const network = fetch(req).then(res => {
-        if (res && res.ok) {
-          const copy = res.clone();
-          caches.open(CACHE).then(cache => cache.put(req, copy));
-        }
-        return res;
-      }).catch(() => hit);
-      return hit || network;
-    })
-  );
+  // Assets: comportamiento nativo del navegador para máxima velocidad.
+  // Solo fallback a caché si falla la red.
+  event.respondWith(fetch(r).catch(()=>caches.match(r)));
 });
