@@ -1,64 +1,17 @@
-const VERSION='v96.98-LAB';
-const CACHE='fluxia-shell-'+VERSION;
-const APP_SHELL=[
-  './',
-  './index_fluxia_v96.98_LAB.html?v=v96.98-LAB',
-  './fluxia-ui-v96.95.css',
-  './manifest_v96.96_LAB.webmanifest'
-];
-
-self.addEventListener('install',event=>{
-  self.skipWaiting();
-  event.waitUntil(
-    caches.open(CACHE).then(cache=>cache.addAll(APP_SHELL).catch(()=>undefined))
-  );
-});
-
-self.addEventListener('activate',event=>{
-  event.waitUntil(
-    Promise.all([
-      caches.keys().then(keys=>Promise.all(
-        keys.filter(key=>key.startsWith('fluxia-shell-') && key!==CACHE)
-            .map(key=>caches.delete(key))
-      )),
-      self.clients.claim()
-    ])
-  );
-});
-
-self.addEventListener('message',event=>{
-  if(event.data && event.data.type==='SKIP_WAITING') self.skipWaiting();
-});
-
-self.addEventListener('fetch',event=>{
-  const req=event.request;
-  if(req.method!=='GET') return;
-  const url=new URL(req.url);
-
-  if(req.mode==='navigate'){
-    event.respondWith(
-      fetch(req,{cache:'no-store'})
-        .then(response=>{
-          const copy=response.clone();
-          caches.open(CACHE).then(cache=>cache.put(req,copy));
-          return response;
-        })
-        .catch(()=>caches.match(req).then(r=>r||caches.match('./index_fluxia_v96.98_LAB.html?v=v96.98-LAB')))
-    );
-    return;
-  }
-
-  if(url.origin===self.location.origin){
-    event.respondWith(
-      fetch(req,{cache:'no-cache'})
-        .then(response=>{
-          if(response && response.ok){
-            const copy=response.clone();
-            caches.open(CACHE).then(cache=>cache.put(req,copy));
-          }
-          return response;
-        })
-        .catch(()=>caches.match(req))
-    );
-  }
+const VERSION='v96.99-MIGRATION';
+const CACHE='fluxia-migrate-'+VERSION;
+const ENTRY='./?v=v96.99-LAB';
+self.addEventListener('install',e=>{self.skipWaiting();});
+self.addEventListener('activate',e=>{e.waitUntil(Promise.all([
+ caches.keys().then(keys=>Promise.all(keys.filter(k=>/fluxia/i.test(k)).map(k=>caches.delete(k)))),
+ self.clients.claim(),
+ self.clients.matchAll({type:'window',includeUncontrolled:true}).then(cs=>Promise.all(cs.map(c=>c.navigate(ENTRY).catch(()=>undefined))))
+]));});
+self.addEventListener('fetch',e=>{
+ if(e.request.method!=='GET')return;
+ if(e.request.mode==='navigate'){
+   e.respondWith(fetch(ENTRY,{cache:'no-store',redirect:'follow'}).catch(()=>fetch(e.request,{cache:'no-store'})));
+   return;
+ }
+ e.respondWith(fetch(e.request,{cache:'no-cache'}).catch(()=>caches.match(e.request)));
 });
