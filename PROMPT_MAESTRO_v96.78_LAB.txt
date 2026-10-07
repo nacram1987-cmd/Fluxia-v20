@@ -1,0 +1,5 @@
+# PROMPT MAESTRO FLUXIA · v96.78-LAB
+Fecha: 7 octubre 2026
+LEY IMPERIAL: integridad financiera, nube fuente de verdad, cero resurrecciones, cero duplicados, CAS/tombstones, Disponible sin ajustes ficticios, Variables v96.76 preservado, interfaz v96.45 preservada, LAB no sustituye ESTABLE sin validación.
+HUCHAS v96.78: para el bloque legacy demostrado de exactamente 7 provisiones, reconciliar el histórico confirmado a 2.817,88 €. Anclas: Boda Ana 150 €, Mantenimiento Césped 70 €, Agua 110 €. Restantes documentadas: Amortización 1.268,01 €, Renta 492,15 €, Tributos 390,48 €, Seguro coche 337,24 €. Corrección retroactiva; no debe alterar Disponible actual. Nunca aplicar a usuario nuevo ni a una colección que no tenga la firma legacy exacta.
+ENTREGA: toda versión debe quedar publicada en LAB y acompañada por artefacto descargable en chat cuando sea técnicamente posible.
