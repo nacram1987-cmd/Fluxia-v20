@@ -1,0 +1,13 @@
+{
+  "version": "v96.94-LAB",
+  "checks": {
+    "html_and_legacy_index_identical": true,
+    "inline_javascript_blocks": 151,
+    "inline_javascript_node_syntax": "passed",
+    "css_rules": 121,
+    "css_parse_errors": 0,
+    "manifest_start_url": "./index_fluxia_v96.94_LAB.html?v=v96.94-LAB",
+    "browser_visual_qa": "pending published-site check; local Chromium and loopback server blocked by sandbox"
+  },
+  "scope": "CSS-only change; no financial or cloud logic changed."
+}
