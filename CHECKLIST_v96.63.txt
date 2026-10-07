@@ -1,0 +1,29 @@
+FLUXIA v96.63-LAB — RECUPERACIÓN VISUAL FASE 2
+
+AÑADIDO
+- Lenguaje visual del Dashboard extendido a módulos de la aplicación.
+- Tarjetas compactas y coherentes en Variables, Fijos, Financiaciones, Provisiones/Huchas y Compartidos.
+- Formularios, selectores, botones, badges e importes armonizados con marca Fluxia.
+- Bancos compactado visualmente, incluida zona de sincronización.
+- Estados vacíos y títulos de sección alineados con estética premium.
+
+MODIFICADO
+- CSS visual global exclusivamente.
+
+ELIMINADO / CONSOLIDADO
+- Ninguna capa JS añadida.
+- Cero listeners/observers/polling/timers/render wrappers nuevos.
+
+BLINDADO / NO TOCADO
+- FAST-SAFE validada hasta v96.62.
+- ESTABLE index.html.
+- Motores financieros, persistencia y navegación de la base.
+
+PRUEBAS
+- Build determinista desde v96.62.
+- Cero JS nuevo.
+- Identidad v96.63 consistente.
+- Debe conservar fluidez perceptible de v96.62.
+
+SIGUIENTE
+- Fase 3: pulido premium final y candidata visual FAST-SAFE.
