@@ -1,0 +1,15 @@
+FLUXIA v96.67-LAB — DASHBOARD MODERNO + IDENTIDAD
+
+AÑADIDO
+- Intento de trasplante estructural del Dashboard moderno desde v96.35: NO ENCONTRADO; se conserva estructura FAST-SAFE.
+- Bridge de nombre visible: la interfaz no usa el correo como nombre; prioriza nombre/displayName existente y usa Nacho como fallback visual.
+- Email oculto en posiciones de identidad visual cuando existe selector específico.
+
+BLINDADO
+- Sin scripts de runtime de v96.35.
+- Un único DOMContentLoaded once para identidad; cero observers, polling, intervals o timers.
+- FAST-SAFE v96.64/66 y ESTABLE intactas.
+
+PRUEBA
+- Debe conservar fluidez v96.66.
+- Verificar Dashboard y menú/Preferencias: nombre visible, no correo como identidad.
