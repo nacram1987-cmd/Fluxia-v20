@@ -4106,7 +4106,7 @@ html body .panel:not(#panel-resumen) .pv-gen-btn{font-family:var(--fx-ui-font)!i
 </script>
 
 <link rel="stylesheet" href="./fluxia-ui-v96.95.css">
-<style id="fluxia-v9716-unified-tabs">
+<style id="fluxia-v9717-unified-tabs">
 /* v97.16 · lenguaje visual único en módulos; Dashboard conserva identidad propia */
 body .panel:not(#panel-dashboard){--fxu-radius:16px;--fxu-pad:14px;}
 body .panel:not(#panel-dashboard) .sec-head{min-height:44px;margin:0 0 10px;padding:0 2px;display:flex;align-items:center;gap:9px;}
@@ -4122,7 +4122,7 @@ body .panel:not(#panel-dashboard) .mov-item{padding:11px 12px!important;margin-b
 body .panel:not(#panel-dashboard) .hint{color:var(--muted);line-height:1.4;}
 body .panel:not(#panel-dashboard) button{touch-action:manipulation;}
 </style>
-<style id="fluxia-v9716-unified-ui">
+<style id="fluxia-v9717-unified-ui">
 /* v97.16 · lenguaje visual común; Dashboard conserva su cromática propia */
 .panel:not(#panel-dashboard){max-width:100%;}.panel:not(#panel-dashboard)>.sec-head{min-height:52px;padding:10px 12px;margin:0 0 10px;border:1px solid var(--line);border-radius:14px;background:var(--surface);}
 .panel:not(#panel-dashboard)>.sec-head .sec-title{font-size:1.02rem;margin:0}.panel:not(#panel-dashboard)>.sec-head .sec-icon{font-size:1.15rem}
@@ -4130,7 +4130,7 @@ body .panel:not(#panel-dashboard) button{touch-action:manipulation;}
 .fx-month-wide button{height:38px;border:0;border-radius:11px;background:var(--surface-2);font-size:1.35rem;color:var(--ink);font-weight:700}.fx-month-wide .fxmw-label{text-align:center;font-weight:800;color:var(--ink);font-size:.9rem}.fx-month-wide .fxmw-label small{display:block;font-size:.67rem;color:var(--muted);font-weight:600;margin-top:1px}
 .pv-deficit{margin:8px 0;padding:8px 10px;border:1px solid var(--gold);border-radius:10px;background:var(--gold-soft);font-size:.76rem;color:var(--ink)}
 @media(max-width:600px){.panel{padding-left:12px!important;padding-right:12px!important}.fx-month-wide{width:100%;margin-left:0;margin-right:0}}
-</style><style id="fluxia-v9716-unified-tabs">
+</style><style id="fluxia-v9717-unified-tabs">
 :root{--fx-tab-card:#fff;--fx-tab-soft:#f7fafc;--fx-tab-border:rgba(20,62,85,.10)}
 #mesSelectGlobal{width:calc(100% - 24px)!important;max-width:760px!important;margin:8px auto 14px!important;box-sizing:border-box!important}
 #mesSelectGlobal>div{width:100%!important;display:flex!important;justify-content:space-between!important;align-items:center!important}
@@ -4140,6 +4140,24 @@ body .panel:not(#panel-dashboard) button{touch-action:manipulation;}
 .panel:not(#panel-resumen)>.hint{margin-top:6px!important}
 .panel:not(#panel-resumen) .tu-mes-like,.panel:not(#panel-resumen) .pv-hero,.panel:not(#panel-resumen) .cv-hero{border-radius:16px!important;border:1px solid var(--fx-tab-border)!important;box-shadow:0 4px 14px rgba(20,62,85,.05)!important}
 @media(max-width:520px){#mesSelectGlobal{width:calc(100% - 16px)!important;margin-left:8px!important;margin-right:8px!important}}
+</style><style id="fluxia-v9717-ui-authority">
+/* Dashboard: old embedded month control is retired; the wide selector is the only authority. */
+#panel-resumen .fx30-monthctl{display:none!important}
+.fxmw{width:100%!important;max-width:none!important;min-height:74px!important;margin:0 0 16px!important;box-sizing:border-box!important}
+.fxmw-nav{width:100%!important;min-height:74px!important;display:grid!important;grid-template-columns:56px 1fr 56px!important;align-items:center!important}
+.fxmw-label{min-height:52px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important}
+.fxmw-label small{display:block!important;min-height:18px!important;margin-top:2px!important}
+#panel-resumen .fxmw{margin-top:0!important}
+/* Variables: restore compact readable rows; actions no longer consume a second half-card. */
+#gvMovimientosView .mov-item{min-height:82px!important;padding:13px 14px!important;display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:8px 12px!important;align-items:center!important}
+#gvMovimientosView .mov-item>div:first-child{min-width:0!important}
+#gvMovimientosView .mov-item .concepto{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#gvMovimientosView .mov-item>div:last-child{display:grid!important;grid-template-columns:auto repeat(4,32px)!important;gap:3px!important;align-items:center!important}
+#gvMovimientosView .mov-item button{width:32px!important;height:32px!important;min-width:32px!important;min-height:32px!important;padding:0!important;border:0!important;background:transparent!important;font-size:.92rem!important}
+#gvMovimientosView .mov-item .importe{margin-right:4px!important;white-space:nowrap!important}
+@media(max-width:430px){#gvMovimientosView .mov-item{grid-template-columns:1fr!important}#gvMovimientosView .mov-item>div:last-child{grid-template-columns:1fr repeat(4,30px)!important;width:100%!important}#gvMovimientosView .mov-item button{width:30px!important;height:30px!important;min-width:30px!important;min-height:30px!important}}
+/* Avoid expensive entrance animation on iPhone tab switches. */
+.panel.active{animation:none!important}
 </style></head>
 <script>
 window._offlineMode=!navigator.onLine;
@@ -4576,6 +4594,18 @@ body {
   function renderProfiles(){
     // Nunca mostrar dummies en la lista
     var profiles=getProfiles().filter(function(p){ return esUsuarioReal(p); });
+    try{
+      function _hasFinance(pr){
+        if(!pr||!pr.id)return false;var pref='fluxia_user_'+pr.id+'__';
+        for(var ii=0;ii<localStorage.length;ii++){var kk=localStorage.key(ii)||'';if(kk.indexOf(pref)===0&&/planRescate_v2_(ingresos|fijos|movimientos|provisiones|config_plan)/.test(kk)){var vv=localStorage.getItem(kk);if(vv&&vv!=='[]'&&vv!=='{}'&&vv!=='null')return true;}}
+        return false;
+      }
+      var owner=profiles.find(function(p){return p&&p.principal&&_hasFinance(p);})||profiles.find(_hasFinance);
+      if(owner){
+        profiles=profiles.filter(function(p){return p===owner||_hasFinance(p)||fxNormProfileName9615(p.name)!=='nacho';});
+        owner._fxDisplayName='Nacho';
+      }
+    }catch(_iderr){}
     list.innerHTML='';
     msg.classList.remove('ok');
     if(!profiles.length){
@@ -4589,7 +4619,7 @@ body {
     profiles.forEach(function(pr){
       var wrap=document.createElement('div');wrap.className='fpg-user-wrap';
       var b=document.createElement('button');b.type='button';b.className='fpg-user-btn';
-      var nom=String(pr.name||'Usuario').replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});
+      var nom=String(pr._fxDisplayName||pr.name||'Usuario').replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});
       b.innerHTML='<span>'+(pr.principal?'⭐ ':'👤 ')+nom+'<small>'+(pr.principal?'Principal · entra solo':'Sesión guardada en este dispositivo')+'</small></span><span>Entrar →</span>';
       if(pr.principal) b.classList.add('fpg-principal');
       b.addEventListener('click',function(){
@@ -15518,20 +15548,20 @@ function iconoProvision(nombre){
   return '🏺';
 }
 
-function fxReconciliarCesped70V9716(){
+function fxReconciliarCesped70V9717(){
   try{
     var p=(provisiones||[]).find(function(x){return /mantenimiento\s+c[eé]sped/i.test(String(x&&x.nombre||''));});
-    if(!p||p._fxCesped70V9716===true)return false;
+    if(!p||p._fxCesped70V9717===true)return false;
     p.aportaciones=p.aportaciones||{};
     var all=[];
     Object.keys(p.aportaciones).forEach(function(m){(p.aportaciones[m]||[]).forEach(function(a){all.push({mes:m,a:a});});});
     var total=all.reduce(function(t,x){return t+(Number(x.a&&x.a.importe)||0);},0);
-    if(total<=70.005){p._fxCesped70V9716=true;p._fxUpdatedAt=Date.now();guardarProvisiones();return false;}
+    if(total<=70.005){p._fxCesped70V9717=true;p._fxUpdatedAt=Date.now();guardarProvisiones();return false;}
     all.sort(function(a,b){return String(a.a&&a.a.fecha||'').localeCompare(String(b.a&&b.a.fecha||''));});
     var rebuilt={},running=0;
     all.forEach(function(x){var v=Number(x.a&&x.a.importe)||0;if(v>0&&running+v<=70.005){(rebuilt[x.mes]||(rebuilt[x.mes]=[])).push(x.a);running+=v;}});
     if(running<69.995){var diff=_r2(70-running);(rebuilt.septiembre||(rebuilt.septiembre=[])).push({id:'fx9714_cesped_reconcile',fecha:'2026-09-30',importe:diff,origen:'conciliacion-confirmada-v97.16'});}
-    p.aportaciones=rebuilt;p._fxCesped70V9716=true;p._fxCesped70Before=_r2(total);p._fxUpdatedAt=Date.now();
+    p.aportaciones=rebuilt;p._fxCesped70V9717=true;p._fxCesped70Before=_r2(total);p._fxUpdatedAt=Date.now();
     guardarProvisiones();
     try{mostrarToast('✓ Mantenimiento césped reconciliado a 70,00 €','var(--teal)',2600);}catch(e){}
     return true;
@@ -15540,7 +15570,7 @@ function fxReconciliarCesped70V9716(){
 
 function renderProvisiones(){
   if(window.FluxiaSync954){provisiones=JSON.parse(FluxiaSync954.mergeCloudValue('v2_provisiones',JSON.stringify(provisiones),'[]',Almacen.getItem('v2_sync_tombstones'),null,Almacen.getItem('v2_sync_restores'),null,Almacen.getItem('v2_explicit_deletions'),null));usosProvisiones=usosProvisiones.filter(function(x){return !FluxiaSync954.isDeleted('v2_usos',x.id);});}
-  try{ fxReconciliarCesped70V9716(); }catch(e){}
+  try{ fxReconciliarCesped70V9717(); }catch(e){}
   try{ pintarAvisoProvTab(); }catch(e){}
   document.getElementById('provMesLabel').textContent = MES_LABEL[mesSeleccionado];
   const hintEl = document.getElementById('provMesLabelHint');
@@ -28116,7 +28146,7 @@ button,a,[role="button"],[data-tab]{touch-action:manipulation;-webkit-tap-highli
  document.addEventListener('fluxia:splash-fin',refresh,{once:true});
 })();
 </script>
-<script id="fluxia-v9716-wide-month">
+<script id="fluxia-v9717-wide-month">
 (function(){'use strict';
  function draw(){
   try{
@@ -28130,7 +28160,7 @@ button,a,[role="button"],[data-tab]{touch-action:manipulation;-webkit-tap-highli
   }catch(e){}
  }
  function refresh(){try{document.querySelectorAll('.fxmw-label').forEach(function(el){el.innerHTML=(MES_LABEL[mesSeleccionado]||mesSeleccionado)+'<small>'+(mesSeleccionado===MES_ACTUAL_REAL?('Hoy · '+new Date().getDate()+' de '+String(MES_LABEL[MES_ACTUAL_REAL]||'').toLowerCase()):'Mes seleccionado')+'</small>';});}catch(e){}}
- window.FluxiaWideMonth9716={draw:draw,refresh:refresh};
+ window.FluxiaWideMonth9717={draw:draw,refresh:refresh};
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',draw,{once:true});else draw();
  document.addEventListener('fluxia:splash-fin',draw,{once:true});
 })();
@@ -38828,7 +38858,7 @@ html body #fxDashboard67 #fx50AvailableNote{font-size:10px!important;color:#5d76
 })();
 </script>
 <!-- FLUXIA_BUILD: v97.18-LAB | MODEL3_FAITHFUL | PERF_CONSOLIDATED | CASH_PROVISION | PWA_FAST_RESUME -->
-<style id="fluxia-v9716-variables-compact">
+<style id="fluxia-v9717-variables-compact">
 #gvMovimientosView .mov-item{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:7px 10px!important;align-items:start!important;padding:10px 11px!important}
 #gvMovimientosView .mov-item>div:first-child{min-width:0!important}
 #gvMovimientosView .mov-item>div:first-child .concepto{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:100%!important}
