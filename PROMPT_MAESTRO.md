@@ -718,3 +718,7 @@ Para cualquier cambio visual de Fluxia se seguirá, por defecto, este flujo de t
 7. Este método prevalece como flujo normal para decisiones de diseño visual: CAPTURA REAL → MODELOS REALES → ELECCIÓN → IMPLEMENTACIÓN FIEL → PRUEBA EN LAB.
 
 Objetivo: reducir iteraciones a ciegas, acercar el resultado final a la intención visual del usuario y proteger simultáneamente la integridad funcional de Fluxia.
+
+8. Cuando se presenten propuestas visuales, no se limitarán a dos o tres alternativas casi idénticas. Se entregará por defecto una batería amplia de modelos reales y técnicamente reproducibles, normalmente entre 6 y 10 cuando el componente lo permita. Deben incluir tanto variaciones refinadas de la línea visual actual como alternativas de estilo claramente distintas (composición, geometría, transparencia, jerarquía, densidad, ubicación de controles y tratamiento cromático), para que el usuario pueda comparar y decidir si conserva, combina o cambia de dirección estética.
+9. Todos los modelos se aplicarán sobre la captura/interfaz real aportada por el usuario, conservando datos, textos, contexto y proporciones reconocibles. Las propuestas no deben ser simples descripciones: siempre que sea viable se mostrarán visualmente como bocetos/mockups reales antes de implementar.
+10. La cantidad de modelos no justifica degradar su calidad: cada alternativa debe ser premium, coherente con Fluxia, legible, compacta, implementable y respetuosa con la integridad funcional.
