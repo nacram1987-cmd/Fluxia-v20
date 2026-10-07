@@ -1,0 +1,36 @@
+FLUXIA v96.56-LAB — CANDIDATA, NO ESTABLE
+
+INTEGRIDAD PRESERVADA
+- index.html y todos los archivos previamente rastreados del repositorio: sin modificar.
+- index.html SHA256 previo: d8bb904a4b81307442624e71befedd12b808fb6c4472599e816e0c23b3afdd66
+- Contabilidad v96.49, bankRef/bancoRef, banco→fijo y Supabase: código preservado.
+- Purga histórica desactivada permanentemente.
+
+SOLUCIONADO
+- LAB ya no desregistra el worker ESTABLE ni borra sus cachés.
+- Registro único de worker con ámbito LAB específico, esperando su propia activación.
+- Manejadores push y notificationclick existentes trasladados al archivo real.
+- Notificación LAB no enfoca una ventana ESTABLE.
+
+CONSOLIDACIÓN
+- Eliminada cleanAndOwn (registro/limpieza duplicados).
+- Eliminado worker v5 expresamente inactivo, sustituido por FluxiaSW desde v93.3.
+- Eliminado fallback blob inválido: ensureSW delega en FluxiaSW.
+- Sin nuevos wrappers ni timers de rendimiento. Listener de activación puntual se retira al terminar.
+
+PRUEBAS LOCALES SUPERADAS
+- 130 elementos script reales analizados + worker: sin errores de sintaxis.
+- Chromium, viewport móvil: cero pageerror en arranque y recorrido de nueve pestañas.
+- Gasto bancario -100/+100: Disponible cambia -100 en ambos casos.
+- Duplicados de bancoRef: se fusionan, segundo pase no altera el resultado.
+- Traspaso marcado propio: impacto 0.
+- Endesa banco→fijo: Variables 0, pago registrado, impacto total -100 (una vez).
+- FluxiaBancoLimpiar({manual:true}) devuelve 0 y conserva el movimiento.
+- Worker ESTABLE simulado y caché testigo intactos tras arranque LAB; controlador LAB correcto.
+- Menú abre/cierra; nueve pestañas activan el panel correcto.
+
+PENDIENTES, NO DECLARAR SUPERADOS
+- Persistencia autenticada Supabase (guardar, cerrar sesión, reentrar, segundo dispositivo).
+- Sincronización bancaria con datos reales y deduplicación extremo a extremo.
+- Rendimiento real de iPhone/Safari, carga prolongada, push servidor y app instalada.
+- Detector determinista de traspasos con confirmación, fecha/hora real y orden de Variables.

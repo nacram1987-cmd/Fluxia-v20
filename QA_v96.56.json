@@ -1,0 +1,63 @@
+{
+  "isolation": {
+    "title": "Fluxia BETA v96.56-LAB",
+    "version": "v96.56-LAB",
+    "cache": "intact",
+    "regs": [
+      {
+        "scope": "http://127.0.0.1:8770/repo/",
+        "url": "http://127.0.0.1:8770/repo/qa-stable-sw.js"
+      },
+      {
+        "scope": "http://127.0.0.1:8770/repo/index_fluxia_v96.56_LAB.html",
+        "url": "http://127.0.0.1:8770/repo/fluxia-sw-v96.56.js"
+      }
+    ],
+    "controller": "http://127.0.0.1:8770/repo/fluxia-sw-v96.56.js",
+    "registration": "http://127.0.0.1:8770/repo/index_fluxia_v96.56_LAB.html",
+    "sdk": true
+  },
+  "financial": {
+    "purge": 0,
+    "purgeKept": 1,
+    "bankNegativeDelta": -100,
+    "bankPositiveDelta": -100,
+    "dedup": {
+      "ok": true,
+      "quitados": 1
+    },
+    "afterDedup": -100,
+    "secondDedup": {
+      "ok": true,
+      "quitados": 0
+    },
+    "ownTransfer": 0,
+    "fixedBefore": -100,
+    "linkedType": "auto",
+    "linkedVariableTotal": 0,
+    "fixedAfter": -100,
+    "paid": true,
+    "linkedId": "qa-fixed"
+  },
+  "tabs": [
+    "panel-ingresos",
+    "panel-fijos",
+    "panel-gastos-variables",
+    "panel-compartidos",
+    "panel-provisiones",
+    "panel-financiaciones",
+    "panel-ajustes",
+    "panel-ayuda",
+    "panel-resumen"
+  ],
+  "menu": {
+    "opened": "drawer-menu open",
+    "closed": "drawer-menu"
+  },
+  "errors": [],
+  "limitations": [
+    "Synthetic data only; no authenticated Supabase or real bank writes.",
+    "External SDK and Chart.js served from installed official npm packages; fonts omitted.",
+    "Chromium mobile viewport, not Safari/iOS."
+  ]
+}
