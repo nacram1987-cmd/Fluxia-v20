@@ -1,0 +1,20 @@
+{
+  "version": "v96.95-LAB",
+  "checks": {
+    "drawer_financing_tab_removed": true,
+    "legacy_financing_route_redirects_to_fixed_expenses": true,
+    "financing_add_button_inside_fixed_expenses": true,
+    "budget_cash_simulator_primary_cards_marked": true,
+    "chartjs_deferred": true,
+    "data_model_and_financial_functions_present": true,
+    "html_and_legacy_index_identical": true,
+    "inline_javascript_blocks": 151,
+    "inline_javascript_node_syntax": "passed",
+    "css_rules": 134,
+    "css_parse_errors": 0,
+    "manifest_start_url": "./index_fluxia_v96.95_LAB.html?v=v96.95-LAB",
+    "published_browser_smoke_test": "pending after GitHub Pages deployment",
+    "github_publication": "uploaded to main; GitHub Pages deployment pending"
+  },
+  "scope": "visual consistency, navigation and non-blocking chart resource; no financial calculations, persistence or cloud logic changed."
+}
