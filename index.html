@@ -292,10 +292,10 @@ body.fx-dashboard-clean .fx-dashboard67-item.gold:after { content:""; position:a
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="telephone=no" name="format-detection"/>
 <meta content="no" name="msapplication-tap-highlight"/>
-<title>Fluxia BETA v97.19-LAB</title>
+<title>Fluxia BETA v97.20-LAB</title>
 
 <style id="fluxia-v95-75-auth-error-visibility">#fobError:not(:empty){display:block!important;}</style>
-<meta content="v97.19-LAB" name="fluxia-version"/>
+<meta content="v97.20-LAB" name="fluxia-version"/>
 <!-- Fluxia v91 · brand lock · datos jamás a 0 · compartidos saldo inicial · notif suaves · logo alineado · base v90.10 -->
 <script>
 (function(){window.FluxiaNative={isNative:function(){try{return!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())}catch(e){return false}},platform:function(){try{return(window.Capacitor&&Capacitor.getPlatform)?Capacitor.getPlatform():'web'}catch(e){return'web'}}};})();
@@ -609,49 +609,25 @@ window.fluxiaCuandoLibre = function(fn, intentos){
 };
 
 </script>
-<meta content="v97.19-LAB" name="fluxia-version"/>
+<meta content="v97.20-LAB" name="fluxia-version"/>
 <meta content="lab" name="fluxia-channel"/>
-<script>window.FLUXIA_VERSION = "v97.19-LAB";</script>
+<script>window.FLUXIA_VERSION = "v97.20-LAB";</script>
 <script id="fx47-version-integrity-guard">
 (function(){
   'use strict';
-  var EXPECT='v97.19-LAB', SW_FILE='fluxia-sw.js', CACHE='fluxia-root-'+EXPECT;
+  var EXPECT='v97.20-LAB';
   window.FLUXIA_VERSION=EXPECT;
+  window.FLUXIA_BUILD=EXPECT;
   try{
     var m=document.querySelector('meta[name="fluxia-build-id"]');
     if(!m){m=document.createElement('meta');m.name='fluxia-build-id';document.head.appendChild(m);}
     m.content=EXPECT;
   }catch(e){}
-  async function cleanAndOwn(){
-    try{
-      if('caches' in window){
-        var names=await caches.keys();
-        await Promise.all(names.filter(function(n){
-          return /^fluxia(?:-lab|-v|-shell)/i.test(n) && n!==CACHE;
-        }).map(function(n){return caches.delete(n);}));
-      }
-    }catch(e){console.warn('[v97.19-LAB] cache cleanup',e);}
-    try{
-      if('serviceWorker' in navigator){
-        var regs=await navigator.serviceWorker.getRegistrations();
-        var here=new URL('./',location.href).href;
-        for(var i=0;i<regs.length;i++){
-          var r=regs[i], w=r.active||r.waiting||r.installing, u=w&&w.scriptURL||'';
-          var sameRepo=(r.scope||'').indexOf(here)===0 || here.indexOf(r.scope||'')===0;
-          var isCurrent=u.indexOf('/'+SW_FILE)>=0;
-          if(sameRepo && !isCurrent){
-            try{await r.unregister();}catch(_u){}
-          }
-        }
-        try{
-          var reg=await navigator.serviceWorker.register('./'+SW_FILE,{scope:'./',updateViaCache:'none'});
-          if(reg&&reg.update) await reg.update();
-        }catch(_r){console.warn('[v97.19-LAB] register',_r);}
-      }
-    }catch(e){console.warn('[v97.19-LAB] sw cleanup',e);}
-  }
-  window.addEventListener('load',function(){setTimeout(cleanAndOwn,0);},{once:true});
-  window.addEventListener('pageshow',function(){window.FLUXIA_VERSION=EXPECT;},{passive:true});
+  /* El Service Worker es el único dueño del shell PWA. La UI no borra cachés
+     ni registra/actualiza workers en la ruta crítica de arranque. */
+  window.addEventListener('pageshow',function(){
+    window.FLUXIA_VERSION=EXPECT; window.FLUXIA_BUILD=EXPECT;
+  },{passive:true});
 })();
 </script>
 
@@ -3892,10 +3868,10 @@ html body #fxDashboard67 .fx30-hero *,html body #fxDashboard67 .fx67-hero * *{co
 </style>
 
 
-<style id='fluxia-v9676-variables-contain'>#panel-gastos-variables{contain:layout style paint}</style><!-- v97.19-LAB · Huchas canónicas en lectura normal + persistencia; Variables v96.76 preservado -->
-<!-- v97.19-LAB · Reconciliación histórica 2.817,88 € de las 7 Huchas legacy; Variables preservado -->
-<!-- v97.19-LAB · Disponible: autoridad real de Fijos conciliados; Huchas v96.78 preservadas -->
-<!-- v97.19-LAB · Disponible auditado contra nube: dedupe bancario de Ingresos por bancoRef; objetivo derivado 111,96 € -->
+<style id='fluxia-v9676-variables-contain'>#panel-gastos-variables{contain:layout style paint}</style><!-- v97.20-LAB · Huchas canónicas en lectura normal + persistencia; Variables v96.76 preservado -->
+<!-- v97.20-LAB · Reconciliación histórica 2.817,88 € de las 7 Huchas legacy; Variables preservado -->
+<!-- v97.20-LAB · Disponible: autoridad real de Fijos conciliados; Huchas v96.78 preservadas -->
+<!-- v97.20-LAB · Disponible auditado contra nube: dedupe bancario de Ingresos por bancoRef; objetivo derivado 111,96 € -->
 <style id="fluxia-v9696-design-system">
 /* v96.99 · ÚNICA capa visual final. Solo presentación; lógica financiera intacta. */
 :root{
@@ -4591,9 +4567,54 @@ body {
   window.FLUXIA_PROFILE_KEY=PROFILE_KEY;
   window.FLUXIA_PROFILES_KEY=PROFILES_KEY;
   function showGate(){gate.classList.add('on');document.documentElement.style.overflow='hidden';document.body.style.overflow='hidden';}
+  function fxFinanceScore9720(pr){
+    try{
+      if(!pr||!pr.id)return 0;
+      var pref='fluxia_user_'+pr.id+'__',score=0;
+      for(var i=0;i<localStorage.length;i++){
+        var k=localStorage.key(i)||'';
+        if(k.indexOf(pref)!==0)continue;
+        if(!/planRescate_v2_(ingresos|fijos|movimientos|provisiones|config_plan|compartidos)/.test(k))continue;
+        var v=localStorage.getItem(k);
+        if(v&&v!=='[]'&&v!=='{}'&&v!=='null')score+=Math.min(2000,String(v).length)+1;
+      }
+      return score;
+    }catch(e){return 0;}
+  }
+  function fxCanonicalizeProfiles9720(input){
+    var arr=fxDedupProfiles9615(input||[]).map(function(x){return Object.assign({},x);});
+    try{
+      var auth=JSON.parse(localStorage.getItem('fluxia_sb_auth')||'null');
+      var uid=auth&&auth.user&&String(auth.user.id||''),email=auth&&auth.user&&String(auth.user.email||'');
+      function bound(p){try{return String((p&&p.cloudUserId)||localStorage.getItem(BIND_KEY+'_'+String(p&&p.id||''))||'');}catch(e){return String(p&&p.cloudUserId||'');}}
+      if(uid){
+        var same=arr.filter(function(p){return p&&p.id&&bound(p)===uid;});
+        if(same.length){
+          same.sort(function(a,b){var d=fxFinanceScore9720(b)-fxFinanceScore9720(a);return d||((b.principal?1:0)-(a.principal?1:0));});
+          var can=same[0];
+          var shellNacho=arr.find(function(p){return p&&p.id!==can.id&&fxNormProfileName9615(p.name)==='nacho'&&fxFinanceScore9720(p)===0;});
+          if(shellNacho||fxNormProfileName9615(can.name)==='nacram1987') can.name='Nacho';
+          can.cloudUserId=uid;if(email)can.cloudEmail=email;can.principal=true;
+          arr=arr.filter(function(p){
+            if(!p||!p.id)return false;
+            if(p.id===can.id)return true;
+            if(bound(p)===uid)return false;
+            if(shellNacho&&p.id===shellNacho.id)return false;
+            return true;
+          }).map(function(p){p.principal=(p.id===can.id);return p;});
+          try{localStorage.setItem(BIND_KEY,can.id);localStorage.setItem(BIND_KEY+'_'+can.id,uid);}catch(e){}
+        }
+      }
+      var seen=false;
+      arr.forEach(function(p){if(p.principal){if(seen)p.principal=false;else seen=true;}});
+      var before=JSON.stringify(fxDedupProfiles9615(input||[])),after=JSON.stringify(arr);
+      if(before!==after)saveProfiles(arr);
+    }catch(e){console.warn('[v97.20 identidad]',e);}
+    return arr;
+  }
   function renderProfiles(){
-    // Nunca mostrar dummies en la lista
-    var profiles=getProfiles().filter(function(p){ return esUsuarioReal(p); });
+    // Una cuenta cloud = una sola identidad visible; usuarios nuevos siguen aislados.
+    var profiles=fxCanonicalizeProfiles9720(getProfiles()).filter(function(p){ return esUsuarioReal(p); });
     try{
       function _hasFinance(pr){
         if(!pr||!pr.id)return false;var pref='fluxia_user_'+pr.id+'__';
@@ -8393,7 +8414,7 @@ function initPwaYBeta(){
     }
   }catch(e){}
 
-  // v97.19-LAB · Manifest de build autoritativo. No sustituir por blob dinámico histórico.
+  // v97.20-LAB · Manifest de build autoritativo. No sustituir por blob dinámico histórico.
   try{
     var link = document.getElementById('fluxiaManifestLink');
     if(link) link.setAttribute('href','./manifest.webmanifest');
@@ -12353,13 +12374,15 @@ function faltaAportarProvision(p, mes){
   return Math.max(0, meta - aportado);
 }
 function estadoProvision(p, mes){
-  const meta = p.importeMensual;
-  const aportado = totalAportadoProvision(p, mes);
-  const falta = faltaAportarProvision(p, mes);
-  let estado = '✅ COMPLETO';
-  if (aportado === 0) estado = '❌ PENDIENTE';
-  else if (falta > 0.005) estado = '⏳ PARCIAL';
-  return { estado, meta, aportado, falta };
+  /* LEY v97.20: APORTACIÓN, USO y SALDO son magnitudes independientes.
+     Usar dinero jamás convierte una aportación realizada en pendiente. */
+  const meta = Math.max(0, Number(p&&p.importeMensual)||0);
+  const aportado = Math.max(0, Number(totalAportadoProvision(p,mes))||0);
+  const falta = Math.max(0, meta-aportado);
+  let estado='✅ COMPLETO';
+  if(aportado<=0.005 && meta>0.005) estado='❌ PENDIENTE';
+  else if(falta>0.005) estado='⏳ PARCIAL';
+  return {estado,meta,aportado,falta,cumplido:falta<=0.005};
 }
 function registrarAportacionProvision(provisionId, mes, importe, fecha){
   const p = provisiones.find(x=>x.id===provisionId);
@@ -12955,13 +12978,9 @@ function fluxiaUpdateHeaderOffset(){
 
 function fluxiaColocarSelectorMes(tabName){
   try{
-    var sel=document.getElementById('mesSelectGlobal'); if(!sel) return;
-    var tabs={ingresos:1,fijos:1,'gastos-variables':1,compartidos:1,provisiones:1,presupuestos:1,efectivo:1,analisis:1,simulador:1};
-    if(tabs[tabName]){
-      var p=document.getElementById('panel-'+tabName); if(p && p.firstChild!==sel) p.insertBefore(sel,p.firstChild);
-    } else {
-      var a=document.getElementById('panelsAnchor'); if(a&&a.parentNode) a.parentNode.insertBefore(sel,a);
-    }
+    var sel=document.getElementById('mesSelectGlobal');
+    var ref=document.getElementById('fluxiaBackupStrip');
+    if(sel&&ref&&ref.parentNode&&sel.nextSibling!==ref) ref.parentNode.insertBefore(sel,ref);
   }catch(e){}
 }
 function goToTab(tabName){
@@ -13154,7 +13173,13 @@ function fluxiaPintarBackupStrip(){
       const until = parseInt(localStorage.getItem(FLUXIA_BACKUP_STRIP_HIDE) || '0', 10);
       if (until && Date.now() < until){ strip.classList.remove('on'); return; }
     }catch(e){}
-    try{ if (typeof Almacen !== 'undefined' && Almacen.estado === 'nube'){ strip.classList.remove('on'); return; } }catch(e){} /* v94.88 · con la nube confirmada no se avisa de 'solo en este dispositivo' */
+    try{
+      if(typeof Almacen!=='undefined' && (Almacen.estado==='nube'||Almacen.estado==='sincronizando'||Almacen.estado==='cargando')){
+        strip.classList.remove('on'); return;
+      }
+      var _auth=JSON.parse(localStorage.getItem('fluxia_sb_auth')||'null');
+      if(_auth&&_auth.user&&_auth.user.id){ strip.classList.remove('on'); return; }
+    }catch(e){} /* v97.20 · sincronización normal y reconexión transitoria: silenciosas abajo */
     const hay = (typeof fluxiaHayDatosUsuario === 'function') ? fluxiaHayDatosUsuario() : false;
     if (!hay){ strip.classList.remove('on'); return; }
     const need = (typeof necesitaBackup === 'function') ? necesitaBackup() : true;
@@ -14155,21 +14180,19 @@ function renderMesSelector(){
 
   const _idx = MESES.indexOf(mesSeleccionado);
   const _irA = (m) => {
-    if (!m) return;
+    if (!m || m === mesSeleccionado) return;
     mesSeleccionado = m;
+    try{ localStorage.setItem('v2_mes_seleccionado',mesSeleccionado); }catch(e){}
     renderMesSelector();
-    try { if (typeof renderAll === 'function') { renderAll(); return; } } catch(e) {}
-    try { renderKPIs(); } catch(e) {}
-    try { renderHero(); } catch(e) {}
-    try { renderIngresos(); } catch(e) {}
-    try { renderFijos(); } catch(e) {}
-    try { renderFinanciaciones(); } catch(e) {}
-    try { renderGastosVariables(); } catch(e) {}
-    try { renderProvisiones(); } catch(e) {}
-    try { renderCompartidos(); } catch(e) {}
-    try { renderPresupuestos(); } catch(e) {}
-    try { renderEfectivo(); } catch(e) {}
-    try { renderAnalisis(); } catch(e) {}
+    var _activo='resumen';
+    try{
+      var _p=document.querySelector('.panel.active');
+      if(_p&&_p.id&&_p.id.indexOf('panel-')===0)_activo=_p.id.slice(6);
+    }catch(e){}
+    try{
+      if(typeof fluxiaRenderPanel9619==='function') fluxiaRenderPanel9619(_activo);
+      else if(typeof renderAll==='function') renderAll();
+    }catch(e){}
   };
   const _mk = (txt, aria, cls) => {
     const b = document.createElement('button');
@@ -20217,12 +20240,8 @@ function fluxiaRenderPanel9619(tab){
       case 'provisiones': try{renderProvisiones();}catch(e){} break;
       case 'financiaciones': try{renderFinanciaciones();}catch(e){} break;
       case 'gastos-variables':
-        try{
-          if(window.__fluxiaGvRenderTimer) clearTimeout(window.__fluxiaGvRenderTimer);
-          window.__fluxiaGvRenderTimer=setTimeout(function(){
-            try{ renderGastosVariables(); }catch(e){}
-          },0);
-        }catch(e){}
+        /* v97.20: sin salto de event-loop; la lista aparece en el primer frame útil. */
+        try{ renderGastosVariables(); }catch(e){}
         break;
       case 'compartidos': try{renderCompartidos();}catch(e){} break;
       case 'presupuestos': try{renderPresupuestos();}catch(e){} break;
@@ -22277,7 +22296,7 @@ function arrancarApp(){
       if(ayuda&&!document.getElementById('fxChecklist9544')){
         var details=document.createElement('details');details.id='fxChecklist9544';
         details.style.cssText='margin:16px 0;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)';
-        details.innerHTML='<summary>Checklist v97.19-LAB</summary>'+
+        details.innerHTML='<summary>Checklist v97.20-LAB</summary>'+
           '<p>Outbox por perfil: IMPLEMENTADO · PROBADO en simulación · conserva edición offline con cuota local llena.</p>'+
           '<p>Cloud autoritativa y CAS: IMPLEMENTADO · PROBADO en simulación · caché vieja no se sube al arrancar.</p>'+
           '<p>Huchas y borrados: IMPLEMENTADO · PROBADO en simulación · dos aportaciones iguales sobreviven y un borrado por ID prevalece.</p>'+
@@ -23357,7 +23376,7 @@ window.FluxiaDiag = (function(){
   /* v95.70: la misma reconstrucción segura debe poder usarse también al iniciar sesión normal
      desde Safari cuando se perdió el registro local del perfil. */
   window.FluxiaRecuperarPerfilCloud = reconstruirPerfilCloud;
-  function limpiarRecoveryYRecargar(){try{window.FLUXIA_RECOVERY_ACTIVO=false;sessionStorage.removeItem('fluxia_recovery_activo');history.replaceState(null,'',location.pathname+'?v=v97.19-LAB');}catch(e){}location.reload();}
+  function limpiarRecoveryYRecargar(){try{window.FLUXIA_RECOVERY_ACTIVO=false;sessionStorage.removeItem('fluxia_recovery_activo');history.replaceState(null,'',location.pathname+'?v=v97.20-LAB');}catch(e){}location.reload();}
   async function completarRecovery(nueva){
     nueva=String(nueva||'');
     if(nueva.length<6){try{showModalError('La contraseña debe tener al menos 6 caracteres.');}catch(e){fxAviso('La contraseña debe tener al menos 6 caracteres.','info');}return;}
@@ -27705,7 +27724,7 @@ window.FluxiaAuditoriaDisponible9616=function(mes){
 /* v95.99 · La versión visible SIEMPRE sale de esta constante de build. */
 (function(){
   'use strict';
-  var V='v97.19-LAB';
+  var V='v97.20-LAB';
   window.FLUXIA_VERSION=V;
   function paint(){
     try{ document.title='Fluxia BETA '+V; }catch(e){}
@@ -27975,7 +27994,7 @@ window.FluxiaCadence9612.visual=function(key,ms,fn,note){
 'use strict';
 /* Diagnóstico local de candidato: no toca datos, solo expone contadores de runtime. */
 window.FluxiaCandidate9613={
- version:'v97.19-LAB',
+ version:'v97.20-LAB',
  snapshot:function(){
    return {
      hidden:document.visibilityState==='hidden',
@@ -28068,7 +28087,7 @@ button,a,[role="button"],[data-tab]{touch-action:manipulation;-webkit-tap-highli
 
 <script id="fluxia-v9717-identity-sentinel">
 (function(){'use strict';
- var V='v97.19-LAB'; window.FLUXIA_VERSION=V; window.FLUXIA_BUILD=V;
+ var V='v97.20-LAB'; window.FLUXIA_VERSION=V; window.FLUXIA_BUILD=V;
  function paint(){try{document.title='Fluxia BETA '+V;}catch(e){}try{document.querySelectorAll('[data-fluxia-version],#appVersion,#versionApp,#menuVersion,.app-version,.version-label,.drawer-version').forEach(function(n){n.textContent=V;});}catch(e){}try{var m=document.querySelector('meta[name="fluxia-version"]');if(m)m.content=V;}catch(e){}}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',paint,{once:true});else paint();
  window.addEventListener('pageshow',paint,{passive:true});
@@ -28093,7 +28112,7 @@ button,a,[role="button"],[data-tab]{touch-action:manipulation;-webkit-tap-highli
 
 <script id="fluxia-v971-interaction-priority">
 (function(){'use strict';
- window.FLUXIA_BUILD='v97.19-LAB';
+ window.FLUXIA_BUILD='v97.20-LAB';
  window.FluxiaIdle=function(fn,timeout){if(typeof fn!=='function')return;if('requestIdleCallback'in window)requestIdleCallback(function(){fn()},{timeout:timeout||1400});else setTimeout(fn,120);};
  // El primer gesto sobre menú se atiende en captura antes de cualquier trabajo secundario.
  /* v97.10: duplicate pointerdown removed; single native menu path below */
@@ -28129,7 +28148,7 @@ button,a,[role="button"],[data-tab]{touch-action:manipulation;-webkit-tap-highli
 </style>
 <script id="fluxia-v9711-bank-background-refresh">
 (function(){'use strict';
- window.FLUXIA_BUILD='v97.19-LAB';
+ window.FLUXIA_BUILD='v97.20-LAB';
  var started=false;
  function refresh(){
    if(started||document.visibilityState==='hidden')return;
@@ -28147,23 +28166,7 @@ button,a,[role="button"],[data-tab]{touch-action:manipulation;-webkit-tap-highli
 })();
 </script>
 <script id="fluxia-v9717-wide-month">
-(function(){'use strict';
- function draw(){
-  try{
-   document.querySelectorAll('.panel').forEach(function(p){
-    if(p.querySelector(':scope > .fx-month-wide'))return;
-    var bar=document.createElement('div');bar.className='fx-month-wide';
-    bar.innerHTML='<button type="button" data-fxmw="-1" aria-label="Mes anterior">‹</button><div class="fxmw-label"></div><button type="button" data-fxmw="1" aria-label="Mes siguiente">›</button>';
-    var anchor=p.querySelector(':scope > .sec-head')||p.firstElementChild;p.insertBefore(bar,anchor?anchor.nextSibling:p.firstChild);
-    bar.addEventListener('click',function(e){var b=e.target.closest('[data-fxmw]');if(!b)return;try{var i=MESES.indexOf(mesSeleccionado),n=Math.max(0,Math.min(MESES.length-1,i+Number(b.dataset.fxmw)));if(n!==i){mesSeleccionado=MESES[n];try{localStorage.setItem('v2_mes_seleccionado',mesSeleccionado);}catch(_){};if(typeof renderAll==='function')renderAll();refresh();}}catch(_){}});
-   });refresh();
-  }catch(e){}
- }
- function refresh(){try{document.querySelectorAll('.fxmw-label').forEach(function(el){el.innerHTML=(MES_LABEL[mesSeleccionado]||mesSeleccionado)+'<small>'+(mesSeleccionado===MES_ACTUAL_REAL?('Hoy · '+new Date().getDate()+' de '+String(MES_LABEL[MES_ACTUAL_REAL]||'').toLowerCase()):'Mes seleccionado')+'</small>';});}catch(e){}}
- window.FluxiaWideMonth9717={draw:draw,refresh:refresh};
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',draw,{once:true});else draw();
- document.addEventListener('fluxia:splash-fin',draw,{once:true});
-})();
+/* v97.20 autoritativo: desactivado. Un solo #mesSelectGlobal para toda la app. */
 </script>
 
 
@@ -33034,7 +33037,7 @@ window.FluxiaConfianzaV88 = {
     } catch(e){}
     box.innerHTML = '<details class="bank-details"><summary>Diagnóstico</summary><div class="fluxia-salud-card">' +
       '<div class="fluxia-salud-grid">' +
-      '<div><span>Versión</span><strong>BETA v97.19-LAB</strong></div>' +
+      '<div><span>Versión</span><strong>BETA v97.20-LAB</strong></div>' +
       '<div><span>Bancos</span><strong>' + s.bancos + '</strong></div>' +
       '<div><span>Gastos variables</span><strong>' + s.movimientos + '</strong></div>' +
       '<div><span>Con ref. banco</span><strong>' + s.bancoRefs + '</strong></div>' +
@@ -33127,7 +33130,7 @@ console.log('✅ Fluxia v91 · Confianza + Salud listos');
       panel.dataset.v91 = '1';
       var versionTxt = document.getElementById('ayudaVersionTxt');
       if(versionTxt){
-        versionTxt.textContent = 'Fluxia BETA ' + (window.FLUXIA_VERSION||'v97.19-LAB') + ' · laboratorio · nube principal';
+        versionTxt.textContent = 'Fluxia BETA ' + (window.FLUXIA_VERSION||'v97.20-LAB') + ' · laboratorio · nube principal';
         versionTxt.style.cssText = 'font-size:.88rem;font-weight:600;color:var(--ink);margin:0 0 12px;';
       }
       // Recoger todos los details de versiones/checklist antiguos
@@ -33230,7 +33233,7 @@ console.log('✅ Fluxia v91 · Confianza + Salud listos');
     var inp = document.getElementById('fluxiaStableUrlInput');
     if (inp && !inp._filled){ inp.value = u; inp._filled = true; }
     var labV = document.getElementById('fluxiaLabVersionLabel');
-    if (labV) labV.textContent = (window.FLUXIA_VERSION ? ('v'+String(window.FLUXIA_VERSION).replace(/^v/,'')) : 'v97.19-LAB');
+    if (labV) labV.textContent = (window.FLUXIA_VERSION ? ('v'+String(window.FLUXIA_VERSION).replace(/^v/,'')) : 'v97.20-LAB');
   }
 
   // Notificación sistema al estilo Revolut (permiso + show)
@@ -33543,7 +33546,7 @@ console.log('✅ Fluxia v91 · Confianza + Salud listos');
     if (!btn || btn._v91) return;
     btn._v91 = true;
     btn.addEventListener('click', function(){
-      var ver = (window.FLUXIA_VERSION || 'v97.19-LAB').toString().replace(/^v/,'');
+      var ver = (window.FLUXIA_VERSION || 'v97.20-LAB').toString().replace(/^v/,'');
       var fileName = 'index_fluxia_v' + ver.replace(/\./g,'_').replace(/^v/,'') + '.html';
       // Normalize: v91 -> index_fluxia_v90_10.html style
       fileName = 'index_fluxia_v' + ver.replace(/\./g, '_') + '.html';
@@ -38314,7 +38317,7 @@ html body #fx50AvailableNote{font-size:.7rem!important;font-weight:600!important
         '<p>✅ Más aire visual: IMPLEMENTADO entre cabecera, estados, hero, cuadrícula y secundarios.</p>'+
         '<p>✅ Menos saturación numérica: IMPLEMENTADO · cifras secundarias reducen peso, Disponible mantiene prioridad.</p>'+
         '<p>✅ Texto de pensión simplificado: IMPLEMENTADO.</p>'+
-        '<p>✅ Build coherente v97.19-LAB: PROBADO · HTML, manifest, SW y canal LAB coinciden.</p>'+
+        '<p>✅ Build coherente v97.20-LAB: PROBADO · HTML, manifest, SW y canal LAB coinciden.</p>'+
         '<p>✅ ESTABLE v95.39: INTACTA.</p>';
     }catch(e){}
   }
@@ -38325,7 +38328,7 @@ html body #fx50AvailableNote{font-size:.7rem!important;font-weight:600!important
 <script id="fluxia-v9554-arch-authority">
 (function(){
  'use strict';
- window.FLUXIA_ARCH_VERSION='v97.19-LAB';
+ window.FLUXIA_ARCH_VERSION='v97.20-LAB';
  window.FLUXIA_RECOVERY_POLICY='github-direct-secure-profile-recovery';
  window.FLUXIA_BANK_RECONCILIATION_POLICY='explicit-only';
  window.FluxiaDisponibleEngine={
@@ -38659,7 +38662,7 @@ window.FLUXIA_V9682=Object.freeze({base:'v96.80-LAB',currentCloudHuchas:true,fix
 
 <script id="fluxia-v9683-pwa-policy">
 window.FLUXIA_PWA_POLICY=Object.freeze({
-  current:'v97.19-LAB',
+  current:'v97.20-LAB',
   updateExistingAfterValidation:true,
   reinstallEveryVersion:false,
   permanentEntryPlanned:true
@@ -38806,27 +38809,11 @@ html body #fxDashboard67 #fx50AvailableNote{font-size:10px!important;color:#5d76
 }
 </style>
 <script id="fluxia-v976-model3-dom-fix">
-(function(){
-  function placeMonthSelector(){
-    var dash=document.getElementById('fxDashboard67');
-    if(!dash) return;
-    var hero=dash.querySelector(':scope > .fx30-hero') || dash.querySelector('.fx30-hero');
-    var ctl=dash.querySelector('.fx30-monthctl');
-    if(hero && ctl && ctl.parentElement!==dash){
-      dash.insertBefore(ctl,hero);
-    } else if(hero && ctl && ctl.nextElementSibling!==hero){
-      dash.insertBefore(ctl,hero);
-    }
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',placeMonthSelector,{once:true});
-  else placeMonthSelector();
-  setTimeout(placeMonthSelector,120);
-  setTimeout(placeMonthSelector,600);
-})();
+/* v97.20 autoritativo: desactivado. El selector mensual no se relocaliza con timers. */
 </script>
 <script id="fluxia-v9712-cash-withdrawal-authority">
 (function(){'use strict';
- window.FLUXIA_BUILD='v97.19-LAB';
+ window.FLUXIA_BUILD='v97.20-LAB';
  function key(m){return 'bankcash:'+String(m.bancoRef||m.id||[m.fecha,m.importe,m.concepto].join('|'));}
  function apply(){
    try{
@@ -38857,7 +38844,7 @@ html body #fxDashboard67 #fx50AvailableNote{font-size:10px!important;color:#5d76
  document.addEventListener('fluxia:splash-fin',function(){if(typeof FluxiaIdle==='function')FluxiaIdle(apply,800);else setTimeout(apply,80);},{once:true});
 })();
 </script>
-<!-- FLUXIA_BUILD: v97.19-LAB | MODEL3_FAITHFUL | PERF_CONSOLIDATED | CASH_PROVISION | PWA_FAST_RESUME -->
+<!-- FLUXIA_BUILD: v97.20-LAB | MODEL3_FAITHFUL | PERF_CONSOLIDATED | CASH_PROVISION | PWA_FAST_RESUME -->
 <style id="fluxia-v9717-variables-compact">
 #gvMovimientosView .mov-item{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:7px 10px!important;align-items:start!important;padding:10px 11px!important}
 #gvMovimientosView .mov-item>div:first-child{min-width:0!important}
@@ -38867,7 +38854,7 @@ html body #fxDashboard67 #fx50AvailableNote{font-size:10px!important;color:#5d76
 #gvMovimientosView .mov-item>div:last-child .importe{justify-self:start!important;margin-right:auto!important;font-size:.92rem!important}
 #gvMovimientosView .mov-item button[data-action]{width:30px!important;height:30px!important;min-width:30px!important;padding:0!important;border-radius:9px!important;display:grid!important;place-items:center!important;font-size:.86rem!important}
 </style>
-<!-- FLUXIA_BUILD: v97.19-LAB | PWA_CACHE_FIRST | CLOUD_TRANSIENT_GUARD | VARIABLES_COMPACT -->
+<!-- FLUXIA_BUILD: v97.20-LAB | PWA_CACHE_FIRST | CLOUD_TRANSIENT_GUARD | VARIABLES_COMPACT -->
 <style id="fluxia-v9717-unified-ui">
 /* One visual language for content tabs; Dashboard keeps its coloured KPI identity. */
 #mesSelectGlobal{width:calc(100% - 24px)!important;max-width:760px!important;margin:6px auto 14px!important;padding:0!important}
@@ -38905,7 +38892,7 @@ html body #fxDashboard67 #fx50AvailableNote{font-size:10px!important;color:#5d76
 </style>
 <script id="fluxia-v9717-runtime">
 (function(){'use strict';
- window.FLUXIA_BUILD='v97.19-LAB';
+ window.FLUXIA_BUILD='v97.20-LAB';
  /* Cloud/bank work is secondary: never block first interaction. */
  document.addEventListener('DOMContentLoaded',function(){
    try{var bs=document.getElementById('fluxiaBackupStrip');if(bs)bs.classList.remove('on');}catch(e){}
@@ -38914,22 +38901,92 @@ html body #fxDashboard67 #fx50AvailableNote{font-size:10px!important;color:#5d76
 </script>
 <!-- FLUXIA_BUILD: v97.20-LAB | PROMPT_MAESTRO | VERIFIED_RECOVERY -->
 <style id="fluxia-v9720">
-#mesSelectGlobal{display:none!important}
-.fx-month-wide{width:100%!important;min-height:54px!important;margin:6px 0 12px!important;padding:5px 7px!important;border:1px solid var(--line)!important;border-radius:15px!important;background:var(--surface)!important;display:grid!important;grid-template-columns:40px 1fr 40px!important;align-items:center!important;gap:7px!important;box-sizing:border-box!important}
-.fx-month-wide button{width:40px!important;height:40px!important;border:0!important;border-radius:11px!important;background:var(--surface-2)!important;color:var(--ink)!important;font-size:1.35rem!important;font-weight:800!important}.fxmw-label{text-align:center!important;font-weight:800!important;font-size:.92rem!important}.fxmw-label small{display:block!important;margin-top:2px!important;color:var(--muted)!important;font-size:.67rem!important}
-#gvMovimientosView .mov-item{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;gap:7px!important;padding:9px 10px!important;margin:6px 0!important;min-height:0!important;content-visibility:auto!important;contain-intrinsic-size:auto 56px!important}
-#gvMovimientosView .mov-item>div:first-child{min-width:0!important}#gvMovimientosView .mov-item>div:last-child{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:3px!important;width:auto!important}
-#gvMovimientosView .concepto{font-size:.88rem!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}#gvMovimientosView .meta{font-size:.67rem!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
-#gvMovimientosView .importe{margin:0 3px 0 0!important;font-size:.9rem!important;white-space:nowrap!important}#gvMovimientosView button{width:27px!important;height:27px!important;min-width:27px!important;padding:0!important;border-radius:8px!important;font-size:.76rem!important}
-#panel-provisiones .pv-card.pv-pend{border-color:rgba(70,145,205,.30)!important;background:linear-gradient(180deg,rgba(222,240,252,.48),var(--surface))!important}#panel-provisiones .pv-card.pv-ok{border-color:rgba(201,157,67,.34)!important;background:linear-gradient(180deg,rgba(250,239,207,.48),var(--surface))!important}
+
+:root{--fxu-max:560px;--fxu-pad:18px;--fxu-radius:16px;--fxu-blue:#327AA3;--fxu-blue-soft:#E8F3FA;--fxu-gold:#B8860B;--fxu-gold-soft:#FAF0D2}
+
+/* ÚNICO selector mensual: siempre en el mismo punto superior del documento. */
+html body #mesSelectGlobal{
+ display:block!important;visibility:visible!important;height:auto!important;overflow:visible!important;
+ width:calc(100% - (var(--fxu-pad) * 2))!important;max-width:calc(var(--fxu-max) - (var(--fxu-pad) * 2))!important;
+ margin:7px auto 12px!important;padding:0!important;border:0!important;background:transparent!important;box-sizing:border-box!important
+}
+html body #mesSelectGlobal.is-hidden{display:none!important}
+html body #mesSelectGlobal>div{display:block!important;width:100%!important;margin:0!important;padding:0!important}
+html body #mesSelectGlobal .fx-month-nav{
+ display:grid!important;grid-template-columns:44px minmax(0,1fr) 44px!important;align-items:center!important;gap:8px!important;
+ width:100%!important;min-height:54px!important;margin:0!important;padding:5px 7px!important;box-sizing:border-box!important;
+ border:1px solid rgba(30,88,110,.13)!important;border-radius:16px!important;background:rgba(255,255,255,.95)!important;
+ box-shadow:0 3px 12px rgba(20,55,70,.045)!important
+}
+html body #mesSelectGlobal .fx-month-nav button{
+ width:44px!important;height:42px!important;min-width:44px!important;padding:0!important;border:0!important;border-radius:12px!important;
+ background:var(--surface-2)!important;color:#244F61!important;font-size:1.5rem!important;font-weight:800!important;line-height:1!important
+}
+html body #mesSelectGlobal .fx-month-nav button:disabled{opacity:.30!important}
+html body #mesSelectGlobal .fx-month-nav .current{min-width:0!important;text-align:center!important;background:transparent!important;padding:0!important}
+html body #mesSelectGlobal .fx-month-nav .current b{display:block!important;font-size:.98rem!important;font-weight:820!important;color:#173D4D!important}
+html body #mesSelectGlobal .fx-month-nav .current small{display:block!important;margin-top:2px!important;font-size:.68rem!important;line-height:1.15!important;color:var(--muted)!important}
+
+/* Ningún panel fabrica o conserva otro selector. */
+html body .fx-month-wide,
+html body #fxDashboard67>.fx30-monthctl,
+html body #fxDashboard67 .fx30-hero-top>.fx30-monthctl{display:none!important}
+
+/* Misma geometría y densidad estructural en pestañas. */
+html body .wrap{max-width:var(--fxu-max)!important}
+html body .panel{box-sizing:border-box!important}
+html body .panel:not(#panel-resumen)>.sec-head{
+ min-height:52px!important;margin:0 0 10px!important;padding:10px 12px!important;box-sizing:border-box!important;
+ border:1px solid rgba(20,62,85,.10)!important;border-radius:14px!important;background:var(--surface)!important;
+ box-shadow:0 3px 10px rgba(20,45,60,.035)!important
+}
+html body .panel:not(#panel-resumen)>.sec-head .sec-title{font-size:1.02rem!important;margin:0!important}
+html body .panel:not(#panel-resumen)>.sec-head .sec-icon{font-size:1.15rem!important}
+
+/* Variables compactas: sin segunda media tarjeta vacía. */
+html body #gvMovimientosView .mov-item{
+ display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;
+ gap:5px 9px!important;min-height:58px!important;margin:7px 0!important;padding:9px 11px!important;
+ border-radius:14px!important;border:1px solid rgba(23,70,80,.10)!important;background:var(--surface)!important;
+ box-shadow:0 3px 10px rgba(23,70,80,.035)!important;content-visibility:auto!important;contain-intrinsic-size:auto 68px!important
+}
+html body #gvMovimientosView .mov-item>div:first-child{min-width:0!important}
+html body #gvMovimientosView .mov-item .concepto{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;font-size:.9rem!important;line-height:1.2!important}
+html body #gvMovimientosView .mov-item .meta{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;font-size:.68rem!important;line-height:1.2!important;margin-top:3px!important}
+html body #gvMovimientosView .mov-item>div:last-child{
+ display:flex!important;grid-column:auto!important;grid-row:auto!important;width:auto!important;align-items:center!important;justify-content:flex-end!important;gap:3px!important
+}
+html body #gvMovimientosView .mov-item .importe{grid-row:auto!important;align-self:center!important;margin:0 5px 0 0!important;white-space:nowrap!important;font-size:.91rem!important}
+html body #gvMovimientosView .mov-item button[data-action]{
+ width:27px!important;height:27px!important;min-width:27px!important;min-height:27px!important;padding:0!important;border-radius:8px!important;font-size:.78rem!important;line-height:1!important
+}
+
+/* Huchas: azul pendiente/parcial; dorado aportación mensual cumplida. */
+html body #panel-provisiones .pv-card.pv-pend{--pv-acc:var(--fxu-blue)!important;--pv-tint:var(--fxu-blue-soft)!important;border-color:rgba(50,122,163,.28)!important}
+html body #panel-provisiones .pv-card.pv-ok{--pv-acc:var(--fxu-gold)!important;--pv-tint:var(--fxu-gold-soft)!important;border-color:rgba(184,134,11,.28)!important}
+html body #panel-provisiones .pv-card.pv-pend .pv-pill{color:var(--fxu-blue)!important;border-color:var(--fxu-blue)!important}
+html body #panel-provisiones .pv-card.pv-ok .pv-pill{color:#795900!important;border-color:var(--fxu-gold)!important}
+html body #panel-provisiones .pv-card.pv-pend .pv-bar i{background:var(--fxu-blue)!important}
+html body #panel-provisiones .pv-card.pv-ok .pv-bar i{background:var(--fxu-gold)!important}
+
+@media(max-width:430px){
+ :root{--fxu-pad:14px}
+ html body #mesSelectGlobal{margin:6px auto 10px!important}
+ html body #gvMovimientosView .mov-item{padding:9px 10px!important;gap:5px 7px!important}
+ html body #gvMovimientosView .mov-item button[data-action]{width:26px!important;height:26px!important;min-width:26px!important}
+ html body #gvMovimientosView .mov-item .importe{font-size:.88rem!important;margin-right:3px!important}
+}
 </style>
 <script id="fluxia-v9720-runtime">
-(function(){'use strict';window.FLUXIA_BUILD='v97.20-LAB';
-var T=['panel-dashboard','panel-ingresos','panel-fijos','panel-gastos-variables','panel-provisiones','panel-compartidos','panel-efectivo'];
-function label(){try{document.querySelectorAll('.fxmw-label').forEach(function(e){e.innerHTML=((typeof MES_LABEL!=='undefined'&&MES_LABEL[mesSeleccionado])||mesSeleccionado||'')+'<small>Mes seleccionado</small>';});}catch(e){}}
-function months(){try{document.querySelectorAll('.fx-month-wide').forEach(function(x){x.remove()});T.forEach(function(id){var p=document.getElementById(id);if(!p)return;var b=document.createElement('div');b.className='fx-month-wide';b.innerHTML='<button type="button" data-d="-1">‹</button><div class="fxmw-label"></div><button type="button" data-d="1">›</button>';p.insertBefore(b,p.firstChild);b.onclick=function(ev){var x=ev.target.closest('[data-d]');if(!x)return;var n=MESES.indexOf(mesSeleccionado)+Number(x.dataset.d);if(n<0||n>=MESES.length)return;mesSeleccionado=MESES[n];localStorage.setItem('v2_mes_seleccionado',mesSeleccionado);if(typeof renderAll==='function')renderAll();label();};});label();}catch(e){}}
-function quiet(){try{var x=document.getElementById('fluxiaBackupStrip');if(x)x.classList.remove('on');}catch(e){}}
-function boot(){months();quiet()}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();document.addEventListener('fluxia:splash-fin',function(){boot();setTimeout(quiet,500)},{once:true});
+(function(){'use strict';
+ window.FLUXIA_BUILD='v97.20-LAB';
+ function clean(){
+   try{document.querySelectorAll('.fx-month-wide').forEach(function(x){x.remove();});}catch(e){}
+   try{if(typeof fluxiaColocarSelectorMes==='function')fluxiaColocarSelectorMes('resumen');}catch(e){}
+   try{if(typeof renderMesSelector==='function')renderMesSelector();}catch(e){}
+   try{var x=document.getElementById('fluxiaBackupStrip');if(x&&typeof Almacen!=='undefined'&&(Almacen.estado==='nube'||Almacen.estado==='sincronizando'||Almacen.estado==='cargando'))x.classList.remove('on');}catch(e){}
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',clean,{once:true});else clean();
 })();
 </script>
 </body></html>
