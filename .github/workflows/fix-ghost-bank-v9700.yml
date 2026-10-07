@@ -1,5 +1,6 @@
 name: Publish Fluxia v97.00 LAB
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths: ['.github/workflows/fix-ghost-bank-v9700.yml']
@@ -60,7 +61,6 @@ try{if(typeof Almacen!=='undefined'&&Almacen.onGuardado)Almacen.onGuardado(funct
           p.write_text(s)
           Path('index_fluxia_v97.00_LAB.html').write_text(s)
           PY
-          cp index.html index_fluxia_v96.99_LAB.html
           git config --local user.name github-actions
           git config --local user.email actions@github.com
           git add index.html index_fluxia_v96.99_LAB.html index_fluxia_v97.00_LAB.html
