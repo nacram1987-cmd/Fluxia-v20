@@ -1,0 +1,54 @@
+name: Build Fluxia v96.99
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/build-fluxia-9699.yml']
+permissions:
+  contents: write
+concurrency:
+  group: fluxia-publisher
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Build real v96.99 entry
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          src=Path("index.html")
+          s=src.read_text(encoding="utf-8")
+          for a,b in [
+            ("v96.96-LAB","v96.99-LAB"),
+            ("v96.96","v96.99"),
+            ("96.96-LAB","96.99-LAB"),
+            ("96.96","96.99"),
+            ("manifest_v96.96_LAB.webmanifest","manifest_v96.99_LAB.webmanifest"),
+            ("fluxia-sw-v96.96.js","fluxia-sw.js"),
+          ]:
+              s=s.replace(a,b)
+          Path("index_fluxia_v96.99_LAB.html").write_text(s,encoding="utf-8")
+          Path("index.html").write_text(s,encoding="utf-8")
+          manifest={
+            "name":"Fluxia BETA","short_name":"Fluxia BETA",
+            "start_url":"./?v=v96.99-LAB","scope":"./","display":"standalone",
+            "background_color":"#f7f4ee","theme_color":"#0E7C90"
+          }
+          import json
+          Path("manifest_v96.99_LAB.webmanifest").write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding="utf-8")
+          PY
+      - name: Verify no stale app version
+        run: |
+          ! grep -q "96\.96" index.html
+          grep -q "96\.99" index.html
+          cmp -s index.html index_fluxia_v96.99_LAB.html
+      - name: Commit
+        run: |
+          git config --local user.name github-actions
+          git config --local user.email actions@github.com
+          git add index.html index_fluxia_v96.99_LAB.html manifest_v96.99_LAB.webmanifest
+          git commit -m "build v96.99 real canonical PWA entry"
+          for i in 1 2 3 4 5; do git fetch origin main; git rebase origin/main; git push origin HEAD:main && exit 0; sleep 3; done
+          exit 1
