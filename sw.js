@@ -1,7 +1,16 @@
-const CACHE_VERSION='fluxia-shell-v97.6-fast';
+const CACHE_VERSION='fluxia-shell-v97.16';
 const ENTRY='./index.html';
 
-self.addEventListener('install',event=>{self.skipWaiting();});
+self.addEventListener('install',event=>{
+  event.waitUntil((async()=>{
+    try{
+      const cache=await caches.open(CACHE_VERSION);
+      const r=await fetch(ENTRY,{cache:'no-store'});
+      if(r&&r.ok) await cache.put(ENTRY,r.clone());
+    }catch(e){}
+    await self.skipWaiting();
+  })());
+});
 
 self.addEventListener('activate',event=>{
   event.waitUntil((async()=>{
@@ -15,32 +24,22 @@ self.addEventListener('activate',event=>{
 self.addEventListener('fetch',event=>{
   const r=event.request;
   if(r.method!=='GET') return;
-
   const u=new URL(r.url);
   if(u.origin!==self.location.origin) return;
-
-  // Datos/API: no intervenir.
   if(/^\/(auth|v1|health)(\/|$)/.test(u.pathname)) return;
 
-  // Navegación: respetar la página ya abierta. Red primero sin reescribir
-  // cada apertura a index.html; fallback a la shell canónica si no hay red.
   if(r.mode==='navigate'){
     event.respondWith((async()=>{
-      try{
-        const response=await fetch(r);
-        if(response&&response.ok){
-          const cache=await caches.open(CACHE_VERSION);
-          cache.put(ENTRY,response.clone()).catch(()=>{});
-        }
+      const cache=await caches.open(CACHE_VERSION);
+      const cached=(await cache.match(ENTRY))||(await cache.match(r));
+      const fresh=fetch(r,{cache:'no-store'}).then(async response=>{
+        if(response&&response.ok) await cache.put(ENTRY,response.clone());
         return response;
-      }catch(e){
-        return (await caches.match(r))||(await caches.match(ENTRY))||Response.error();
-      }
+      }).catch(()=>null);
+      if(cached){ event.waitUntil(fresh); return cached; }
+      return (await fresh)||Response.error();
     })());
     return;
   }
-
-  // Assets: comportamiento nativo del navegador para máxima velocidad.
-  // Solo fallback a caché si falla la red.
   event.respondWith(fetch(r).catch(()=>caches.match(r)));
 });
