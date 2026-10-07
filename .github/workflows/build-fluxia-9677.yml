@@ -1,0 +1,34 @@
+name: Build Fluxia v96.77
+on:
+  push:
+    branches: [main]
+    paths:
+      - tools/build_9677.py
+permissions:
+  contents: write
+concurrency:
+  group: fluxia-publisher
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python tools/build_9677.py
+      - run: |
+          git config --local user.name github-actions
+          git config --local user.email actions@github.com
+          git add index_fluxia_v96.77_LAB.html CHECKLIST_v96.77.txt PROMPT_MAESTRO_v96.77.txt README_v96.77.md manifest_v96.77_LAB.webmanifest fluxia-sw-v96.77.js SHA256SUMS_v96.77.txt Fluxia_v96.77_LAB.zip
+          git commit -m "build v96.77 variables fast path"
+          for i in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main && exit 0
+            sleep 3
+          done
+          exit 1
