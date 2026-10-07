@@ -1,0 +1,320 @@
+function renderGastosVariables(){
+  /* v96.77 NO-PURGE: no reconciliation on panel entry */
+  const mes = mesSeleccionado;
+  const movMes = movimientosDe(mes);
+  document.getElementById('gvMesLabel').textContent = MES_LABEL[mes];
+  document.getElementById('gvMesActivo').textContent = MES_LABEL[mes];
+  document.getElementById('gvMesLista').textContent = MES_LABEL[mes];
+  document.getElementById('gvNumGastos').textContent = movMes.length;
+
+  // Disponible ajustado
+  const disponible = disponibleEfectivo(mes);
+  const valEl = document.getElementById('gvAjustadoVal');
+  valEl.textContent = eur(disponible, 2);
+  valEl.style.color = disponible >= 0 ? 'var(--teal)' : 'var(--wine)';
+
+  // Stats
+  document.getElementById('gvStatMes').textContent = eur(variablesTotal(mes), 2);
+  const gastosTotalPlan = movimientos.reduce((s,mv)=>s+mv.importe,0);
+  document.getElementById('gvStatTotal').textContent = eur(gastosTotalPlan, 2);
+
+  // Datalist de conceptos
+  const dl = document.getElementById('gvConceptosHistorial');
+  dl.innerHTML = historialConceptos().map(c=>'<option value="'+c.replace(/"/g,'&quot;')+'"></option>').join('');
+
+  // Filtros de búsqueda / categoría
+  const busqEl = document.getElementById('gvBuscar');
+  const catEl = document.getElementById('gvFiltroCat');
+  const q = (busqEl && busqEl.value || '').trim().toLowerCase();
+  const catFiltro = (catEl && catEl.value) || '';
+  // Rellenar opciones de categoría (sin perder selección)
+  if (catEl){
+    const prev = catEl.value;
+    const cats = [...new Set(movMes.map(m => m.categoria || 'Otros'))].sort((a,b)=>a.localeCompare(b,'es'));
+    catEl.innerHTML = '<option value="">Todas las categorías</option>' + cats.map(c => '<option value="'+String(c).replace(/"/g,'&quot;')+'">'+c+'</option>').join('');
+    if (prev && cats.includes(prev)) catEl.value = prev;
+  }
+  if (busqEl && !busqEl._bound){
+    busqEl._bound = true;
+    let t;
+    busqEl.addEventListener('input', ()=>{ clearTimeout(t); t = setTimeout(()=> renderGastosVariables(), 180); });
+  }
+  if (catEl && !catEl._bound){
+    catEl._bound = true;
+    catEl.addEventListener('change', ()=> renderGastosVariables());
+  }
+  const btnCsv = document.getElementById('btnExportGvCsv');
+  if (btnCsv && !btnCsv._bound){
+    btnCsv._bound = true;
+    btnCsv.addEventListener('click', ()=> exportarVariablesCSV(mesSeleccionado));
+  }
+
+  // Histórico de movimientos (filtrado)
+  const movView = document.getElementById('gvMovimientosView');
+  movView.innerHTML = "";
+  let movs = movMes.slice().sort((a,b)=> (a.fecha||'').localeCompare(b.fecha||'') || 0).reverse();
+  if (catFiltro) movs = movs.filter(m => (m.categoria || 'Otros') === catFiltro);
+  if (q) movs = movs.filter(m => {
+    const blob = ((m.concepto||'')+' '+(m.categoria||'')).toLowerCase();
+    return blob.includes(q);
+  });
+  document.getElementById('gvNumGastos').textContent = movs.length + (q || catFiltro ? '/'+movMes.length : '');
+  if (movMes.length === 0){
+    movView.innerHTML = fluxiaEmptyHTML({ico:'💸',tit:'Sin gastos del día a día aún',txt:'Café, supermercado, transporte… rellena el formulario de arriba y pulsa Guardar gasto.',btn:'✎ Ir al formulario',onclick:"var el=document.getElementById('gvConcepto');if(el){el.focus();el.scrollIntoView({behavior:'smooth',block:'center'});}"});
+  } else if (movs.length === 0){
+    movView.innerHTML = fluxiaEmptyHTML({ico:'🔎',tit:'Ningún gasto coincide',txt:'Limpia la búsqueda o el filtro de categoría para ver todos.'});
+  } else {
+    movs.forEach(mv=>{
+      const div = document.createElement('div');
+      div.className = 'mov-item';
+      const fechaTxt = mv.fecha ? mv.fecha.slice(8,10)+'/'+mv.fecha.slice(5,7) : MES_LABEL[mv.mes];
+      const metaTxt = fechaTxt + (mv.categoria ? ' · '+mv.categoria : '');
+      div.innerHTML = `
+        <div>
+          <div class="concepto">${escapeHtml(mv.concepto || 'Gasto variable')}${mv.origen==='excel' ? ' <span class="badge excel">Excel</span>' : ''}</div>
+          <div class="meta">${escapeHtml(metaTxt)}</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span class="importe gasto">-${eur(mv.importe,2)}</span>
+          <button data-id="${mv.id}" data-action="split" title="Compartir gasto">🤝</button>
+          <button data-id="${mv.id}" data-action="edit" title="Editar">✎</button>
+          <button data-id="${mv.id}" data-action="del" title="Eliminar">×</button>
+        </div>
+      `;
+      movView.appendChild(div);
+    });
+  }
+
+  movView.querySelectorAll('button[data-action="split"]').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const mv = movimientos.find(m=>String(m.id)===btn.dataset.id);
+      if (!mv || !window.FluxiaDividir) return;
+      FluxiaDividir.abrir(mv.id);
+    });
+  });
+
+  movView.querySelectorAll('button[data-action="del"]').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const mv = movimientos.find(m=>String(m.id)===btn.dataset.id);
+      if (!mv) return;
+      openConfirmModal({
+        title: 'Borrar gasto',
+        message: '¿Borrar «' + (mv.concepto || 'gasto') + '» de ' + eur(mv.importe, 2) + '? No se puede deshacer.',
+        confirmLabel: 'Borrar', danger: true,
+        onConfirm: ()=>{
+          const linked = mv.division && window.FluxiaDividir ? FluxiaDividir.quitarCompartidos(mv, false) : true;
+          if (linked === false){ mostrarToast('⚠️ Primero elimina los cobros recibidos de este gasto en Compartidos.','var(--wine)',3200); return; }
+          try{ window._FLUXIA_BORRANDO_GV = true; }catch(_){}
+          try{ if (window._fluxiaRegistrarBorradoGV) _fluxiaRegistrarBorradoGV(mv); }catch(_){}
+          try{ if (window.FluxiaGVBorrados) FluxiaGVBorrados.registrar(mv); }catch(_){}
+          movimientos = movimientos.filter(m => String(m.id) !== btn.dataset.id);
+          try{ window.movimientos = movimientos; }catch(_){}
+          try{ registrarOperacion('gasto_eliminado',{id:mv.id,concepto:mv.concepto,importe:mv.importe,dividido:!!mv.division}); }catch(_){}
+          _guardarMovimientosTrasBorrado();
+          try{ setTimeout(function(){ window._FLUXIA_BORRANDO_GV = false; }, 500); }catch(_){}
+          /* v94.16: segunda escritura directa por si Almacen falla */
+          try{
+            var _k = (typeof claveLS==='function') ? claveLS('v2_movimientos') : 'v2_movimientos';
+            localStorage.setItem(_k, JSON.stringify(movimientos));
+            if (typeof Almacen!=='undefined' && Almacen.setItem) Almacen.setItem(_k, JSON.stringify(movimientos));
+          }catch(_e2){}
+          renderGastosVariables(); renderKPIs();
+          try{ if(typeof mostrarToast==='function') mostrarToast('🗑️ En papelera · no volverá del banco', 'var(--teal)', 2800); }catch(_){}
+        }
+      });
+    });
+  });
+
+  movView.querySelectorAll('button[data-action="edit"]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const mv = movimientos.find(m=>String(m.id)===btn.dataset.id);
+      if (!mv) return;
+      const categoriaOptions = Array.from(document.getElementById('gvCategoria').options)
+        .map(o=>({ value:o.value, label:o.textContent }));
+      openFormModal({
+        title: 'Editar gasto',
+        fields: [
+          { name:'concepto', label:'Concepto', type:'text', required:true, value: mv.concepto },
+          { name:'categoria', label:'Categoría', type:'select', value: mv.categoria || 'Otros', options: categoriaOptions },
+          ...(mv.division ? [] : [{ name:'importe', label:'Importe (€)', type:'number', min:0, step:'0.01', value: mv.importe }]),
+          { name:'fecha', label:'Fecha', type:'date', required:true, value: mv.fecha || hoyISO() }
+        ],
+        submitLabel: 'Guardar',
+        onSubmit: (vals)=>{
+          mv.concepto = formatTexto(vals.concepto); mv.categoria = vals.categoria;
+          if (!mv.division && vals.importe !== undefined) mv.importe = vals.importe;
+          mv.fecha = vals.fecha; mv.mes = mesFromFechaISO(vals.fecha);
+          try{ registrarOperacion('gasto_editado',{id:mv.id,concepto:mv.concepto,importe:mv.importe,dividido:!!mv.division}); }catch(_){}
+          guardarMovimientos();
+          renderGastosVariables(); renderKPIs();
+        }
+      });
+    });
+  });
+
+  var _catPanel=document.getElementById('gv-categoria');
+  if(!_catPanel || !_catPanel.classList.contains('active')) return;
+
+  // Render de categorías (pestaña interna "Por categoría")
+  const gvFechaEl = document.getElementById('gvFecha');
+  if (gvFechaEl && !gvFechaEl.value){
+    gvFechaEl.value = (mes === MES_ACTUAL_REAL) ? hoyISO() : (ymDeMes(mes)+'-01');
+  }
+  const combinado = {};
+  movMes.forEach(mv=>{
+    const cat = mv.categoria || 'Otros';
+    combinado[cat] = (combinado[cat]||0) + mv.importe;
+  });
+  const entries = Object.entries(combinado).filter(([,v]) => v > 0).sort((a,b)=> b[1]-a[1]);
+  const totalCat = entries.reduce((s,[,v])=>s+v, 0);
+  document.getElementById('gcMesActivo').textContent = MES_LABEL[mes];
+
+  const catView = document.getElementById('gvCategoriasView');
+  catView.innerHTML = "";
+  if (entries.length === 0){
+    catView.innerHTML = fluxiaEmptyHTML({ico:'📊',tit:'Sin gastos este mes',txt:'Cuando registres gastos en '+MES_LABEL[mes]+', aquí se agrupan por categoría.',btn:'✎ Ir al formulario',onclick:"var el=document.getElementById('gvConcepto');if(el){el.focus();el.scrollIntoView({behavior:'smooth',block:'center'});}"});
+  } else {
+    window._gvCatAbierta = window._gvCatAbierta || null;
+    entries.forEach(([cat, val])=>{
+      const pct = totalCat > 0 ? (val/totalCat)*100 : 0;
+      const color = CATEGORY_COLORS[cat] || '#8A9086';
+      const abierta = window._gvCatAbierta === cat;
+      const movsCat = movMes
+        .filter(mv => (mv.categoria || 'Otros') === cat)
+        .sort((a,b) => String(b.fecha||'').localeCompare(String(a.fecha||'')));
+      const div = document.createElement('div');
+      div.className = 'fin-item gv-cat-item' + (abierta ? ' open' : '');
+      div.setAttribute('data-cat', cat);
+      div.style.cursor = 'pointer';
+      let movsHTML = '';
+      if (abierta){
+        const rows = movsCat.length ? movsCat.map(mv => {
+          const e = (typeof emojiParaConcepto === 'function') ? emojiParaConcepto(mv.concepto) : '🧾';
+          const fecha = mv.fecha || '';
+          return '<div class="gv-cat-mov" data-mvid="'+escapeHtml(mv.id||'')+'">'
+            + '<span class="gv-cat-mov-ico">'+e+'</span>'
+            + '<div class="gv-cat-mov-body"><div class="gv-cat-mov-tit">'+escapeHtml(mv.concepto||'Gasto')+'</div>'
+            + '<div class="gv-cat-mov-sub">'+escapeHtml(fecha)+(mv.division ? ' · <span class="fxd-tag">🤝 con '+escapeHtml((mv.division.personas||[]).join(', '))+' · pagaste '+eur(mv.importeOriginal,2)+'</span>' : '')+'</div></div>'
+            + '<div class="gv-cat-mov-imp">'+eur(mv.importe,2)+'</div>'
+            + '<div class="gv-cat-mov-actions">'
+            + '<button type="button" class="gv-action-btn gv-dividir" data-mvid="'+escapeHtml(mv.id||'')+'" title="Compartir gasto">🤝</button>'
+            + '<button type="button" class="gv-action-btn gv-delete" data-mvid="'+escapeHtml(mv.id||'')+'" title="Eliminar gasto">×</button>'
+            + '</div>'
+            + '</div>';
+        }).join('') : fluxiaEmptyHTML({ico:'📂',tit:'Sin movimientos en esta categoría',txt:'Cuando gastes aquí, aparecerán listados.'});
+        movsHTML = '<div class="gv-cat-movs">' + rows
+          + '<div style="font-size:.78rem;color:var(--muted);margin:4px 0 2px;">Total ' + escapeHtml(cat) + ': <b style="color:var(--ink);font-family:var(--mono)">' + eur(val,2) + '</b></div>'
+          + '<button type="button" class="gv-cat-add" data-add-cat="'+escapeHtml(cat)+'">＋ Añadir gasto en '+escapeHtml(cat)+'</button>'
+          + '</div>';
+      }
+      div.innerHTML = `
+        <div class="fin-top">
+          <span class="nombre">${escapeHtml(cat)} <span class="gv-cat-chev">${abierta?'▾':'▸'}</span></span>
+          <span class="cuota">${eur(val,2)} · ${pct.toFixed(1)}%</span>
+        </div>
+        <div class="bar"><div style="width:${pct.toFixed(1)}%; background:${color};"></div></div>
+        ${movsHTML}
+      `;
+      div.addEventListener('click', function(e){
+        if (e.target.closest('.gv-cat-mov')) return;
+        window._gvCatAbierta = (window._gvCatAbierta === cat) ? null : cat;
+        try{ renderGastosVariables && renderGastosVariables(); }catch(err){
+          try{ if (typeof renderRegistroVariable === 'function') renderRegistroVariable(); }catch(e2){}
+        }
+      });
+      div.querySelectorAll('.gv-cat-mov[data-mvid]').forEach(row => {
+        // Botón Dividir
+        const btnDividir = row.querySelector('.gv-dividir');
+        if (btnDividir){
+          btnDividir.addEventListener('click', function(ev){
+            ev.stopPropagation();
+            const id = row.getAttribute('data-mvid');
+            const mv = movimientos.find(m => m && m.id === id);
+            if (!mv) return;
+            // Abrir modal de dividir cuenta reutilizando la función existente
+            try{ window.FluxiaDividir.abrir(mv); }catch(err){ console.warn(err); }
+          });
+        }
+        // Botón Eliminar
+        const btnDelete = row.querySelector('.gv-delete');
+        if (btnDelete){
+          btnDelete.addEventListener('click', function(ev){
+            ev.stopPropagation();
+            const id = row.getAttribute('data-mvid');
+            const mv = movimientos.find(m => m && m.id === id);
+            if (!mv) return;
+            const _txtDiv = mv.division ? '\n\nEstá dividido: también se quitará lo que te deben por él en Compartidos.' : '';
+            if (window.fxConfirm2('¿Eliminar este gasto: '+(mv.concepto||'Gasto')+' ('+eur(mv.importeOriginal!=null?mv.importeOriginal:mv.importe,2)+')?'+_txtDiv)){
+              try{ if (mv.division && window.FluxiaDividir) FluxiaDividir.quitarCompartidos(mv, true); }catch(e){}
+              try{ if (window._fluxiaRegistrarBorradoGV) _fluxiaRegistrarBorradoGV(mv); }catch(e){}
+              movimientos = movimientos.filter(m => m && m.id !== id);
+              try{ _guardarMovimientosTrasBorrado(); }catch(e){}
+              try{ if (typeof renderGastosVariables==='function') renderGastosVariables(); else if (typeof renderRegistroVariable==='function') renderRegistroVariable(); }catch(e){}
+              try{ renderKPIs(); }catch(e){}
+              try{ if(typeof mostrarToast==='function') mostrarToast('🗑️ En papelera · no volverá del banco', 'var(--teal)', 2800); }catch(e){}
+            }
+          });
+        }
+        // Click en la fila (editar)
+        row.addEventListener('click', function(ev){
+          ev.stopPropagation();
+          // Si el click fue en los botones, no hacer nada más
+          if (ev.target.closest('.gv-action-btn')) return;
+          const id = row.getAttribute('data-mvid');
+          const mv = movimientos.find(m => m && m.id === id);
+          if (!mv) return;
+          try{
+            const catSelect = document.getElementById('gvCategoria');
+            const categoriaOptions = catSelect ? Array.from(catSelect.options).map(o=>({value:o.value,label:o.textContent})) : [{value:mv.categoria||'Otros',label:mv.categoria||'Otros'}];
+            openFormModal({
+              title: 'Editar gasto',
+              fields: [
+                { name:'concepto', label:'Concepto', type:'text', required:true, value: mv.concepto||'' },
+                { name:'categoria', label:'Categoría', type:'select', value: mv.categoria || 'Otros', options: categoriaOptions },
+                { name:'importe', label:'Importe (€)', type:'number', min:0.01, step:'0.01', value: mv.importe },
+                { name:'fecha', label:'Fecha', type:'date', value: mv.fecha||'' }
+              ],
+              submitLabel: 'Guardar',
+              onSubmit: (vals)=>{
+                mv.concepto = formatTexto(vals.concepto);
+                mv.categoria = vals.categoria;
+                mv.categoriaManual = true;
+                mv.catManual = true;
+                mv.importe = vals.importe; mv.fecha = vals.fecha;
+                try{ if (window.FluxiaCategorializacionV81 && FluxiaCategorializacionV81.recordarPreferencia) FluxiaCategorializacionV81.recordarPreferencia(mv.concepto, mv.categoria); }catch(e){}
+                try{ guardarMovimientos(); }catch(e){}
+                try{ if (typeof renderGastosVariables==='function') renderGastosVariables(); else if (typeof renderRegistroVariable==='function') renderRegistroVariable(); }catch(e){}
+                try{ renderKPIs(); }catch(e){}
+              }
+            });
+          }catch(err){ console.warn(err); }
+        });
+      });
+      catView.appendChild(div);
+    });
+    catView.querySelectorAll('[data-add-cat]').forEach(btn => {
+      btn.addEventListener('click', function(ev){
+        ev.stopPropagation();
+        const cat = btn.getAttribute('data-add-cat');
+        try{
+          // Ir a pestaña de registro y precargar categoría
+          const tabBtn = document.querySelector('[data-internal-tab="gv-registro"]');
+          if (tabBtn) tabBtn.click();
+          const sel = document.getElementById('gvCategoria');
+          if (sel){
+            for (let o of sel.options){ if (o.value === cat || o.textContent === cat){ sel.value = o.value; break; } }
+          }
+          const concepto = document.getElementById('gvConcepto');
+          if (concepto){ concepto.focus(); }
+          if (typeof mostrarToast === 'function') mostrarToast('Categoría: '+cat, 'var(--teal)', 1800);
+        }catch(e){ console.warn(e); }
+      });
+    });
+  }
+  document.getElementById('gvCategoriaTotal').textContent = eur(totalCat, 2);
+}
+// ---------------------------------------------------------------------------
+
+// Registrar gasto variable (formulario completo o gasto rápido del Resumen)
