@@ -27903,7 +27903,24 @@ button,a,[role="button"],[data-tab]{touch-action:manipulation;-webkit-tap-highli
 
 
 
-<script id="fluxia-v9673-display-name">(function(){function c(v){v=String(v||'').trim();return v&&!v.includes('@')?v:''}function a(){var n='Nacho';try{['fluxia_display_name','displayName','nombreUsuario','userName','nombre'].some(function(k){var x=c(localStorage.getItem(k));if(x){n=x;return true}})}catch(e){}document.querySelectorAll('[data-user-name],.user-name,.profile-name,.account-name,.preferences-user-name').forEach(function(e){if((e.textContent||'').includes('@')||e.hasAttribute('data-user-name'))e.textContent=n})}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',a,{once:true});else a()})();</script><script id="fluxia-v9674-audit">window.FluxiaAuditar9674=function(m){try{return {mes:m,variables:typeof variablesTotal==='function'?variablesTotal(m):null,disponible:typeof disponibleEfectivo==='function'?disponibleEfectivo(m):null}}catch(e){return {error:String(e)}}};</script></body>
+<script id="fluxia-v9673-display-name">(function(){function c(v){v=String(v||'').trim();return v&&!v.includes('@')?v:''}function a(){var n='Nacho';try{['fluxia_display_name','displayName','nombreUsuario','userName','nombre'].some(function(k){var x=c(localStorage.getItem(k));if(x){n=x;return true}})}catch(e){}document.querySelectorAll('[data-user-name],.user-name,.profile-name,.account-name,.preferences-user-name').forEach(function(e){if((e.textContent||'').includes('@')||e.hasAttribute('data-user-name'))e.textContent=n})}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',a,{once:true});else a()})();</script><script id="fluxia-v9674-audit">window.FluxiaAuditar9674=function(m){try{return {mes:m,variables:typeof variablesTotal==='function'?variablesTotal(m):null,disponible:typeof disponibleEfectivo==='function'?disponibleEfectivo(m):null}}catch(e){return {error:String(e)}}};</script>
+<script id="fluxia-v971-bank-decision-durability">
+(function(){'use strict';
+ function flush(){try{if(window.FluxiaEspejo&&FluxiaEspejo.decisionANube)FluxiaEspejo.decisionANube();}catch(e){}try{if(window.FluxiaEspejo&&FluxiaEspejo.volcar)FluxiaEspejo.volcar();}catch(e){}try{if(window.Almacen&&Almacen.flush)Almacen.flush();}catch(e){}}
+ document.addEventListener('click',function(e){var b=e.target&&e.target.closest?e.target.closest('[data-bf-never],[data-bf-dup],[data-bf-ok],[data-bf-no],[data-bf-skip]'):null;if(!b)return;setTimeout(flush,80);setTimeout(flush,500);},true);
+ window.addEventListener('pagehide',flush,{capture:true});
+})();
+</script>
+
+<script id="fluxia-v971-interaction-priority">
+(function(){'use strict';
+ window.FLUXIA_BUILD='v97.1-LAB';
+ window.FluxiaIdle=function(fn,timeout){if(typeof fn!=='function')return;if('requestIdleCallback'in window)requestIdleCallback(function(){fn()},{timeout:timeout||1400});else setTimeout(fn,120);};
+ // El primer gesto sobre menú se atiende en captura antes de cualquier trabajo secundario.
+ document.addEventListener('pointerdown',function(e){var b=e.target&&e.target.closest?e.target.closest('#btnMenu'):null;if(!b)return;try{if(typeof openDrawer==='function')openDrawer();}catch(_){}},true);
+})();
+</script>
+</body>
 
 
 
@@ -27988,7 +28005,7 @@ window.FluxiaBancoFijos = (function(){
     {re:/(movistar|vodafone|orange|yoigo|másmóvil|masmovil|digi|pepephone|lowi|finetwork|internet|fibra|adsl|telefono|teléfono|móvil|movil)/i, tags:['internet','teléfono','telefono','móvil','movil','fibra','adsl']},
     {re:/(comunidad\s*de\s*prop|administ|cuota\s*comunidad|finca)/i, tags:['comunidad','comunidad de vecinos']},
     {re:/(alquiler|rent\b|arrend)/i, tags:['alquiler','renta']},
-    {re:/(seguro\s*hogar|mapfre|axa|sanitas|adeslas|seguro)/i, tags:['seguro','seguros']},
+    {re:/(seguro\s*hogar|mapfre|axa|sanitas|adeslas|seguro|securitas|prosegur|alarma|seguridad)/i, tags:['seguro','seguros','securitas','alarma','seguridad']},
     {re:/(netflix|spotify|disney|hbo|amazon\s*prime|youtube\s*premium|apple\s*tv|subscription)/i, tags:['netflix','spotify','suscripción','suscripcion','streaming']},
     {re:/(gimnasio|gym\b|basic.fit|metropolitan)/i, tags:['gimnasio','gym']},
     {re:/(colegio|guarderia|guardería|mensualidad\s*escuela)/i, tags:['colegio','guardería','guarderia','escuela']}
@@ -28283,7 +28300,7 @@ window.FluxiaBancoFijos = (function(){
     try{
       if (typeof movimientos!=='undefined' && Array.isArray(movimientos)){
         var i = movimientos.findIndex(function(m){ return m && m.id === movId; });
-        if (i >= 0){ var borrado = movimientos[i]; movimientos.splice(i,1); if(borrado) _fluxiaRegistrarBorradoGV(borrado); guardarMovimientos(); }
+        if (i >= 0){ var borrado = movimientos[i]; try{ if(borrado){ decMarcar(borrado,'silenciar'); marcarDismiss(huellaMov(borrado)); if(window.FluxiaGVBorrados&&FluxiaGVBorrados.silenciar)FluxiaGVBorrados.silenciar(borrado); } }catch(_d){} movimientos.splice(i,1); if(borrado) _fluxiaRegistrarBorradoGV(borrado); guardarMovimientos(); try{if(window.FluxiaEspejo&&FluxiaEspejo.decisionANube)FluxiaEspejo.decisionANube();}catch(_e){} }
       }
     }catch(e){}
     try{ renderGastosVariables(); renderFijos(); renderKPIs(); renderHero(); }catch(e){}
