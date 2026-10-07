@@ -1,0 +1,1 @@
+LEY v96.73: v96.45 es referencia estética absoluta. Optimizar motor sin reconstruir UI. Prohibido mezclar componentes visuales de otras versiones. Éxito = visual/datos v96.45 + velocidad FAST-SAFE.

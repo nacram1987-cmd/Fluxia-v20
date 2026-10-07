@@ -1,0 +1,1 @@
+FLUXIA v96.73 — fuente visual y funcional EXACTA v96.45; solo se retiran capas de rendimiento identificadas. Eliminadas: [["fluxia-runtime-performance-v9607", 1], ["fluxia-v9630-render-coalescer", 1], ["fluxia-v9645-stable-performance", 1], ["v95.94 · MOTOR DE FLUIDEZ", 1], ["v95.97 · Ciclo de vida PWA/iOS", 1]]
