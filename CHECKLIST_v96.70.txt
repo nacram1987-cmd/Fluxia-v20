@@ -1,0 +1,19 @@
+FLUXIA v96.70-LAB — RECUPERACIÓN DESDE LA REFERENCIA REAL
+
+CORRECCIÓN
+- Se abandona v96.35 como referencia visual incorrecta.
+- Referencia visual exacta: index.html del 06-10-2026, commit e59635e, última rama moderna del repositorio antes del trabajo de recovery.
+- Runtime rápido: v96.67 validada.
+
+APLICADO
+- 30 reglas CSS extraídas específicamente de los selectores REALES del Dashboard moderno: #panel-resumen, .fx30-*, .fx-month-nav, #mesSelectGlobal y #fx34Context.
+- Se mantiene identidad/nombre corregidos y diseño moderno ya validado en módulos.
+
+NO IMPORTADO
+- Ningún JavaScript del index moderno.
+- Ningún observer/polling/timer/render engine.
+- Ninguna regla content-visibility/will-change.
+
+ACEPTACIÓN
+- La referencia visual deja de ser inferida: procede del index real del 06-10.
+- Debe conservar velocidad FAST-SAFE.
