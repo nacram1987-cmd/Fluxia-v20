@@ -703,3 +703,18 @@ Para afianzar el producto como ELITE:
 
 **EFFECTIVE IMMEDIATELY: Fluxia v93.8.2+**  
 **NO RELEASE SIN CUMPLIR v3.0 CHECKLIST**
+
+
+## LEY IMPERIAL · MÉTODO DE DISEÑO VISUAL BASADO EN CAPTURA REAL
+
+Para cualquier cambio visual de Fluxia se seguirá, por defecto, este flujo de trabajo:
+
+1. El usuario envía una captura real de la pantalla, módulo, tarjeta o componente que desea modificar.
+2. Antes de modificar el código, se preparan varias propuestas visuales claramente diferenciadas (Modelo 1, Modelo 2, Modelo 3, etc.) aplicadas sobre la interfaz real de Fluxia y conservando, siempre que sea posible, sus datos, textos, jerarquía, contexto y elementos reales. No se usarán interfaces genéricas o inventadas cuando exista una captura real de referencia.
+3. Las propuestas deben ser técnicamente reproducibles en la aplicación. No se presentará como opción un diseño que después no pueda implementarse con fidelidad razonable en Fluxia.
+4. El usuario elige un modelo o combina elementos de varios modelos. Solo entonces se implementa en LAB, salvo que el usuario ordene expresamente ejecución directa.
+5. La implementación debe reproducir con la máxima fidelidad el modelo elegido y modificar únicamente el ámbito visual acordado. No se alterarán cálculos, persistencia, sincronización, datos ni lógica financiera por un cambio puramente visual.
+6. Si durante la implementación aparece una limitación técnica que impida reproducir fielmente el boceto elegido, se informa antes de sustituirlo silenciosamente por otro diseño.
+7. Este método prevalece como flujo normal para decisiones de diseño visual: CAPTURA REAL → MODELOS REALES → ELECCIÓN → IMPLEMENTACIÓN FIEL → PRUEBA EN LAB.
+
+Objetivo: reducir iteraciones a ciegas, acercar el resultado final a la intención visual del usuario y proteger simultáneamente la integridad funcional de Fluxia.
