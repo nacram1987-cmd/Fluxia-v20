@@ -1,0 +1,7 @@
+FLUXIA v96.79-LAB · LEY IMPERIAL
+Integridad financiera primero. Nube fuente de verdad. Huchas históricas v96.78 preservadas en 2.817,88 €.
+Disponible = ingresos cobrados - impacto real de Fijos/Financiación - provisiones previstas (más solo exceso real del mes) - Variables + impacto de Compartidos.
+Cuando un fijo tiene movimiento bancario conciliado, el movimiento real sustituye al previsto: nunca ambos.
+Prohibidos ajustes ficticios o hardcodear el Disponible.
+Variables v96.76 e interfaz v96.45 se preservan.
+LAB no sustituye ESTABLE sin validación.
