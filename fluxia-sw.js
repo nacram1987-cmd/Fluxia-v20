@@ -39,6 +39,8 @@ async function freshIndex(){
 self.addEventListener('fetch',event=>{
   const req=event.request;
   const url=new URL(req.url);
+  // LAB previews must bypass the production PWA shell and its index cache.
+  if (/\/lab-v97-[\d-]+\.html$/.test(url.pathname)) return;
   if(req.mode==='navigate'){
     event.respondWith((async()=>{
       const fresh=await freshIndex();
