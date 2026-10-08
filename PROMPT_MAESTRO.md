@@ -803,3 +803,15 @@ Los bocetos visuales se entregaran siempre por separado, nunca agrupados en una 
 7. QA antes de promoción: probar desde iPhone/Safari la **raíz** `/Fluxia-v20/index.html?v=97.39` y la PWA, asegurarse de que desaparecieron los dos defectos, no cambió Disponible/Imprimir y los bancos se reconcilian sin pérdidas. La publicación GitHub verificada por SHA **NO equivale** a validación del navegador.
 
 **Integridad primero:** disponible e Imprimir no se tocan; los datos reales en nube tampoco. Informar cualquier limitación de pruebas sin simular resultados.
+
+
+---
+
+## LEY IMPERIAL v97.39 · VERSIÓN ACTUAL EN SAFARI Y PWA
+
+**Orden permanente confirmado por el usuario:** toda entrega debe cargar la última versión realmente publicada, en Safari y en la PWA, sin quedarse en una versión anterior (incidencia observada: se mostraba v97.32 pese a existir v97.39 en `main`). La versión en GitHub por sí sola NO confirma el despliegue de GitHub Pages.
+
+1. Antes de afirmar «publicada», identificar la **rama y directorio de origen de GitHub Pages** (no suponer que es `main`); verificar que la ruta web sirve el archivo/commit y versión que se acaban de subir. En caso de duda, usar una ruta independiente de diagnóstico no destructivo, `comprobar-fluxia-v97-39.html`, que distingue ramas de publicación y SW antiguos. Si no hay acceso al sitio real, pedir una única comprobación al usuario y no prometer que el enlace ya carga la nueva versión.
+2. En la app instalada y Safari, nunca devolver un `index.html` anterior en línea cuando esté disponible el más nuevo. El Service Worker debe tener una política única de actualización, respetar todas las rutas LAB, manejar fallo de red con último shell sano y no bloquear datos ni sesiones. No debe existir ninguna rutina que desregistre todos los workers en cada arranque de PWA, ni varias rutas de registro concurrentes.
+3. **Número de versión coherente** en título, metadatos, información interna, commits, manifiesto de build y changelog. Sin etiquetas flotantes o franjas. La versión solo se declara aceptada si la **abertura real del usuario** corresponde al build esperado y los cambios son visibles.
+4. Mantener copia de seguridad antes de toda intervención sobre la entrada principal. Eliminar cachés de shell caducados sin tocar almacenamiento financiero local, sesiones o bases de datos. No indicar reinstalación como mecanismo normal de actualización.
