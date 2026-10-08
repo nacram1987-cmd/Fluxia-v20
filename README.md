@@ -1,5 +1,17 @@
-# Fluxia v95.80-LAB
+# Fluxia v97.26-LAB · paquete mínimo Vercel
 
-Corrección focalizada de Huchas tras comprobar en Safari que se mostraban saldos brutos porque faltaban usos históricos después de la hidratación.
+Subir SOLO estos archivos a la raíz de la rama `lab/ux-pwa-audit-20261008`:
 
-**Esperado:** Tributos 150,00 € · Por reponer 240,48 € · Agua 1,10 € · Amortización 1.690,58 € · reservado 2.817,88 €.
+- `index.html`
+- `manifest.webmanifest`
+- `fluxia-icon.png`
+- `README.md`
+
+Commit recomendado:
+
+`release: Fluxia v97.26 LAB minimo vercel`
+
+Notas:
+- No tocar `main`.
+- No subir carpetas antiguas ni el ZIP completo.
+- Este paquete mantiene la corrección de Fase 1 rendimiento y no modifica reglas financieras.
