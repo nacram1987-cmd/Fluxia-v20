@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Fluxia · Comprobación de publicación v97.39</title>
+<style>:root{color-scheme:light}*{box-sizing:border-box}body{font:16px/1.45 -apple-system,BlinkMacSystemFont,system-ui,sans-serif;background:#f5f9fb;color:#173848;margin:0;padding:20px}main{max-width:620px;margin:auto;background:white;border:1px solid #d9e6eb;border-radius:18px;padding:22px;box-shadow:0 4px 16px #1232}h1{font-size:21px;margin:0 0 8px}.sub{color:#526b78}dt{font-weight:700;margin-top:15px}dd{margin:2px 0 0;overflow-wrap:anywhere}strong{font-weight:800}.ok{color:#1a704c}.warn{color:#b45428}.bad{color:#ac2833}button,a.action{display:block;background:#287791;color:white;border:0;border-radius:11px;padding:12px 16px;text-decoration:none;font-weight:700;text-align:center;margin-top:14px;width:100%}button{font:inherit;cursor:pointer}.small{font-size:13px;color:#657a87}code{font-size:13px}hr{border:0;border-top:1px solid #e2ebee;margin:18px 0}</style>
+</head><body><main>
+<h1>Diagnóstico de publicación · Fluxia</h1>
+<p class="sub">Esta página es independiente de la aplicación y NO modifica gastos, bancos, cachés ni sesiones.</p>
+<dl>
+<dt>Archivo de diagnóstico servido</dt><dd id="probe" class="ok">DIAGNÓSTICO v97.39 · 08/10/2026</dd>
+<dt>Versión de index.html recibida</dt><dd id="indexver">Comprobando…</dd>
+<dt>Service Worker que controla esta página</dt><dd id="controller">Comprobando…</dd>
+<dt>Worker registrado en esta ruta</dt><dd id="registered">Comprobando…</dd>
+<dt>Ruta de prueba</dt><dd id="url"></dd>
+</dl>
+<hr>
+<p id="result" class="sub">Analizando…</p>
+<a class="action" href="./index.html?v=97.39-probe">Abrir Fluxia desde index.html</a>
+<button id="again">Volver a comprobar</button>
+<p class="small">Esta página permite distinguir si GitHub Pages no publica los cambios o si un Service Worker antiguo devuelve una versión cacheada. No elimina ni modifica almacenamiento.</p>
+</main><script>
+(function(){
+  'use strict';
+  var $=function(id){return document.getElementById(id)};
+  $('url').textContent=location.href;
+  function version(text){
+    var p=document.createElement('div');p.innerHTML=text.slice(0,130000);
+    var m=p.querySelector('meta[name="fluxia-version"],meta[name="fluxia-build-id"]');
+    return (m&&m.getAttribute('content'))||(text.match(/<title>\s*Fluxia BETA\s*([^<]+)/i)||[])[1]||'Versión no identificable';
+  }
+  async function run(){
+    $('indexver').textContent='Comprobando…';$('result').textContent='Analizando…';
+    try{$('controller').textContent=navigator.serviceWorker&&navigator.serviceWorker.controller?navigator.serviceWorker.controller.scriptURL:'Ninguno (esta página no está controlada)';}catch(e){$('controller').textContent='No disponible';}
+    try{var r=await Promise.race([navigator.serviceWorker.getRegistration('./'),new Promise(function(_,reject){setTimeout(function(){reject(new Error('Tiempo agotado'));},6000);})]);$('registered').textContent=r?(r.active&&r.active.scriptURL||'Instalando'):'Ninguno';}catch(e){$('registered').textContent='No disponible: '+e.message;}
+    try{
+      var r=await fetch('./index.html?fluxia_probe='+Date.now(),{cache:'no-store',redirect:'follow'});
+      if(!r.ok)throw Error('HTTP '+r.status);
+      var html=await r.text();
+      var v=version(html);
+      $('indexver').textContent=v;
+      var latest=/97\.39/.test(v);
+      $('indexver').className=latest?'ok':'bad';
+      $('result').textContent=latest?'Esta prueba recibe el index.html de v97.39. Si Fluxia muestra v97.32, hay una copia antigua en otra ruta o controlador.':'Esta prueba recibe una versión distinta de la v97.39. La publicación o la caché del Service Worker necesita corregirse.';
+      $('result').className=latest?'ok':'bad';
+    }catch(e){$('indexver').textContent='Error: '+e.message;$('result').textContent='No se ha podido obtener index.html; comprueba la configuración de GitHub Pages.';$('result').className='bad';}
+  }
+  $('again').addEventListener('click',run);
+  run();
+})();
+</script></body></html>
