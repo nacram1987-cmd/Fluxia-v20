@@ -16872,7 +16872,11 @@ function renderGastosVariables(){
 
   /* v96.95 · FIRST PAINT FIRST: cabecera contable e historial se completan después
      de pintar la lista. Entrar en Variables nunca espera a Disponible ni al datalist. */
+  const _gvRenderGeneration = (window.__fxGVRenderGeneration = (window.__fxGVRenderGeneration || 0) + 1);
   const _gvDeferred = function(){
+    if (_gvRenderGeneration !== window.__fxGVRenderGeneration) return;
+    const _gvPage = document.getElementById('gvMovimientosView');
+    if (_gvPage && !_gvPage.getClientRects().length) return;
     try{
       const disponible = disponibleEfectivo(mes);
       const valEl = document.getElementById('gvAjustadoVal');
@@ -16911,8 +16915,12 @@ function renderGastosVariables(){
   if (catEl){
     const prev = catEl.value;
     const cats = [...new Set(_movMes.map(m => m.categoria || 'Otros'))].sort((a,b)=>a.localeCompare(b,'es'));
-    catEl.innerHTML = '<option value="">Todas las categorías</option>' + cats.map(c => '<option value="'+String(c).replace(/"/g,'&quot;')+'">'+c+'</option>').join('');
-    if (prev && cats.includes(prev)) catEl.value = prev;
+    const sig = cats.join('\\u001f');
+    if(catEl.dataset.fxCategoriesSignature !== sig){
+      catEl.innerHTML = '<option value="">Todas las categorías</option>' + cats.map(c => '<option value="'+String(c).replace(/"/g,'&quot;')+'">'+c+'</option>').join('');
+      catEl.dataset.fxCategoriesSignature = sig;
+      if (prev && cats.includes(prev)) catEl.value = prev;
+    }
   }
   if (busqEl && !busqEl._bound){
     busqEl._bound = true;
