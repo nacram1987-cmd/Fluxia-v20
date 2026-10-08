@@ -38025,7 +38025,7 @@ html body #panel-provisiones .pv-loan{border-radius:14px!important;margin-top:10
   function cabeceraPremium(){
     try{
       var b=document.getElementById('bancoEstadoHeader'),n=document.getElementById('fxNubeEstado'),txt=document.querySelector('header.top .fx-hdr-text');
-      if(txt&&b&&n){var row=document.getElementById('fxHeaderStatusRow');if(!row){row=document.createElement('div');row.id='fxHeaderStatusRow';row.className='fx-header-status';txt.appendChild(row);}if(b.parentNode!==row)row.appendChild(b);if(n.parentNode!==row)row.appendChild(n);}
+      /* LAB: disable legacy status reparenting; preserve existing bank/cloud status containers. */
       var beta=document.getElementById('fluxiaBetaBadge');if(beta){beta.style.display='inline-flex';beta.textContent='BETA';}
     }catch(e){}
   }
