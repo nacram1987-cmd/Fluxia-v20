@@ -12574,6 +12574,21 @@ function fxEfectivoConfirmadoOct08(m){
   return (nombre.includes('peluquer') && Math.abs(valor-8)<0.005)
     || ((nombre.includes('jamon') || nombre.includes('chucher')) && Math.abs(valor-1)<0.005);
 }
+/* Conciliación visual específica de pagos en efectivo de octubre de 2026.
+   No borra registros, no altera Disponible ni la cartera. */
+function fxEfectivoOctubreConciliado(mv){
+  if(!mv || String(mv.mes||'')!=='2026-10') return false;
+  var nombre=String(mv.concepto||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();
+  var importe=Math.abs(Number(mv.importe)||0);
+  var peluquero=nombre.includes('peluquer') && Math.abs(importe-8)<0.005;
+  var chucheria=(nombre.includes('jamon') || nombre.includes('chucher')) && Math.abs(importe-1)<0.005;
+  if(!peluquero && !chucheria) return false;
+  if(typeof efectivo==='undefined' || !efectivo || !Array.isArray(efectivo.movimientos)) return false;
+  return efectivo.movimientos.some(function(e){
+    return e && e.tipo==='salida' && Math.abs((Number(e.importe)||0)-importe)<0.005
+      && String(e.fecha||'').slice(0,7)==='2026-10';
+  });
+}
 function movimientosDe(mes){
   return movimientos.filter(function(mv){
     if(!mv || mv.mes!==mes) return false;
@@ -16775,7 +16790,7 @@ function renderGastosVariables(){
     /* Origen efectivo es determinante aunque la cartera aún no se haya
        hidratado desde nube. El ledger y Disponible permanecen intactos. */
     if(String(m.origen||'').trim().toLowerCase()==='efectivo') return false;
-    return !fxPagoYaEnDineroEnMano(m);
+    return !fxPagoYaEnDineroEnMano(m) && !fxEfectivoOctubreConciliado(m);
   });
   document.getElementById('gvMesLabel').textContent = MES_LABEL[mes];
   document.getElementById('gvMesActivo').textContent = MES_LABEL[mes];
