@@ -13324,7 +13324,8 @@ function pintarDrawerHeader(){
 
 let _drawerScrollY = 0;
 function openDrawer(){
-  try{ pintarDrawerHeader(); }catch(e){}
+  // Primero abrir; datos secundarios del drawer se actualizan tras el primer frame.
+  requestAnimationFrame(function(){try{pintarDrawerHeader();}catch(e){}});
   try{
     _drawerScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
     document.documentElement.classList.add('drawer-open');
@@ -13338,6 +13339,7 @@ function openDrawer(){
 }
 function closeDrawer(){
   const m = document.getElementById('drawerMenu');
+  if(!m || !m.classList.contains('open')) return;
   const o = document.getElementById('drawerOverlay');
   if (m) m.classList.remove('open');
   if (o) o.classList.remove('open');
@@ -16969,7 +16971,7 @@ function renderGastosVariables(){
 
   // Histórico de movimientos (filtrado)
   const movView = document.getElementById('gvMovimientosView');
-  movView.innerHTML = "";
+  // No vaciar la lista hasta disponer de los nuevos nodos: reduce parpadeos y repintados.
   let movs = _movMes.slice().sort((a,b)=> (a.fecha||'').localeCompare(b.fecha||'') || 0).reverse();
   if (catFiltro) movs = movs.filter(m => (m.categoria || 'Otros') === catFiltro);
   if (q) movs = movs.filter(m => {
@@ -16982,6 +16984,7 @@ function renderGastosVariables(){
   } else if (movs.length === 0){
     movView.innerHTML = fluxiaEmptyHTML({ico:'🔎',tit:'Ningún gasto coincide',txt:'Limpia la búsqueda o el filtro de categoría para ver todos.'});
   } else {
+    movView.replaceChildren();
     movs.forEach(mv=>{
       const div = document.createElement('div');
       div.className = 'mov-item';
