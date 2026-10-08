@@ -1,4 +1,4 @@
-const CACHE_VERSION='fluxia-shell-v97.31-menu-fix-20261008e';
+const CACHE_VERSION='fluxia-shell-v97.32-final-20261008';
 const ENTRY='./index.html?v=97.31-lab-menu-fix';
 const CORE=['./index.html','./manifest.webmanifest','./fluxia-icon.png'];
 
