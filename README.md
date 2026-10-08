@@ -1,4 +1,4 @@
-# Fluxia v97.27-LAB mínima Vercel
+# Fluxia v97.28-LAB · PWA FIX definitivo
 
 Paquete mínimo para subir a la raíz de la rama `lab/ux-pwa-audit-20261008`.
 
@@ -9,18 +9,19 @@ Archivos incluidos:
 - `fluxia-icon.png`
 - `README.md`
 
-Cambios v97.27-LAB:
+Cambios v97.28-LAB:
 
-- Restaura el menú habitual integrado arriba.
-- Oculta cualquier botón flotante negro/duplicado de menú generado por capas anteriores.
-- Mantiene apertura rápida del drawer.
-- Añade versión visible `v97.27-LAB`.
-- Añade optimización visual segura para Variables y Bancos (`content-visibility`, `contain`, menor transición móvil).
-- No modifica lógica financiera ni datos.
-- Mantiene desactivada la reconciliación automática antigua de césped al visualizar huchas.
+- Corrige arranque en modo PWA/iOS standalone.
+- `manifest.webmanifest` con `start_url` versionado para evitar caché antigua al añadir a pantalla de inicio.
+- Mantiene menú normal integrado arriba.
+- Oculta/elimina visualmente cualquier botón flotante negro heredado.
+- Mueve `#btnMenu` al header si alguna capa antigua lo deja fuera en PWA.
+- Añade versión visible `v97.28-LAB`.
+- Intenta desregistrar service workers antiguos solo en modo standalone, sin borrar datos financieros.
+- No modifica lógica financiera, Supabase, huchas, disponible ni movimientos.
 
 Commit recomendado:
 
 ```
-release: Fluxia v97.27 LAB menu rendimiento
+release: Fluxia v97.28 LAB pwa fix
 ```
