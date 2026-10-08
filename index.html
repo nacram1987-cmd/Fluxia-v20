@@ -4134,7 +4134,27 @@ body .panel:not(#panel-dashboard) button{touch-action:manipulation;}
 @media(max-width:430px){#gvMovimientosView .mov-item{grid-template-columns:1fr!important}#gvMovimientosView .mov-item>div:last-child{grid-template-columns:1fr repeat(4,30px)!important;width:100%!important}#gvMovimientosView .mov-item button{width:30px!important;height:30px!important;min-width:30px!important;min-height:30px!important}}
 /* Avoid expensive entrance animation on iPhone tab switches. */
 .panel.active{animation:none!important}
-</style></head>
+</style>
+<style id="fx-ux-unification-20261008">
+/* LAB: layout-only; no mutations to finance, authentication, sync or month state */
+@media(max-width:700px){
+ html body #fx32Header{padding:8px 12px!important;min-height:54px!important;border-radius:0 0 17px 17px!important}
+ html body #fx32Header .fx30-headgrid{display:grid!important;grid-template-columns:40px minmax(0,1fr) 40px!important;align-items:center!important;gap:8px!important;min-height:40px!important}
+ html body #fx32Header .fx30-brandzone{justify-self:center!important;max-width:100%!important;min-height:36px!important}
+ html body #fx32Header #btnMenu,html body #fx32Header #headerNotifications{position:static!important;transform:none!important;margin:0!important;visibility:visible!important;display:flex!important;align-items:center!important;justify-content:center!important;width:40px!important;height:40px!important}
+ html body #fx32Header #btnMenu{grid-column:1!important;grid-row:1!important}
+ html body #fx32Header .fx30-brandzone{grid-column:2!important;grid-row:1!important}
+ html body #fx32Header #headerNotifications{grid-column:3!important;grid-row:1!important}
+ html body #fx34Context{margin:4px 0 8px!important}
+ html body #fx34Context .fx30-greeting{display:none!important}
+ html body #fx34Context .fx30-statusrow{gap:8px!important}
+ html body #fx34Context .fx-banco-pill{font-size:11px!important;padding:5px 9px!important;max-width:49%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+ html body #mesSelectGlobal{margin-top:5px!important;margin-bottom:9px!important}
+ html body .fx-month-nav{padding:6px 8px!important;margin-bottom:9px!important;min-height:0!important}
+ html body .fx-month-nav button{min-width:36px!important;height:36px!important}
+}
+</style>
+</head>
 <script>
 window._offlineMode=!navigator.onLine;
 window.addEventListener('online',()=>{window._offlineMode=false;});
