@@ -16928,8 +16928,9 @@ function renderGastosVariables(){
 
   /* v96.95 · FIRST PAINT FIRST: cabecera contable e historial se completan después
      de pintar la lista. Entrar en Variables nunca espera a Disponible ni al datalist. */
+  const _gvGeneration = (window.__fxGVGeneration = (window.__fxGVGeneration || 0) + 1);
   const _gvDeferred = function(){
-    if (!_gvPanel || !_gvPanel.classList.contains('active') || mesSeleccionado!==mes) return;
+    if (_gvGeneration !== window.__fxGVGeneration || !_gvPanel || !_gvPanel.classList.contains('active') || mesSeleccionado!==mes) return;
     try{
       const disponible = disponibleEfectivo(mes);
       const valEl = document.getElementById('gvAjustadoVal');
