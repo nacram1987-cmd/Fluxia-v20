@@ -1,4 +1,4 @@
-const CACHE_VERSION='fluxia-shell-v97.20';
+const CACHE_VERSION='fluxia-shell-v97.33-lab';
 const ENTRY='./index.html';
 
 self.addEventListener('install',event=>{
@@ -36,7 +36,14 @@ self.addEventListener('fetch',event=>{
         if(response&&response.ok) await cache.put(ENTRY,response.clone());
         return response;
       }).catch(()=>null);
-      if(cached){ event.waitUntil(fresh); return cached; }
+      if(cached){
+        // Give the network a short opportunity to supply a newly deployed shell.
+        // A slow/offline connection still boots quickly from the last known-good cache.
+        const latest=await Promise.race([fresh,new Promise(resolve=>setTimeout(()=>resolve(null),450))]);
+        if(latest&&latest.ok) return latest;
+        event.waitUntil(fresh);
+        return cached;
+      }
       return (await fresh)||Response.error();
     })());
     return;
