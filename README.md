@@ -1,4 +1,4 @@
-# Fluxia v97.28-LAB · PWA FIX definitivo
+# Fluxia v97.29-LAB · MENÚ DEFINITIVO
 
 Paquete mínimo para subir a la raíz de la rama `lab/ux-pwa-audit-20261008`.
 
@@ -9,19 +9,18 @@ Archivos incluidos:
 - `fluxia-icon.png`
 - `README.md`
 
-Cambios v97.28-LAB:
+Cambios v97.29-LAB:
 
-- Corrige arranque en modo PWA/iOS standalone.
-- `manifest.webmanifest` con `start_url` versionado para evitar caché antigua al añadir a pantalla de inicio.
-- Mantiene menú normal integrado arriba.
-- Oculta/elimina visualmente cualquier botón flotante negro heredado.
-- Mueve `#btnMenu` al header si alguna capa antigua lo deja fuera en PWA.
-- Añade versión visible `v97.28-LAB`.
-- Intenta desregistrar service workers antiguos solo en modo standalone, sin borrar datos financieros.
+- Elimina/oculta de forma agresiva el botón negro flotante lateral de menú.
+- Fuerza el botón de menú normal dentro del header superior.
+- Si el botón original no aparece, crea un botón superior permanente que abre el drawer.
+- Mantiene rendimiento y visual de v97.27/v97.28.
+- `manifest.webmanifest` versionado para instalación PWA limpia.
+- Versión visible: `v97.29-LAB`.
 - No modifica lógica financiera, Supabase, huchas, disponible ni movimientos.
 
 Commit recomendado:
 
-```
-release: Fluxia v97.28 LAB pwa fix
+```text
+release: Fluxia v97.29 LAB menu definitivo
 ```

@@ -1,8 +1,8 @@
 {
-  "name": "Fluxia BETA v97.28-LAB",
+  "name": "Fluxia BETA v97.29-LAB",
   "short_name": "Fluxia BETA",
-  "id": "/fluxia-beta-v97-28-lab",
-  "start_url": "/?fx_pwa=97.28-lab&source=ios-home-screen",
+  "id": "/fluxia-beta-v97-29-lab-menu-definitivo",
+  "start_url": "/?fx_pwa=97.29-lab-menu-definitivo&source=ios-home-screen",
   "scope": "/",
   "display": "standalone",
   "display_override": [
@@ -14,7 +14,7 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "/fluxia-icon.png?v=97.28-lab",
+      "src": "/fluxia-icon.png?v=97.29-lab",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any maskable"
