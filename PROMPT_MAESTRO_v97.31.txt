@@ -1,0 +1,12 @@
+PROMPT MAESTRO FLUXIA · CORRECCIÓN v97.31-LAB
+
+Prioridades: 1) integridad financiera, 2) separación de usuarios, 3) nube como fuente de verdad, 4) cero duplicados o resurrecciones, 5) rendimiento, 6) diseño.
+
+- No modificar importes, movimientos, Disponible, huchas, ingresos, variables, fijos, bancos o reglas contables al arreglar navegación o presentación.
+- Los datos sobreviven a reinstalación, limpieza de caché, cierre de sesión y cambio de dispositivo; al entrar se reconstruyen desde la nube. No mezclar perfiles.
+- Dinero en mano es autoritativo para retiradas de efectivo: no duplicar esas salidas como gasto variable.
+- Disponible = ingresos − gastos − provisiones previstas − exceso de aportaciones sobre lo previsto. Aportaciones hasta lo previsto no reducen Disponible; las inferiores no lo aumentan.
+- No resucitar operaciones tratadas ni duplicar sincronizaciones o notificaciones.
+- PWA: `index.html` estable, manifiesto con identidad Fluxia BETA, service worker actualizado y compatible con Safari. Instalar/actualizar no altera los datos financieros.
+- Renderizado: evitar observadores de página completa que vuelven a mutar clases/estilos y disparan ciclos de render. Preferir manejadores acotados e idempotentes.
+- En esta entrega se corrige únicamente el menú original `#btnMenu` y el ciclo de mutaciones asociado; no se cambia lógica financiera.

@@ -2,7 +2,7 @@
   "name": "Fluxia BETA v97.31-LAB",
   "short_name": "Fluxia BETA",
   "id": "./fluxia-beta-v97-31-github-pages",
-  "start_url": "./index.html?v=97.31-lab-ghpages",
+  "start_url": "./index.html?v=97.31-lab-menu-fix",
   "scope": "./",
   "display": "standalone",
   "display_override": [

@@ -1,5 +1,5 @@
-const CACHE_VERSION='fluxia-shell-v97.31-ghpages-20261008d';
-const ENTRY='./index.html?v=97.31-lab-ghpages';
+const CACHE_VERSION='fluxia-shell-v97.31-menu-fix-20261008e';
+const ENTRY='./index.html?v=97.31-lab-menu-fix';
 const CORE=['./index.html','./manifest.webmanifest','./fluxia-icon.png'];
 
 self.addEventListener('install',event=>{
@@ -19,7 +19,7 @@ self.addEventListener('activate',event=>{
 
 async function freshIndex(){
   try{
-    const res=await fetch('./index.html?v=97.31-lab-ghpages-'+Date.now(),{cache:'no-store'});
+    const res=await fetch('./index.html?v=97.31-lab-menu-fix-'+Date.now(),{cache:'no-store'});
     if(res&&res.ok){const cache=await caches.open(CACHE_VERSION);await cache.put('./index.html',res.clone());}
     return res;
   }catch(_){return null;}
