@@ -4169,6 +4169,16 @@ html body #panel-fijos .fx47-summary-total{line-height:1.1!important}
 html body #panel-fijos .fx47-fijos-icon{width:38px!important;height:38px!important;flex:0 0 38px!important}
 }
 </style>
+<script id="fluxia-lab-perf-instrumentation">
+/* Read-only performance diagnostics; disabled by default. No financial data collected. */
+(function(){
+ var enabled=/[?&]fxperf=1(?:&|$)/.test(location.search);
+ if(!enabled)return;
+ var samples=[];
+ window.FLUXIA_LAB_PERF={record:function(tab,ms){samples.push({tab:String(tab),ms:Math.round(ms),at:Math.round(performance.now())});if(samples.length>120)samples.shift();if(ms>50)console.warn('[Fluxia LAB slow render]',tab,Math.round(ms)+'ms')},report:function(){return samples.slice()},summary:function(){var out={};samples.forEach(function(x){var a=out[x.tab]||(out[x.tab]={calls:0,totalMs:0,maxMs:0});a.calls++;a.totalMs+=x.ms;a.maxMs=Math.max(a.maxMs,x.ms)});return out}}};
+ try{if('PerformanceObserver'in window){var observer=new PerformanceObserver(function(list){list.getEntries().forEach(function(x){console.warn('[Fluxia LAB long task]',Math.round(x.duration)+'ms')})});observer.observe({entryTypes:['longtask']})}}catch(e){}
+})();
+</script>
 </head>
 <script>
 window._offlineMode=!navigator.onLine;
@@ -20307,7 +20317,9 @@ function renderAll(){
     var p=document.querySelector('.panel.active');
     if(p&&p.id&&p.id.indexOf('panel-')===0) activo=p.id.slice(6);
   }catch(e){}
+  const fxPerfStart = (window.FLUXIA_LAB_PERF && typeof performance!=='undefined') ? performance.now() : 0;
   fluxiaRenderPanel9619(activo);
+  if(fxPerfStart){try{window.FLUXIA_LAB_PERF.record(activo,performance.now()-fxPerfStart)}catch(e){}}
 
   try{ fluxiaPintarPrimerUsoInicio(); }catch(e){}
   try{ pintarDrawerHeader(); }catch(e){}
