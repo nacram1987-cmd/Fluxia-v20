@@ -1,9 +1,25 @@
 {
   "name": "Fluxia BETA",
   "short_name": "Fluxia BETA",
-  "start_url": "./index.html",
-  "scope": "./",
+  "start_url": "/index.html?v=v97.26-LAB",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#0E7C90"
+  "background_color": "#F7FBFC",
+  "theme_color": "#69A9D0",
+  "icons": [
+    {
+      "src": "/fluxia-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/fluxia-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/fluxia-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
