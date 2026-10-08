@@ -1,6 +1,6 @@
 /* Fluxia v97.39: one canonical shell, network-first with bounded offline fallback.
    No SW may rewrite an independent LAB document to index.html. */
-const CACHE_VERSION = 'fluxia-shell-v97.39-canonical';
+const CACHE_VERSION = 'fluxia-shell-v97.40-canonical-menu';
 const ENTRY = './index.html';
 const PATH = new URL(ENTRY, self.registration.scope).pathname;
 const ROOT = new URL('./', self.registration.scope).pathname;
@@ -48,7 +48,7 @@ self.addEventListener('fetch', event => {
       return res && res.ok ? res : null;
     }).catch(() => null);
     // A fast connection receives the latest published shell, not a stale PWA.
-    const fresh = await Promise.race([network, new Promise(resolve => setTimeout(() => resolve(null), 1100))]);
+    const fresh = await Promise.race([network, new Promise(resolve => setTimeout(() => resolve(null), 2500))]);
     if (fresh) return fresh;
     const cached = await cache.match(ENTRY);
     if (cached) {
