@@ -17041,78 +17041,69 @@ function renderGastosVariables(){
     movView.replaceChildren(_gvFragment);
   }
 
-  movView.querySelectorAll('button[data-action="provision"]').forEach(btn=>{
-    btn.addEventListener('click',(e)=>{e.stopPropagation();const mv=movimientos.find(m=>String(m.id)===btn.dataset.id);if(mv)fxVincularVariableProvision(mv);});
-  });
-
-  movView.querySelectorAll('button[data-action="split"]').forEach(btn=>{
-    btn.addEventListener('click', (e)=>{
+  /* v97.21 LAB: un único listener delegado; no crear listeners por gasto en cada render. */
+  if (!movView._fxGvDelegated) {
+    movView._fxGvDelegated = true;
+    movView.addEventListener('click', function(e){
+      const btn = e.target.closest('button[data-action]');
+      if (!btn || !movView.contains(btn)) return;
+      const action = btn.dataset.action;
+      if (!['provision','split','del','edit'].includes(action)) return;
       e.stopPropagation();
-      const mv = movimientos.find(m=>String(m.id)===btn.dataset.id);
-      if (!mv || !window.FluxiaDividir) return;
-      FluxiaDividir.abrir(mv.id);
-    });
-  });
-
-  movView.querySelectorAll('button[data-action="del"]').forEach(btn=>{
-    btn.addEventListener('click', (e)=>{
-      e.stopPropagation();
-      const mv = movimientos.find(m=>String(m.id)===btn.dataset.id);
+      const id = btn.dataset.id;
+      const mv = movimientos.find(m=>String(m.id)===id);
       if (!mv) return;
-      openConfirmModal({
-        title: 'Borrar gasto',
-        message: '¿Borrar «' + (mv.concepto || 'gasto') + '» de ' + eur(mv.importe, 2) + '? No se puede deshacer.',
-        confirmLabel: 'Borrar', danger: true,
-        onConfirm: ()=>{
-          const linked = mv.division && window.FluxiaDividir ? FluxiaDividir.quitarCompartidos(mv, false) : true;
-          if (linked === false){ mostrarToast('⚠️ Primero elimina los cobros recibidos de este gasto en Compartidos.','var(--wine)',3200); return; }
-          try{ window._FLUXIA_BORRANDO_GV = true; }catch(_){}
-          try{ if (window._fluxiaRegistrarBorradoGV) _fluxiaRegistrarBorradoGV(mv); }catch(_){}
-          try{ if (window.FluxiaGVBorrados) FluxiaGVBorrados.registrar(mv); }catch(_){}
-          movimientos = movimientos.filter(m => String(m.id) !== btn.dataset.id);
-          try{ window.movimientos = movimientos; }catch(_){}
-          try{ registrarOperacion('gasto_eliminado',{id:mv.id,concepto:mv.concepto,importe:mv.importe,dividido:!!mv.division}); }catch(_){}
-          _guardarMovimientosTrasBorrado();
-          try{ setTimeout(function(){ window._FLUXIA_BORRANDO_GV = false; }, 500); }catch(_){}
-          /* v94.16: segunda escritura directa por si Almacen falla */
-          try{
-            var _k = (typeof claveLS==='function') ? claveLS('v2_movimientos') : 'v2_movimientos';
-            localStorage.setItem(_k, JSON.stringify(movimientos));
-            if (typeof Almacen!=='undefined' && Almacen.setItem) Almacen.setItem(_k, JSON.stringify(movimientos));
-          }catch(_e2){}
-          renderGastosVariables(); renderKPIs();
-          try{ if(typeof mostrarToast==='function') mostrarToast('🗑️ En papelera · no volverá del banco', 'var(--teal)', 2800); }catch(_){}
-        }
-      });
+      if (action==='provision') { fxVincularVariableProvision(mv); return; }
+      if (action==='split') { if(window.FluxiaDividir) FluxiaDividir.abrir(mv.id); return; }
+      if (action==='del') {
+        openConfirmModal({
+          title:'Borrar gasto',
+          message:'¿Borrar «'+(mv.concepto||'gasto')+'» de '+eur(mv.importe,2)+'? No se puede deshacer.',
+          confirmLabel:'Borrar', danger:true,
+          onConfirm:()=>{
+            const linked=mv.division && window.FluxiaDividir ? FluxiaDividir.quitarCompartidos(mv,false) : true;
+            if(linked===false){mostrarToast('⚠️ Primero elimina los cobros recibidos de este gasto en Compartidos.','var(--wine)',3200);return;}
+            try{window._FLUXIA_BORRANDO_GV=true;}catch(_){}
+            try{if(window._fluxiaRegistrarBorradoGV) _fluxiaRegistrarBorradoGV(mv);}catch(_){}
+            try{if(window.FluxiaGVBorrados) FluxiaGVBorrados.registrar(mv);}catch(_){}
+            movimientos=movimientos.filter(m=>String(m.id)!==id);
+            try{window.movimientos=movimientos;}catch(_){}
+            try{registrarOperacion('gasto_eliminado',{id:mv.id,concepto:mv.concepto,importe:mv.importe,dividido:!!mv.division});}catch(_){}
+            _guardarMovimientosTrasBorrado();
+            try{setTimeout(function(){window._FLUXIA_BORRANDO_GV=false;},500);}catch(_){}
+            try{
+              var _k=(typeof claveLS==='function')?claveLS('v2_movimientos'):'v2_movimientos';
+              localStorage.setItem(_k,JSON.stringify(movimientos));
+              if(typeof Almacen!=='undefined' && Almacen.setItem) Almacen.setItem(_k,JSON.stringify(movimientos));
+            }catch(_e2){}
+            renderGastosVariables();renderKPIs();
+            try{if(typeof mostrarToast==='function')mostrarToast('🗑️ En papelera · no volverá del banco','var(--teal)',2800);}catch(_){}
+          }
+        });
+        return;
+      }
+      if(action==='edit'){
+        const categoriaOptions=Array.from(document.getElementById('gvCategoria').options).map(o=>({value:o.value,label:o.textContent}));
+        openFormModal({
+          title:'Editar gasto',
+          fields:[
+            {name:'concepto',label:'Concepto',type:'text',required:true,value:mv.concepto},
+            {name:'categoria',label:'Categoría',type:'select',value:mv.categoria||'Otros',options:categoriaOptions},
+            ...(mv.division?[]:[{name:'importe',label:'Importe (€)',type:'number',min:0,step:'0.01',value:mv.importe}]),
+            {name:'fecha',label:'Fecha',type:'date',required:true,value:mv.fecha||hoyISO()}
+          ],
+          submitLabel:'Guardar',
+          onSubmit:(vals)=>{
+            mv.concepto=formatTexto(vals.concepto);mv.categoria=vals.categoria;
+            if(!mv.division && vals.importe!==undefined)mv.importe=vals.importe;
+            mv.fecha=vals.fecha;mv.mes=mesFromFechaISO(vals.fecha);
+            try{registrarOperacion('gasto_editado',{id:mv.id,concepto:mv.concepto,importe:mv.importe,dividido:!!mv.division});}catch(_){}
+            guardarMovimientos();renderGastosVariables();renderKPIs();
+          }
+        });
+      }
     });
-  });
-
-  movView.querySelectorAll('button[data-action="edit"]').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const mv = movimientos.find(m=>String(m.id)===btn.dataset.id);
-      if (!mv) return;
-      const categoriaOptions = Array.from(document.getElementById('gvCategoria').options)
-        .map(o=>({ value:o.value, label:o.textContent }));
-      openFormModal({
-        title: 'Editar gasto',
-        fields: [
-          { name:'concepto', label:'Concepto', type:'text', required:true, value: mv.concepto },
-          { name:'categoria', label:'Categoría', type:'select', value: mv.categoria || 'Otros', options: categoriaOptions },
-          ...(mv.division ? [] : [{ name:'importe', label:'Importe (€)', type:'number', min:0, step:'0.01', value: mv.importe }]),
-          { name:'fecha', label:'Fecha', type:'date', required:true, value: mv.fecha || hoyISO() }
-        ],
-        submitLabel: 'Guardar',
-        onSubmit: (vals)=>{
-          mv.concepto = formatTexto(vals.concepto); mv.categoria = vals.categoria;
-          if (!mv.division && vals.importe !== undefined) mv.importe = vals.importe;
-          mv.fecha = vals.fecha; mv.mes = mesFromFechaISO(vals.fecha);
-          try{ registrarOperacion('gasto_editado',{id:mv.id,concepto:mv.concepto,importe:mv.importe,dividido:!!mv.division}); }catch(_){}
-          guardarMovimientos();
-          renderGastosVariables(); renderKPIs();
-        }
-      });
-    });
-  });
+  }
 
   // Render de categorías (pestaña interna "Por categoría")
   const gvFechaEl = document.getElementById('gvFecha');
