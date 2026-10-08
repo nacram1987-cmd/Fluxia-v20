@@ -1,12 +1,11 @@
-const CACHE_VERSION='fluxia-shell-v97.20';
-const ENTRY='./index.html';
-const CORE=[ENTRY,'./manifest.webmanifest'];
+const CACHE_VERSION='fluxia-shell-v97.31-ghpages-20261008b';
+const ENTRY='./index.html?v=97.31-lab-ghpages';
+const CORE=['./index.html','./manifest.webmanifest','./fluxia-icon.png'];
 
 self.addEventListener('install',event=>{
   self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_VERSION)
-      .then(cache=>cache.addAll(CORE).catch(()=>{}))
+    caches.open(CACHE_VERSION).then(cache=>cache.addAll(CORE).catch(()=>{}))
   );
 });
 
@@ -24,41 +23,33 @@ self.addEventListener('activate',event=>{
   })());
 });
 
-async function networkIndex(){
+async function freshIndex(){
   try{
-    const res=await fetch(ENTRY,{cache:'no-store'});
+    const res=await fetch('./index.html?v=97.31-lab-ghpages-'+Date.now(),{cache:'no-store'});
     if(res&&res.ok){
       const cache=await caches.open(CACHE_VERSION);
-      await cache.put(ENTRY,res.clone());
+      await cache.put('./index.html',res.clone());
     }
     return res;
-  }catch(_){return null;}
+  }catch(_){
+    return null;
+  }
 }
 
 self.addEventListener('fetch',event=>{
-  const r=event.request;
-  if(r.mode==='navigate'){
+  const req=event.request;
+  const url=new URL(req.url);
+  if(req.mode==='navigate'){
     event.respondWith((async()=>{
+      const fresh=await freshIndex();
+      if(fresh&&fresh.ok)return fresh;
       const cache=await caches.open(CACHE_VERSION);
-      const cached=await cache.match(ENTRY);
-      const net=networkIndex();
-      if(!cached){
-        const fresh=await net;
-        return fresh||Response.error();
-      }
-      /* v97.20: la red tiene una ventana corta para entregar la versión más nueva.
-         Si tarda, Fluxia arranca desde shell local y la actualización termina detrás. */
-      const fast=await Promise.race([
-        net,
-        new Promise(resolve=>setTimeout(()=>resolve(null),450))
-      ]);
-      if(fast&&fast.ok)return fast;
-      event.waitUntil(net);
-      return cached;
+      const cached=await cache.match('./index.html');
+      return cached||fetch(req);
     })());
     return;
   }
-  if(new URL(r.url).origin===self.location.origin){
-    event.respondWith(fetch(r).catch(()=>caches.match(r)));
+  if(url.origin===self.location.origin){
+    event.respondWith(fetch(req,{cache:'no-store'}).catch(()=>caches.match(req)));
   }
 });
