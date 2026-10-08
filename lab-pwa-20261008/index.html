@@ -16891,6 +16891,11 @@ function fxVincularVariableProvision(mv){
 }
 
 function renderGastosVariables(){
+  /* LAB rendimiento: no construir la lista cuando el panel no está visible.
+     Al abrir Gastos variables, goToTab -> fluxiaRenderPanel9619 actualiza la vista. */
+  var _gvPanel = document.getElementById('panel-gastos-variables');
+  if (_gvPanel && !_gvPanel.classList.contains('active')) return;
+
   /* v96.95 · FAST PATH: purga solo si cambió movimientos o la huella de borrados. */
   try{
     var _lastMv = movimientos && movimientos.length ? movimientos[movimientos.length-1] : null;
