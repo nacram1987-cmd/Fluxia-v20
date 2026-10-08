@@ -12546,24 +12546,28 @@ function obtenerTablaComparativa(){
 
 /* Fluxia LAB · Clasificación determinista de pagos desde la cartera.
    No modifica, elimina ni guarda datos; compara con movimientos ya existentes. */
+/* Los pagos en cartera siguen siendo gasto real una vez; solo se excluyen
+   de la lista de Variables. No mutar el ledger ni el Disponible. */
 function fxPagoYaEnDineroEnMano(mv){
   if(!mv || typeof efectivo==='undefined' || !efectivo || !Array.isArray(efectivo.movimientos)) return false;
-  var concepto=String(mv.concepto||'').trim().toLocaleLowerCase('es');
-  var fecha=String(mv.fecha||'').slice(0,10);
-  var importe=Number(mv.importe)||0;
-  return efectivo.movimientos.some(function(e){
-    if(!e || e.tipo!=='salida') return false;
-    if(e.gastoId && mv.id && String(e.gastoId)===String(mv.id)) return true;
-    if(mv.efectivoId && e.id && String(mv.efectivoId)===String(e.id)) return true;
-    return !!(concepto && fecha && String(e.fecha||'').slice(0,10)===fecha
-      && String(e.concepto||'').trim().toLocaleLowerCase('es')===concepto
-      && Math.abs((Number(e.importe)||0)-importe)<0.005);
-  });
+  var salidas=efectivo.movimientos.filter(function(e){return e && e.tipo==='salida';});
+  var id=String(mv.id||''), efectivoId=String(mv.efectivoId||'');
+  if(salidas.some(function(e){return (id && e.gastoId && String(e.gastoId)===id) || (efectivoId && e.id && String(e.id)===efectivoId);})) return true;
+  var dia=String(mv.fecha||'').slice(0,10), imp=Number(mv.importe)||0;
+  if(!dia || !(imp>0)) return false;
+  var canon=function(x){return String(x||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase().replace(/[^a-z0-9]+/g,' ');};
+  var candidatos=salidas.filter(function(e){return String(e.fecha||'').slice(0,10)===dia && Math.abs((Number(e.importe)||0)-imp)<0.005;});
+  var concepto=canon(mv.concepto);
+  if(concepto && candidatos.some(function(e){return canon(e.concepto)===concepto;})) return true;
+  /* Fallback conservador para descripciones bancarias diferentes (El jamón /
+     Chuchería): solo si la cuantía es única en ambas fuentes ese día. */
+  if(candidatos.length!==1 || !Array.isArray(movimientos)) return false;
+  var iguales=movimientos.filter(function(g){return g && String(g.fecha||'').slice(0,10)===dia && Math.abs((Number(g.importe)||0)-imp)<0.005;});
+  return iguales.length===1;
 }
 function movimientosDe(mes){
   return movimientos.filter(function(mv){
     if(!mv || mv.mes!==mes) return false;
-    if(fxPagoYaEnDineroEnMano(mv)) return false;
     /* v95.93 · Un movimiento conciliado con un fijo se conserva como evidencia,
        pero no pertenece a Gastos Variables. */
     if(mv.cuentaComoFijo || mv.vinculoFijoId) return false;
@@ -16757,7 +16761,7 @@ function renderGastosVariables(){
   const mes = mesSeleccionado;
   /* Los pagos vinculados a Dinero en mano pertenecen a la cartera,
      no al listado de gastos variables ordinarios. Sin alterar el ledger. */
-  const _movMes = movimientosDe(mes).filter(m => String(m.origen||'').toLowerCase() !== 'efectivo');
+  const _movMes = movimientosDe(mes).filter(m => !fxPagoYaEnDineroEnMano(m));
   document.getElementById('gvMesLabel').textContent = MES_LABEL[mes];
   document.getElementById('gvMesActivo').textContent = MES_LABEL[mes];
   document.getElementById('gvMesLista').textContent = MES_LABEL[mes];
