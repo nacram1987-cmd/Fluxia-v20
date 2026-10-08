@@ -1,4 +1,4 @@
-const CACHE_VERSION='fluxia-shell-v97.31-ghpages-20261008c';
+const CACHE_VERSION='fluxia-shell-v97.31-ghpages-20261008d';
 const ENTRY='./index.html?v=97.31-lab-ghpages';
 const CORE=['./index.html','./manifest.webmanifest','./fluxia-icon.png'];
 
@@ -29,12 +29,16 @@ self.addEventListener('fetch',event=>{
   const req=event.request;
   const url=new URL(req.url);
   if(req.mode==='navigate'){
+    const refresh=freshIndex();
+    event.waitUntil(refresh.then(()=>{}).catch(()=>{}));
     event.respondWith((async()=>{
-      const fresh=await freshIndex();
-      if(fresh&&fresh.ok)return fresh;
       const cache=await caches.open(CACHE_VERSION);
       const cached=await cache.match('./index.html');
-      return cached||fetch(req);
+      if(cached){
+        const fresh=await Promise.race([refresh,new Promise(resolve=>setTimeout(()=>resolve(null),1200))]);
+        return fresh&&fresh.ok?fresh:cached;
+      }
+      return (await refresh)||fetch(req);
     })());
     return;
   }
