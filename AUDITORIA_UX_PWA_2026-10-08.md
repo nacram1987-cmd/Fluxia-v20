@@ -23,3 +23,6 @@ Rama aislada de LAB. No modificar producción ni datos financieros.
 - Evitar rediseño disruptivo y cambios contables.
 
 Estado: auditoría inicial; corrección PWA y QA funcional aún pendientes.
+
+## Hallazgo de integración verificado en index.html principal
+Lectura completa del HTML mediante GitHub: 2.241.056 caracteres. Existe registro canónico `navigator.serviceWorker.register('./fluxia-sw.js', {scope:'./',updateViaCache:'none'})` pero también aparecen registros `navigator.serviceWorker.register(URL.createObjectURL(blob))`, `navigator.serviceWorker.register(swUrl,{scope:'/'})` y `navigator.serviceWorker.register(url,{scope:'./'})` en bloques históricos. Algunos pueden estar inactivos por condiciones; hay que verificar control de flujo antes de retirarlos. NO basta con modificar fluxia-sw.js. Próxima intervención: neutralizar solo los registros activos redundantes tras análisis de bloques completos, preservar notificaciones y sincronización.
