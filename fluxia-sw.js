@@ -1,6 +1,6 @@
 /* Fluxia v97.39: one canonical shell, network-first with bounded offline fallback.
    No SW may rewrite an independent LAB document to index.html. */
-const CACHE_VERSION = 'fluxia-shell-v97.40-canonical-menu';
+const CACHE_VERSION = 'fluxia-shell-v97.42-canonical-pages';
 const ENTRY = './index.html';
 const PATH = new URL(ENTRY, self.registration.scope).pathname;
 const ROOT = new URL('./', self.registration.scope).pathname;
