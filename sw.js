@@ -1,4 +1,4 @@
-const CACHE_VERSION='fluxia-shell-v97.20';
+const CACHE_VERSION='fluxia-shell-v97.36-router';
 const ENTRY='./index.html';
 
 self.addEventListener('install',event=>{
@@ -31,6 +31,11 @@ self.addEventListener('fetch',event=>{
   if(/^\/(auth|v1|health)(\/|$)/.test(u.pathname)) return;
 
   if(r.mode==='navigate'){
+    // Standalone previews must never be served from cached production index.
+    if (!/(?:\/|\/index\.html)$/.test(u.pathname)) {
+      event.respondWith(fetch(r,{cache:'no-store'}));
+      return;
+    }
     event.respondWith((async()=>{
       const cache=await caches.open(CACHE_VERSION);
       const cached=(await cache.match(ENTRY))||(await cache.match(r));
