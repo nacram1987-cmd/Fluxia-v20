@@ -31692,7 +31692,7 @@ async function sincronizarEnBackground(){
       const blob = new Blob([swCode], { type: 'application/javascript' });
       const swUrl = URL.createObjectURL(blob);
       
-      const registration = await navigator.serviceWorker.register(swUrl, { scope: '/' });
+      const registration = await navigator.serviceWorker.register('./fluxia-sw.js', { scope: './', updateViaCache:'none' });
       console.log('✅ Service Worker registrado:', registration);
       
       // Peticiones de sincronización
@@ -33430,7 +33430,7 @@ console.log('✅ Fluxia v91 · Confianza + Salud listos');
     var blob = new Blob([swCode], {type: 'application/javascript'});
     var url = URL.createObjectURL(blob);
     try{
-      var reg = await navigator.serviceWorker.register(url, {scope: './'});
+      var reg = await navigator.serviceWorker.register('./fluxia-sw.js', {scope:'./',updateViaCache:'none'});
       await navigator.serviceWorker.ready;
       return reg;
     }catch(e){
