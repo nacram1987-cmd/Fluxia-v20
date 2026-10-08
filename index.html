@@ -13025,6 +13025,13 @@ function goToTab(tabName){
   if(tabName==='financiaciones') tabName='fijos';
   var anterior=null, destino=null;
   try{ anterior=document.querySelector('.panel.active'); destino=document.getElementById('panel-'+tabName); }catch(e){}
+  try{
+    if(anterior && anterior.id==='panel-gastos-variables' && destino!==anterior){
+      window.__fxGVGeneration=(window.__fxGVGeneration||0)+1;
+      if(window.__fxGVIdleId!=null && typeof cancelIdleCallback==='function'){cancelIdleCallback(window.__fxGVIdleId);window.__fxGVIdleId=null;}
+      if(window.__fxGVTimeoutId!=null){clearTimeout(window.__fxGVTimeoutId);window.__fxGVTimeoutId=null;}
+    }
+  }catch(_gvLeave){}
   if(anterior && anterior!==destino) anterior.classList.remove('active');
   if(destino && !destino.classList.contains('active')) destino.classList.add('active');
 
@@ -16929,6 +16936,10 @@ function renderGastosVariables(){
   /* v96.95 · FIRST PAINT FIRST: cabecera contable e historial se completan después
      de pintar la lista. Entrar en Variables nunca espera a Disponible ni al datalist. */
   const _gvGeneration = (window.__fxGVGeneration = (window.__fxGVGeneration || 0) + 1);
+  try{
+    if(window.__fxGVIdleId!=null && typeof cancelIdleCallback==='function'){cancelIdleCallback(window.__fxGVIdleId);window.__fxGVIdleId=null;}
+    if(window.__fxGVTimeoutId!=null){clearTimeout(window.__fxGVTimeoutId);window.__fxGVTimeoutId=null;}
+  }catch(_gvCancel){}
   const _gvDeferred = function(){
     if (_gvGeneration !== window.__fxGVGeneration || !_gvPanel || !_gvPanel.classList.contains('active') || mesSeleccionado!==mes) return;
     try{
