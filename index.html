@@ -35035,15 +35035,22 @@ window.FluxiaProtegerDatos = {
     return s;
   }
   // Envolver pintado de errores de conexión si existe el HTML de lista
-  var _obs = new MutationObserver(function(){
+  // Procesar únicamente nodos cambiados: evitar recorrer toda la lista bancaria por cada mutación.
+  var _obs = new MutationObserver(function(records){
     try{
-      document.querySelectorAll('#fluxiaBancoListaConexiones, .fluxia-banco-cuenta, #fluxiaBancoConectado').forEach(function(root){
-        root.querySelectorAll && root.querySelectorAll('*').forEach(function(el){
-          if (!el.childNodes || el.childNodes.length!==1 || el.childNodes[0].nodeType!==3) return;
-          var t = el.textContent||'';
-          if (/HUB046|Allowed number of accesses/i.test(t) && !el.dataset.v93fix){
-            el.dataset.v93fix = '1';
-            el.textContent = textoErrorBanco(t);
+      var nodes = new Set();
+      records.forEach(function(rec){
+        if(rec.type==='characterData'){if(rec.target.parentElement)nodes.add(rec.target.parentElement);}
+        else rec.addedNodes.forEach(function(node){if(node.nodeType===1)nodes.add(node);else if(node.nodeType===3&&node.parentElement)nodes.add(node.parentElement);});
+      });
+      nodes.forEach(function(node){
+        var els=[node];
+        if(node.querySelectorAll)els=els.concat(Array.from(node.querySelectorAll('*')));
+        els.forEach(function(el){
+          if(!el.childNodes||el.childNodes.length!==1||el.childNodes[0].nodeType!==3)return;
+          var t=el.textContent||'';
+          if(/HUB046|Allowed number of accesses/i.test(t)&&!el.dataset.v93fix){
+            el.dataset.v93fix='1';el.textContent=textoErrorBanco(t);
           }
         });
       });
