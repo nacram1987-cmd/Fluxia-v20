@@ -16910,6 +16910,15 @@ function renderGastosVariables(){
   }catch(_purgeErr){}
   const mes = mesSeleccionado;
   const _movMes = movimientosDe(mes);
+  /* LAB: pintar inmediatamente importes de movimientos ya cargados.
+     Nunca dejar estos dos indicadores vacíos esperando idleCallback. */
+  try{
+    var _gvQuickTotal = _movMes.reduce(function(sum,mv){return sum+(Number(mv.importe)||0);},0);
+    var _gvQuickMonth = document.getElementById('gvStatMes');
+    if(_gvQuickMonth) _gvQuickMonth.textContent=eur(_gvQuickTotal,2);
+    var _gvQuickPlan = document.getElementById('gvStatTotal');
+    if(_gvQuickPlan) _gvQuickPlan.textContent=eur(movimientos.reduce(function(sum,mv){return sum+(Number(mv.importe)||0);},0),2);
+  }catch(_gvQuickError){}
   document.getElementById('gvMesLabel').textContent = MES_LABEL[mes];
   document.getElementById('gvMesActivo').textContent = MES_LABEL[mes];
   document.getElementById('gvMesLista').textContent = MES_LABEL[mes];
