@@ -789,3 +789,17 @@ Los bocetos visuales se entregaran siempre por separado, nunca agrupados en una 
 - No sugerir un gasto fijo ya pagado. La igualdad de importe nunca justifica por sí sola asociar comercios distintos. Revalidar las preguntas históricas rehidratadas desde nube antes de mostrarlas en cualquier modalidad («nombre», «importe» u otras).
 - Prueba de regresión obligatoria: cargo **Apple.com/bill · 14,99 €** no debe preguntarse como «Loterías»; tras «Es otro gasto» o «Nunca más» no debe volver a aparecer, ni desaparecer del libro de movimientos. No proclamar corrección final hasta verificarlo en Safari después de recargar y sincronizar.
 - Regla visual vigente: **no mostrar franjas ni badges flotantes de versión**, ni siquiera como sustitutos de los antiguos. Mostrar el número en metadatos/Ajustes sin tapar contenido.
+
+---
+
+## LEY IMPERIAL v97.39 · ARCHIVO CANÓNICO REAL, CONTROL DE CACHÉ Y DECISIONES BANCARIAS
+
+1. El archivo de entrada principal de Safari y PWA es `/Fluxia-v20/index.html`. En GitHub Pages una LAB HTML independiente puede estar contaminada por un Service Worker antiguo que responde con el índice canónico; antes de declarar una prueba fallida o correcta comprobar el documento realmente servido. **No seguir publicando sucesivas LAB que el navegador sustituye por la versión vieja.**
+2. La versión previa de `main` se salvó en `respaldo-estable-antes-v97-39-20261008` antes de modificar `index.html`. Conservar la rama como reversión; no borrar ni reescribir sin petición explícita.
+3. La versión v97.39-LAB actualiza por primera vez `index.html` directamente tras el diagnóstico de la PWA; junto con `fluxia-sw.js`, `sw.js` y `manifest.webmanifest`. El manifiesto debe mantener su identificador de instalación y usar `./index.html` como inicio permanente. El SW debe priorizar una respuesta fresca y admitir respaldo offline, sin redirigir páginas LAB independientes al índice.
+4. **La coincidencia de importe y una regla aprendida históricamente NO son evidencia suficiente para reconciliar un movimiento bancario con un fijo.** Una sugerencia automática exige correspondencia verificable entre comerciante y nombre o alias semántico del fijo. No emparejar `Apple.com/bill · 14,99 €` con `Loterías` ni sugerir fijos ya pagados.
+5. `Es otro gasto` y `Nunca más` son **decisiones de clasificación**, nunca órdenes de borrado ni de reducción de saldo. Persistir decisión por usuario y movimiento; evitar resurrecciones al importar; no destruir ni duplicar el movimiento.
+6. **Cero indicadores o franjas flotantes de versión.** Versión verificable solo en título/metadatos/Ajustes y commit. En el `index.html` canónico v97.39 no existen `fluxia-lab-version`, `fluxia-lab-version-fixed`, `fx-lab-build-verified` ni el texto `v97.28 LAB`.
+7. QA antes de promoción: probar desde iPhone/Safari la **raíz** `/Fluxia-v20/index.html?v=97.39` y la PWA, asegurarse de que desaparecieron los dos defectos, no cambió Disponible/Imprimir y los bancos se reconcilian sin pérdidas. La publicación GitHub verificada por SHA **NO equivale** a validación del navegador.
+
+**Integridad primero:** disponible e Imprimir no se tocan; los datos reales en nube tampoco. Informar cualquier limitación de pruebas sin simular resultados.
