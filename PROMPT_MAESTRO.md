@@ -818,3 +818,16 @@ Los bocetos visuales se entregaran siempre por separado, nunca agrupados en una 
 
 
 **Origen de publicación confirmado el 08/10/2026:** GitHub Pages sirve Fluxia desde la rama **`pages-v9731-real-final`**, NO desde `main`. Se verificó con el histórico `pages build and deployment` y el despliegue exitoso del commit `e9081378fdcbbef469cddf601b7d6db9bd282284`. **Toda actualización futura de la versión que abre el usuario debe propagarse a la rama de GitHub Pages realmente configurada**, preservando sus archivos/recursos, realizando copia de seguridad previa, confirmando SHA del `index.html`, y comprobando que el workflow de GitHub Pages concluye `success`. No entregar enlaces de versiones nuevas que solo existan en `main`. La rama puede cambiar en el futuro: verificar de nuevo el origen por los logs de despliegue antes de publicar.
+
+
+---
+
+## LEY IMPERIAL v97.39 · PRIORIDAD DE BANCOS EN EL ARRANQUE
+
+**Validación del usuario (09/10/2026):** la versión actual ya carga correctamente y la navegación general va muy fluida. **NO alterar ni revertir este estado bueno** sin respaldo y pruebas. Persisten dos incidencias: Bancos no muestra el estado conectado nada más abrir la aplicación; la primera entrada en Gastos Variables sigue siendo lenta.
+
+**Prioridad 1 — Bancos al arrancar:** tras autenticar al usuario, pintar de inmediato el último estado bancario guardado para esa cuenta, junto con su fecha/hora de actualización; distinguir expresamente estado en caché de conexión actual comprobada. Lanzar en segundo plano una sola verificación de conexión y sincronización incremental, sin bloquear la interfaz. Si la conexión no puede verificarse, informar sin afirmar falsamente «Conectado». Mostrar movimientos recibidos del proveedor en cuanto estén disponibles, sin prometer instantaneidad ajena al proveedor. Evitar consultas y avisos duplicados, importaciones repetidas, resurrecciones y doble conteo. La persistencia en nube sigue siendo fuente de verdad; nunca usar caché de otro usuario.
+
+**Prioridad 2 — primera entrada en Gastos Variables:** medir el tiempo de primera apertura, localizar trabajo síncrono, renderizados y conciliaciones redundantes y corregirlos de forma focalizada. No romper la navegación, el menú, los importes ni el rendimiento ya confirmado por el usuario.
+
+**Protocolo de cambios:** copia recuperable del estado actual, mediciones y pruebas antes/después, LAB independiente, QA de datos reales con cautela y publicación en la rama efectiva de GitHub Pages. No modificar Disponible ni Imprimir, ya validados. No dar por resuelta la conexión bancaria solo porque se haya mostrado su último estado guardado.
