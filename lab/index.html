@@ -16761,7 +16761,12 @@ function renderGastosVariables(){
   const mes = mesSeleccionado;
   /* Los pagos vinculados a Dinero en mano pertenecen a la cartera,
      no al listado de gastos variables ordinarios. Sin alterar el ledger. */
-  const _movMes = movimientosDe(mes).filter(m => !fxPagoYaEnDineroEnMano(m));
+  const _movMes = movimientosDe(mes).filter(function(m){
+    /* Origen efectivo es determinante aunque la cartera aún no se haya
+       hidratado desde nube. El ledger y Disponible permanecen intactos. */
+    if(String(m.origen||'').trim().toLowerCase()==='efectivo') return false;
+    return !fxPagoYaEnDineroEnMano(m);
+  });
   document.getElementById('gvMesLabel').textContent = MES_LABEL[mes];
   document.getElementById('gvMesActivo').textContent = MES_LABEL[mes];
   document.getElementById('gvMesLista').textContent = MES_LABEL[mes];
