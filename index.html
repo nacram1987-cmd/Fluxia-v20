@@ -3868,7 +3868,7 @@ html body #fxDashboard67 .fx30-hero *,html body #fxDashboard67 .fx67-hero * *{co
 </style>
 
 
-<style id='fluxia-v9676-variables-contain'>#panel-gastos-variables{contain:layout style paint}</style><!-- v97.20-LAB · Huchas canónicas en lectura normal + persistencia; Variables v96.76 preservado -->
+<style id='fluxia-v9676-variables-contain'>#panel-gastos-variables{contain:layout style paint}</style><!-- v97.21-LAB · Menú↔Variables: delegación eventos + cancel idle al salir; Variables v96.76 preservado -->
 <!-- v97.20-LAB · Reconciliación histórica 2.817,88 € de las 7 Huchas legacy; Variables preservado -->
 <!-- v97.20-LAB · Disponible: autoridad real de Fijos conciliados; Huchas v96.78 preservadas -->
 <!-- v97.20-LAB · Disponible auditado contra nube: dedupe bancario de Ingresos por bancoRef; objetivo derivado 111,96 € -->
@@ -4175,7 +4175,7 @@ html body #panel-fijos .fx47-fijos-icon{width:38px!important;height:38px!importa
  var enabled=/[?&]fxperf=1(?:&|$)/.test(location.search);
  if(!enabled)return;
  var samples=[];
- window.FLUXIA_LAB_PERF={record:function(tab,ms){samples.push({tab:String(tab),ms:Math.round(ms),at:Math.round(performance.now())});if(samples.length>120)samples.shift();if(ms>50)console.warn('[Fluxia LAB slow render]',tab,Math.round(ms)+'ms')},report:function(){return samples.slice()},summary:function(){var out={};samples.forEach(function(x){var a=out[x.tab]||(out[x.tab]={calls:0,totalMs:0,maxMs:0});a.calls++;a.totalMs+=x.ms;a.maxMs=Math.max(a.maxMs,x.ms)});return out}}};
+ window.FLUXIA_LAB_PERF={record:function(tab,ms){samples.push({tab:String(tab),ms:Math.round(ms),at:Math.round(performance.now())});if(samples.length>120)samples.shift();if(ms>50)console.warn('[Fluxia LAB slow render]',tab,Math.round(ms)+'ms')},report:function(){return samples.slice()},summary:function(){var out={};samples.forEach(function(x){var a=out[x.tab]||(out[x.tab]={calls:0,totalMs:0,maxMs:0});a.calls++;a.totalMs+=x.ms;a.maxMs=Math.max(a.maxMs,x.ms)});return out}};
  try{if('PerformanceObserver'in window){var observer=new PerformanceObserver(function(list){list.getEntries().forEach(function(x){console.warn('[Fluxia LAB long task]',Math.round(x.duration)+'ms')})});observer.observe({entryTypes:['longtask']})}}catch(e){}
 })();
 </script>
@@ -9394,7 +9394,7 @@ window.FluxiaSync954 = (function(){
   function quarantineLegacyTombstones(){
     try{var marker='v2_tombstone_guard_v9536';if(Almacen.getItem(marker))return 0;var T=parse(Almacen.getItem(TKEY),{}),E=parse(Almacen.getItem(EKEY),{}),keep={},drop=[],n=0;Object.keys(T).forEach(function(full){var tt=T[full]||{},ee=E[full]||{};Object.keys(tt).forEach(function(q){if(ee[q]){keep[full]=keep[full]||{};keep[full][q]=tt[q];}else{drop.push({full:full,q:q,t:tt[q]});n++;}});});if(n){Almacen.setItem('v2_legacy_tombstone_quarantine_v9536',JSON.stringify({cuando:new Date().toISOString(),items:drop.slice(-2000)}));Almacen.setItem(TKEY,JSON.stringify(keep));}Almacen.setItem(marker,'1');return n;}catch(e){console.warn('[v95.38] quarantine legacy tombstones',e);return 0;}
   }
-  return {metadataKey:metadataKey,mergeMetadataRaw:mergeMetadataRaw,restored:restored,prepare:prepare,isProtectedListKey:isProtectedListKey,mergeCloudValue:mergeCloudValue,mergeTombstonesRaw:mergeTombstonesRaw,mergeExplicitRaw:mergeExplicitRaw,registerDelete:registerDelete,isDeleted:isDeleted,clearDelete:clearDelete,quarantineLegacyTombstones:quarantineLegacyTombstones,aptSemantic:aptSemantic};
+  return {activeDeletesFor:function(k){return activeDeletes(k);},metadataKey:metadataKey,mergeMetadataRaw:mergeMetadataRaw,restored:restored,prepare:prepare,isProtectedListKey:isProtectedListKey,mergeCloudValue:mergeCloudValue,mergeTombstonesRaw:mergeTombstonesRaw,mergeExplicitRaw:mergeExplicitRaw,registerDelete:registerDelete,isDeleted:isDeleted,clearDelete:clearDelete,quarantineLegacyTombstones:quarantineLegacyTombstones,aptSemantic:aptSemantic};
 })();
 
 
@@ -9977,9 +9977,12 @@ window.FluxiaGVBorrados = (function(){
   function purgarListaLocal(arr){
     // quita de movimientos[] cualquiera que coincida con borrados
     if(!Array.isArray(arr)) return arr;
+    var _fxAct=null;
+    try{ if(window.FluxiaSync954&&FluxiaSync954.activeDeletesFor) _fxAct=FluxiaSync954.activeDeletesFor('v2_movimientos'); }catch(_fxA){ _fxAct=null; }
     return arr.filter(function(mv){
       if(!mv)return true;
-      if(window.FluxiaSync954&&FluxiaSync954.isDeleted('v2_movimientos',mv.id))return false;
+      if(_fxAct){ if(mv.id!=null && _fxAct['i:'+String(mv.id)]) return false; }
+      else if(window.FluxiaSync954&&FluxiaSync954.isDeleted('v2_movimientos',mv.id))return false;
       if(mv.origen!=='banco'&&!mv.bancoRef)return !debeIgnorarBanco({id:mv.id},'');
       var fake = { id: mv.bancoRef||mv.id, fecha: mv.fecha, importe: mv.importeOriginal!=null?mv.importeOriginal:mv.importe, concepto: mv.concepto, banco: mv.banco };
       return !debeIgnorarBanco(fake, mv.banco);
@@ -11075,9 +11078,14 @@ function escapeHtml(s){
     .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
+var _fxEurFmt = {};
 function eur(n, decimales){
   if (decimales === undefined) decimales = 0;
-  return new Intl.NumberFormat('es-ES', { style:'currency', currency:'EUR', minimumFractionDigits:decimales, maximumFractionDigits:decimales }).format(n);
+  var f = _fxEurFmt[decimales];
+  if (!f) {
+    f = _fxEurFmt[decimales] = new Intl.NumberFormat('es-ES', { style:'currency', currency:'EUR', minimumFractionDigits:decimales, maximumFractionDigits:decimales });
+  }
+  return f.format(n);
 }
 function parseImporte(str){
   if (str === null || str === undefined) return NaN;
@@ -13006,6 +13014,11 @@ function setupFAQSearch(){
   });
 }
 
+var _fxHdrRaf = 0;
+function fxScheduleHeaderOffset(){
+  if (_fxHdrRaf) return;
+  _fxHdrRaf = requestAnimationFrame(function(){ _fxHdrRaf = 0; try{ fluxiaUpdateHeaderOffset(); }catch(e){} });
+}
 function fluxiaUpdateHeaderOffset(){
   try{
     const header = document.querySelector('header.top');
@@ -13025,11 +13038,17 @@ function goToTab(tabName){
   if(tabName==='financiaciones') tabName='fijos';
   var anterior=null, destino=null;
   try{ anterior=document.querySelector('.panel.active'); destino=document.getElementById('panel-'+tabName); }catch(e){}
+  /* v97.21-LAB · Al salir de Variables, invalidar generación e idle para que no
+     sigan ejecutándose cálculos/DOM de la pestaña abandonada al abrir el menú. */
   try{
-    if(anterior && anterior.id==='panel-gastos-variables' && destino!==anterior){
-      window.__fxGVGeneration=(window.__fxGVGeneration||0)+1;
-      if(window.__fxGVIdleId!=null && typeof cancelIdleCallback==='function'){cancelIdleCallback(window.__fxGVIdleId);window.__fxGVIdleId=null;}
-      if(window.__fxGVTimeoutId!=null){clearTimeout(window.__fxGVTimeoutId);window.__fxGVTimeoutId=null;}
+    if (anterior && anterior.id === 'panel-gastos-variables' && destino !== anterior) {
+      window.__fxGVGeneration = (window.__fxGVGeneration || 0) + 1;
+      if (window.__fxGVIdleId != null && typeof cancelIdleCallback === 'function') {
+        cancelIdleCallback(window.__fxGVIdleId); window.__fxGVIdleId = null;
+      }
+      if (window.__fxGVTimeoutId != null) {
+        clearTimeout(window.__fxGVTimeoutId); window.__fxGVTimeoutId = null;
+      }
     }
   }catch(_gvLeave){}
   if(anterior && anterior!==destino) anterior.classList.remove('active');
@@ -14316,7 +14335,7 @@ function renderMesSelector(){
     var _ml = (typeof MES_LABEL !== 'undefined' && MES_LABEL[mesSeleccionado]) ? MES_LABEL[mesSeleccionado] : '';
     if (_ml) ['ing','fijos','prov','fin','gv','com','pres','an','ef','sim'].forEach(function(p){ var el = document.getElementById(p + 'MesLabel'); if (el) el.textContent = _ml; });
   } catch(e) {}
-  try { fluxiaUpdateHeaderOffset(); } catch(e) {}
+  try { fxScheduleHeaderOffset(); } catch(e) {}
 }
 
 // ---------------------------------------------------------------------------
@@ -16935,11 +16954,19 @@ function renderGastosVariables(){
 
   /* v96.95 · FIRST PAINT FIRST: cabecera contable e historial se completan después
      de pintar la lista. Entrar en Variables nunca espera a Disponible ni al datalist. */
+  /* v97.21-LAB · Generación + cancelación de idle previos para no apilar trabajo
+     cuando el usuario abre el menú o sale de Variables antes de que termine. */
   const _gvGeneration = (window.__fxGVGeneration = (window.__fxGVGeneration || 0) + 1);
   try{
-    if(window.__fxGVIdleId!=null && typeof cancelIdleCallback==='function'){cancelIdleCallback(window.__fxGVIdleId);window.__fxGVIdleId=null;}
-    if(window.__fxGVTimeoutId!=null){clearTimeout(window.__fxGVTimeoutId);window.__fxGVTimeoutId=null;}
-  }catch(_gvCancel){}
+    if (window.__fxGVIdleId != null && typeof cancelIdleCallback === 'function') {
+      cancelIdleCallback(window.__fxGVIdleId);
+      window.__fxGVIdleId = null;
+    }
+    if (window.__fxGVTimeoutId != null) {
+      clearTimeout(window.__fxGVTimeoutId);
+      window.__fxGVTimeoutId = null;
+    }
+  }catch(_c){}
   const _gvDeferred = function(){
     if (_gvGeneration !== window.__fxGVGeneration || !_gvPanel || !_gvPanel.classList.contains('active') || mesSeleccionado!==mes) return;
     try{
@@ -16967,9 +16994,12 @@ function renderGastosVariables(){
     }catch(e){}
   };
   try{
-    if('requestIdleCallback' in window) window.__fxGVIdleId=requestIdleCallback(_gvDeferred,{timeout:1200});
-    else window.__fxGVTimeoutId=setTimeout(_gvDeferred,32);
-  }catch(e){ window.__fxGVTimeoutId=setTimeout(_gvDeferred,32); }
+    if('requestIdleCallback' in window) {
+      window.__fxGVIdleId = requestIdleCallback(_gvDeferred,{timeout:1200});
+    } else {
+      window.__fxGVTimeoutId = setTimeout(_gvDeferred,32);
+    }
+  }catch(e){ window.__fxGVTimeoutId = setTimeout(_gvDeferred,32); }
 
   // Filtros de búsqueda / categoría
   const busqEl = document.getElementById('gvBuscar');
@@ -17041,64 +17071,76 @@ function renderGastosVariables(){
     movView.replaceChildren(_gvFragment);
   }
 
-  /* v97.21 LAB: un único listener delegado; no crear listeners por gasto en cada render. */
-  if (!movView._fxGvDelegated) {
+  /* v97.21-LAB · Delegación de eventos: un solo listener en el contenedor.
+     Evita N addEventListener por fila (cuello de botella con listas grandes
+     y al re-entrar desde el menú). Conserva todas las acciones y stopPropagation. */
+  if (movView && !movView._fxGvDelegated) {
     movView._fxGvDelegated = true;
     movView.addEventListener('click', function(e){
-      const btn = e.target.closest('button[data-action]');
+      var btn = e.target && e.target.closest ? e.target.closest('button[data-action]') : null;
       if (!btn || !movView.contains(btn)) return;
-      const action = btn.dataset.action;
-      if (!['provision','split','del','edit'].includes(action)) return;
+      var action = btn.getAttribute('data-action');
+      var id = btn.getAttribute('data-id');
+      if (!action || id == null) return;
       e.stopPropagation();
-      const id = btn.dataset.id;
-      const mv = movimientos.find(m=>String(m.id)===id);
+      var mv = movimientos.find(function(m){ return m && String(m.id) === String(id); });
       if (!mv) return;
-      if (action==='provision') { fxVincularVariableProvision(mv); return; }
-      if (action==='split') { if(window.FluxiaDividir) FluxiaDividir.abrir(mv.id); return; }
-      if (action==='del') {
+      if (action === 'provision') {
+        if (typeof fxVincularVariableProvision === 'function') fxVincularVariableProvision(mv);
+        return;
+      }
+      if (action === 'split') {
+        if (window.FluxiaDividir) FluxiaDividir.abrir(mv.id);
+        return;
+      }
+      if (action === 'del') {
         openConfirmModal({
-          title:'Borrar gasto',
-          message:'¿Borrar «'+(mv.concepto||'gasto')+'» de '+eur(mv.importe,2)+'? No se puede deshacer.',
-          confirmLabel:'Borrar', danger:true,
-          onConfirm:()=>{
-            const linked=mv.division && window.FluxiaDividir ? FluxiaDividir.quitarCompartidos(mv,false) : true;
-            if(linked===false){mostrarToast('⚠️ Primero elimina los cobros recibidos de este gasto en Compartidos.','var(--wine)',3200);return;}
-            try{window._FLUXIA_BORRANDO_GV=true;}catch(_){}
-            try{if(window._fluxiaRegistrarBorradoGV) _fluxiaRegistrarBorradoGV(mv);}catch(_){}
-            try{if(window.FluxiaGVBorrados) FluxiaGVBorrados.registrar(mv);}catch(_){}
-            movimientos=movimientos.filter(m=>String(m.id)!==id);
-            try{window.movimientos=movimientos;}catch(_){}
-            try{registrarOperacion('gasto_eliminado',{id:mv.id,concepto:mv.concepto,importe:mv.importe,dividido:!!mv.division});}catch(_){}
+          title: 'Borrar gasto',
+          message: '¿Borrar «' + (mv.concepto || 'gasto') + '» de ' + eur(mv.importe, 2) + '? No se puede deshacer.',
+          confirmLabel: 'Borrar', danger: true,
+          onConfirm: function(){
+            var linked = mv.division && window.FluxiaDividir ? FluxiaDividir.quitarCompartidos(mv, false) : true;
+            if (linked === false){ mostrarToast('⚠️ Primero elimina los cobros recibidos de este gasto en Compartidos.','var(--wine)',3200); return; }
+            try{ window._FLUXIA_BORRANDO_GV = true; }catch(_){}
+            try{ if (window._fluxiaRegistrarBorradoGV) _fluxiaRegistrarBorradoGV(mv); }catch(_){}
+            try{ if (window.FluxiaGVBorrados) FluxiaGVBorrados.registrar(mv); }catch(_){}
+            movimientos = movimientos.filter(function(m){ return String(m.id) !== String(id); });
+            try{ window.movimientos = movimientos; }catch(_){}
+            try{ registrarOperacion('gasto_eliminado',{id:mv.id,concepto:mv.concepto,importe:mv.importe,dividido:!!mv.division}); }catch(_){}
             _guardarMovimientosTrasBorrado();
-            try{setTimeout(function(){window._FLUXIA_BORRANDO_GV=false;},500);}catch(_){}
+            try{ setTimeout(function(){ window._FLUXIA_BORRANDO_GV = false; }, 500); }catch(_){}
             try{
-              var _k=(typeof claveLS==='function')?claveLS('v2_movimientos'):'v2_movimientos';
-              localStorage.setItem(_k,JSON.stringify(movimientos));
-              if(typeof Almacen!=='undefined' && Almacen.setItem) Almacen.setItem(_k,JSON.stringify(movimientos));
+              var _k = (typeof claveLS==='function') ? claveLS('v2_movimientos') : 'v2_movimientos';
+              localStorage.setItem(_k, JSON.stringify(movimientos));
+              if (typeof Almacen!=='undefined' && Almacen.setItem) Almacen.setItem(_k, JSON.stringify(movimientos));
             }catch(_e2){}
-            renderGastosVariables();renderKPIs();
-            try{if(typeof mostrarToast==='function')mostrarToast('🗑️ En papelera · no volverá del banco','var(--teal)',2800);}catch(_){}
+            renderGastosVariables(); renderKPIs();
+            try{ if(typeof mostrarToast==='function') mostrarToast('🗑️ En papelera · no volverá del banco', 'var(--teal)', 2800); }catch(_){}
           }
         });
         return;
       }
-      if(action==='edit'){
-        const categoriaOptions=Array.from(document.getElementById('gvCategoria').options).map(o=>({value:o.value,label:o.textContent}));
+      if (action === 'edit') {
+        var catSelect = document.getElementById('gvCategoria');
+        var categoriaOptions = catSelect
+          ? Array.from(catSelect.options).map(function(o){ return { value:o.value, label:o.textContent }; })
+          : [{value: mv.categoria||'Otros', label: mv.categoria||'Otros'}];
         openFormModal({
-          title:'Editar gasto',
-          fields:[
-            {name:'concepto',label:'Concepto',type:'text',required:true,value:mv.concepto},
-            {name:'categoria',label:'Categoría',type:'select',value:mv.categoria||'Otros',options:categoriaOptions},
-            ...(mv.division?[]:[{name:'importe',label:'Importe (€)',type:'number',min:0,step:'0.01',value:mv.importe}]),
-            {name:'fecha',label:'Fecha',type:'date',required:true,value:mv.fecha||hoyISO()}
+          title: 'Editar gasto',
+          fields: [
+            { name:'concepto', label:'Concepto', type:'text', required:true, value: mv.concepto },
+            { name:'categoria', label:'Categoría', type:'select', value: mv.categoria || 'Otros', options: categoriaOptions },
+            ...(mv.division ? [] : [{ name:'importe', label:'Importe (€)', type:'number', min:0, step:'0.01', value: mv.importe }]),
+            { name:'fecha', label:'Fecha', type:'date', required:true, value: mv.fecha || hoyISO() }
           ],
-          submitLabel:'Guardar',
-          onSubmit:(vals)=>{
-            mv.concepto=formatTexto(vals.concepto);mv.categoria=vals.categoria;
-            if(!mv.division && vals.importe!==undefined)mv.importe=vals.importe;
-            mv.fecha=vals.fecha;mv.mes=mesFromFechaISO(vals.fecha);
-            try{registrarOperacion('gasto_editado',{id:mv.id,concepto:mv.concepto,importe:mv.importe,dividido:!!mv.division});}catch(_){}
-            guardarMovimientos();renderGastosVariables();renderKPIs();
+          submitLabel: 'Guardar',
+          onSubmit: function(vals){
+            mv.concepto = formatTexto(vals.concepto); mv.categoria = vals.categoria;
+            if (!mv.division && vals.importe !== undefined) mv.importe = vals.importe;
+            mv.fecha = vals.fecha; mv.mes = mesFromFechaISO(vals.fecha);
+            try{ registrarOperacion('gasto_editado',{id:mv.id,concepto:mv.concepto,importe:mv.importe,dividido:!!mv.division}); }catch(_){}
+            guardarMovimientos();
+            renderGastosVariables(); renderKPIs();
           }
         });
       }
