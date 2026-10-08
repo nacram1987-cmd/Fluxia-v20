@@ -1,4 +1,4 @@
-const CACHE_VERSION='fluxia-shell-v97.20';
+const CACHE_VERSION='fluxia-shell-v97.31-ghpages-20261008c';
 const ENTRY='./index.html';
 
 self.addEventListener('install',event=>{
@@ -27,7 +27,6 @@ self.addEventListener('fetch',event=>{
   const u=new URL(r.url);
   if(u.origin!==self.location.origin) return;
   if(/^\/(auth|v1|health)(\/|$)/.test(u.pathname)) return;
-
   if(r.mode==='navigate'){
     event.respondWith((async()=>{
       const cache=await caches.open(CACHE_VERSION);
@@ -36,7 +35,7 @@ self.addEventListener('fetch',event=>{
         if(response&&response.ok) await cache.put(ENTRY,response.clone());
         return response;
       }).catch(()=>null);
-      if(cached){ event.waitUntil(fresh); return cached; }
+      if(cached){event.waitUntil(fresh);return cached;}
       return (await fresh)||Response.error();
     })());
     return;
