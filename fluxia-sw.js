@@ -37,7 +37,7 @@ self.addEventListener('fetch', event => {
 
   event.respondWith((async () => {
     try {
-      const response=await fetch(request,{cache:'no-store'});
+      const response=await Promise.race([fetch(request,{cache:'no-store'}), new Promise((_,reject)=>setTimeout(()=>reject(new Error('network timeout')),1200))]);
       if(response.ok && response.type==='basic') {
         const cache=await caches.open(CACHE_VERSION);
         await cache.put(ENTRY,response.clone());
