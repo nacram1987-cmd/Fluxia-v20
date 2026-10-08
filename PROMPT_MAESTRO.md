@@ -751,3 +751,15 @@ Los bocetos visuales se entregaran siempre por separado, nunca agrupados en una 
 11. **Entrega verificada.** No se declarará un cambio como terminado si no está presente en el código publicado y comprobado mediante validación estática/funcional disponible. Toda versión LAB debe documentar qué se cambió, qué no se tocó y las pruebas realizadas.
 
 **Prioridad:** integridad financiera → aislamiento de usuarios → persistencia cloud → no resurrección/duplicados → rendimiento → coherencia visual.
+
+
+## Regla permanente — conciliación bancaria inteligente (08/10/2026)
+
+- Conciliar automáticamente un movimiento bancario con un gasto fijo existente **solo** si la identificación del comercio/mandato es inequívoca, el importe coincide, corresponde al periodo y existe una única obligación compatible aún sin conciliar. Ejemplo: gimnasio 34,95 €.
+- Confianza media: preguntar una vez, permitir memorizar una asociación por usuario y entidad bancaria. Confianza baja o ambigüedad: revisión manual.
+- La asociación memorizada nunca sustituye comprobaciones de importe, periodo, cuenta, estado y unicidad. No inferir coincidencia alta solo por importe.
+- Conciliación idempotente por ID bancario estable y clave de obligación mensual; operación atómica y persistida en nube con aislamiento por usuario. No crear gasto variable adicional ni descontar dos veces el Disponible.
+- Si ya existe pago o conciliación, no volver a notificar ni reabrir; registrar trazabilidad, permitir deshacer sin borrar la transacción bancaria.
+- Mostrar confirmación discreta no bloqueante; no preguntar ante coincidencias inequívocas. Evitar repetición de notificaciones tras sincronización.
+- Antes de release: probar dos cargos idénticos, cargo repetido en importación, cambio de mes, importes parecidos, comercio ambiguo, dos usuarios, sesión PWA, conexión interrumpida y reversión.
+- No desplegar sin pruebas de regresión financiera y conservación de v97.32.
