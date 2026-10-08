@@ -4134,7 +4134,52 @@ body .panel:not(#panel-dashboard) button{touch-action:manipulation;}
 @media(max-width:430px){#gvMovimientosView .mov-item{grid-template-columns:1fr!important}#gvMovimientosView .mov-item>div:last-child{grid-template-columns:1fr repeat(4,30px)!important;width:100%!important}#gvMovimientosView .mov-item button{width:30px!important;height:30px!important;min-width:30px!important;min-height:30px!important}}
 /* Avoid expensive entrance animation on iPhone tab switches. */
 .panel.active{animation:none!important}
-</style></head>
+</style>
+<style id="fx-ux-unification-20261008">
+/* LAB: layout-only; no mutations to finance, authentication, sync or month state */
+@media(max-width:700px){
+ html body #fx32Header{padding:8px 12px!important;min-height:54px!important;border-radius:0 0 17px 17px!important}
+ html body #fx32Header .fx30-headgrid{display:grid!important;grid-template-columns:40px minmax(0,1fr) 40px!important;align-items:center!important;gap:8px!important;min-height:40px!important}
+ html body #fx32Header .fx30-brandzone{justify-self:center!important;max-width:100%!important;min-height:36px!important}
+ html body #fx32Header #btnMenu,html body #fx32Header #headerNotifications{position:static!important;transform:none!important;margin:0!important;visibility:visible!important;display:flex!important;align-items:center!important;justify-content:center!important;width:40px!important;height:40px!important}
+ html body #fx32Header #btnMenu{grid-column:1!important;grid-row:1!important}
+ html body #fx32Header .fx30-brandzone{grid-column:2!important;grid-row:1!important}
+ html body #fx32Header #headerNotifications{grid-column:3!important;grid-row:1!important}
+ html body #fx34Context{margin:4px 0 8px!important}
+ html body #fx34Context .fx30-greeting{display:none!important}
+ html body #fx34Context .fx30-statusrow{gap:8px!important}
+ html body #fx34Context .fx-banco-pill{font-size:11px!important;padding:5px 9px!important;max-width:49%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+ html body #mesSelectGlobal{margin-top:5px!important;margin-bottom:9px!important}
+ html body .fx-month-nav{padding:6px 8px!important;margin-bottom:9px!important;min-height:0!important}
+ html body .fx-month-nav button{min-width:36px!important;height:36px!important}
+}
+</style>
+
+<style id="fx-lab-duplicate-month-fix">
+/* Single month control: keep the DOM/IDs for existing listeners; visually suppress duplicate. */
+html body #panel-fijos .fx47-fijos-monthbox{display:none!important}
+html body #panel-fijos .fx47-fijos-hero{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:10px!important;padding:12px 14px!important;min-height:0!important}
+html body #panel-fijos .fx47-fijos-titlewrap{display:flex!important;align-items:center!important;gap:10px!important;width:100%!important}
+html body #panel-fijos .fx47-fijos-titlewrap h3{margin:0!important;font-size:1.08rem!important;line-height:1.25!important}
+html body #panel-fijos .fx47-fijos-titlewrap p{margin:3px 0 0!important;line-height:1.3!important;font-size:.74rem!important}
+@media(max-width:700px){
+html body #panel-fijos .fx47-fijos-summary{margin-top:8px!important;padding:12px!important}
+html body #panel-fijos .fx47-summary-top{gap:8px!important}
+html body #panel-fijos .fx47-summary-total{line-height:1.1!important}
+html body #panel-fijos .fx47-fijos-icon{width:38px!important;height:38px!important;flex:0 0 38px!important}
+}
+</style>
+<script id="fluxia-lab-perf-instrumentation">
+/* Read-only performance diagnostics; disabled by default. No financial data collected. */
+(function(){
+ var enabled=/[?&]fxperf=1(?:&|$)/.test(location.search);
+ if(!enabled)return;
+ var samples=[];
+ window.FLUXIA_LAB_PERF={record:function(tab,ms){samples.push({tab:String(tab),ms:Math.round(ms),at:Math.round(performance.now())});if(samples.length>120)samples.shift();if(ms>50)console.warn('[Fluxia LAB slow render]',tab,Math.round(ms)+'ms')},report:function(){return samples.slice()},summary:function(){var out={};samples.forEach(function(x){var a=out[x.tab]||(out[x.tab]={calls:0,totalMs:0,maxMs:0});a.calls++;a.totalMs+=x.ms;a.maxMs=Math.max(a.maxMs,x.ms)});return out}}};
+ try{if('PerformanceObserver'in window){var observer=new PerformanceObserver(function(list){list.getEntries().forEach(function(x){console.warn('[Fluxia LAB long task]',Math.round(x.duration)+'ms')})});observer.observe({entryTypes:['longtask']})}}catch(e){}
+})();
+</script>
+</head>
 <script>
 window._offlineMode=!navigator.onLine;
 window.addEventListener('online',()=>{window._offlineMode=false;});
@@ -6174,14 +6219,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
         <p>Tus compromisos financieros<br>mensuales</p>
       </div>
     </div>
-    <div class="fx47-fijos-monthbox">
-      <div class="fx47-fijos-monthctl">
-        <button type="button" id="fx47FijosPrev" aria-label="Mes anterior">‹</button>
-        <strong id="fijosMesLabel">Octubre</strong>
-        <button type="button" id="fx47FijosNext" aria-label="Mes siguiente">›</button>
-      </div>
-      <div class="fx47-fijos-today" id="fx47FijosToday">📅 Hoy</div>
-    </div>
+    <div id="fxLabLegacyMonthControls" hidden style="display:none!important" aria-hidden="true"><button type="button" id="fx47FijosPrev" tabindex="-1">‹</button><strong id="fijosMesLabel">Octubre</strong><button type="button" id="fx47FijosNext" tabindex="-1">›</button><span id="fx47FijosToday"></span></div>
   </div>
 
   <div class="fx47-fijos-summary">
@@ -13286,7 +13324,9 @@ function pintarDrawerHeader(){
 
 let _drawerScrollY = 0;
 function openDrawer(){
-  try{ pintarDrawerHeader(); }catch(e){}
+  const _fxMenuStart = performance.now();
+  // Primero abrir; datos secundarios del drawer se actualizan tras el primer frame.
+  requestAnimationFrame(function(){try{pintarDrawerHeader();}catch(e){}});
   try{
     _drawerScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
     document.documentElement.classList.add('drawer-open');
@@ -13297,9 +13337,11 @@ function openDrawer(){
   const o = document.getElementById('drawerOverlay');
   if (m) m.classList.add('open');
   if (o) o.classList.add('open');
+  requestAnimationFrame(function(){const ms=Math.round(performance.now()-_fxMenuStart);if(ms>80)console.warn('[Fluxia LAB perf] menú:',ms+'ms');});
 }
 function closeDrawer(){
   const m = document.getElementById('drawerMenu');
+  if(!m || !m.classList.contains('open')) return;
   const o = document.getElementById('drawerOverlay');
   if (m) m.classList.remove('open');
   if (o) o.classList.remove('open');
@@ -16851,6 +16893,11 @@ function fxVincularVariableProvision(mv){
 }
 
 function renderGastosVariables(){
+  /* LAB rendimiento: no construir la lista cuando el panel no está visible.
+     Al abrir Gastos variables, goToTab -> fluxiaRenderPanel9619 actualiza la vista. */
+  var _gvPanel = document.getElementById('panel-gastos-variables');
+  if (_gvPanel && !_gvPanel.classList.contains('active')) return;
+
   /* v96.95 · FAST PATH: purga solo si cambió movimientos o la huella de borrados. */
   try{
     var _lastMv = movimientos && movimientos.length ? movimientos[movimientos.length-1] : null;
@@ -16865,6 +16912,15 @@ function renderGastosVariables(){
   }catch(_purgeErr){}
   const mes = mesSeleccionado;
   const _movMes = movimientosDe(mes);
+  /* LAB: pintar inmediatamente importes de movimientos ya cargados.
+     Nunca dejar estos dos indicadores vacíos esperando idleCallback. */
+  try{
+    var _gvQuickTotal = _movMes.reduce(function(sum,mv){return sum+(Number(mv.importe)||0);},0);
+    var _gvQuickMonth = document.getElementById('gvStatMes');
+    if(_gvQuickMonth) _gvQuickMonth.textContent=eur(_gvQuickTotal,2);
+    var _gvQuickPlan = document.getElementById('gvStatTotal');
+    if(_gvQuickPlan) _gvQuickPlan.textContent=eur(movimientos.reduce(function(sum,mv){return sum+(Number(mv.importe)||0);},0),2);
+  }catch(_gvQuickError){}
   document.getElementById('gvMesLabel').textContent = MES_LABEL[mes];
   document.getElementById('gvMesActivo').textContent = MES_LABEL[mes];
   document.getElementById('gvMesLista').textContent = MES_LABEL[mes];
@@ -16873,6 +16929,7 @@ function renderGastosVariables(){
   /* v96.95 · FIRST PAINT FIRST: cabecera contable e historial se completan después
      de pintar la lista. Entrar en Variables nunca espera a Disponible ni al datalist. */
   const _gvDeferred = function(){
+    if (!_gvPanel || !_gvPanel.classList.contains('active') || mesSeleccionado!==mes) return;
     try{
       const disponible = disponibleEfectivo(mes);
       const valEl = document.getElementById('gvAjustadoVal');
@@ -16898,7 +16955,7 @@ function renderGastosVariables(){
     }catch(e){}
   };
   try{
-    if('requestIdleCallback' in window) requestIdleCallback(_gvDeferred,{timeout:350});
+    if('requestIdleCallback' in window) requestIdleCallback(_gvDeferred,{timeout:1200});
     else setTimeout(_gvDeferred,32);
   }catch(e){ setTimeout(_gvDeferred,32); }
 
@@ -16911,8 +16968,12 @@ function renderGastosVariables(){
   if (catEl){
     const prev = catEl.value;
     const cats = [...new Set(_movMes.map(m => m.categoria || 'Otros'))].sort((a,b)=>a.localeCompare(b,'es'));
-    catEl.innerHTML = '<option value="">Todas las categorías</option>' + cats.map(c => '<option value="'+String(c).replace(/"/g,'&quot;')+'">'+c+'</option>').join('');
-    if (prev && cats.includes(prev)) catEl.value = prev;
+    const catSig = JSON.stringify(cats);
+    if(catEl.dataset.fxCategorySig!==catSig){
+      catEl.innerHTML = '<option value="">Todas las categorías</option>' + cats.map(c => '<option value="'+String(c).replace(/"/g,'&quot;')+'">'+c+'</option>').join('');
+      if (prev && cats.includes(prev)) catEl.value = prev;
+      catEl.dataset.fxCategorySig=catSig;
+    }
   }
   if (busqEl && !busqEl._bound){
     busqEl._bound = true;
@@ -16931,7 +16992,7 @@ function renderGastosVariables(){
 
   // Histórico de movimientos (filtrado)
   const movView = document.getElementById('gvMovimientosView');
-  movView.innerHTML = "";
+  // No vaciar la lista hasta disponer de los nuevos nodos: reduce parpadeos y repintados.
   let movs = _movMes.slice().sort((a,b)=> (a.fecha||'').localeCompare(b.fecha||'') || 0).reverse();
   if (catFiltro) movs = movs.filter(m => (m.categoria || 'Otros') === catFiltro);
   if (q) movs = movs.filter(m => {
@@ -16944,6 +17005,7 @@ function renderGastosVariables(){
   } else if (movs.length === 0){
     movView.innerHTML = fluxiaEmptyHTML({ico:'🔎',tit:'Ningún gasto coincide',txt:'Limpia la búsqueda o el filtro de categoría para ver todos.'});
   } else {
+    const _gvFragment = document.createDocumentFragment();
     movs.forEach(mv=>{
       const div = document.createElement('div');
       div.className = 'mov-item';
@@ -16962,8 +17024,9 @@ function renderGastosVariables(){
           <button data-id="${mv.id}" data-action="del" title="Eliminar">×</button>
         </div>
       `;
-      movView.appendChild(div);
+      _gvFragment.appendChild(div);
     });
+    movView.replaceChildren(_gvFragment);
   }
 
   movView.querySelectorAll('button[data-action="provision"]').forEach(btn=>{
@@ -20279,7 +20342,9 @@ function renderAll(){
     var p=document.querySelector('.panel.active');
     if(p&&p.id&&p.id.indexOf('panel-')===0) activo=p.id.slice(6);
   }catch(e){}
+  const fxPerfStart = (window.FLUXIA_LAB_PERF && typeof performance!=='undefined') ? performance.now() : 0;
   fluxiaRenderPanel9619(activo);
+  if(fxPerfStart){try{window.FLUXIA_LAB_PERF.record(activo,performance.now()-fxPerfStart)}catch(e){}}
 
   try{ fluxiaPintarPrimerUsoInicio(); }catch(e){}
   try{ pintarDrawerHeader(); }catch(e){}
@@ -31692,7 +31757,7 @@ async function sincronizarEnBackground(){
       const blob = new Blob([swCode], { type: 'application/javascript' });
       const swUrl = URL.createObjectURL(blob);
       
-      const registration = await navigator.serviceWorker.register(swUrl, { scope: '/' });
+      const registration = await navigator.serviceWorker.register('./fluxia-sw.js', { scope: './', updateViaCache:'none' });
       console.log('✅ Service Worker registrado:', registration);
       
       // Peticiones de sincronización
@@ -33430,7 +33495,7 @@ console.log('✅ Fluxia v91 · Confianza + Salud listos');
     var blob = new Blob([swCode], {type: 'application/javascript'});
     var url = URL.createObjectURL(blob);
     try{
-      var reg = await navigator.serviceWorker.register(url, {scope: './'});
+      var reg = await navigator.serviceWorker.register('./fluxia-sw.js', {scope:'./',updateViaCache:'none'});
       await navigator.serviceWorker.ready;
       return reg;
     }catch(e){
@@ -34995,15 +35060,22 @@ window.FluxiaProtegerDatos = {
     return s;
   }
   // Envolver pintado de errores de conexión si existe el HTML de lista
-  var _obs = new MutationObserver(function(){
+  // Procesar únicamente nodos cambiados: evitar recorrer toda la lista bancaria por cada mutación.
+  var _obs = new MutationObserver(function(records){
     try{
-      document.querySelectorAll('#fluxiaBancoListaConexiones, .fluxia-banco-cuenta, #fluxiaBancoConectado').forEach(function(root){
-        root.querySelectorAll && root.querySelectorAll('*').forEach(function(el){
-          if (!el.childNodes || el.childNodes.length!==1 || el.childNodes[0].nodeType!==3) return;
-          var t = el.textContent||'';
-          if (/HUB046|Allowed number of accesses/i.test(t) && !el.dataset.v93fix){
-            el.dataset.v93fix = '1';
-            el.textContent = textoErrorBanco(t);
+      var nodes = new Set();
+      records.forEach(function(rec){
+        if(rec.type==='characterData'){if(rec.target.parentElement)nodes.add(rec.target.parentElement);}
+        else rec.addedNodes.forEach(function(node){if(node.nodeType===1)nodes.add(node);else if(node.nodeType===3&&node.parentElement)nodes.add(node.parentElement);});
+      });
+      nodes.forEach(function(node){
+        var els=[node];
+        if(node.querySelectorAll)els=els.concat(Array.from(node.querySelectorAll('*')));
+        els.forEach(function(el){
+          if(!el.childNodes||el.childNodes.length!==1||el.childNodes[0].nodeType!==3)return;
+          var t=el.textContent||'';
+          if(/HUB046|Allowed number of accesses/i.test(t)&&!el.dataset.v93fix){
+            el.dataset.v93fix='1';el.textContent=textoErrorBanco(t);
           }
         });
       });
