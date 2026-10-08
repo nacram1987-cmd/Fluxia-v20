@@ -12544,9 +12544,26 @@ function obtenerTablaComparativa(){
   return rows;
 }
 
+/* Fluxia LAB · Clasificación determinista de pagos desde la cartera.
+   No modifica, elimina ni guarda datos; compara con movimientos ya existentes. */
+function fxPagoYaEnDineroEnMano(mv){
+  if(!mv || typeof efectivo==='undefined' || !efectivo || !Array.isArray(efectivo.movimientos)) return false;
+  var concepto=String(mv.concepto||'').trim().toLocaleLowerCase('es');
+  var fecha=String(mv.fecha||'').slice(0,10);
+  var importe=Number(mv.importe)||0;
+  return efectivo.movimientos.some(function(e){
+    if(!e || e.tipo!=='salida') return false;
+    if(e.gastoId && mv.id && String(e.gastoId)===String(mv.id)) return true;
+    if(mv.efectivoId && e.id && String(mv.efectivoId)===String(e.id)) return true;
+    return !!(concepto && fecha && String(e.fecha||'').slice(0,10)===fecha
+      && String(e.concepto||'').trim().toLocaleLowerCase('es')===concepto
+      && Math.abs((Number(e.importe)||0)-importe)<0.005);
+  });
+}
 function movimientosDe(mes){
   return movimientos.filter(function(mv){
     if(!mv || mv.mes!==mes) return false;
+    if(fxPagoYaEnDineroEnMano(mv)) return false;
     /* v95.93 · Un movimiento conciliado con un fijo se conserva como evidencia,
        pero no pertenece a Gastos Variables. */
     if(mv.cuentaComoFijo || mv.vinculoFijoId) return false;
