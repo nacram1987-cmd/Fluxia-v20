@@ -751,3 +751,20 @@ Los bocetos visuales se entregaran siempre por separado, nunca agrupados en una 
 11. **Entrega verificada.** No se declarará un cambio como terminado si no está presente en el código publicado y comprobado mediante validación estática/funcional disponible. Toda versión LAB debe documentar qué se cambió, qué no se tocó y las pruebas realizadas.
 
 **Prioridad:** integridad financiera → aislamiento de usuarios → persistencia cloud → no resurrección/duplicados → rendimiento → coherencia visual.
+
+
+---
+
+## LEY IMPERIAL v97.34 · PUBLICACIÓN DIRECTA Y PRUEBAS EN SAFARI
+
+**Regla obligatoria permanente, confirmada por el usuario el 08/10/2026:** al generar cada nueva versión, se debe **publicar desde el propio chat usando la integración de GitHub**, sin pedir al usuario que suba ZIPs o archivos manualmente. La publicación de Fluxia v97.34-LAB demostró que es posible subir un `index.html` de más de 2 MB reconstruyendo el contenido íntegro del archivo disponible y enviándolo a GitHub mediante `create_blob` / `create_file`, verificando el SHA del contenido recibido. Un fallo de lectura del archivo grande con `fetch_file` **no debe confundirse** con imposibilidad de publicarlo.
+
+**Flujo de entrega:** modificar → validar → conservar la versión estable → publicar una LAB con número correlativo visible → verificar el SHA/commit en GitHub → comprobar la URL de GitHub Pages cuando sea accesible → entregar al usuario **enlace directo para Safari, respaldo ZIP completo, número de versión y cambios exactos**. Si el despliegue web no puede comprobarse desde la herramienta, diferenciar explícitamente «confirmado en GitHub» de «confirmado en Safari»; jamás fingir la segunda verificación.
+
+**Ruta de aislamiento:** cuando una modificación afecte lógica financiera, preferir un archivo de prueba independiente (por ejemplo `lab-v97-34.html`) accesible en GitHub Pages antes de sustituir el `index.html` estable. Verificar también el Service Worker: jamás debe redirigir la ruta LAB al índice/cache estable. No promocionar un LAB a ESTABLE sin pruebas funcionales y conformidad del usuario.
+
+**Identificador visible obligatorio:** cualquier badge o texto heredado que muestre una versión distinta de la cargada constituye un defecto de publicación que debe corregirse. En la prueba de v97.34-LAB se observó todavía un indicador `v97.28 LAB`; queda como incidencia abierta, no como corrección confirmada.
+
+**Clasificación bancaria pendiente:** el usuario confirmó cuatro rechazos de la asociación del cargo `Apple.com/bill · 14,99 €` con «Loterías», y en la captura de la LAB volvió a aparecer la pregunta. La decisión de «Es otro gasto» debe persistir por usuario y movimiento, sin borrar el cargo, sin recontarlo y sin volver a preguntar. Este fallo permanece abierto hasta que el usuario valide su desaparición después de una sincronización.
+
+**Prohibido:** volver a indicar al usuario que «no se puede subir a GitHub» sin antes intentar las rutas de publicación probadas (incluida creación directa de blobs y archivos con verificación), o volver a ofrecer como publicada una versión que solo está en local.
