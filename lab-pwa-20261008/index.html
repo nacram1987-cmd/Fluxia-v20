@@ -2,7 +2,6 @@
 
 <html lang="es">
 <head>
-<!-- Fluxia LAB isolated preview -->
 <script id="fx-quota-guard">
 /* v95.3.0 · Memoria del dispositivo. La app guardaba una copia completa de los gastos CADA DÍA y nunca borraba las
    antiguas; con la memoria del navegador llena, localStorage.setItem falla y varias partes de la app lo ignoraban
@@ -6210,14 +6209,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
         <p>Tus compromisos financieros<br>mensuales</p>
       </div>
     </div>
-    <div class="fx47-fijos-monthbox">
-      <div class="fx47-fijos-monthctl">
-        <button type="button" id="fx47FijosPrev" aria-label="Mes anterior">‹</button>
-        <strong id="fijosMesLabel">Octubre</strong>
-        <button type="button" id="fx47FijosNext" aria-label="Mes siguiente">›</button>
-      </div>
-      <div class="fx47-fijos-today" id="fx47FijosToday">📅 Hoy</div>
-    </div>
+    <div id="fxLabLegacyMonthControls" hidden style="display:none!important" aria-hidden="true"><button type="button" id="fx47FijosPrev" tabindex="-1">‹</button><strong id="fijosMesLabel">Octubre</strong><button type="button" id="fx47FijosNext" tabindex="-1">›</button><span id="fx47FijosToday"></span></div>
   </div>
 
   <div class="fx47-fijos-summary">
