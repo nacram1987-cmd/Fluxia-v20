@@ -39472,7 +39472,7 @@ var inFlight=false,lastTry=0,lastProfile='',timer=0;
 function ready(){try{
 if(document.getElementById('splashCarga'))return false;
 if(!window.FLUXIA_PROFILE||!window.FLUXIA_PROFILE.id)return false;
-if(typeof Almacen==='undefined'||!Almacen.arrancada)return false;
+if(typeof Almacen==='undefined'||Almacen.estado==='cargando')return false;
 if(typeof ingresosItems==='undefined'||!Array.isArray(ingresosItems))return false;
 if(typeof gastosFijosItems==='undefined'||!Array.isArray(gastosFijosItems))return false;
 if(typeof window.FluxiaBancoSincronizar!=='function'||typeof registrarGastoVariable!=='function')return false;
