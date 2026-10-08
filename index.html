@@ -292,10 +292,10 @@ body.fx-dashboard-clean .fx-dashboard67-item.gold:after { content:""; position:a
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="telephone=no" name="format-detection"/>
 <meta content="no" name="msapplication-tap-highlight"/>
-<title>Fluxia BETA v97.20-LAB</title>
+<title>Fluxia BETA v97.31-LAB</title>
 
 <style id="fluxia-v95-75-auth-error-visibility">#fobError:not(:empty){display:block!important;}</style>
-<meta content="v97.20-LAB" name="fluxia-version"/>
+<meta content="v97.31-LAB" name="fluxia-version"/>
 <!-- Fluxia v91 · brand lock · datos jamás a 0 · compartidos saldo inicial · notif suaves · logo alineado · base v90.10 -->
 <script>
 (function(){window.FluxiaNative={isNative:function(){try{return!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())}catch(e){return false}},platform:function(){try{return(window.Capacitor&&Capacitor.getPlatform)?Capacitor.getPlatform():'web'}catch(e){return'web'}}};})();
@@ -609,13 +609,13 @@ window.fluxiaCuandoLibre = function(fn, intentos){
 };
 
 </script>
-<meta content="v97.20-LAB" name="fluxia-version"/>
+<meta content="v97.31-LAB" name="fluxia-version"/>
 <meta content="lab" name="fluxia-channel"/>
-<script>window.FLUXIA_VERSION = "v97.20-LAB";</script>
+<script>window.FLUXIA_VERSION = "v97.31-LAB";</script>
 <script id="fx47-version-integrity-guard">
 (function(){
   'use strict';
-  var EXPECT='v97.20-LAB';
+  var EXPECT='v97.31-LAB';
   window.FLUXIA_VERSION=EXPECT;
   window.FLUXIA_BUILD=EXPECT;
   try{
@@ -3868,10 +3868,10 @@ html body #fxDashboard67 .fx30-hero *,html body #fxDashboard67 .fx67-hero * *{co
 </style>
 
 
-<style id='fluxia-v9676-variables-contain'>#panel-gastos-variables{contain:layout style paint}</style><!-- v97.20-LAB · Huchas canónicas en lectura normal + persistencia; Variables v96.76 preservado -->
-<!-- v97.20-LAB · Reconciliación histórica 2.817,88 € de las 7 Huchas legacy; Variables preservado -->
-<!-- v97.20-LAB · Disponible: autoridad real de Fijos conciliados; Huchas v96.78 preservadas -->
-<!-- v97.20-LAB · Disponible auditado contra nube: dedupe bancario de Ingresos por bancoRef; objetivo derivado 111,96 € -->
+<style id='fluxia-v9676-variables-contain'>#panel-gastos-variables{contain:layout style paint}</style><!-- v97.21-LAB · Menú↔Variables: delegación eventos + cancel idle al salir; Variables v96.76 preservado -->
+<!-- v97.31-LAB · Reconciliación histórica 2.817,88 € de las 7 Huchas legacy; Variables preservado -->
+<!-- v97.31-LAB · Disponible: autoridad real de Fijos conciliados; Huchas v96.78 preservadas -->
+<!-- v97.31-LAB · Disponible auditado contra nube: dedupe bancario de Ingresos por bancoRef; objetivo derivado 111,96 € -->
 <style id="fluxia-v9696-design-system">
 /* v96.99 · ÚNICA capa visual final. Solo presentación; lógica financiera intacta. */
 :root{
@@ -4081,7 +4081,7 @@ html body .panel:not(#panel-resumen) .pv-gen-btn{font-family:var(--fx-ui-font)!i
 })();
 </script>
 
-<link rel="stylesheet" href="./fluxia-ui-v96.95.css">
+<link rel="stylesheet" href="./fluxia-ui-v97.23.css">
 <style id="fluxia-v9717-unified-tabs">
 /* v97.16 · lenguaje visual único en módulos; Dashboard conserva identidad propia */
 body .panel:not(#panel-dashboard){--fxu-radius:16px;--fxu-pad:14px;}
@@ -4134,7 +4134,52 @@ body .panel:not(#panel-dashboard) button{touch-action:manipulation;}
 @media(max-width:430px){#gvMovimientosView .mov-item{grid-template-columns:1fr!important}#gvMovimientosView .mov-item>div:last-child{grid-template-columns:1fr repeat(4,30px)!important;width:100%!important}#gvMovimientosView .mov-item button{width:30px!important;height:30px!important;min-width:30px!important;min-height:30px!important}}
 /* Avoid expensive entrance animation on iPhone tab switches. */
 .panel.active{animation:none!important}
-</style></head>
+</style>
+<style id="fx-ux-unification-20261008">
+/* LAB: layout-only; no mutations to finance, authentication, sync or month state */
+@media(max-width:700px){
+ html body #fx32Header{padding:8px 12px!important;min-height:54px!important;border-radius:0 0 17px 17px!important}
+ html body #fx32Header .fx30-headgrid{display:grid!important;grid-template-columns:40px minmax(0,1fr) 40px!important;align-items:center!important;gap:8px!important;min-height:40px!important}
+ html body #fx32Header .fx30-brandzone{justify-self:center!important;max-width:100%!important;min-height:36px!important}
+ html body #fx32Header #btnMenu,html body #fx32Header #headerNotifications{position:static!important;transform:none!important;margin:0!important;visibility:visible!important;display:flex!important;align-items:center!important;justify-content:center!important;width:40px!important;height:40px!important}
+ html body #fx32Header #btnMenu{grid-column:1!important;grid-row:1!important}
+ html body #fx32Header .fx30-brandzone{grid-column:2!important;grid-row:1!important}
+ html body #fx32Header #headerNotifications{grid-column:3!important;grid-row:1!important}
+ html body #fx34Context{margin:4px 0 8px!important}
+ html body #fx34Context .fx30-greeting{display:none!important}
+ html body #fx34Context .fx30-statusrow{gap:8px!important}
+ html body #fx34Context .fx-banco-pill{font-size:11px!important;padding:5px 9px!important;max-width:49%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+ html body #mesSelectGlobal{margin-top:5px!important;margin-bottom:9px!important}
+ html body .fx-month-nav{padding:6px 8px!important;margin-bottom:9px!important;min-height:0!important}
+ html body .fx-month-nav button{min-width:36px!important;height:36px!important}
+}
+</style>
+
+<style id="fx-lab-duplicate-month-fix">
+/* Single month control: keep the DOM/IDs for existing listeners; visually suppress duplicate. */
+html body #panel-fijos .fx47-fijos-monthbox{display:none!important}
+html body #panel-fijos .fx47-fijos-hero{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:10px!important;padding:12px 14px!important;min-height:0!important}
+html body #panel-fijos .fx47-fijos-titlewrap{display:flex!important;align-items:center!important;gap:10px!important;width:100%!important}
+html body #panel-fijos .fx47-fijos-titlewrap h3{margin:0!important;font-size:1.08rem!important;line-height:1.25!important}
+html body #panel-fijos .fx47-fijos-titlewrap p{margin:3px 0 0!important;line-height:1.3!important;font-size:.74rem!important}
+@media(max-width:700px){
+html body #panel-fijos .fx47-fijos-summary{margin-top:8px!important;padding:12px!important}
+html body #panel-fijos .fx47-summary-top{gap:8px!important}
+html body #panel-fijos .fx47-summary-total{line-height:1.1!important}
+html body #panel-fijos .fx47-fijos-icon{width:38px!important;height:38px!important;flex:0 0 38px!important}
+}
+</style>
+<script id="fluxia-lab-perf-instrumentation">
+/* Read-only performance diagnostics; disabled by default. No financial data collected. */
+(function(){
+ var enabled=/[?&]fxperf=1(?:&|$)/.test(location.search);
+ if(!enabled)return;
+ var samples=[];
+ window.FLUXIA_LAB_PERF={record:function(tab,ms){samples.push({tab:String(tab),ms:Math.round(ms),at:Math.round(performance.now())});if(samples.length>120)samples.shift();if(ms>50)console.warn('[Fluxia LAB slow render]',tab,Math.round(ms)+'ms')},report:function(){return samples.slice()},summary:function(){var out={};samples.forEach(function(x){var a=out[x.tab]||(out[x.tab]={calls:0,totalMs:0,maxMs:0});a.calls++;a.totalMs+=x.ms;a.maxMs=Math.max(a.maxMs,x.ms)});return out}};
+ try{if('PerformanceObserver'in window){var observer=new PerformanceObserver(function(list){list.getEntries().forEach(function(x){console.warn('[Fluxia LAB long task]',Math.round(x.duration)+'ms')})});observer.observe({entryTypes:['longtask']})}}catch(e){}
+})();
+</script>
+<link rel="apple-touch-icon" sizes="180x180" href="fluxia-icon.png"><link rel="icon" type="image/png" href="fluxia-icon.png"><meta name="apple-mobile-web-app-title" content="Fluxia BETA"><meta name="theme-color" content="#69A9D0"><meta name="fluxia-lab-build" content="v97.31-LAB"></head>
 <script>
 window._offlineMode=!navigator.onLine;
 window.addEventListener('online',()=>{window._offlineMode=false;});
@@ -6174,14 +6219,7 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
         <p>Tus compromisos financieros<br>mensuales</p>
       </div>
     </div>
-    <div class="fx47-fijos-monthbox">
-      <div class="fx47-fijos-monthctl">
-        <button type="button" id="fx47FijosPrev" aria-label="Mes anterior">‹</button>
-        <strong id="fijosMesLabel">Octubre</strong>
-        <button type="button" id="fx47FijosNext" aria-label="Mes siguiente">›</button>
-      </div>
-      <div class="fx47-fijos-today" id="fx47FijosToday">📅 Hoy</div>
-    </div>
+    <div id="fxLabLegacyMonthControls" hidden style="display:none!important" aria-hidden="true"><button type="button" id="fx47FijosPrev" tabindex="-1">‹</button><strong id="fijosMesLabel">Octubre</strong><button type="button" id="fx47FijosNext" tabindex="-1">›</button><span id="fx47FijosToday"></span></div>
   </div>
 
   <div class="fx47-fijos-summary">
@@ -6302,9 +6340,9 @@ function pinData(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'null');
 <div class="gv-hero tu-mes-like">
 <div class="gv-hero-lbl">Te queda este mes</div>
 <div class="gv-hero-val" id="gvAjustadoVal">—</div>
-<div class="gv-hero-sub">después de gastos fijos, provisiones y variables</div>
+<div class="gv-hero-sub">después de fijos, provisiones y variables · los pagos en efectivo se muestran en Dinero en mano</div>
 <div class="gv-mini">
-<div><span>Gastado en variables</span><strong id="gvStatMes">—</strong></div>
+<div><span>Variables · incluye cartera</span><strong id="gvStatMes">—</strong></div>
 <div><span>Total del plan</span><strong id="gvStatTotal">—</strong></div>
 </div>
 </div>
@@ -8414,7 +8452,7 @@ function initPwaYBeta(){
     }
   }catch(e){}
 
-  // v97.20-LAB · Manifest de build autoritativo. No sustituir por blob dinámico histórico.
+  // v97.31-LAB · Manifest de build autoritativo. No sustituir por blob dinámico histórico.
   try{
     var link = document.getElementById('fluxiaManifestLink');
     if(link) link.setAttribute('href','./manifest.webmanifest');
@@ -9356,7 +9394,7 @@ window.FluxiaSync954 = (function(){
   function quarantineLegacyTombstones(){
     try{var marker='v2_tombstone_guard_v9536';if(Almacen.getItem(marker))return 0;var T=parse(Almacen.getItem(TKEY),{}),E=parse(Almacen.getItem(EKEY),{}),keep={},drop=[],n=0;Object.keys(T).forEach(function(full){var tt=T[full]||{},ee=E[full]||{};Object.keys(tt).forEach(function(q){if(ee[q]){keep[full]=keep[full]||{};keep[full][q]=tt[q];}else{drop.push({full:full,q:q,t:tt[q]});n++;}});});if(n){Almacen.setItem('v2_legacy_tombstone_quarantine_v9536',JSON.stringify({cuando:new Date().toISOString(),items:drop.slice(-2000)}));Almacen.setItem(TKEY,JSON.stringify(keep));}Almacen.setItem(marker,'1');return n;}catch(e){console.warn('[v95.38] quarantine legacy tombstones',e);return 0;}
   }
-  return {metadataKey:metadataKey,mergeMetadataRaw:mergeMetadataRaw,restored:restored,prepare:prepare,isProtectedListKey:isProtectedListKey,mergeCloudValue:mergeCloudValue,mergeTombstonesRaw:mergeTombstonesRaw,mergeExplicitRaw:mergeExplicitRaw,registerDelete:registerDelete,isDeleted:isDeleted,clearDelete:clearDelete,quarantineLegacyTombstones:quarantineLegacyTombstones,aptSemantic:aptSemantic};
+  return {activeDeletesFor:function(k){return activeDeletes(k);},metadataKey:metadataKey,mergeMetadataRaw:mergeMetadataRaw,restored:restored,prepare:prepare,isProtectedListKey:isProtectedListKey,mergeCloudValue:mergeCloudValue,mergeTombstonesRaw:mergeTombstonesRaw,mergeExplicitRaw:mergeExplicitRaw,registerDelete:registerDelete,isDeleted:isDeleted,clearDelete:clearDelete,quarantineLegacyTombstones:quarantineLegacyTombstones,aptSemantic:aptSemantic};
 })();
 
 
@@ -9939,9 +9977,12 @@ window.FluxiaGVBorrados = (function(){
   function purgarListaLocal(arr){
     // quita de movimientos[] cualquiera que coincida con borrados
     if(!Array.isArray(arr)) return arr;
+    var _fxAct=null;
+    try{ if(window.FluxiaSync954&&FluxiaSync954.activeDeletesFor) _fxAct=FluxiaSync954.activeDeletesFor('v2_movimientos'); }catch(_fxA){ _fxAct=null; }
     return arr.filter(function(mv){
       if(!mv)return true;
-      if(window.FluxiaSync954&&FluxiaSync954.isDeleted('v2_movimientos',mv.id))return false;
+      if(_fxAct){ if(mv.id!=null && _fxAct['i:'+String(mv.id)]) return false; }
+      else if(window.FluxiaSync954&&FluxiaSync954.isDeleted('v2_movimientos',mv.id))return false;
       if(mv.origen!=='banco'&&!mv.bancoRef)return !debeIgnorarBanco({id:mv.id},'');
       var fake = { id: mv.bancoRef||mv.id, fecha: mv.fecha, importe: mv.importeOriginal!=null?mv.importeOriginal:mv.importe, concepto: mv.concepto, banco: mv.banco };
       return !debeIgnorarBanco(fake, mv.banco);
@@ -11037,9 +11078,14 @@ function escapeHtml(s){
     .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
+var _fxEurFmt = {};
 function eur(n, decimales){
   if (decimales === undefined) decimales = 0;
-  return new Intl.NumberFormat('es-ES', { style:'currency', currency:'EUR', minimumFractionDigits:decimales, maximumFractionDigits:decimales }).format(n);
+  var f = _fxEurFmt[decimales];
+  if (!f) {
+    f = _fxEurFmt[decimales] = new Intl.NumberFormat('es-ES', { style:'currency', currency:'EUR', minimumFractionDigits:decimales, maximumFractionDigits:decimales });
+  }
+  return f.format(n);
 }
 function parseImporte(str){
   if (str === null || str === undefined) return NaN;
@@ -12636,15 +12682,39 @@ function obtenerTablaComparativa(){
   return rows;
 }
 
-function movimientosDe(mes){
-  return movimientos.filter(function(mv){
+function esMovimientoVariable(mv, mes){
     if(!mv || mv.mes!==mes) return false;
     /* v95.93 · Un movimiento conciliado con un fijo se conserva como evidencia,
        pero no pertenece a Gastos Variables. */
     if(mv.cuentaComoFijo || mv.vinculoFijoId) return false;
     if(mv.excluido || mv.excluidoDisponible || mv.tipoInterno==='reponer_hucha' || mv.tipoInterno==='traspaso' || mv.tipoInterno==='traspaso_efectivo' || mv.tipoInterno==='puente' || mv.esTraspasoPropio===true || fxRetiradaEfectivoNoGasto(mv)) return false;
     return true;
+}
+function movimientosDe(mes){
+  return movimientos.filter(function(mv){ return esMovimientoVariable(mv, mes); });
+}
+/* Los pagos realizados desde Dinero en mano también viven en v2_movimientos
+   para que afecten al Disponible. Se conservan para la contabilidad, pero su
+   único listado visible es la cartera, evitando que aparezcan duplicados en
+   Gastos variables. */
+function movimientosVariablesVisibles(mes){
+  return movimientosDe(mes).filter(function(mv){
+    return !(mv && (mv.origen==='efectivo' || mv.tipoInterno==='gasto_efectivo'));
   });
+}
+function resumenMovimientosVariables(mes){
+  var totalPlan=0,totalMes=0,mesMovs=[],visibles=[];
+  var lista=Array.isArray(movimientos)?movimientos:[];
+  for(var i=0;i<lista.length;i++){
+    var mv=lista[i];
+    if(!mv)continue;
+    totalPlan+=(Number(mv.importe)||0);
+    if(!esMovimientoVariable(mv,mes))continue;
+    mesMovs.push(mv);
+    totalMes+=(Number(mv.importe)||0);
+    if(mv.origen!=='efectivo'&&mv.tipoInterno!=='gasto_efectivo')visibles.push(mv);
+  }
+  return {mes:mesMovs,visibles:visibles,totalMes:totalMes,totalPlan:totalPlan};
 }
 function fxEsRetiradaEfectivoBanco(mv){
   if(!mv || mv.origen!=='banco') return false;
@@ -12968,6 +13038,11 @@ function setupFAQSearch(){
   });
 }
 
+var _fxHdrRaf = 0;
+function fxScheduleHeaderOffset(){
+  if (_fxHdrRaf) return;
+  _fxHdrRaf = requestAnimationFrame(function(){ _fxHdrRaf = 0; try{ fluxiaUpdateHeaderOffset(); }catch(e){} });
+}
 function fluxiaUpdateHeaderOffset(){
   try{
     const header = document.querySelector('header.top');
@@ -12987,6 +13062,21 @@ function goToTab(tabName){
   if(tabName==='financiaciones') tabName='fijos';
   var anterior=null, destino=null;
   try{ anterior=document.querySelector('.panel.active'); destino=document.getElementById('panel-'+tabName); }catch(e){}
+  /* v97.21-LAB · Al salir de Variables, invalidar generación e idle para que no
+     sigan ejecutándose cálculos/DOM de la pestaña abandonada al abrir el menú. */
+  try{
+    if (anterior && anterior.id === 'panel-gastos-variables' && destino !== anterior) {
+      fxGvPausarLista();
+      window.__fxGVListState=null;
+      window.__fxGVGeneration = (window.__fxGVGeneration || 0) + 1;
+      if (window.__fxGVIdleId != null && typeof cancelIdleCallback === 'function') {
+        cancelIdleCallback(window.__fxGVIdleId); window.__fxGVIdleId = null;
+      }
+      if (window.__fxGVTimeoutId != null) {
+        clearTimeout(window.__fxGVTimeoutId); window.__fxGVTimeoutId = null;
+      }
+    }
+  }catch(_gvLeave){}
   if(anterior && anterior!==destino) anterior.classList.remove('active');
   if(destino && !destino.classList.contains('active')) destino.classList.add('active');
 
@@ -13032,6 +13122,9 @@ function goToTab(tabName){
 function goToInternalTab(tabName){
   document.querySelectorAll('.internal-tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.internalTab===tabName));
   document.querySelectorAll('.internal-tab-panel').forEach(p=>p.classList.toggle('active', p.id===tabName));
+  if(tabName==='gv-categoria'||tabName==='gv-registro'){
+    try{ renderGastosVariables(); }catch(e){}
+  }
 }
 
 document.querySelectorAll('.internal-tab-btn').forEach(btn=>{
@@ -13286,29 +13379,32 @@ function pintarDrawerHeader(){
 
 let _drawerScrollY = 0;
 function openDrawer(){
-  try{ pintarDrawerHeader(); }catch(e){}
+  /* v97.31-LAB · menú fast-path: abrir primero, cualquier trabajo secundario después.
+     No se fija body.top en iOS para evitar relayout global al primer toque desde Variables/Bancos. */
+  try{ fxGvPausarLista(); }catch(e){}
   try{
-    _drawerScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
-    document.documentElement.classList.add('drawer-open');
-    document.body.classList.add('drawer-open');
-    document.body.style.top = (-_drawerScrollY) + 'px';
+    if(window.__fxGVIdleId!=null&&typeof cancelIdleCallback==='function')cancelIdleCallback(window.__fxGVIdleId);
+    if(window.__fxGVTimeoutId!=null)clearTimeout(window.__fxGVTimeoutId);
+    window.__fxGVIdleId=null; window.__fxGVTimeoutId=null;
   }catch(e){}
-  const m = document.getElementById('drawerMenu');
-  const o = document.getElementById('drawerOverlay');
-  if (m) m.classList.add('open');
-  if (o) o.classList.add('open');
+  var m=document.getElementById('drawerMenu');
+  var o=document.getElementById('drawerOverlay');
+  try{ _drawerScrollY = window.pageYOffset || document.documentElement.scrollTop || 0; }catch(e){}
+  if(m) m.classList.add('open');
+  if(o) o.classList.add('open');
+  try{ document.documentElement.classList.add('drawer-open'); document.body.classList.add('drawer-open'); }catch(e){}
+  var later=window.requestIdleCallback||function(cb){return setTimeout(cb,60)};
+  try{ later(function(){try{pintarDrawerHeader();}catch(e){}}); }catch(e){}
 }
 function closeDrawer(){
-  const m = document.getElementById('drawerMenu');
-  const o = document.getElementById('drawerOverlay');
-  if (m) m.classList.remove('open');
-  if (o) o.classList.remove('open');
-  try{
-    document.documentElement.classList.remove('drawer-open');
-    document.body.classList.remove('drawer-open');
-    document.body.style.top = '';
-    window.scrollTo(0, _drawerScrollY || 0);
-  }catch(e){}
+  var m=document.getElementById('drawerMenu');
+  if(!m || !m.classList.contains('open')) return;
+  var o=document.getElementById('drawerOverlay');
+  if(m) m.classList.remove('open');
+  if(o) o.classList.remove('open');
+  try{ document.documentElement.classList.remove('drawer-open'); document.body.classList.remove('drawer-open'); document.body.style.top=''; }catch(e){}
+  var later=window.requestIdleCallback||function(cb){return setTimeout(cb,80)};
+  try{ later(function(){try{fxGvReanudarLista();}catch(e){}}); }catch(e){}
 }
 document.getElementById('btnMenu').addEventListener('pointerdown', openDrawer, {passive:true});
 document.getElementById('drawerClose').addEventListener('click', closeDrawer);
@@ -14267,7 +14363,7 @@ function renderMesSelector(){
     var _ml = (typeof MES_LABEL !== 'undefined' && MES_LABEL[mesSeleccionado]) ? MES_LABEL[mesSeleccionado] : '';
     if (_ml) ['ing','fijos','prov','fin','gv','com','pres','an','ef','sim'].forEach(function(p){ var el = document.getElementById(p + 'MesLabel'); if (el) el.textContent = _ml; });
   } catch(e) {}
-  try { fluxiaUpdateHeaderOffset(); } catch(e) {}
+  try { fxScheduleHeaderOffset(); } catch(e) {}
 }
 
 // ---------------------------------------------------------------------------
@@ -15593,7 +15689,7 @@ function fxReconciliarCesped70V9717(){
 
 function renderProvisiones(){
   if(window.FluxiaSync954){provisiones=JSON.parse(FluxiaSync954.mergeCloudValue('v2_provisiones',JSON.stringify(provisiones),'[]',Almacen.getItem('v2_sync_tombstones'),null,Almacen.getItem('v2_sync_restores'),null,Almacen.getItem('v2_explicit_deletions'),null));usosProvisiones=usosProvisiones.filter(function(x){return !FluxiaSync954.isDeleted('v2_usos',x.id);});}
-  try{ fxReconciliarCesped70V9717(); }catch(e){}
+  /* v97.31-LAB: reconciliación automática Mantenimiento Césped desactivada; la nube ya está conciliada y no se muta al renderizar */
   try{ pintarAvisoProvTab(); }catch(e){}
   document.getElementById('provMesLabel').textContent = MES_LABEL[mesSeleccionado];
   const hintEl = document.getElementById('provMesLabelHint');
@@ -16802,7 +16898,7 @@ document.getElementById('btnAddFin').addEventListener('click', ()=>{
 // ---------------------------------------------------------------------------
 function exportarVariablesCSV(mes){
   mes = mes || mesSeleccionado || MES_ACTUAL_REAL;
-  const movs = movimientosDe(mes).slice().sort((a,b)=>(a.fecha||'').localeCompare(b.fecha||''));
+  const movs = movimientosVariablesVisibles(mes).slice().sort((a,b)=>(a.fecha||'').localeCompare(b.fecha||''));
   const sep = ';';
   const rows = [['Fecha','Concepto','Categoría','Importe','Origen'].join(sep)];
   movs.forEach(m=>{
@@ -16850,7 +16946,74 @@ function fxVincularVariableProvision(mv){
   }});
 }
 
+/* Render incremental del historial: muestra el primer lote inmediatamente y
+   cede el hilo entre lotes. Así abrir Menú o cambiar de pestaña interrumpe el
+   trabajo pendiente sin recortar la lista ni las acciones de sus filas. */
+function fxGvPausarLista(){
+  var s=window.__fxGVListState;
+  if(!s)return;
+  s.paused=true;
+  if(s.raf){cancelAnimationFrame(s.raf);s.raf=0;}
+}
+function fxGvReanudarLista(){
+  var s=window.__fxGVListState;
+  if(!s||s.done||s.raf)return;
+  s.paused=false;
+  if(document.hidden||document.getElementById('drawerMenu')?.classList.contains('open'))return;
+  s.raf=requestAnimationFrame(function(){
+    s.raf=0;
+    if(window.__fxGVListState!==s||s.done)return;
+    var panel=document.getElementById('panel-gastos-variables');
+    if(!panel||!panel.classList.contains('active')){s.done=true;return;}
+    if(document.hidden||document.getElementById('drawerMenu')?.classList.contains('open')){s.paused=true;return;}
+    var start=performance.now(), fragment=document.createDocumentFragment(), count=0;
+    while(s.index<s.items.length&&count<8&&(count===0||performance.now()-start<3)){
+      var mv=s.items[s.index++], div=document.createElement('div');
+      div.className='mov-item';
+      var fechaTxt=mv.fecha?mv.fecha.slice(8,10)+'/'+mv.fecha.slice(5,7):MES_LABEL[mv.mes];
+      var metaTxt=fechaTxt+(mv.categoria?' · '+mv.categoria:'')+(mv.provisionVinculada?' · '+iconoProvision(mv.provisionVinculada)+' '+mv.provisionVinculada+(Number(mv.provisionDeficit)>0.005?' · déficit '+eur(mv.provisionDeficit,2):' · cubierto'):'');
+      var safeId=escapeHtml(mv.id==null?'':mv.id);
+      div.innerHTML='<div><div class="concepto">'+FluxiaMerchant.html(mv.concepto,'fx-variable-merchant')+escapeHtml(mv.concepto||'Gasto variable')+(mv.origen==='excel'?' <span class="badge excel">Excel</span>':'')+'</div><div class="meta">'+escapeHtml(metaTxt)+'</div></div><div style="display:flex;align-items:center;gap:6px"><span class="importe gasto">-'+eur(mv.importe,2)+'</span><button data-id="'+safeId+'" data-action="provision" title="Usar provisión">🏺</button><button data-id="'+safeId+'" data-action="split" title="Compartir gasto">🤝</button><button data-id="'+safeId+'" data-action="edit" title="Editar">✎</button><button data-id="'+safeId+'" data-action="del" title="Eliminar">×</button></div>';
+      fragment.appendChild(div);count++;
+    }
+    s.container.appendChild(fragment);
+    if(s.index>=s.items.length){s.done=true;s.container.setAttribute('aria-busy','false');window.__fxGVListState=null;return;}
+    fxGvReanudarLista();
+  });
+}
+function fxGvRenderLista(container,items){
+  fxGvPausarLista();
+  var state={container:container,items:items,index:0,raf:0,paused:false,done:false};
+  window.__fxGVListState=state;
+  container._fxGvById=new Map(items.map(function(m){return [String(m.id),m];}));
+  container.setAttribute('aria-busy','true');
+  container.replaceChildren();
+  /* Lote crítico inicial: evita la pantalla vacía; los siguientes se añaden
+     en frames separados y respetan el menú y la navegación. */
+  var start=performance.now(),fragment=document.createDocumentFragment(),count=0;
+  while(state.index<items.length&&count<8&&(count===0||performance.now()-start<3)){
+    var mv=items[state.index++],div=document.createElement('div');
+    div.className='mov-item';
+    var fechaTxt=mv.fecha?mv.fecha.slice(8,10)+'/'+mv.fecha.slice(5,7):MES_LABEL[mv.mes];
+    var metaTxt=fechaTxt+(mv.categoria?' · '+mv.categoria:'')+(mv.provisionVinculada?' · '+iconoProvision(mv.provisionVinculada)+' '+mv.provisionVinculada+(Number(mv.provisionDeficit)>0.005?' · déficit '+eur(mv.provisionDeficit,2):' · cubierto'):'');
+    var safeId=escapeHtml(mv.id==null?'':mv.id);
+    div.innerHTML='<div><div class="concepto">'+FluxiaMerchant.html(mv.concepto,'fx-variable-merchant')+escapeHtml(mv.concepto||'Gasto variable')+(mv.origen==='excel'?' <span class="badge excel">Excel</span>':'')+'</div><div class="meta">'+escapeHtml(metaTxt)+'</div></div><div style="display:flex;align-items:center;gap:6px"><span class="importe gasto">-'+eur(mv.importe,2)+'</span><button data-id="'+safeId+'" data-action="provision" title="Usar provisión">🏺</button><button data-id="'+safeId+'" data-action="split" title="Compartir gasto">🤝</button><button data-id="'+safeId+'" data-action="edit" title="Editar">✎</button><button data-id="'+safeId+'" data-action="del" title="Eliminar">×</button></div>';
+    fragment.appendChild(div);count++;
+  }
+  container.appendChild(fragment);
+  if(state.index>=items.length){state.done=true;container.setAttribute('aria-busy','false');window.__fxGVListState=null;}
+  else fxGvReanudarLista();
+}
+document.addEventListener('visibilitychange',function(){if(!document.hidden)fxGvReanudarLista();});
+
 function renderGastosVariables(){
+  fxGvPausarLista();
+  window.__fxGVListState=null;
+  /* LAB rendimiento: no construir la lista cuando el panel no está visible.
+     Al abrir Gastos variables, goToTab -> fluxiaRenderPanel9619 actualiza la vista. */
+  var _gvPanel = document.getElementById('panel-gastos-variables');
+  if (_gvPanel && !_gvPanel.classList.contains('active')) return;
+
   /* v96.95 · FAST PATH: purga solo si cambió movimientos o la huella de borrados. */
   try{
     var _lastMv = movimientos && movimientos.length ? movimientos[movimientos.length-1] : null;
@@ -16864,32 +17027,47 @@ function renderGastosVariables(){
     }
   }catch(_purgeErr){}
   const mes = mesSeleccionado;
-  const _movMes = movimientosDe(mes);
+  const _gvResumen = resumenMovimientosVariables(mes);
+  const _movMes = _gvResumen.mes;
+  const _movVisibles = _gvResumen.visibles;
+  /* LAB: pintar inmediatamente importes de movimientos ya cargados.
+     Nunca dejar estos dos indicadores vacíos esperando idleCallback. */
+  try{
+    var _gvQuickTotal = _gvResumen.totalMes;
+    var _gvQuickMonth = document.getElementById('gvStatMes');
+    if(_gvQuickMonth) _gvQuickMonth.textContent=eur(_gvQuickTotal,2);
+    var _gvQuickPlan = document.getElementById('gvStatTotal');
+    if(_gvQuickPlan) _gvQuickPlan.textContent=eur(_gvResumen.totalPlan,2);
+  }catch(_gvQuickError){}
   document.getElementById('gvMesLabel').textContent = MES_LABEL[mes];
   document.getElementById('gvMesActivo').textContent = MES_LABEL[mes];
   document.getElementById('gvMesLista').textContent = MES_LABEL[mes];
-  document.getElementById('gvNumGastos').textContent = _movMes.length;
+  document.getElementById('gvNumGastos').textContent = _movVisibles.length;
 
   /* v96.95 · FIRST PAINT FIRST: cabecera contable e historial se completan después
      de pintar la lista. Entrar en Variables nunca espera a Disponible ni al datalist. */
-  const _gvRenderGeneration = (window.__fxGVRenderGeneration = (window.__fxGVRenderGeneration || 0) + 1);
+  /* v97.21-LAB · Generación + cancelación de idle previos para no apilar trabajo
+     cuando el usuario abre el menú o sale de Variables antes de que termine. */
+  const _gvGeneration = (window.__fxGVGeneration = (window.__fxGVGeneration || 0) + 1);
+  try{
+    if (window.__fxGVIdleId != null && typeof cancelIdleCallback === 'function') {
+      cancelIdleCallback(window.__fxGVIdleId);
+      window.__fxGVIdleId = null;
+    }
+    if (window.__fxGVTimeoutId != null) {
+      clearTimeout(window.__fxGVTimeoutId);
+      window.__fxGVTimeoutId = null;
+    }
+  }catch(_c){}
   const _gvDeferred = function(){
-    if (_gvRenderGeneration !== window.__fxGVRenderGeneration) return;
-    const _gvPage = document.getElementById('gvMovimientosView');
-    if (_gvPage && !_gvPage.getClientRects().length) return;
+    if (_gvGeneration !== window.__fxGVGeneration || !_gvPanel || !_gvPanel.classList.contains('active') || mesSeleccionado!==mes) return;
+    if(document.getElementById('drawerMenu')?.classList.contains('open'))return;
     try{
       const disponible = disponibleEfectivo(mes);
       const valEl = document.getElementById('gvAjustadoVal');
       if(valEl){
         valEl.textContent = eur(disponible, 2);
         valEl.style.color = disponible >= 0 ? 'var(--teal)' : 'var(--wine)';
-      }
-      const statMes=document.getElementById('gvStatMes');
-      if(statMes) statMes.textContent = eur(variablesTotal(mes), 2);
-      const statTotal=document.getElementById('gvStatTotal');
-      if(statTotal){
-        const gastosTotalPlan = movimientos.reduce((sum,mv)=>sum+(Number(mv.importe)||0),0);
-        statTotal.textContent = eur(gastosTotalPlan, 2);
       }
       const dl = document.getElementById('gvConceptosHistorial');
       if(dl){
@@ -16901,10 +17079,14 @@ function renderGastosVariables(){
       }
     }catch(e){}
   };
+  window.__fxGVRefreshSummary=_gvDeferred;
   try{
-    if('requestIdleCallback' in window) requestIdleCallback(_gvDeferred,{timeout:350});
-    else setTimeout(_gvDeferred,32);
-  }catch(e){ setTimeout(_gvDeferred,32); }
+    if('requestIdleCallback' in window) {
+      window.__fxGVIdleId = requestIdleCallback(_gvDeferred,{timeout:1200});
+    } else {
+      window.__fxGVTimeoutId = setTimeout(_gvDeferred,32);
+    }
+  }catch(e){ window.__fxGVTimeoutId = setTimeout(_gvDeferred,32); }
 
   // Filtros de búsqueda / categoría
   const busqEl = document.getElementById('gvBuscar');
@@ -16914,12 +17096,12 @@ function renderGastosVariables(){
   // Rellenar opciones de categoría (sin perder selección)
   if (catEl){
     const prev = catEl.value;
-    const cats = [...new Set(_movMes.map(m => m.categoria || 'Otros'))].sort((a,b)=>a.localeCompare(b,'es'));
-    const sig = cats.join('\\u001f');
-    if(catEl.dataset.fxCategoriesSignature !== sig){
+    const cats = [...new Set(_movVisibles.map(m => m.categoria || 'Otros'))].sort((a,b)=>a.localeCompare(b,'es'));
+    const catSig = JSON.stringify(cats);
+    if(catEl.dataset.fxCategorySig!==catSig){
       catEl.innerHTML = '<option value="">Todas las categorías</option>' + cats.map(c => '<option value="'+String(c).replace(/"/g,'&quot;')+'">'+c+'</option>').join('');
-      catEl.dataset.fxCategoriesSignature = sig;
       if (prev && cats.includes(prev)) catEl.value = prev;
+      catEl.dataset.fxCategorySig=catSig;
     }
   }
   if (busqEl && !busqEl._bound){
@@ -16937,115 +17119,108 @@ function renderGastosVariables(){
     btnCsv.addEventListener('click', ()=> exportarVariablesCSV(mesSeleccionado));
   }
 
+  const _gvRegistroActiva = !!(document.getElementById('gv-registro') && document.getElementById('gv-registro').classList.contains('active'));
+  if(!_gvRegistroActiva){
+    fxGvPausarLista();
+    window.__fxGVListState=null;
+  }
+  if(_gvRegistroActiva){
   // Histórico de movimientos (filtrado)
   const movView = document.getElementById('gvMovimientosView');
-  movView.innerHTML = "";
-  let movs = _movMes.slice().sort((a,b)=> (a.fecha||'').localeCompare(b.fecha||'') || 0).reverse();
+  // No vaciar la lista hasta disponer de los nuevos nodos: reduce parpadeos y repintados.
+  let movs = _movVisibles.slice().sort((a,b)=> (a.fecha||'').localeCompare(b.fecha||'') || 0).reverse();
   if (catFiltro) movs = movs.filter(m => (m.categoria || 'Otros') === catFiltro);
   if (q) movs = movs.filter(m => {
     const blob = ((m.concepto||'')+' '+(m.categoria||'')).toLowerCase();
     return blob.includes(q);
   });
-  document.getElementById('gvNumGastos').textContent = movs.length + (q || catFiltro ? '/'+_movMes.length : '');
-  if (_movMes.length === 0){
+  document.getElementById('gvNumGastos').textContent = movs.length + (q || catFiltro ? '/'+_movVisibles.length : '');
+  if (_movVisibles.length === 0){
     movView.innerHTML = fluxiaEmptyHTML({ico:'💸',tit:'Sin gastos del día a día aún',txt:'Café, supermercado, transporte… rellena el formulario de arriba y pulsa Guardar gasto.',btn:'✎ Ir al formulario',onclick:"var el=document.getElementById('gvConcepto');if(el){el.focus();el.scrollIntoView({behavior:'smooth',block:'center'});}"});
+    movView.setAttribute('aria-busy','false');
   } else if (movs.length === 0){
     movView.innerHTML = fluxiaEmptyHTML({ico:'🔎',tit:'Ningún gasto coincide',txt:'Limpia la búsqueda o el filtro de categoría para ver todos.'});
+    movView.setAttribute('aria-busy','false');
   } else {
-    movs.forEach(mv=>{
-      const div = document.createElement('div');
-      div.className = 'mov-item';
-      const fechaTxt = mv.fecha ? mv.fecha.slice(8,10)+'/'+mv.fecha.slice(5,7) : MES_LABEL[mv.mes];
-      const metaTxt = fechaTxt + (mv.categoria ? ' · '+mv.categoria : '') + (mv.provisionVinculada ? ' · '+iconoProvision(mv.provisionVinculada)+' '+mv.provisionVinculada+(Number(mv.provisionDeficit)>0.005?' · déficit '+eur(mv.provisionDeficit,2):' · cubierto') : '');
-      div.innerHTML = `
-        <div>
-          <div class="concepto">${FluxiaMerchant.html(mv.concepto,"fx-variable-merchant")}${escapeHtml(mv.concepto || 'Gasto variable')}${mv.origen==='excel' ? ' <span class="badge excel">Excel</span>' : ''}</div>
-          <div class="meta">${escapeHtml(metaTxt)}</div>
-        </div>
-        <div style="display:flex; align-items:center; gap:6px;">
-          <span class="importe gasto">-${eur(mv.importe,2)}</span>
-          <button data-id="${mv.id}" data-action="provision" title="Usar provisión">🏺</button>
-          <button data-id="${mv.id}" data-action="split" title="Compartir gasto">🤝</button>
-          <button data-id="${mv.id}" data-action="edit" title="Editar">✎</button>
-          <button data-id="${mv.id}" data-action="del" title="Eliminar">×</button>
-        </div>
-      `;
-      movView.appendChild(div);
-    });
+    fxGvRenderLista(movView,movs);
   }
 
-  movView.querySelectorAll('button[data-action="provision"]').forEach(btn=>{
-    btn.addEventListener('click',(e)=>{e.stopPropagation();const mv=movimientos.find(m=>String(m.id)===btn.dataset.id);if(mv)fxVincularVariableProvision(mv);});
-  });
-
-  movView.querySelectorAll('button[data-action="split"]').forEach(btn=>{
-    btn.addEventListener('click', (e)=>{
+  /* v97.21-LAB · Delegación de eventos: un solo listener en el contenedor.
+     Evita N addEventListener por fila (cuello de botella con listas grandes
+     y al re-entrar desde el menú). Conserva todas las acciones y stopPropagation. */
+  if (movView && !movView._fxGvDelegated) {
+    movView._fxGvDelegated = true;
+    movView.addEventListener('click', function(e){
+      var btn = e.target && e.target.closest ? e.target.closest('button[data-action]') : null;
+      if (!btn || !movView.contains(btn)) return;
+      var action = btn.getAttribute('data-action');
+      var id = btn.getAttribute('data-id');
+      if (!action || id == null) return;
       e.stopPropagation();
-      const mv = movimientos.find(m=>String(m.id)===btn.dataset.id);
-      if (!mv || !window.FluxiaDividir) return;
-      FluxiaDividir.abrir(mv.id);
-    });
-  });
-
-  movView.querySelectorAll('button[data-action="del"]').forEach(btn=>{
-    btn.addEventListener('click', (e)=>{
-      e.stopPropagation();
-      const mv = movimientos.find(m=>String(m.id)===btn.dataset.id);
+      var mv = movView._fxGvById && movView._fxGvById.get(String(id));
       if (!mv) return;
-      openConfirmModal({
-        title: 'Borrar gasto',
-        message: '¿Borrar «' + (mv.concepto || 'gasto') + '» de ' + eur(mv.importe, 2) + '? No se puede deshacer.',
-        confirmLabel: 'Borrar', danger: true,
-        onConfirm: ()=>{
-          const linked = mv.division && window.FluxiaDividir ? FluxiaDividir.quitarCompartidos(mv, false) : true;
-          if (linked === false){ mostrarToast('⚠️ Primero elimina los cobros recibidos de este gasto en Compartidos.','var(--wine)',3200); return; }
-          try{ window._FLUXIA_BORRANDO_GV = true; }catch(_){}
-          try{ if (window._fluxiaRegistrarBorradoGV) _fluxiaRegistrarBorradoGV(mv); }catch(_){}
-          try{ if (window.FluxiaGVBorrados) FluxiaGVBorrados.registrar(mv); }catch(_){}
-          movimientos = movimientos.filter(m => String(m.id) !== btn.dataset.id);
-          try{ window.movimientos = movimientos; }catch(_){}
-          try{ registrarOperacion('gasto_eliminado',{id:mv.id,concepto:mv.concepto,importe:mv.importe,dividido:!!mv.division}); }catch(_){}
-          _guardarMovimientosTrasBorrado();
-          try{ setTimeout(function(){ window._FLUXIA_BORRANDO_GV = false; }, 500); }catch(_){}
-          /* v94.16: segunda escritura directa por si Almacen falla */
-          try{
-            var _k = (typeof claveLS==='function') ? claveLS('v2_movimientos') : 'v2_movimientos';
-            localStorage.setItem(_k, JSON.stringify(movimientos));
-            if (typeof Almacen!=='undefined' && Almacen.setItem) Almacen.setItem(_k, JSON.stringify(movimientos));
-          }catch(_e2){}
-          renderGastosVariables(); renderKPIs();
-          try{ if(typeof mostrarToast==='function') mostrarToast('🗑️ En papelera · no volverá del banco', 'var(--teal)', 2800); }catch(_){}
-        }
-      });
+      if (action === 'provision') {
+        if (typeof fxVincularVariableProvision === 'function') fxVincularVariableProvision(mv);
+        return;
+      }
+      if (action === 'split') {
+        if (window.FluxiaDividir) FluxiaDividir.abrir(mv.id);
+        return;
+      }
+      if (action === 'del') {
+        openConfirmModal({
+          title: 'Borrar gasto',
+          message: '¿Borrar «' + (mv.concepto || 'gasto') + '» de ' + eur(mv.importe, 2) + '? No se puede deshacer.',
+          confirmLabel: 'Borrar', danger: true,
+          onConfirm: function(){
+            var linked = mv.division && window.FluxiaDividir ? FluxiaDividir.quitarCompartidos(mv, false) : true;
+            if (linked === false){ mostrarToast('⚠️ Primero elimina los cobros recibidos de este gasto en Compartidos.','var(--wine)',3200); return; }
+            try{ window._FLUXIA_BORRANDO_GV = true; }catch(_){}
+            try{ if (window._fluxiaRegistrarBorradoGV) _fluxiaRegistrarBorradoGV(mv); }catch(_){}
+            try{ if (window.FluxiaGVBorrados) FluxiaGVBorrados.registrar(mv); }catch(_){}
+            movimientos = movimientos.filter(function(m){ return String(m.id) !== String(id); });
+            try{ window.movimientos = movimientos; }catch(_){}
+            try{ registrarOperacion('gasto_eliminado',{id:mv.id,concepto:mv.concepto,importe:mv.importe,dividido:!!mv.division}); }catch(_){}
+            _guardarMovimientosTrasBorrado();
+            try{ setTimeout(function(){ window._FLUXIA_BORRANDO_GV = false; }, 500); }catch(_){}
+            try{
+              var _k = (typeof claveLS==='function') ? claveLS('v2_movimientos') : 'v2_movimientos';
+              localStorage.setItem(_k, JSON.stringify(movimientos));
+              if (typeof Almacen!=='undefined' && Almacen.setItem) Almacen.setItem(_k, JSON.stringify(movimientos));
+            }catch(_e2){}
+            renderGastosVariables(); renderKPIs();
+            try{ if(typeof mostrarToast==='function') mostrarToast('🗑️ En papelera · no volverá del banco', 'var(--teal)', 2800); }catch(_){}
+          }
+        });
+        return;
+      }
+      if (action === 'edit') {
+        var catSelect = document.getElementById('gvCategoria');
+        var categoriaOptions = catSelect
+          ? Array.from(catSelect.options).map(function(o){ return { value:o.value, label:o.textContent }; })
+          : [{value: mv.categoria||'Otros', label: mv.categoria||'Otros'}];
+        openFormModal({
+          title: 'Editar gasto',
+          fields: [
+            { name:'concepto', label:'Concepto', type:'text', required:true, value: mv.concepto },
+            { name:'categoria', label:'Categoría', type:'select', value: mv.categoria || 'Otros', options: categoriaOptions },
+            ...(mv.division ? [] : [{ name:'importe', label:'Importe (€)', type:'number', min:0, step:'0.01', value: mv.importe }]),
+            { name:'fecha', label:'Fecha', type:'date', required:true, value: mv.fecha || hoyISO() }
+          ],
+          submitLabel: 'Guardar',
+          onSubmit: function(vals){
+            mv.concepto = formatTexto(vals.concepto); mv.categoria = vals.categoria;
+            if (!mv.division && vals.importe !== undefined) mv.importe = vals.importe;
+            mv.fecha = vals.fecha; mv.mes = mesFromFechaISO(vals.fecha);
+            try{ registrarOperacion('gasto_editado',{id:mv.id,concepto:mv.concepto,importe:mv.importe,dividido:!!mv.division}); }catch(_){}
+            guardarMovimientos();
+            renderGastosVariables(); renderKPIs();
+          }
+        });
+      }
     });
-  });
-
-  movView.querySelectorAll('button[data-action="edit"]').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const mv = movimientos.find(m=>String(m.id)===btn.dataset.id);
-      if (!mv) return;
-      const categoriaOptions = Array.from(document.getElementById('gvCategoria').options)
-        .map(o=>({ value:o.value, label:o.textContent }));
-      openFormModal({
-        title: 'Editar gasto',
-        fields: [
-          { name:'concepto', label:'Concepto', type:'text', required:true, value: mv.concepto },
-          { name:'categoria', label:'Categoría', type:'select', value: mv.categoria || 'Otros', options: categoriaOptions },
-          ...(mv.division ? [] : [{ name:'importe', label:'Importe (€)', type:'number', min:0, step:'0.01', value: mv.importe }]),
-          { name:'fecha', label:'Fecha', type:'date', required:true, value: mv.fecha || hoyISO() }
-        ],
-        submitLabel: 'Guardar',
-        onSubmit: (vals)=>{
-          mv.concepto = formatTexto(vals.concepto); mv.categoria = vals.categoria;
-          if (!mv.division && vals.importe !== undefined) mv.importe = vals.importe;
-          mv.fecha = vals.fecha; mv.mes = mesFromFechaISO(vals.fecha);
-          try{ registrarOperacion('gasto_editado',{id:mv.id,concepto:mv.concepto,importe:mv.importe,dividido:!!mv.division}); }catch(_){}
-          guardarMovimientos();
-          renderGastosVariables(); renderKPIs();
-        }
-      });
-    });
-  });
+  }
+  }
 
   // Render de categorías (pestaña interna "Por categoría")
   const gvFechaEl = document.getElementById('gvFecha');
@@ -17053,9 +17228,14 @@ function renderGastosVariables(){
     gvFechaEl.value = (mes === MES_ACTUAL_REAL) ? hoyISO() : (ymDeMes(mes)+'-01');
   }
   const combinado = {};
-  _movMes.forEach(mv=>{
+  const porCategoria = Object.create(null);
+  /* El resumen por categorías solo se calcula mientras su pestaña está visible. */
+  const _gvCategoriaActiva = !!(document.getElementById('gv-categoria') && document.getElementById('gv-categoria').classList.contains('active'));
+  if(_gvCategoriaActiva){
+  _movVisibles.forEach(mv=>{
     const cat = mv.categoria || 'Otros';
     combinado[cat] = (combinado[cat]||0) + mv.importe;
+    (porCategoria[cat]||(porCategoria[cat]=[])).push(mv);
   });
   const entries = Object.entries(combinado).filter(([,v]) => v > 0).sort((a,b)=> b[1]-a[1]);
   const totalCat = entries.reduce((s,[,v])=>s+v, 0);
@@ -17071,9 +17251,8 @@ function renderGastosVariables(){
       const pct = totalCat > 0 ? (val/totalCat)*100 : 0;
       const color = CATEGORY_COLORS[cat] || '#8A9086';
       const abierta = window._gvCatAbierta === cat;
-      const movsCat = _movMes
-        .filter(mv => (mv.categoria || 'Otros') === cat)
-        .sort((a,b) => String(b.fecha||'').localeCompare(String(a.fecha||'')));
+      const movsCat = porCategoria[cat] || [];
+      if(abierta) movsCat.sort((a,b) => String(b.fecha||'').localeCompare(String(a.fecha||'')));
       const div = document.createElement('div');
       div.className = 'fin-item gv-cat-item' + (abierta ? ' open' : '');
       div.setAttribute('data-cat', cat);
@@ -17202,6 +17381,7 @@ function renderGastosVariables(){
         }catch(e){ console.warn(e); }
       });
     });
+  }
   }
   document.getElementById('gvCategoriaTotal').textContent = eur(totalCat, 2);
 }
@@ -20287,7 +20467,9 @@ function renderAll(){
     var p=document.querySelector('.panel.active');
     if(p&&p.id&&p.id.indexOf('panel-')===0) activo=p.id.slice(6);
   }catch(e){}
+  const fxPerfStart = (window.FLUXIA_LAB_PERF && typeof performance!=='undefined') ? performance.now() : 0;
   fluxiaRenderPanel9619(activo);
+  if(fxPerfStart){try{window.FLUXIA_LAB_PERF.record(activo,performance.now()-fxPerfStart)}catch(e){}}
 
   try{ fluxiaPintarPrimerUsoInicio(); }catch(e){}
   try{ pintarDrawerHeader(); }catch(e){}
@@ -22304,7 +22486,7 @@ function arrancarApp(){
       if(ayuda&&!document.getElementById('fxChecklist9544')){
         var details=document.createElement('details');details.id='fxChecklist9544';
         details.style.cssText='margin:16px 0;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)';
-        details.innerHTML='<summary>Checklist v97.20-LAB</summary>'+
+        details.innerHTML='<summary>Checklist v97.31-LAB</summary>'+
           '<p>Outbox por perfil: IMPLEMENTADO · PROBADO en simulación · conserva edición offline con cuota local llena.</p>'+
           '<p>Cloud autoritativa y CAS: IMPLEMENTADO · PROBADO en simulación · caché vieja no se sube al arrancar.</p>'+
           '<p>Huchas y borrados: IMPLEMENTADO · PROBADO en simulación · dos aportaciones iguales sobreviven y un borrado por ID prevalece.</p>'+
@@ -23384,7 +23566,7 @@ window.FluxiaDiag = (function(){
   /* v95.70: la misma reconstrucción segura debe poder usarse también al iniciar sesión normal
      desde Safari cuando se perdió el registro local del perfil. */
   window.FluxiaRecuperarPerfilCloud = reconstruirPerfilCloud;
-  function limpiarRecoveryYRecargar(){try{window.FLUXIA_RECOVERY_ACTIVO=false;sessionStorage.removeItem('fluxia_recovery_activo');history.replaceState(null,'',location.pathname+'?v=v97.20-LAB');}catch(e){}location.reload();}
+  function limpiarRecoveryYRecargar(){try{window.FLUXIA_RECOVERY_ACTIVO=false;sessionStorage.removeItem('fluxia_recovery_activo');history.replaceState(null,'',location.pathname+'?v=v97.31-LAB');}catch(e){}location.reload();}
   async function completarRecovery(nueva){
     nueva=String(nueva||'');
     if(nueva.length<6){try{showModalError('La contraseña debe tener al menos 6 caracteres.');}catch(e){fxAviso('La contraseña debe tener al menos 6 caracteres.','info');}return;}
@@ -27732,7 +27914,7 @@ window.FluxiaAuditoriaDisponible9616=function(mes){
 /* v95.99 · La versión visible SIEMPRE sale de esta constante de build. */
 (function(){
   'use strict';
-  var V='v97.20-LAB';
+  var V='v97.31-LAB';
   window.FLUXIA_VERSION=V;
   function paint(){
     try{ document.title='Fluxia BETA '+V; }catch(e){}
@@ -28002,7 +28184,7 @@ window.FluxiaCadence9612.visual=function(key,ms,fn,note){
 'use strict';
 /* Diagnóstico local de candidato: no toca datos, solo expone contadores de runtime. */
 window.FluxiaCandidate9613={
- version:'v97.20-LAB',
+ version:'v97.31-LAB',
  snapshot:function(){
    return {
      hidden:document.visibilityState==='hidden',
@@ -28095,7 +28277,7 @@ button,a,[role="button"],[data-tab]{touch-action:manipulation;-webkit-tap-highli
 
 <script id="fluxia-v9717-identity-sentinel">
 (function(){'use strict';
- var V='v97.20-LAB'; window.FLUXIA_VERSION=V; window.FLUXIA_BUILD=V;
+ var V='v97.31-LAB'; window.FLUXIA_VERSION=V; window.FLUXIA_BUILD=V;
  function paint(){try{document.title='Fluxia BETA '+V;}catch(e){}try{document.querySelectorAll('[data-fluxia-version],#appVersion,#versionApp,#menuVersion,.app-version,.version-label,.drawer-version').forEach(function(n){n.textContent=V;});}catch(e){}try{var m=document.querySelector('meta[name="fluxia-version"]');if(m)m.content=V;}catch(e){}}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',paint,{once:true});else paint();
  window.addEventListener('pageshow',paint,{passive:true});
@@ -28120,7 +28302,7 @@ button,a,[role="button"],[data-tab]{touch-action:manipulation;-webkit-tap-highli
 
 <script id="fluxia-v971-interaction-priority">
 (function(){'use strict';
- window.FLUXIA_BUILD='v97.20-LAB';
+ window.FLUXIA_BUILD='v97.31-LAB';
  window.FluxiaIdle=function(fn,timeout){if(typeof fn!=='function')return;if('requestIdleCallback'in window)requestIdleCallback(function(){fn()},{timeout:timeout||1400});else setTimeout(fn,120);};
  // El primer gesto sobre menú se atiende en captura antes de cualquier trabajo secundario.
  /* v97.10: duplicate pointerdown removed; single native menu path below */
@@ -28156,7 +28338,7 @@ button,a,[role="button"],[data-tab]{touch-action:manipulation;-webkit-tap-highli
 </style>
 <script id="fluxia-v9711-bank-background-refresh">
 (function(){'use strict';
- window.FLUXIA_BUILD='v97.20-LAB';
+ window.FLUXIA_BUILD='v97.31-LAB';
  var started=false;
  function refresh(){
    if(started||document.visibilityState==='hidden')return;
@@ -31700,7 +31882,7 @@ async function sincronizarEnBackground(){
       const blob = new Blob([swCode], { type: 'application/javascript' });
       const swUrl = URL.createObjectURL(blob);
       
-      const registration = await navigator.serviceWorker.register(swUrl, { scope: '/' });
+      const registration = await navigator.serviceWorker.register('./fluxia-sw.js', { scope: './', updateViaCache:'none' });
       console.log('✅ Service Worker registrado:', registration);
       
       // Peticiones de sincronización
@@ -33045,7 +33227,7 @@ window.FluxiaConfianzaV88 = {
     } catch(e){}
     box.innerHTML = '<details class="bank-details"><summary>Diagnóstico</summary><div class="fluxia-salud-card">' +
       '<div class="fluxia-salud-grid">' +
-      '<div><span>Versión</span><strong>BETA v97.20-LAB</strong></div>' +
+      '<div><span>Versión</span><strong>BETA v97.31-LAB</strong></div>' +
       '<div><span>Bancos</span><strong>' + s.bancos + '</strong></div>' +
       '<div><span>Gastos variables</span><strong>' + s.movimientos + '</strong></div>' +
       '<div><span>Con ref. banco</span><strong>' + s.bancoRefs + '</strong></div>' +
@@ -33138,7 +33320,7 @@ console.log('✅ Fluxia v91 · Confianza + Salud listos');
       panel.dataset.v91 = '1';
       var versionTxt = document.getElementById('ayudaVersionTxt');
       if(versionTxt){
-        versionTxt.textContent = 'Fluxia BETA ' + (window.FLUXIA_VERSION||'v97.20-LAB') + ' · laboratorio · nube principal';
+        versionTxt.textContent = 'Fluxia BETA ' + (window.FLUXIA_VERSION||'v97.31-LAB') + ' · laboratorio · nube principal';
         versionTxt.style.cssText = 'font-size:.88rem;font-weight:600;color:var(--ink);margin:0 0 12px;';
       }
       // Recoger todos los details de versiones/checklist antiguos
@@ -33241,7 +33423,7 @@ console.log('✅ Fluxia v91 · Confianza + Salud listos');
     var inp = document.getElementById('fluxiaStableUrlInput');
     if (inp && !inp._filled){ inp.value = u; inp._filled = true; }
     var labV = document.getElementById('fluxiaLabVersionLabel');
-    if (labV) labV.textContent = (window.FLUXIA_VERSION ? ('v'+String(window.FLUXIA_VERSION).replace(/^v/,'')) : 'v97.20-LAB');
+    if (labV) labV.textContent = (window.FLUXIA_VERSION ? ('v'+String(window.FLUXIA_VERSION).replace(/^v/,'')) : 'v97.31-LAB');
   }
 
   // Notificación sistema al estilo Revolut (permiso + show)
@@ -33438,7 +33620,7 @@ console.log('✅ Fluxia v91 · Confianza + Salud listos');
     var blob = new Blob([swCode], {type: 'application/javascript'});
     var url = URL.createObjectURL(blob);
     try{
-      var reg = await navigator.serviceWorker.register(url, {scope: './'});
+      var reg = await navigator.serviceWorker.register('./fluxia-sw.js', {scope:'./',updateViaCache:'none'});
       await navigator.serviceWorker.ready;
       return reg;
     }catch(e){
@@ -33554,7 +33736,7 @@ console.log('✅ Fluxia v91 · Confianza + Salud listos');
     if (!btn || btn._v91) return;
     btn._v91 = true;
     btn.addEventListener('click', function(){
-      var ver = (window.FLUXIA_VERSION || 'v97.20-LAB').toString().replace(/^v/,'');
+      var ver = (window.FLUXIA_VERSION || 'v97.31-LAB').toString().replace(/^v/,'');
       var fileName = 'index_fluxia_v' + ver.replace(/\./g,'_').replace(/^v/,'') + '.html';
       // Normalize: v91 -> index_fluxia_v90_10.html style
       fileName = 'index_fluxia_v' + ver.replace(/\./g, '_') + '.html';
@@ -35003,15 +35185,22 @@ window.FluxiaProtegerDatos = {
     return s;
   }
   // Envolver pintado de errores de conexión si existe el HTML de lista
-  var _obs = new MutationObserver(function(){
+  // Procesar únicamente nodos cambiados: evitar recorrer toda la lista bancaria por cada mutación.
+  var _obs = new MutationObserver(function(records){
     try{
-      document.querySelectorAll('#fluxiaBancoListaConexiones, .fluxia-banco-cuenta, #fluxiaBancoConectado').forEach(function(root){
-        root.querySelectorAll && root.querySelectorAll('*').forEach(function(el){
-          if (!el.childNodes || el.childNodes.length!==1 || el.childNodes[0].nodeType!==3) return;
-          var t = el.textContent||'';
-          if (/HUB046|Allowed number of accesses/i.test(t) && !el.dataset.v93fix){
-            el.dataset.v93fix = '1';
-            el.textContent = textoErrorBanco(t);
+      var nodes = new Set();
+      records.forEach(function(rec){
+        if(rec.type==='characterData'){if(rec.target.parentElement)nodes.add(rec.target.parentElement);}
+        else rec.addedNodes.forEach(function(node){if(node.nodeType===1)nodes.add(node);else if(node.nodeType===3&&node.parentElement)nodes.add(node.parentElement);});
+      });
+      nodes.forEach(function(node){
+        var els=[node];
+        if(node.querySelectorAll)els=els.concat(Array.from(node.querySelectorAll('*')));
+        els.forEach(function(el){
+          if(!el.childNodes||el.childNodes.length!==1||el.childNodes[0].nodeType!==3)return;
+          var t=el.textContent||'';
+          if(/HUB046|Allowed number of accesses/i.test(t)&&!el.dataset.v93fix){
+            el.dataset.v93fix='1';el.textContent=textoErrorBanco(t);
           }
         });
       });
@@ -38325,7 +38514,7 @@ html body #fx50AvailableNote{font-size:.7rem!important;font-weight:600!important
         '<p>✅ Más aire visual: IMPLEMENTADO entre cabecera, estados, hero, cuadrícula y secundarios.</p>'+
         '<p>✅ Menos saturación numérica: IMPLEMENTADO · cifras secundarias reducen peso, Disponible mantiene prioridad.</p>'+
         '<p>✅ Texto de pensión simplificado: IMPLEMENTADO.</p>'+
-        '<p>✅ Build coherente v97.20-LAB: PROBADO · HTML, manifest, SW y canal LAB coinciden.</p>'+
+        '<p>✅ Build coherente v97.31-LAB: PROBADO · HTML, manifest, SW y canal LAB coinciden.</p>'+
         '<p>✅ ESTABLE v95.39: INTACTA.</p>';
     }catch(e){}
   }
@@ -38336,7 +38525,7 @@ html body #fx50AvailableNote{font-size:.7rem!important;font-weight:600!important
 <script id="fluxia-v9554-arch-authority">
 (function(){
  'use strict';
- window.FLUXIA_ARCH_VERSION='v97.20-LAB';
+ window.FLUXIA_ARCH_VERSION='v97.31-LAB';
  window.FLUXIA_RECOVERY_POLICY='github-direct-secure-profile-recovery';
  window.FLUXIA_BANK_RECONCILIATION_POLICY='explicit-only';
  window.FluxiaDisponibleEngine={
@@ -38670,7 +38859,7 @@ window.FLUXIA_V9682=Object.freeze({base:'v96.80-LAB',currentCloudHuchas:true,fix
 
 <script id="fluxia-v9683-pwa-policy">
 window.FLUXIA_PWA_POLICY=Object.freeze({
-  current:'v97.20-LAB',
+  current:'v97.31-LAB',
   updateExistingAfterValidation:true,
   reinstallEveryVersion:false,
   permanentEntryPlanned:true
@@ -38821,7 +39010,7 @@ html body #fxDashboard67 #fx50AvailableNote{font-size:10px!important;color:#5d76
 </script>
 <script id="fluxia-v9712-cash-withdrawal-authority">
 (function(){'use strict';
- window.FLUXIA_BUILD='v97.20-LAB';
+ window.FLUXIA_BUILD='v97.31-LAB';
  function key(m){return 'bankcash:'+String(m.bancoRef||m.id||[m.fecha,m.importe,m.concepto].join('|'));}
  function apply(){
    try{
@@ -38852,7 +39041,7 @@ html body #fxDashboard67 #fx50AvailableNote{font-size:10px!important;color:#5d76
  document.addEventListener('fluxia:splash-fin',function(){if(typeof FluxiaIdle==='function')FluxiaIdle(apply,800);else setTimeout(apply,80);},{once:true});
 })();
 </script>
-<!-- FLUXIA_BUILD: v97.20-LAB | MODEL3_FAITHFUL | PERF_CONSOLIDATED | CASH_PROVISION | PWA_FAST_RESUME -->
+<!-- FLUXIA_BUILD: v97.31-LAB | MODEL3_FAITHFUL | PERF_CONSOLIDATED | CASH_PROVISION | PWA_FAST_RESUME -->
 <style id="fluxia-v9717-variables-compact">
 #gvMovimientosView .mov-item{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:7px 10px!important;align-items:start!important;padding:10px 11px!important}
 #gvMovimientosView .mov-item>div:first-child{min-width:0!important}
@@ -38862,7 +39051,7 @@ html body #fxDashboard67 #fx50AvailableNote{font-size:10px!important;color:#5d76
 #gvMovimientosView .mov-item>div:last-child .importe{justify-self:start!important;margin-right:auto!important;font-size:.92rem!important}
 #gvMovimientosView .mov-item button[data-action]{width:30px!important;height:30px!important;min-width:30px!important;padding:0!important;border-radius:9px!important;display:grid!important;place-items:center!important;font-size:.86rem!important}
 </style>
-<!-- FLUXIA_BUILD: v97.20-LAB | PWA_CACHE_FIRST | CLOUD_TRANSIENT_GUARD | VARIABLES_COMPACT -->
+<!-- FLUXIA_BUILD: v97.31-LAB | PWA_CACHE_FIRST | CLOUD_TRANSIENT_GUARD | VARIABLES_COMPACT -->
 <style id="fluxia-v9717-unified-ui">
 /* One visual language for content tabs; Dashboard keeps its coloured KPI identity. */
 #mesSelectGlobal{width:calc(100% - 24px)!important;max-width:760px!important;margin:6px auto 14px!important;padding:0!important}
@@ -38900,14 +39089,14 @@ html body #fxDashboard67 #fx50AvailableNote{font-size:10px!important;color:#5d76
 </style>
 <script id="fluxia-v9717-runtime">
 (function(){'use strict';
- window.FLUXIA_BUILD='v97.20-LAB';
+ window.FLUXIA_BUILD='v97.31-LAB';
  /* Cloud/bank work is secondary: never block first interaction. */
  document.addEventListener('DOMContentLoaded',function(){
    try{var bs=document.getElementById('fluxiaBackupStrip');if(bs)bs.classList.remove('on');}catch(e){}
  },{once:true});
 })();
 </script>
-<!-- FLUXIA_BUILD: v97.20-LAB | PROMPT_MAESTRO | VERIFIED_RECOVERY -->
+<!-- FLUXIA_BUILD: v97.31-LAB | PROMPT_MAESTRO | VERIFIED_RECOVERY -->
 <style id="fluxia-v9720">
 
 :root{--fxu-max:560px;--fxu-pad:18px;--fxu-radius:16px;--fxu-blue:#327AA3;--fxu-blue-soft:#E8F3FA;--fxu-gold:#B8860B;--fxu-gold-soft:#FAF0D2}
@@ -38987,7 +39176,7 @@ html body #panel-provisiones .pv-card.pv-ok .pv-bar i{background:var(--fxu-gold)
 </style>
 <script id="fluxia-v9720-runtime">
 (function(){'use strict';
- window.FLUXIA_BUILD='v97.20-LAB';
+ window.FLUXIA_BUILD='v97.31-LAB';
  function clean(){
    try{document.querySelectorAll('.fx-month-wide').forEach(function(x){x.remove();});}catch(e){}
    try{if(typeof fluxiaColocarSelectorMes==='function')fluxiaColocarSelectorMes('resumen');}catch(e){}
@@ -38997,4 +39186,445 @@ html body #panel-provisiones .pv-card.pv-ok .pv-bar i{background:var(--fxu-gold)
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',clean,{once:true});else clean();
 })();
 </script>
+
+<style id="fluxia-v97-22-shared-layout">
+/* Selector mensual único y alineado debajo de la cabecera en todas las pestañas. */
+.mes-selector-global{position:relative!important;top:auto!important;z-index:160!important;width:100%!important;justify-content:center!important;margin:8px 0 16px!important;padding:8px 10px!important;background:var(--surface)!important;border:1px solid var(--line)!important;border-radius:14px!important;box-shadow:0 3px 10px rgba(20,30,44,.06)!important;scrollbar-width:none!important;}
+.mes-selector-global>div{justify-content:center!important;gap:6px!important;}
+.mes-selector-global button{min-height:38px!important;padding:7px 11px!important;}
+.panel>.sec-head{display:flex;align-items:center;gap:10px;min-height:46px;margin:0 0 10px!important;}
+.panel>.sec-head .sec-title{margin:0!important;line-height:1.2!important;}
+@media(max-width:520px){.mes-selector-global{top:var(--fluxia-header-h,68px)!important;margin:6px 0 12px!important;padding:6px 4px!important;border-radius:12px!important}.mes-selector-global button{padding:6px 9px!important;font-size:.76rem!important}.panel>.sec-head{min-height:42px;gap:8px}}
+</style>
+<style id="fluxia-recovery-version-badge">#fluxia-lab-version{position:fixed;right:9px;bottom:calc(6px + env(safe-area-inset-bottom,0px));z-index:2147483000;font:600 10px/1.4 system-ui,sans-serif;color:#236c78;background:#eaf6f7e8;border:1px solid #b4d7db;border-radius:7px;padding:2px 6px;pointer-events:none;opacity:.85}</style><div id="fluxia-lab-version" aria-label="Versión LAB">v97.28 LAB</div>
+<style id="fluxia-v9726-fase1-performance">
+@media (hover:none) and (pointer:coarse){
+  html.drawer-open,body.drawer-open{overflow:hidden!important;overscroll-behavior:contain!important}
+  #drawerMenu,.drawer-menu{will-change:transform!important;transform:translateZ(0)!important;contain:layout style paint!important}
+  #drawerOverlay,.drawer-overlay{will-change:opacity!important;contain:strict!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  #panel-gastos-variables,#panel-bancos{overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important}
+  #panel-gastos-variables .mov-item,#panel-bancos .mov-item,#panel-bancos .bank-card{content-visibility:auto;contain-intrinsic-size:72px;transition:none!important;animation:none!important}
+}
+</style>
+<script id="fluxia-v9726-visible-version">
+(function(){
+  window.FLUXIA_VERSION='v97.31-LAB';
+  function paint(){
+    try{document.querySelectorAll('[data-fluxia-version],#fluxiaLabVersionLabel,#menuVersion,.app-version,.version-label').forEach(function(el){el.textContent='v97.31-LAB';});}catch(e){}
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',paint,{once:true});else paint();
+  window.addEventListener('pageshow',paint,{passive:true});
+})();
+</script>
+
+
+<!-- Fluxia v97.31-LAB · menú integrado + rendimiento seguro -->
+<style id="fluxia-v9727-menu-performance">
+  :root{--fx9727-accent:#69A9D0;--fx9727-ink:#173D4D;}
+
+  /* Header y menú habitual: el botón vuelve a vivir arriba, nunca como FAB negro lateral. */
+  html body #fx32Header{
+    display:block!important;visibility:visible!important;opacity:1!important;filter:none!important;
+    transform:none!important;position:relative!important;z-index:80!important;margin:0!important;
+  }
+  html body #fx32Header .fx30-headgrid{
+    display:grid!important;grid-template-columns:44px minmax(0,1fr) 44px!important;align-items:center!important;
+    gap:8px!important;min-height:46px!important;width:100%!important;box-sizing:border-box!important;
+  }
+  html body #fx32Header #btnMenu,
+  html body #fx32Header #headerNotifications{
+    position:static!important;inset:auto!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+    transform:none!important;margin:0!important;display:flex!important;visibility:visible!important;opacity:1!important;
+    width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;
+    border-radius:14px!important;border:1px solid rgba(105,169,208,.28)!important;
+    background:rgba(255,255,255,.82)!important;color:var(--fx9727-ink)!important;
+    box-shadow:0 6px 16px rgba(23,61,77,.07)!important;
+    align-items:center!important;justify-content:center!important;padding:0!important;
+    touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important;
+  }
+  html body #fx32Header #btnMenu{grid-column:1!important;grid-row:1!important;justify-self:start!important;}
+  html body #fx32Header .fx30-brandzone{grid-column:2!important;grid-row:1!important;justify-self:center!important;min-width:0!important;}
+  html body #fx32Header #headerNotifications{grid-column:3!important;grid-row:1!important;justify-self:end!important;}
+
+  /* Si alguna versión anterior creó un botón flotante de menú fuera del header, se oculta. */
+  html body > .menu-btn:not(#btnMenu):not(#headerNotifications),
+  html body > button[aria-label*="menú" i]:not(#btnMenu):not(#drawerClose),
+  html body > button[aria-label*="menu" i]:not(#btnMenu):not(#drawerClose),
+  html body [data-fluxia-floating-menu],
+  html body .fluxia-floating-menu,
+  html body .fx-floating-menu,
+  html body .floating-menu-debug{
+    display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;
+  }
+
+  /* Drawer rápido pero normal. */
+  html body #drawerMenu{will-change:transform!important;contain:layout paint style!important;}
+  html body #drawerOverlay{will-change:opacity!important;}
+  @media (hover:none) and (pointer:coarse){
+    html body #drawerMenu,html body #drawerOverlay{transition-duration:.075s!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+    html body .tab-content,html body .tab-pane,html body .panel{animation:none!important;}
+    html body #panel-gastos-variables .mov-card,
+    html body #panel-gastos-variables .movement-item,
+    html body #panel-gastos-variables .transaction-item,
+    html body #panel-gastos-variables .list-item,
+    html body #panel-bancos .bank-card,
+    html body #panel-bancos .movement-item,
+    html body #panel-bancos .transaction-item,
+    html body #panel-bancos .list-item{
+      content-visibility:auto!important;contain-intrinsic-size:78px!important;transition:none!important;animation:none!important;
+    }
+  }
+
+  /* Selector de mes no flotante y versión visible para no ir a ciegas. */
+  html body .mes-selector-global,html body .mes-selector-unificado,html body .fx-month-nav{position:relative!important;top:auto!important;transform:none!important;}
+  html body #fluxia-lab-version{
+    position:fixed!important;right:8px!important;bottom:calc(6px + env(safe-area-inset-bottom,0px))!important;
+    z-index:2147483000!important;font:700 10px/1.35 system-ui,-apple-system,sans-serif!important;
+    color:#236c78!important;background:#eaf6f7ee!important;border:1px solid #b4d7db!important;
+    border-radius:8px!important;padding:2px 6px!important;pointer-events:none!important;opacity:.9!important;
+  }
+</style>
+<script id="fluxia-v9727-menu-performance">
+(function(){
+  'use strict';
+  var V='v97.31-LAB';
+  function qs(s,r){try{return (r||document).querySelector(s)}catch(e){return null}}
+  function qsa(s,r){try{return Array.prototype.slice.call((r||document).querySelectorAll(s))}catch(e){return[]}}
+  function paintVersion(){
+    try{window.FLUXIA_VERSION=V;window.FLUXIA_BUILD=V;}catch(e){}
+    try{var m=qs('meta[name="fluxia-version"]')||document.createElement('meta');m.name='fluxia-version';m.content=V;if(!m.parentNode)document.head.appendChild(m);}catch(e){}
+    try{var b=document.getElementById('fluxia-lab-version');if(!b){b=document.createElement('div');b.id='fluxia-lab-version';document.body.appendChild(b);}b.textContent=V;}catch(e){}
+    try{qsa('.fluxia-version,.fx-version,.app-version,.version-label,.drawer-version').forEach(function(n){n.textContent=V;});}catch(e){}
+  }
+  function restoreMenu(){
+    var header=document.getElementById('fx32Header');
+    var grid=header && (qs('.fx30-headgrid',header)||header);
+    var btn=document.getElementById('btnMenu');
+    if(grid && btn && btn.parentNode!==grid){try{grid.insertBefore(btn,grid.firstChild);}catch(e){}}
+    if(btn){
+      try{btn.removeAttribute('style');}catch(e){}
+      try{btn.classList.add('menu-btn','fx30-iconbtn');btn.setAttribute('aria-label','Abrir menú');btn.setAttribute('title','Menú');}catch(e){}
+      if(!btn.__fx9727Fast){
+        btn.__fx9727Fast=1;
+        btn.addEventListener('pointerdown',function(ev){
+          try{var m=document.getElementById('drawerMenu'),o=document.getElementById('drawerOverlay'); if(m)m.classList.add('open'); if(o)o.classList.add('open');}catch(e){}
+        },{capture:true,passive:true});
+      }
+    }
+    /* Ocultar clones flotantes que abran menú pero no sean el botón canónico. */
+    qsa('body > button, body > .menu-btn').forEach(function(n){
+      try{
+        if(n.id==='btnMenu'||n.id==='headerNotifications'||n.id==='drawerClose')return;
+        var label=(n.getAttribute('aria-label')||n.title||n.textContent||'').toLowerCase();
+        var cs=getComputedStyle(n);
+        var looksFloating=(cs.position==='fixed'||cs.position==='sticky') && (parseInt(cs.zIndex||'0',10)>50||/menu|menú|☰|≡/.test(label));
+        if(looksFloating){n.setAttribute('data-fluxia-floating-menu','hidden-v9727');n.style.display='none';n.style.pointerEvents='none';}
+      }catch(e){}
+    });
+  }
+  function perfHints(){
+    try{document.documentElement.classList.add('fx-v9727');}catch(e){}
+    try{['panel-gastos-variables','panel-bancos'].forEach(function(id){var p=document.getElementById(id);if(p){p.style.contain='layout paint style';}});}catch(e){}
+  }
+  function start(){paintVersion();restoreMenu();perfHints();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+  window.addEventListener('pageshow',start,{passive:true});
+  setTimeout(start,500);setTimeout(start,1800);
+})();
+</script>
+
+
+<!-- Fluxia v97.31-LAB · PWA FIX definitivo: start standalone limpio, menú normal arriba, sin FAB negro -->
+<style id="fluxia-v9728-pwa-fix">
+  :root{--fx9728-accent:#69A9D0;--fx9728-ink:#173D4D;}
+  html body.fx9728-pwa-ready #fx32Header{
+    display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:120!important;
+    transform:none!important;filter:none!important;
+  }
+  html body.fx9728-pwa-ready #fx32Header .fx30-headgrid{
+    display:grid!important;grid-template-columns:44px minmax(0,1fr) 44px!important;align-items:center!important;gap:8px!important;width:100%!important;
+  }
+  html body.fx9728-pwa-ready #fx32Header #btnMenu,
+  html body.fx9728-pwa-ready #fx32Header #headerNotifications{
+    position:static!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;inset:auto!important;
+    transform:none!important;margin:0!important;display:flex!important;visibility:visible!important;opacity:1!important;
+    width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;border-radius:14px!important;
+    border:1px solid rgba(105,169,208,.30)!important;background:rgba(255,255,255,.88)!important;color:var(--fx9728-ink)!important;
+    box-shadow:0 6px 16px rgba(23,61,77,.07)!important;align-items:center!important;justify-content:center!important;padding:0!important;
+    touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important;
+  }
+  html body.fx9728-pwa-ready #fx32Header #btnMenu{grid-column:1!important;grid-row:1!important;justify-self:start!important;}
+  html body.fx9728-pwa-ready #fx32Header .fx30-brandzone{grid-column:2!important;grid-row:1!important;justify-self:center!important;min-width:0!important;}
+  html body.fx9728-pwa-ready #fx32Header #headerNotifications{grid-column:3!important;grid-row:1!important;justify-self:end!important;}
+
+  /* Mata cualquier botón flotante negro heredado, también en standalone/iOS. */
+  html body.fx9728-pwa-ready button.fx9728-kill-fab,
+  html body.fx9728-pwa-ready .fx9728-kill-fab,
+  html body.fx9728-pwa-ready [data-fluxia-floating-menu],
+  html body.fx9728-pwa-ready .fluxia-floating-menu,
+  html body.fx9728-pwa-ready .fx-floating-menu,
+  html body.fx9728-pwa-ready .floating-menu-debug{
+    display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;width:0!important;height:0!important;overflow:hidden!important;
+  }
+  html body.fx9728-pwa-ready #drawerMenu{will-change:transform!important;contain:layout paint style!important;}
+  html body.fx9728-pwa-ready #drawerOverlay{will-change:opacity!important;}
+  html body.fx9728-pwa-ready #fluxia-lab-version-fixed{
+    display:inline-flex!important;align-items:center!important;gap:5px!important;margin:6px auto 0!important;padding:4px 9px!important;border-radius:999px!important;
+    background:rgba(105,169,208,.12)!important;color:#173D4D!important;border:1px solid rgba(105,169,208,.22)!important;font-size:11px!important;font-weight:700!important;
+  }
+  @media (display-mode: standalone){
+    html body #fx32Header{padding-top:max(8px, env(safe-area-inset-top))!important;}
+  }
+</style>
+<script id="fluxia-v9728-pwa-fix">
+(function(){
+  'use strict';
+  var VERSION='v97.31-LAB';
+  var RELOAD_KEY='fluxia_v9728_pwa_reload_done';
+  function isStandalone(){
+    try{return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;}catch(e){return false;}
+  }
+  function paintVersion(){
+    try{window.FLUXIA_VERSION=VERSION;window.FLUXIA_BUILD=VERSION;}catch(e){}
+    try{document.querySelectorAll('meta[name="fluxia-version"],meta[name="fluxia-lab-build"]').forEach(function(m){m.setAttribute('content',VERSION);});}catch(e){}
+    try{document.querySelectorAll('[data-fluxia-version],#fluxiaLabVersionLabel,#menuVersion,.app-version,.version-label,.drawer-version').forEach(function(el){el.textContent=VERSION;});}catch(e){}
+    try{
+      if(!document.getElementById('fluxia-lab-version-fixed')){
+        var h=document.getElementById('fx32Header')||document.body;
+        var pill=document.createElement('div');pill.id='fluxia-lab-version-fixed';pill.textContent=VERSION;
+        h.appendChild(pill);
+      }else document.getElementById('fluxia-lab-version-fixed').textContent=VERSION;
+    }catch(e){}
+  }
+  function ensureMenuInHeader(){
+    try{document.body.classList.add('fx9728-pwa-ready');}catch(e){}
+    try{
+      var header=document.getElementById('fx32Header');
+      var btn=document.getElementById('btnMenu');
+      if(!header||!btn)return;
+      var grid=header.querySelector('.fx30-headgrid')||header;
+      if(!header.contains(btn)) grid.insertBefore(btn, grid.firstChild);
+      btn.classList.remove('fx9728-kill-fab');
+      ['position','left','right','top','bottom','inset','transform','margin','zIndex','background','boxShadow','borderRadius'].forEach(function(k){try{btn.style[k]='';}catch(e){}});
+      btn.removeAttribute('data-fluxia-floating-menu');
+      btn.setAttribute('aria-label','Abrir menú');
+      if(!btn.__fx9728Fast){
+        btn.__fx9728Fast=1;
+        btn.addEventListener('pointerdown',function(){
+          try{var m=document.getElementById('drawerMenu'),o=document.getElementById('drawerOverlay'); if(m)m.classList.add('open'); if(o)o.classList.add('open');}catch(e){}
+        },{capture:true,passive:true});
+      }
+    }catch(e){}
+  }
+  function killFloatingClones(){
+    try{
+      var header=document.getElementById('fx32Header');
+      Array.prototype.slice.call(document.querySelectorAll('button,[role="button"],.menu-btn,.hamburger,.fab')).forEach(function(el){
+        if(!el || el.id==='btnMenu' || el.id==='headerNotifications' || el.id==='drawerClose')return;
+        var txt=((el.getAttribute('aria-label')||'')+' '+(el.textContent||'')).toLowerCase();
+        var cs=getComputedStyle(el);
+        var rect=el.getBoundingClientRect();
+        var looksMenu=/menú|menu|☰|≡|hamburger/.test(txt);
+        var isFloating=(cs.position==='fixed'||cs.position==='sticky'||cs.position==='absolute') && rect.width<=72 && rect.height<=72;
+        var isBlack=/rgb\(0, 0, 0\)|#000|black/.test((cs.backgroundColor||'')+' '+(cs.color||''));
+        if((looksMenu&&isFloating) || (isFloating&&isBlack&&rect.right>window.innerWidth-96)){
+          if(!header || !header.contains(el)) el.classList.add('fx9728-kill-fab');
+        }
+      });
+    }catch(e){}
+  }
+  function unregisterOldSWOnce(){
+    if(!isStandalone())return;
+    try{
+      if(sessionStorage.getItem(RELOAD_KEY)==='1')return;
+      if(!('serviceWorker' in navigator))return;
+      navigator.serviceWorker.getRegistrations().then(function(regs){
+        if(!regs||!regs.length)return;
+        Promise.all(regs.map(function(r){try{return r.unregister();}catch(e){return false;}})).then(function(){
+          try{sessionStorage.setItem(RELOAD_KEY,'1');}catch(e){}
+          var url=new URL(location.href);url.searchParams.set('fx_pwa','97.29-lab');url.searchParams.set('t',Date.now().toString());
+          location.replace(url.toString());
+        });
+      }).catch(function(){});
+    }catch(e){}
+  }
+  function start(){paintVersion();ensureMenuInHeader();killFloatingClones();unregisterOldSWOnce();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+  window.addEventListener('pageshow',start,{passive:true});
+  setTimeout(start,250);setTimeout(start,900);setTimeout(start,1800);
+})();
+</script>
+
+
+
+<!-- Fluxia v97.31-LAB · MENÚ DEFINITIVO: elimina botón negro flotante y fija menú superior -->
+<style id="fluxia-v9731-menu-original-visible">
+  :root{--fx9731-ink:#194B5C;--fx9731-accent:#69A9D0;}
+  html body #fx32Header{display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:90!important;}
+  html body #fx32Header .fx30-headgrid{display:grid!important;grid-template-columns:44px minmax(0,1fr) 44px!important;align-items:center!important;gap:8px!important;width:100%!important;min-height:46px!important;}
+  html body #fx32Header #btnMenu,
+  html body #fx32Header #fxMenuTopPermanent{
+    position:static!important;inset:auto!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+    transform:none!important;margin:0!important;display:flex!important;visibility:visible!important;opacity:1!important;
+    width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;
+    border-radius:14px!important;border:1px solid rgba(105,169,208,.32)!important;
+    background:rgba(255,255,255,.86)!important;color:var(--fx9731-ink)!important;
+    box-shadow:0 6px 16px rgba(23,61,77,.07)!important;align-items:center!important;justify-content:center!important;padding:0!important;
+    touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important;
+  }
+  html body #fx32Header #btnMenu{grid-column:1!important;grid-row:1!important;justify-self:start!important;}
+  html body #fx32Header #fxMenuTopPermanent{grid-column:1!important;grid-row:1!important;justify-self:start!important;}
+  html body #fx32Header .fx30-brandzone{grid-column:2!important;grid-row:1!important;justify-self:center!important;min-width:0!important;}
+  html body #fx32Header #headerNotifications{grid-column:3!important;grid-row:1!important;justify-self:end!important;position:static!important;display:flex!important;visibility:visible!important;opacity:1!important;}
+  html body .fx9731-floating-killed,
+  html body [data-fx9731-killed="1"]{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;}
+  /* Filtro visual de seguridad: cualquier duplicado tipo FAB negro de menú en el lateral derecho queda anulado. */
+  html body button.fx-menu-floating,
+  html body .menu-floating,
+  html body .floating-menu,
+  html body .floating-menu-debug,
+  html body .fluxia-floating-menu,
+  html body .fx-floating-menu,
+  html body [data-fluxia-floating-menu]{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;}
+  #fluxia-lab-version{position:fixed!important;left:8px!important;bottom:calc(6px + env(safe-area-inset-bottom))!important;z-index:10!important;font:700 10px/1 system-ui,-apple-system,sans-serif!important;color:rgba(25,75,92,.42)!important;background:rgba(255,255,255,.55)!important;border:1px solid rgba(105,169,208,.18)!important;border-radius:999px!important;padding:3px 6px!important;pointer-events:none!important;}
+</style>
+<script id="fluxia-v9731-menu-original-visible">
+(function(){
+  'use strict';
+  var V='v97.31-LAB';
+  function qs(sel,root){try{return (root||document).querySelector(sel);}catch(e){return null;}}
+  function qsa(sel,root){try{return Array.prototype.slice.call((root||document).querySelectorAll(sel));}catch(e){return [];}}
+  function isStandalone(){try{return window.navigator.standalone===true||window.matchMedia('(display-mode: standalone)').matches;}catch(e){return false;}}
+  function paintVersion(){
+    try{window.FLUXIA_VERSION=V;window.FLUXIA_BUILD=V;}catch(e){}
+    try{var m=qs('meta[name="fluxia-version"]')||document.createElement('meta');m.name='fluxia-version';m.content=V;if(!m.parentNode)document.head.appendChild(m);}catch(e){}
+    try{var b=document.getElementById('fluxia-lab-version');if(!b){b=document.createElement('div');b.id='fluxia-lab-version';document.body.appendChild(b);}b.textContent=V;}catch(e){}
+    try{qsa('.fluxia-version,.fx-version,.app-version,.version-label,.drawer-version').forEach(function(n){n.textContent=V;});}catch(e){}
+  }
+  function openMenuFallback(original){
+    try{ if(typeof window.openDrawer==='function'){ window.openDrawer(); return; } }catch(e){}
+    try{ if(original && original !== document.activeElement){ original.click(); return; } }catch(e){}
+    try{ var d=document.getElementById('drawerMenu'),o=document.getElementById('drawerOverlay'); if(d)d.classList.add('open'); if(o)o.classList.add('open'); document.documentElement.classList.add('drawer-open'); document.body.classList.add('drawer-open'); }catch(e){}
+  }
+  function ensureTopMenu(){
+    var header=document.getElementById('fx32Header');
+    if(!header) return;
+    var grid=qs('.fx30-headgrid',header)||header;
+    var btn=document.getElementById('btnMenu');
+    // Si el botón real existe, lo forzamos dentro del header. Si no existe, creamos uno permanente.
+    if(btn){
+      try{ if(btn.parentNode!==grid){ grid.insertBefore(btn, grid.firstChild); } }catch(e){}
+      try{btn.classList.add('menu-btn','fx30-iconbtn'); btn.setAttribute('aria-label','Abrir menú'); btn.setAttribute('title','Menú'); btn.removeAttribute('data-fx9731-killed'); btn.classList.remove('fx9731-floating-killed');}catch(e){}
+      try{btn.style.cssText='';}catch(e){}
+      if(!btn.__fx9731Bound){btn.__fx9731Bound=1;btn.addEventListener('pointerdown',function(ev){try{openMenuFallback(btn);}catch(e){}},{capture:true,passive:true});}
+    }else{
+      var p=document.getElementById('fxMenuTopPermanent');
+      if(!p){
+        p=document.createElement('button');p.id='fxMenuTopPermanent';p.className='menu-btn fx30-iconbtn';p.type='button';p.setAttribute('aria-label','Abrir menú');p.setAttribute('title','Menú');
+        p.innerHTML='<svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22"><path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+        try{grid.insertBefore(p,grid.firstChild);}catch(e){}
+      }
+      if(!p.__fx9731Bound){p.__fx9731Bound=1;p.addEventListener('pointerdown',function(){openMenuFallback(btn);},{capture:true,passive:true});p.addEventListener('click',function(){openMenuFallback(btn);},{capture:true,passive:true});}
+    }
+  }
+  function isHeaderChild(el){try{return !!(document.getElementById('fx32Header')||{}).contains(el);}catch(e){return false;}}
+  function looksLikeBadFloatingMenu(el){
+    if(!el || isHeaderChild(el)) return false;
+    if(el.id==='drawerClose'||el.id==='headerNotifications'||el.id==='fxMenuTopPermanent') return false;
+    var cs, r;
+    try{cs=getComputedStyle(el);r=el.getBoundingClientRect();}catch(e){return false;}
+    if(!r || r.width<28 || r.height<28) return false;
+    var pos=(cs.position||'').toLowerCase();
+    var fixedish=(pos==='fixed'||pos==='sticky');
+    var rightSide=(r.left > (window.innerWidth||0)-96) || (parseFloat(cs.right)||0) <= 32;
+    var midPage=(r.top>70 && r.top < ((window.innerHeight||700)-70));
+    var roundish=(parseFloat(cs.borderRadius)||0) >= 18 || /50%|999/.test(cs.borderRadius||'');
+    var dark=/rgb\((?:0|1|2|3|4|5|6|7|8|9|1\d|2\d|3\d|4\d|5\d)/.test(cs.backgroundColor||'') || /rgba\(0,\s*0,\s*0/.test(cs.backgroundColor||'');
+    var txt=((el.getAttribute('aria-label')||'')+' '+(el.title||'')+' '+(el.className||'')+' '+(el.id||'')+' '+(el.textContent||'')).toLowerCase();
+    var menuish=/menu|menú|drawer|hamburg|☰/.test(txt) || !!el.querySelector('svg');
+    return fixedish && rightSide && midPage && (roundish||dark) && menuish;
+  }
+  function killBadFloatingMenus(){
+    qsa('button,[role="button"],.menu-btn,.fx30-iconbtn,.floating-menu,.fluxia-floating-menu,.fx-floating-menu,[data-fluxia-floating-menu],a').forEach(function(el){
+      try{ if(looksLikeBadFloatingMenu(el)){ el.setAttribute('data-fx9731-killed','1'); el.classList.add('fx9731-floating-killed'); el.style.setProperty('display','none','important'); el.style.setProperty('visibility','hidden','important'); el.style.setProperty('opacity','0','important'); el.style.setProperty('pointer-events','none','important'); } }catch(e){}
+    });
+  }
+  function run(){paintVersion();ensureTopMenu();killBadFloatingMenus();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();
+  window.addEventListener('load',run,{passive:true});
+  window.addEventListener('pageshow',run,{passive:true});
+  setTimeout(run,120);setTimeout(run,500);setTimeout(run,1200);setTimeout(run,2500);
+  try{new MutationObserver(function(){run();}).observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','id','aria-label']});}catch(e){}
+})();
+</script>
+
+
+
+<!-- Fluxia v97.31-LAB · MENÚ ORIGINAL VISIBLE: el mismo #btnMenu de siempre, sin botón alternativo -->
+<style id="fluxia-v9731-menu-original-visible-final">
+  :root{--fx9731-menu-ink:#194B5C;--fx9731-menu-bg:rgba(255,255,255,.90);}
+  /* El botón válido es SIEMPRE el original: #btnMenu. Ningún botón PWA alternativo. */
+  html body #fxMenuTopPermanent,
+  html body .fx-pwa-menu-real,
+  html body [data-fx-menu-clone="1"]{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;}
+  html body #btnMenu{
+    display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;
+    align-items:center!important;justify-content:center!important;
+    width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;
+    padding:0!important;margin:0!important;border-radius:14px!important;
+    border:1px solid rgba(105,169,208,.32)!important;background:var(--fx9731-menu-bg)!important;color:var(--fx9731-menu-ink)!important;
+    box-shadow:0 6px 16px rgba(23,61,77,.07)!important;
+    transform:none!important;filter:none!important;-webkit-tap-highlight-color:transparent!important;touch-action:manipulation!important;
+    z-index:2147483647!important;
+  }
+  html body #fx32Header #btnMenu{
+    position:static!important;inset:auto!important;grid-column:1!important;grid-row:1!important;justify-self:start!important;
+  }
+  /* En PWA/iOS, si el header se comporta distinto, el MISMO botón original se fija arriba. */
+  @media (display-mode: standalone){
+    html body #btnMenu{
+      position:fixed!important;left:14px!important;top:calc(env(safe-area-inset-top) + 10px)!important;right:auto!important;bottom:auto!important;
+    }
+    html body #fx32Header{padding-top:max(8px, env(safe-area-inset-top))!important;}
+  }
+</style>
+<script id="fluxia-v9731-menu-original-visible-final">
+(function(){
+  'use strict';
+  var V='v97.31-LAB';
+  function standalone(){try{return navigator.standalone===true || matchMedia('(display-mode: standalone)').matches;}catch(e){return false;}}
+  function openMenu(){
+    try{ if(typeof window.openDrawer==='function'){ window.openDrawer(); return; } }catch(e){}
+    try{var d=document.getElementById('drawerMenu'),o=document.getElementById('drawerOverlay');if(d)d.classList.add('open');if(o)o.classList.add('open');document.documentElement.classList.add('drawer-open');document.body.classList.add('drawer-open');}catch(e){}
+  }
+  function restoreOriginalMenu(){
+    try{window.FLUXIA_VERSION=V;window.FLUXIA_BUILD=V;}catch(e){}
+    try{document.querySelectorAll('meta[name="fluxia-version"],meta[name="fluxia-lab-build"]').forEach(function(m){m.content=V;});}catch(e){}
+    try{document.querySelectorAll('#fxMenuTopPermanent,.fx-pwa-menu-real,[data-fx-menu-clone="1"]').forEach(function(n){n.remove();});}catch(e){}
+    var btn=document.getElementById('btnMenu');
+    var header=document.getElementById('fx32Header');
+    var grid=header && (header.querySelector('.fx30-headgrid')||header);
+    if(!btn) return;
+    try{
+      btn.className='menu-btn fx30-iconbtn';
+      btn.removeAttribute('data-fx9731-killed');btn.removeAttribute('data-fx9729-killed');btn.classList.remove('fx9731-floating-killed','fx9729-floating-killed');
+      btn.setAttribute('aria-label','Abrir menú');btn.setAttribute('title','Menú');btn.type='button';
+      if(!btn.querySelector('svg')) btn.innerHTML='<svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22"><path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+      if(grid && !standalone() && btn.parentNode!==grid) grid.insertBefore(btn,grid.firstChild);
+      btn.style.removeProperty('display');btn.style.removeProperty('visibility');btn.style.removeProperty('opacity');btn.style.removeProperty('pointer-events');
+    }catch(e){}
+    if(!btn.__fx9731Bound){
+      btn.__fx9731Bound=1;
+      btn.addEventListener('pointerdown',function(ev){try{openMenu();}catch(e){}},{capture:true,passive:true});
+      btn.addEventListener('click',function(ev){try{openMenu();}catch(e){}},{capture:true,passive:true});
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',restoreOriginalMenu,{once:true});else restoreOriginalMenu();
+  window.addEventListener('load',restoreOriginalMenu,{passive:true});
+  window.addEventListener('pageshow',restoreOriginalMenu,{passive:true});
+  setTimeout(restoreOriginalMenu,120);setTimeout(restoreOriginalMenu,600);setTimeout(restoreOriginalMenu,1600);setTimeout(restoreOriginalMenu,3200);
+  try{new MutationObserver(function(){restoreOriginalMenu();}).observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['class','style','id']});}catch(e){}
+})();
+</script>
+
 </body></html>

@@ -1,5 +1,17 @@
-# Fluxia v95.80-LAB
+# Fluxia v97.31-LAB · MENÚ ORIGINAL VISIBLE
 
-Corrección focalizada de Huchas tras comprobar en Safari que se mostraban saldos brutos porque faltaban usos históricos después de la hidratación.
+Corrección quirúrgica: mantiene el botón original `#btnMenu` de Fluxia, el de siempre.
 
-**Esperado:** Tributos 150,00 € · Por reponer 240,48 € · Agua 1,10 € · Amortización 1.690,58 € · reservado 2.817,88 €.
+Cambios:
+- No crea botón alternativo.
+- No usa botón PWA nuevo.
+- Fuerza el mismo `#btnMenu` original a ser visible también en modo pantalla de inicio/iOS standalone.
+- Oculta/elimina clones previos (`fxMenuTopPermanent`, botones PWA alternativos).
+- Mantiene rendimiento de v97.27/v97.29.
+- No toca datos financieros, Supabase, huchas, disponible ni movimientos.
+
+Commit recomendado:
+
+```
+release: Fluxia v97.31 LAB menu original visible
+```
