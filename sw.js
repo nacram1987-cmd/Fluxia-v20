@@ -1,44 +1,60 @@
-const CACHE_VERSION='fluxia-shell-v97.31-ghpages-20261008d';
-const ENTRY='./index.html';
+/* Fluxia v97.39: one canonical shell, network-first with bounded offline fallback.
+   No SW may rewrite an independent LAB document to index.html. */
+const CACHE_VERSION = 'fluxia-shell-v97.39-canonical';
+const ENTRY = './index.html';
+const PATH = new URL(ENTRY, self.registration.scope).pathname;
+const ROOT = new URL('./', self.registration.scope).pathname;
 
-self.addEventListener('install',event=>{
-  event.waitUntil((async()=>{
-    try{
-      const cache=await caches.open(CACHE_VERSION);
-      const r=await fetch(ENTRY,{cache:'no-store'});
-      if(r&&r.ok) await cache.put(ENTRY,r.clone());
-    }catch(e){}
+self.addEventListener('install', event => {
+  event.waitUntil((async () => {
+    try {
+      const res = await fetch(ENTRY, {cache:'no-store'});
+      if (res && res.ok) {
+        const cache = await caches.open(CACHE_VERSION);
+        await cache.put(ENTRY, res.clone());
+      }
+    } catch (_) {}
     await self.skipWaiting();
   })());
 });
 
-self.addEventListener('activate',event=>{
-  event.waitUntil((async()=>{
-    for(const key of await caches.keys()){
-      if(key.startsWith('fluxia-shell-')&&key!==CACHE_VERSION) await caches.delete(key);
-    }
+self.addEventListener('activate', event => {
+  event.waitUntil((async () => {
+    try {
+      const keys = await caches.keys();
+      await Promise.all(keys.filter(key =>
+        (key.startsWith('fluxia-shell-') || key.startsWith('fluxia-root-')) && key !== CACHE_VERSION
+      ).map(key => caches.delete(key)));
+    } catch (_) {}
     await self.clients.claim();
   })());
 });
 
-self.addEventListener('fetch',event=>{
-  const r=event.request;
-  if(r.method!=='GET') return;
-  const u=new URL(r.url);
-  if(u.origin!==self.location.origin) return;
-  if(/^\/(auth|v1|health)(\/|$)/.test(u.pathname)) return;
-  if(r.mode==='navigate'){
-    event.respondWith((async()=>{
-      const cache=await caches.open(CACHE_VERSION);
-      const cached=(await cache.match(ENTRY))||(await cache.match(r));
-      const fresh=fetch(r,{cache:'no-store'}).then(async response=>{
-        if(response&&response.ok) await cache.put(ENTRY,response.clone());
-        return response;
-      }).catch(()=>null);
-      if(cached){event.waitUntil(fresh);return cached;}
-      return (await fresh)||Response.error();
-    })());
+self.addEventListener('fetch', event => {
+  const req = event.request;
+  if (req.method !== 'GET') return;
+  const url = new URL(req.url);
+  if (url.origin !== self.location.origin) return;
+  if (req.mode !== 'navigate') return; // Leave APIs and static resources untouched.
+  if (url.pathname !== PATH && url.pathname !== ROOT) {
+    // Never fall back to index.html for independent LAB pages.
+    event.respondWith(fetch(req, {cache:'no-store'}));
     return;
   }
-  event.respondWith(fetch(r).catch(()=>caches.match(r)));
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE_VERSION);
+    const network = fetch(ENTRY, {cache:'no-store'}).then(async res => {
+      if (res && res.ok) await cache.put(ENTRY, res.clone());
+      return res && res.ok ? res : null;
+    }).catch(() => null);
+    // A fast connection receives the latest published shell, not a stale PWA.
+    const fresh = await Promise.race([network, new Promise(resolve => setTimeout(() => resolve(null), 1100))]);
+    if (fresh) return fresh;
+    const cached = await cache.match(ENTRY);
+    if (cached) {
+      event.waitUntil(network); // Refresh offline copy even when the fast path falls back.
+      return cached;
+    }
+    return (await network) || Response.error();
+  })());
 });

@@ -1,8 +1,8 @@
 {
-  "name": "Fluxia BETA v97.32",
+  "name": "Fluxia BETA",
   "short_name": "Fluxia BETA",
   "id": "./fluxia-beta-v97-31-github-pages",
-  "start_url": "./index.html?v=97.32-final-menu",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "display_override": [
@@ -14,7 +14,7 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "./fluxia-icon.png?v=97.32-final",
+      "src": "./fluxia-icon.png",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any maskable"

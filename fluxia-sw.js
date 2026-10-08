@@ -1,46 +1,60 @@
-const CACHE_VERSION='fluxia-shell-v97.33-drawer-fix-20261008';
-const ENTRY='./index.html?v=97.31-lab-menu-fix';
-const CORE=['./index.html','./manifest.webmanifest','./fluxia-icon.png'];
+/* Fluxia v97.39: one canonical shell, network-first with bounded offline fallback.
+   No SW may rewrite an independent LAB document to index.html. */
+const CACHE_VERSION = 'fluxia-shell-v97.39-canonical';
+const ENTRY = './index.html';
+const PATH = new URL(ENTRY, self.registration.scope).pathname;
+const ROOT = new URL('./', self.registration.scope).pathname;
 
-self.addEventListener('install',event=>{
-  self.skipWaiting();
-  event.waitUntil(caches.open(CACHE_VERSION).then(cache=>cache.addAll(CORE).catch(()=>{})));
+self.addEventListener('install', event => {
+  event.waitUntil((async () => {
+    try {
+      const res = await fetch(ENTRY, {cache:'no-store'});
+      if (res && res.ok) {
+        const cache = await caches.open(CACHE_VERSION);
+        await cache.put(ENTRY, res.clone());
+      }
+    } catch (_) {}
+    await self.skipWaiting();
+  })());
 });
 
-self.addEventListener('activate',event=>{
-  event.waitUntil((async()=>{
-    for(const key of await caches.keys()){
-      if((key.startsWith('fluxia-shell-')||key.startsWith('fluxia-root-'))&&key!==CACHE_VERSION) await caches.delete(key);
-    }
-    if(self.registration.navigationPreload){try{await self.registration.navigationPreload.enable();}catch(_){} }
+self.addEventListener('activate', event => {
+  event.waitUntil((async () => {
+    try {
+      const keys = await caches.keys();
+      await Promise.all(keys.filter(key =>
+        (key.startsWith('fluxia-shell-') || key.startsWith('fluxia-root-')) && key !== CACHE_VERSION
+      ).map(key => caches.delete(key)));
+    } catch (_) {}
     await self.clients.claim();
   })());
 });
 
-async function freshIndex(){
-  try{
-    const res=await fetch('./index.html?v=97.31-lab-menu-fix-'+Date.now(),{cache:'no-store'});
-    if(res&&res.ok){const cache=await caches.open(CACHE_VERSION);await cache.put('./index.html',res.clone());}
-    return res;
-  }catch(_){return null;}
-}
-
-self.addEventListener('fetch',event=>{
-  const req=event.request;
-  const url=new URL(req.url);
-  if(req.mode==='navigate'){
-    const refresh=freshIndex();
-    event.waitUntil(refresh.then(()=>{}).catch(()=>{}));
-    event.respondWith((async()=>{
-      const cache=await caches.open(CACHE_VERSION);
-      const cached=await cache.match('./index.html');
-      if(cached){
-        const fresh=await Promise.race([refresh,new Promise(resolve=>setTimeout(()=>resolve(null),1200))]);
-        return fresh&&fresh.ok?fresh:cached;
-      }
-      return (await refresh)||fetch(req);
-    })());
+self.addEventListener('fetch', event => {
+  const req = event.request;
+  if (req.method !== 'GET') return;
+  const url = new URL(req.url);
+  if (url.origin !== self.location.origin) return;
+  if (req.mode !== 'navigate') return; // Leave APIs and static resources untouched.
+  if (url.pathname !== PATH && url.pathname !== ROOT) {
+    // Never fall back to index.html for independent LAB pages.
+    event.respondWith(fetch(req, {cache:'no-store'}));
     return;
   }
-  if(url.origin===self.location.origin)event.respondWith(fetch(req,{cache:'no-store'}).catch(()=>caches.match(req)));
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE_VERSION);
+    const network = fetch(ENTRY, {cache:'no-store'}).then(async res => {
+      if (res && res.ok) await cache.put(ENTRY, res.clone());
+      return res && res.ok ? res : null;
+    }).catch(() => null);
+    // A fast connection receives the latest published shell, not a stale PWA.
+    const fresh = await Promise.race([network, new Promise(resolve => setTimeout(() => resolve(null), 1100))]);
+    if (fresh) return fresh;
+    const cached = await cache.match(ENTRY);
+    if (cached) {
+      event.waitUntil(network); // Refresh offline copy even when the fast path falls back.
+      return cached;
+    }
+    return (await network) || Response.error();
+  })());
 });
