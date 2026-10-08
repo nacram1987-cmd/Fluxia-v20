@@ -16967,9 +16967,9 @@ function renderGastosVariables(){
     }catch(e){}
   };
   try{
-    if('requestIdleCallback' in window) requestIdleCallback(_gvDeferred,{timeout:1200});
-    else setTimeout(_gvDeferred,32);
-  }catch(e){ setTimeout(_gvDeferred,32); }
+    if('requestIdleCallback' in window) window.__fxGVIdleId=requestIdleCallback(_gvDeferred,{timeout:1200});
+    else window.__fxGVTimeoutId=setTimeout(_gvDeferred,32);
+  }catch(e){ window.__fxGVTimeoutId=setTimeout(_gvDeferred,32); }
 
   // Filtros de búsqueda / categoría
   const busqEl = document.getElementById('gvBuscar');
