@@ -25,6 +25,8 @@ self.addEventListener('fetch',event=>{
   const r=event.request;
   if(r.method!=='GET') return;
   const u=new URL(r.url);
+  // Keep LAB preview navigations isolated from production index caches.
+  if (/\/lab-v97-[\d-]+\.html$/.test(u.pathname)) return;
   if(u.origin!==self.location.origin) return;
   if(/^\/(auth|v1|health)(\/|$)/.test(u.pathname)) return;
 
