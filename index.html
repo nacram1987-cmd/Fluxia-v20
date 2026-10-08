@@ -4179,7 +4179,13 @@ html body #panel-fijos .fx47-fijos-icon{width:38px!important;height:38px!importa
  try{if('PerformanceObserver'in window){var observer=new PerformanceObserver(function(list){list.getEntries().forEach(function(x){console.warn('[Fluxia LAB long task]',Math.round(x.duration)+'ms')})});observer.observe({entryTypes:['longtask']})}}catch(e){}
 })();
 </script>
-<link rel="apple-touch-icon" sizes="180x180" href="fluxia-icon.png"><link rel="icon" type="image/png" href="fluxia-icon.png"><meta name="apple-mobile-web-app-title" content="Fluxia BETA"><meta name="theme-color" content="#69A9D0"><meta name="fluxia-lab-build" content="v97.32"></head>
+<link rel="apple-touch-icon" sizes="180x180" href="fluxia-icon.png"><link rel="icon" type="image/png" href="fluxia-icon.png"><meta name="apple-mobile-web-app-title" content="Fluxia BETA"><meta name="theme-color" content="#69A9D0"><meta name="fluxia-lab-build" content="v97.32"><style id="fluxia-v9733-drawer-visibility-fix">
+html body #drawerMenu:not(.open){transform:translate3d(-105%,0,0)!important;pointer-events:none!important;visibility:hidden!important;}
+html body #drawerMenu.open{transform:translate3d(0,0,0)!important;visibility:visible!important;pointer-events:auto!important;}
+html body #drawerOverlay:not(.open){opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
+html body #drawerOverlay.open{visibility:visible!important;pointer-events:auto!important;}
+</style>
+</head>
 <script>
 window._offlineMode=!navigator.onLine;
 window.addEventListener('online',()=>{window._offlineMode=false;});
@@ -39215,7 +39221,7 @@ html body #panel-provisiones .pv-card.pv-ok .pv-bar i{background:var(--fxu-gold)
 <style id="fluxia-v9726-fase1-performance">
 @media (hover:none) and (pointer:coarse){
   html.drawer-open,body.drawer-open{overflow:hidden!important;overscroll-behavior:contain!important}
-  #drawerMenu,.drawer-menu{will-change:transform!important;transform:translateZ(0)!important;contain:layout style paint!important}
+  #drawerMenu,.drawer-menu{will-change:transform!important;contain:layout style paint!important}
   #drawerOverlay,.drawer-overlay{will-change:opacity!important;contain:strict!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
   #panel-gastos-variables,#panel-bancos{overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important}
   #panel-gastos-variables .mov-item,#panel-bancos .mov-item,#panel-bancos .bank-card{content-visibility:auto;contain-intrinsic-size:72px;transition:none!important;animation:none!important}
