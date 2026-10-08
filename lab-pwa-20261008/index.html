@@ -13324,6 +13324,7 @@ function pintarDrawerHeader(){
 
 let _drawerScrollY = 0;
 function openDrawer(){
+  const _fxMenuStart = performance.now();
   // Primero abrir; datos secundarios del drawer se actualizan tras el primer frame.
   requestAnimationFrame(function(){try{pintarDrawerHeader();}catch(e){}});
   try{
@@ -13336,6 +13337,7 @@ function openDrawer(){
   const o = document.getElementById('drawerOverlay');
   if (m) m.classList.add('open');
   if (o) o.classList.add('open');
+  requestAnimationFrame(function(){const ms=Math.round(performance.now()-_fxMenuStart);if(ms>80)console.warn('[Fluxia LAB perf] menú:',ms+'ms');});
 }
 function closeDrawer(){
   const m = document.getElementById('drawerMenu');
@@ -16927,6 +16929,7 @@ function renderGastosVariables(){
   /* v96.95 · FIRST PAINT FIRST: cabecera contable e historial se completan después
      de pintar la lista. Entrar en Variables nunca espera a Disponible ni al datalist. */
   const _gvDeferred = function(){
+    if (!_gvPanel || !_gvPanel.classList.contains('active') || mesSeleccionado!==mes) return;
     try{
       const disponible = disponibleEfectivo(mes);
       const valEl = document.getElementById('gvAjustadoVal');
@@ -16952,7 +16955,7 @@ function renderGastosVariables(){
     }catch(e){}
   };
   try{
-    if('requestIdleCallback' in window) requestIdleCallback(_gvDeferred,{timeout:350});
+    if('requestIdleCallback' in window) requestIdleCallback(_gvDeferred,{timeout:1200});
     else setTimeout(_gvDeferred,32);
   }catch(e){ setTimeout(_gvDeferred,32); }
 
