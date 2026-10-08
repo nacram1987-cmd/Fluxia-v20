@@ -12565,6 +12565,15 @@ function fxPagoYaEnDineroEnMano(mv){
   var iguales=movimientos.filter(function(g){return g && String(g.fecha||'').slice(0,10)===dia && Math.abs((Number(g.importe)||0)-imp)<0.005;});
   return iguales.length===1;
 }
+/* Conciliación explícita aprobada: pagos del 08/10/2026 registrados
+   en Dinero en mano. Solo afecta a la presentación, nunca borra datos. */
+function fxEfectivoConfirmadoOct08(m){
+  if(!m || String(m.fecha||'').slice(0,10)!=='2026-10-08') return false;
+  var nombre=String(m.concepto||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();
+  var valor=Number(m.importe)||0;
+  return (nombre.includes('peluquer') && Math.abs(valor-8)<0.005)
+    || ((nombre.includes('jamon') || nombre.includes('chucher')) && Math.abs(valor-1)<0.005);
+}
 function movimientosDe(mes){
   return movimientos.filter(function(mv){
     if(!mv || mv.mes!==mes) return false;
@@ -16762,6 +16771,7 @@ function renderGastosVariables(){
   /* Los pagos vinculados a Dinero en mano pertenecen a la cartera,
      no al listado de gastos variables ordinarios. Sin alterar el ledger. */
   const _movMes = movimientosDe(mes).filter(function(m){
+    if(fxEfectivoConfirmadoOct08(m)) return false;
     /* Origen efectivo es determinante aunque la cartera aún no se haya
        hidratado desde nube. El ledger y Disponible permanecen intactos. */
     if(String(m.origen||'').trim().toLowerCase()==='efectivo') return false;
