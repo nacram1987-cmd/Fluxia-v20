@@ -6,26 +6,25 @@
   <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>Fluxia BETA</title>
-  <link rel="manifest" href="manifest.webmanifest?v=9731-final">
+  <title>Fluxia BETA · v97.31-LAB</title>
+  <link rel="manifest" href="manifest.webmanifest?v=9731-real-final">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Fluxia BETA">
   <meta name="theme-color" content="#69A9D0">
   <style>
     html,body{margin:0;height:100%;background:#f7fbfa;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#123;display:grid;place-items:center}
-    .box{max-width:360px;text-align:center;padding:24px}
-    .logo{font-size:38px;margin-bottom:10px}.t{font-weight:800;font-size:22px}.s{margin-top:8px;opacity:.72;font-size:14px}
+    .box{max-width:360px;text-align:center;padding:24px}.logo{font-size:38px;margin-bottom:10px}.t{font-weight:800;font-size:22px}.s{margin-top:8px;opacity:.72;font-size:14px}
   </style>
 </head>
 <body>
   <div class="box">
     <div class="logo">💎</div>
     <div class="t">Fluxia BETA</div>
-    <div class="s">Cargando versión estable...</div>
+    <div class="s">Cargando v97.31-LAB real...</div>
   </div>
   <script>
   (async function(){
-    const SRC = 'https://raw.githubusercontent.com/nacram1987-cmd/Fluxia-v20/13748635f6ff61eab3c6788757e91247b0442bda/index.html?cacheBust=' + Date.now();
+    const SRC = 'https://raw.githubusercontent.com/nacram1987-cmd/Fluxia-v20/4f72ccd1124b0a6fb66bce1306de153b07461242/index.html?cacheBust=' + Date.now();
     try{
       const r = await fetch(SRC, { cache: 'no-store' });
       if(!r.ok) throw new Error('HTTP '+r.status);
@@ -35,7 +34,7 @@
       document.write(html);
       document.close();
     }catch(e){
-      document.body.innerHTML = '<div style="padding:24px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><h2>Fluxia</h2><p>No se ha podido cargar la versión estable.</p><pre style="white-space:pre-wrap">'+String(e && e.message || e)+'</pre></div>';
+      document.body.innerHTML = '<div style="padding:24px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif"><h2>Fluxia</h2><p>No se ha podido cargar v97.31-LAB.</p><pre style="white-space:pre-wrap">'+String(e && e.message || e)+'</pre></div>';
     }
   })();
   </script>
