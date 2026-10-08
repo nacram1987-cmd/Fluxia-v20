@@ -16951,8 +16951,12 @@ function renderGastosVariables(){
   if (catEl){
     const prev = catEl.value;
     const cats = [...new Set(_movMes.map(m => m.categoria || 'Otros'))].sort((a,b)=>a.localeCompare(b,'es'));
-    catEl.innerHTML = '<option value="">Todas las categorías</option>' + cats.map(c => '<option value="'+String(c).replace(/"/g,'&quot;')+'">'+c+'</option>').join('');
-    if (prev && cats.includes(prev)) catEl.value = prev;
+    const catSig = JSON.stringify(cats);
+    if(catEl.dataset.fxCategorySig!==catSig){
+      catEl.innerHTML = '<option value="">Todas las categorías</option>' + cats.map(c => '<option value="'+String(c).replace(/"/g,'&quot;')+'">'+c+'</option>').join('');
+      if (prev && cats.includes(prev)) catEl.value = prev;
+      catEl.dataset.fxCategorySig=catSig;
+    }
   }
   if (busqEl && !busqEl._bound){
     busqEl._bound = true;
@@ -16984,7 +16988,7 @@ function renderGastosVariables(){
   } else if (movs.length === 0){
     movView.innerHTML = fluxiaEmptyHTML({ico:'🔎',tit:'Ningún gasto coincide',txt:'Limpia la búsqueda o el filtro de categoría para ver todos.'});
   } else {
-    movView.replaceChildren();
+    const _gvFragment = document.createDocumentFragment();
     movs.forEach(mv=>{
       const div = document.createElement('div');
       div.className = 'mov-item';
@@ -17003,8 +17007,9 @@ function renderGastosVariables(){
           <button data-id="${mv.id}" data-action="del" title="Eliminar">×</button>
         </div>
       `;
-      movView.appendChild(div);
+      _gvFragment.appendChild(div);
     });
+    movView.replaceChildren(_gvFragment);
   }
 
   movView.querySelectorAll('button[data-action="provision"]').forEach(btn=>{
