@@ -871,3 +871,22 @@ Los bocetos visuales se entregaran siempre por separado, nunca agrupados en una 
 - LAB aislada en `/lab/` con `lab/fluxia-sw.js`, `lab/manifest.webmanifest` y caché propia; prohibido cambiar root SW o root index por un ensayo. PWA debe llamarse Fluxia BETA.
 - Medición y aceptación: diagnosticar `FluxiaArranque9752.report()` con solo métricas temporales (sin movimientos, importes ni IDs); probar arranque frío/caliente Safari iOS + PWA, primer toque, cambio de pestañas, gráficos diferidos, bancos, login multiusuario, huchas y disponible. **No declarar objetivo de velocidad ni promover LAB como ESTABLE sin validación real**.
 - Entregables: ZIP completo y URLs separadas LAB/ESTABLE, PROMPT MAESTRO actualizado, checklist y GitHub Action de prueba de integridad. Verificar despliegue de la rama efectiva, no solo commit en main.
+
+---
+
+## ADENDA v97.53-LAB · UI CANÓNICA EN UNA FILA + ARRANQUE SIN BLOQUEO (09/10/2026)
+
+**Base:** v97.52-LAB presente en main y Pages real `pages-v9731-real-final`.
+**Incidencia real observada:** Safari iPhone mostró menú, marca y campana en 3 alturas distintas, con hueco blanco excesivo. El usuario reportó espera prolongada antes de respuesta.
+
+- Mantener **una sola cabecera**: `#fx32Header` con `.fx30-headgrid` horizontal, 1 fila de menú original `#btnMenu`, marca y campana original `#headerNotifications`; no duplicar botones, no flotantes, no sobrescribir listeners.
+- Aplicar contención visual en CSS crítico y una normalización **solo del DOM visible**, idempotente en DOMContentLoaded / pageshow. Sin loops, MutationObserver, recargas, ni cambios en finanzas o perfiles.
+- Mantener `#fx34Context` debajo como dos estados gemelos y compactos: bancos y nube.
+- El dashboard debe conservar importes y diseño premium; no se maquillan tiempos con un splash más largo.
+- Mantener la sincronización bancaria diferida única de v97.52 y la lógica de gráficos diferidos; no reactivarla ni duplicarla durante la corrección visual.
+- Instrumentar tiempo al primer gesto en LAB sin capturar eventos privados ni importes, para comparar en Safari iPhone. No atribuir mejoras de segundos sin medición de dispositivo.
+- Invariantes: Disponible, ingresos, fijos, variables, huchas, bancos, tombstones, notificaciones rechazadas, credenciales y aislamiento entre usuarios no se alteran. LA NUBE sigue como verdad financiera.
+- Estrictamente **LAB**, la entrada ESTABLE de raíz no se toca ni se promociona hasta QA con navegador real, arranque frío/caliente, PWA, dos cuentas, análisis, variables y banco sin duplicados.
+- Cada entrega contiene ZIP completo, master, README, enlace LAB y referencia estable.
+
+**Estado verificación:** estructura estática auditada y pendiente de Safari/PWA real. Nunca asumir que el bug está resuelto sin comprobar render en iPhone.

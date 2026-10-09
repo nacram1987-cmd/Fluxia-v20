@@ -1,0 +1,58 @@
+name: Fluxia v97.53 LAB - integrity and ZIP
+on:
+  push:
+    branches: [main]
+    paths: ['lab/index.html','README_v97.53_LAB.md','.github/workflows/fluxia-lab-v9753.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Verify lab and stable invariants
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          lab=Path('lab/index.html').read_text()
+          stable=Path('index.html').read_text()
+          assert 'v97.53-LAB' in lab
+          assert 'fx9753-single-row-critical' in lab
+          assert 'fx9753-header-normalizer' in lab
+          assert 'fx9753-first-interaction-metrics' in lab
+          assert 'id="btnMenu"' in lab and 'id="headerNotifications"' in lab
+          assert lab.count('id="btnMenu"')==1
+          assert lab.count('id="headerNotifications"')==1
+          assert 'window.FluxiaDisponibleEngine' in lab
+          assert 'fx9747-boot-bank' in lab
+          assert 'FluxiaCharts9752' in lab
+          assert '<script defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js">' not in lab
+          assert Path('lab/fluxia-sw.js').exists()
+          assert Path('PROMPT_MAESTRO.md').exists()
+          # No changes to stable in commit.
+          oldstable=subprocess.check_output(['git','show','HEAD^:index.html'])
+          assert oldstable==Path('index.html').read_bytes(), 'Root stable changed'
+          oldlab=subprocess.check_output(['git','show','HEAD^:lab/index.html']).decode()
+          # Audited diff is header CSS, gesture metrics, DOM-only normalizer, and release label.
+          replaced=lab.replace('v97.53','v97.52')
+          assert replaced.split('<head>',1)[0]==oldlab.split('<head>',1)[0], 'Unexpected HTML preface change'
+          assert oldlab.count('function cargarTodo()')==lab.count('function cargarTodo()')
+          assert oldlab.count('function arrancarApp()')==lab.count('function arrancarApp()')
+          assert oldlab.count('window.FluxiaDisponibleEngine')==lab.count('window.FluxiaDisponibleEngine')
+          print('PASS static header, financial invariants, unchanged stable')
+          PY
+      - name: Build release ZIP
+        shell: bash
+        run: |
+          zip -q -r Fluxia_v97.53_LAB.zip lab/index.html lab/fluxia-sw.js lab/manifest.webmanifest lab/apple-touch-icon.png lab/fluxia-icon-180.png lab/fluxia-icon-192.png lab/fluxia-icon-512.png lab/fluxia-icon.svg lab/assets/brands PROMPT_MAESTRO.md README_v97.53_LAB.md
+          unzip -t Fluxia_v97.53_LAB.zip | tail -n 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Fluxia_v97.53_LAB
+          path: Fluxia_v97.53_LAB.zip
+          retention-days: 30
