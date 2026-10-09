@@ -1,8 +1,5 @@
 name: Fluxia v97.53 LAB - integrity and ZIP
 on:
-  push:
-    branches: [main]
-    paths: ['lab/index.html','lab/v97.53.html','lab/fluxia-sw.js','lab/manifest.webmanifest','README_v97.53_LAB.md','.github/workflows/fluxia-lab-v9753.yml']
   workflow_dispatch:
 permissions:
   contents: read

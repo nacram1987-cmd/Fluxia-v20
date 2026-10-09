@@ -1,13 +1,5 @@
 name: Fluxia v97.52 LAB - QA and ZIP
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'lab/index.html'
-      - 'lab/fluxia-sw.js'
-      - 'lab/manifest.webmanifest'
-      - 'README_v97.52_LAB.md'
-      - '.github/workflows/fluxia-lab-v9752.yml'
   workflow_dispatch:
 
 permissions:

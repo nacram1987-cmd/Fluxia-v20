@@ -1,0 +1,70 @@
+name: Fluxia v97.54 LAB - Startup QA and ZIP
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'lab/index.html'
+      - 'lab/v97.54.html'
+      - 'lab/fluxia-sw.js'
+      - 'lab/manifest.webmanifest'
+      - 'README_v97.54_LAB.md'
+      - '.github/workflows/fluxia-lab-v9754.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Verify integrity, runnable scripts and boot order
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from html.parser import HTMLParser
+          import subprocess,json
+          lab=Path('lab/index.html').read_text()
+          old=subprocess.check_output(['git','show','HEAD^:lab/index.html']).decode()
+          assert lab==Path('lab/v97.54.html').read_text(), 'Versioned Safari entry differs'
+          assert 'v97.54-LAB' in lab
+          assert 'v97.53-LAB' in old
+          for marker in ['fx9753-single-row-critical','fx9753-header-normalizer','fx9753-first-interaction-metrics','window.FluxiaDisponibleEngine','fx9747-boot-bank','fluxia-v9752-lazy-charts','function arrancarApp(){','function cargarTodo(){']:
+            assert marker in lab and marker in old,marker
+          for marker in ['window.FluxiaDisponibleEngine','function _reconciliar(','function reconectar(','function cargarTodo(){','function arrancarApp(){']:
+            assert old.count(marker)==lab.count(marker), marker
+          assert 'Almacen.cuandoListo(1100)' in lab
+          assert 'cuandoDurableListo(){ return durableReady || Promise.resolve(); }' in lab
+          assert 'function reconnect()' in lab and 'Almacen.onEstado(schedule)' in lab
+          assert 'fx9754-boot-metrics' in lab
+          assert 'fluxia-lab-shell-v97.54' in Path('lab/fluxia-sw.js').read_text()
+          assert 'v97.54' in Path('lab/manifest.webmanifest').read_text()
+          assert subprocess.check_output(['git','show','HEAD^:index.html'])==Path('index.html').read_bytes(), 'Root stable changed'
+          class Extract(HTMLParser):
+            def __init__(self):super().__init__();self.current=None;self.parts=[]
+            def handle_starttag(self,t,attrs):
+              if t=='script' and not dict(attrs).get('src'): self.current=''
+            def handle_data(self,d):
+              if self.current is not None:self.current+=d
+            def handle_endtag(self,t):
+              if t=='script' and self.current is not None:self.parts.append(self.current);self.current=None
+          scripts=Extract();scripts.feed(lab)
+          Path('/tmp/scripts.json').write_text(json.dumps(scripts.parts))
+          PY
+          node - <<'JS'
+          const fs=require('fs'),vm=require('vm');const scripts=JSON.parse(fs.readFileSync('/tmp/scripts.json','utf8'));let errors=[];
+          scripts.forEach((s,i)=>{try{new vm.Script(s,{filename:'inline-'+i})}catch(e){errors.push(i+': '+e.message)}});
+          if(errors.length){console.error(errors);process.exit(1)}console.log('PASS '+scripts.length+' scripts, authoritative financial markers, stable root and boot sequence');
+          JS
+      - name: Package complete release
+        shell: bash
+        run: |
+          zip -q -r Fluxia_v97.54_LAB.zip lab/index.html lab/v97.54.html lab/fluxia-sw.js lab/manifest.webmanifest lab/apple-touch-icon.png lab/fluxia-icon-180.png lab/fluxia-icon-192.png lab/fluxia-icon-512.png lab/fluxia-icon.svg lab/assets/brands PROMPT_MAESTRO.md README_v97.54_LAB.md
+          unzip -t Fluxia_v97.54_LAB.zip | tail -n 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Fluxia_v97.54_LAB
+          path: Fluxia_v97.54_LAB.zip
+          retention-days: 30
