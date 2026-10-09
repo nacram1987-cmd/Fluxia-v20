@@ -540,3 +540,12 @@ GitHub será el canal oficial para gestionar, actualizar y publicar Fluxia direc
 - Enlaces oficiales: ESTABLE `https://nacram1987-cmd.github.io/Fluxia-v20/` y LAB `https://nacram1987-cmd.github.io/Fluxia-v20/lab-vNN-NN.html?v=NN.NN`. Enlaces versionados para diagnóstico sin cambiar la ruta canónica de PWA.
 - Tras commits verificar por separado existencia en repositorio, despliegue Pages y comportamiento real Safari/PWA. Nunca confundir commit con verificación pública ni afirmar pruebas bancarias no ejecutadas.
 - Mantener ZIP completo por versión y un histórico de versiones estables; jamás borrar datos financieros ni resetear credenciales o identificadores de la PWA al promocionar.
+
+
+## REGLA CRÍTICA REVOLUT · CARGO ABARROTAO · 09/10/2026
+- Incidencia abierta: cargo real de Abarrotao, Revolut, 08/10/2026, importe aproximado 18 € (verificar importe exacto en fuente bancaria). No consta visible en Fluxia; NO declarar recuperado sin comprobar datos reales.
+- Cada movimiento bancario recibido debe mantener trazabilidad por cuenta, proveedor, ID externo, fecha, importe, estado de importación, clasificación y efecto contable. Un movimiento sin clasificar debe mostrarse en pendientes de revisión; nunca descartarse silenciosamente.
+- La deduplicación debe ser idempotente y no destructiva; jamás fusionar solo por referencia si cambian importe, cuenta, signo, fecha, estado o usuario. No contabilizar dos veces un mismo cargo ni alterar Disponible sin evidencia.
+- Conciliar Revolut por lotes con paginación, ventanas temporales solapadas, reintentos y cursor persistente por usuario/cuenta. Confirmar recepción antes de avanzar cursor; registrar rechazos con causa visible y posibilidad de reintento.
+- Si un cargo no llega desde el proveedor, indicar explícitamente «pendiente de recepción bancaria»; no inventar operaciones ni modificar saldos.
+- Prueba de aceptación obligatoria: Abarrotao aparece exactamente una vez con importe y fecha bancarios reales, persiste tras reinicio, actualización PWA y sincronización repetida, sin duplicados ni cambios injustificados en Disponible.
