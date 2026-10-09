@@ -21619,6 +21619,15 @@ function renderDashboard(){
       elAlert.classList.remove('show');
       elAlert.innerHTML = '';
     }
+    if(elAlert.classList.contains('show')&&!alertaPresupuestos){
+      const tipo=disponible<0?'deficit':'margen';
+      const botones=document.createElement('div');
+      botones.style.cssText='display:flex;gap:8px;margin-top:10px;flex-wrap:wrap';
+      botones.innerHTML='<button type="button" data-alert-24 style="flex:1;padding:9px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink)">Ocultar 24 h</button><button type="button" data-alert-never style="flex:1;padding:9px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink)">No volver a mostrar</button>';
+      botones.querySelector('[data-alert-24]').addEventListener('click',function(){ocultarNotificacion(tipo,24);elAlert.classList.remove('show');elAlert.innerHTML='';});
+      botones.querySelector('[data-alert-never]').addEventListener('click',function(){ocultarNotificacionDefinitiva(tipo);elAlert.classList.remove('show');elAlert.innerHTML='';});
+      elAlert.appendChild(botones);
+    }
   }
 
     }
