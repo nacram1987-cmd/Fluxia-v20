@@ -13111,6 +13111,7 @@ function goToTab(tabName){
       try{ pintarEstadoBackup(); }catch(e){}
       try{ pintarHorizontePlan(); }catch(e){}
       try{ fluxiaBindAyudaAcciones(); }catch(e){}
+      if(tabName==='ayuda'){try{fluxiaPintarDiagnosticoInicio();}catch(e){}}
     }
     if(tabName==='resumen'){
       try{ fluxiaPintarPrimerUsoInicio(); }catch(e){}
@@ -22858,6 +22859,28 @@ window.FluxiaEspejo = (function(){
 window.FluxiaInicioDiag={inicio:performance.now(),nubeLista:null,primerRender:null,primerToque:null,
  resumen:function(){const d=x=>x==null?null:Math.round(x-this.inicio);return {cloudMs:d(this.nubeLista),renderMs:d(this.primerRender),firstTapMs:d(this.primerToque),nota:'Medición desde inicialización del motor (no incluye descarga ni parseo HTML)'};}};
 document.addEventListener('pointerdown',function(){if(window.FluxiaInicioDiag&&!window.FluxiaInicioDiag.primerToque)window.FluxiaInicioDiag.primerToque=performance.now();},{capture:true,passive:true,once:true});
+
+function fluxiaPintarDiagnosticoInicio(){
+  try{
+    const panel=document.getElementById('panel-ayuda');if(!panel)return;
+    let el=document.getElementById('fx48DiagnosticoInicio');
+    if(!el){el=document.createElement('details');el.id='fx48DiagnosticoInicio';el.style.cssText='margin:12px 0;padding:12px;border:1px solid var(--line);border-radius:13px;background:var(--surface)';panel.appendChild(el);}
+    const d=window.FluxiaInicioDiag&&window.FluxiaInicioDiag.resumen();
+    if(!d)return;
+    const fmt=x=>x==null?'pendiente':(x/1000).toFixed(2)+' s';
+    const nav=performance.getEntriesByType('navigation')[0];
+    const dom=nav&&nav.domContentLoadedEventEnd!=null?(nav.domContentLoadedEventEnd/1000).toFixed(2)+' s':'no disponible';
+    const whole=d.renderMs!=null?((d.renderMs+window.FluxiaInicioDiag.inicio)/1000).toFixed(2)+' s':'pendiente';
+    el.innerHTML='<summary style="cursor:pointer;font-weight:700">⏱️ Diagnóstico de inicio · LAB</summary>'+
+      '<div style="font-size:.82rem;line-height:1.7;margin-top:8px">Documento listo: '+dom+
+      '<br>Nube / espera: '+fmt(d.cloudMs)+
+      '<br>Primer render desde motor: '+fmt(d.renderMs)+
+      '<br>Primer render desde navegación: '+whole+
+      '<br>Primer toque desde motor: '+fmt(d.firstTapMs)+
+      '<br><small>Los tiempos de red y autenticación dependen del dispositivo y la conexión. Estos datos no incluyen validación bancaria.</small></div>';
+  }catch(e){}
+}
+
 Almacen.iniciar();
 Almacen.cuandoListo(3500).then(async ()=>{
   try{window.FluxiaInicioDiag.nubeLista=performance.now();}catch(e){}
