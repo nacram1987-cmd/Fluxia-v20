@@ -30948,7 +30948,7 @@ window.FluxiaBancoFijos = (function(){
             // v87: tras sync, fusiona duplicados exactos por bancoRef (PROMPT test_no_duplicados)
       try{
         if(window.FluxiaSalud&&typeof window.FluxiaSalud.limpiarDuplicadosBancoRef==='function'){
-          var _ld=window.FluxiaSalud.limpiarDuplicadosBancoRef();
+          var _ld={ok:true,quitados:0,omitido:true}; /* AUDIT 2026-10-09: deshabilitada fusión automática destructiva durante sincronización; requiere validación de identidad contable y neutralidad del Disponible. */
           if(_ld&&_ld.quitados){tot.dupLimpios=_ld.quitados;if(typeof mostrarToast==='function')mostrarToast('🧹 '+_ld.quitados+' duplicado(s) fusionados','var(--teal)',2800);}
         }
       }catch(_e){}
