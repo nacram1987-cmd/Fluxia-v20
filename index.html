@@ -30828,7 +30828,7 @@ window.FluxiaBancoFijos = (function(){
         if(Math.abs(Number(x.importe)-importe)>0.005)return false;
         var cx=String(x.concepto||'').toLowerCase(), cm=String(concepto||'').toLowerCase();
         if(cx&&cm&&(cx===cm||cx.indexOf(cm)>=0||cm.indexOf(cx)>=0))return true;
-        if(x.origen==='banco')return true;
+        /* LAB: fecha+importe sin identidad bancaria NO prueban duplicidad. */
         return false;
       });
       if(yaDup){ids.add(m.id);enlazados++;return;}
