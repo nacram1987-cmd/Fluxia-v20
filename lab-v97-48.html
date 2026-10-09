@@ -8172,9 +8172,9 @@ function notifSilenciada(tipo){ return (_silLeer()[tipo]||0) > Date.now(); }
 function notifPermanente(tipo){ return notifSilenciada(tipo); }   // compat
 function notifOculta24(tipo){ return false; }                       // compat: unificado en _silLeer
 function notifSuprimida(tipo){ return notifSilenciada(tipo); }
-function notifSilencioTexto(tipo){ return 'No volver a mostrar'; }
+function notifSilencioTexto(tipo){ return 'No mostrar '+politicaNotificacion(tipo).etiqueta; }
 function ocultarNotificacion(tipo, horas){ _silEscribir(tipo, Date.now()+(horas||24)*3600000); try{actualizarBadgesNav();}catch(e){} /* v91.2: NO renderAll */ }
-function ocultarNotificacionDefinitiva(tipo){ _silEscribir(tipo, 8640000000000000); try{actualizarBadgesNav();}catch(e){} /* v91.2: NO renderAll */ }
+function ocultarNotificacionDefinitiva(tipo){ _silEscribir(tipo, Date.now()+politicaNotificacion(tipo).dias*86400000); try{actualizarBadgesNav();}catch(e){} /* v91.2: NO renderAll */ }
 function ocultarTodasNotificaciones(){ try{ datosNotificaciones().forEach(function(n){ ocultarNotificacionDefinitiva(n.tipo); }); }catch(e){} try{actualizarBadgesNav();}catch(e){} try{renderCentroNotificaciones();}catch(e){} }
 function restablecerNotificaciones(){ try{ localStorage.removeItem(NOTIF_SIL_G); }catch(e){} try{ guardarLS('v2_notif_sil', {}); }catch(e){} try{ Object.keys(NOTIF_POLITICAS).forEach(function(t){ localStorage.removeItem(CLAVE_NOTIF_OCULTA24+t); localStorage.removeItem(CLAVE_NOTIF_PERMANENTE+t); localStorage.removeItem('fluxia_notif_perm_g_'+t); }); }catch(e){} try{actualizarBadgesNav();}catch(e){} try{renderCentroNotificaciones();}catch(e){} }
 // Un plan recién creado (sin ingresos anotados) no debe disparar avisos de margen o déficit.
@@ -13055,6 +13055,7 @@ function fluxiaColocarSelectorMes(tabName){
   }catch(e){}
 }
 function goToTab(tabName){
+  window.__fxHomeRenderGeneration=(window.__fxHomeRenderGeneration||0)+1;
   if(tabName==='financiaciones') tabName='fijos';
   var anterior=null, destino=null;
   try{ anterior=document.querySelector('.panel.active'); destino=document.getElementById('panel-'+tabName); }catch(e){}
@@ -20419,7 +20420,21 @@ function fluxiaRenderPanel9619(tab){
   try{
     switch(tab){
       case 'resumen':
-        [renderKPIs,renderHero,renderDashboard,renderMetas,renderResumenCompartidos,renderChart,pintarResumenFamiliar].forEach(function(fn){try{fn&&fn();}catch(e){}});
+        [renderKPIs,renderHero,renderDashboard].forEach(function(fn){try{fn&&fn();}catch(e){}});
+        // v97.48: módulos secundarios se reparten en turnos de evento, cancelables al navegar.
+        try{
+          var _secondary=[renderMetas,renderResumenCompartidos,renderChart,pintarResumenFamiliar];
+          var _generation=(window.__fxHomeRenderGeneration=(window.__fxHomeRenderGeneration||0)+1),_step=0;
+          function _next(){
+            if(_generation!==window.__fxHomeRenderGeneration)return;
+            var _panel=document.getElementById('panel-resumen');
+            if(_panel&&!_panel.classList.contains('active'))return;
+            try{var fn=_secondary[_step++];if(typeof fn==='function')fn();}catch(_e){}
+            if(_step<_secondary.length)setTimeout(_next,0);
+          }
+          setTimeout(_next,0);
+        }catch(_e){}
+
         break;
       case 'ingresos': try{renderIngresos();}catch(e){} break;
       case 'fijos': try{renderFijos();}catch(e){} break;
@@ -21391,7 +21406,7 @@ function renderFluxiaCloudIntegrity(){
 }
 
 function renderDashboard(){
-  try{if(!window.__fxCloudRefreshScheduled){window.__fxCloudRefreshScheduled=true;setTimeout(function(){window.__fxCloudRefreshScheduled=false;try{renderFluxiaCloudIntegrity();}catch(_e){}},0);}}catch(_e){}
+  renderFluxiaCloudIntegrity();
   const mes = mesSeleccionado;
   const disponible = disponibleEfectivo(mes);
 
