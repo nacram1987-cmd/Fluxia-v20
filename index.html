@@ -30827,7 +30827,7 @@ window.FluxiaBancoFijos = (function(){
         if(String(x.fecha||'').slice(0,10)!==fecha)return false;
         if(Math.abs(Number(x.importe)-importe)>0.005)return false;
         var cx=String(x.concepto||'').toLowerCase(), cm=String(concepto||'').toLowerCase();
-        if(cx&&cm&&(cx===cm||cx.indexOf(cm)>=0||cm.indexOf(cx)>=0))return true;
+        /* LAB: solo la identidad bancaria confirma automáticamente una repetición; conceptos similares pueden ser compras distintas. */
         /* LAB: fecha+importe sin identidad bancaria NO prueban duplicidad. */
         return false;
       });
