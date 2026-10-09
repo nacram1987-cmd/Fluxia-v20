@@ -907,3 +907,12 @@ Cada entrega LAB que cambie el HTML debe cambiar el nombre de la caché de su `l
 - Mantener bloqueo de credenciales para usuario nuevo, separación absoluta entre perfiles, papelera, rechazos permanentes, outbox persistente y recuperación desde la nube; no modificar motor financiero ni deduplicación.
 - Regresión estática y temporización medible con `FluxiaTiempos9754.report()`; sin ensayos reales en iPhone no afirmar mejoras temporales cuantificadas ni promover a ESTABLE.
 - Publicar **ambos** `lab/index.html` y `lab/v97.54.html`, SW LAB con caché nueva y artefacto ZIP; la raíz ESTABLE no se modifica.
+
+
+## Adenda v97.55-LAB · sincronización única y servidor aislado
+- Servidor activo auditado: `bandeja` es alias de `movimientos` con ventana de 40 días; una sincronización del cliente debe realizar una sola consulta y conservar esa cobertura.
+- Las llamadas concurrentes comparten la misma promesa; un fallo no ejecuta conciliación ni marca una sincronización correcta. Respuestas de un perfil anterior se rechazan antes de procesarlas.
+- El servidor LAB `Fluxia-banco-lab9755` consulta hasta dos bancos en paralelo, mantiene orden determinista, resultados parciales, blacklist, validación de usuario real y filtro por propietario. No modificar el servidor ESTABLE.
+- Una actualización financiera solicita un solo fotograma para la vista activa. La persistencia permanece inmediata; no se altera cálculo, tombstones, huchas ni efectivo.
+- Consulta automática al abrir y al recuperar conexión/primer plano, con mínimo 90 segundos desde consulta exitosa y cadencia de 12 minutos durante uso continuado. Pausar en segundo plano/offline y aplicar backoff 2–15 minutos por fallo. No prometer recepción instantánea ni push con app cerrada: depende del banco y no hay bandeja de webhook en este servidor.
+- Entrega LAB v97.55 y referencia ESTABLE v97.46, ZIP completo de ambas. No promover sin pruebas reales de Safari/PWA, dos cuentas y cargos reales.

@@ -1,6 +1,6 @@
-/* Fluxia BETA v97.54-LAB: PWA aislada bajo /lab/, shell inmediata tras primera instalación.
+/* Fluxia BETA v97.55-LAB: PWA aislada bajo /lab/, shell inmediata tras primera instalación.
  * El despliegue de LAB jamás controla /Fluxia-v20/ (ESTABLE). */
-const CACHE='fluxia-lab-shell-v97.54';
+const CACHE='fluxia-lab-shell-v97.55';
 const ENTRY='./index.html';
 const ROOT=new URL('./',self.registration.scope).pathname;
 const INDEX=new URL(ENTRY,self.registration.scope).pathname;

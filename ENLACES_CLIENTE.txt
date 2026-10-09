@@ -1,8 +1,3 @@
-LAB v96.95:
-https://nacram1987-cmd.github.io/Fluxia-v20/index_fluxia_v96.95_LAB.html?v=v96.95-LAB
-
-Referencia ESTABLE histórica fijada v95.25 (sin cambios):
-https://nacram1987-cmd.github.io/Fluxia-v20/index_fluxia_v95.25_LAB.html?v=v95.25
-
-Entrada existente conservada:
-https://nacram1987-cmd.github.io/Fluxia-v20/
+LAB v97.55: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.55.html
+LAB PWA: https://nacram1987-cmd.github.io/Fluxia-v20/lab/index.html
+ESTABLE v97.46: https://nacram1987-cmd.github.io/Fluxia-v20/
