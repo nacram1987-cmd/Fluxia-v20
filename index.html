@@ -30783,7 +30783,7 @@ window.FluxiaBancoFijos = (function(){
       if(pend){pend.bancoPendiente=false;pend.bancoRef=m.id;pend.fecha=fecha;ids.add(m.id);enlazados++;return;}
       // v69.1: el mismo cargo ya apuntado con otro código que YA NO viene del banco = era el pendiente → se enlaza, no se duplica
       const hNuevo=huellaCargo({banco:m.banco||banco,fecha:fecha,importe:importe,concepto:(m.contraparte&&m.contraparte.length>1?m.contraparte:m.concepto)||'Pago con tarjeta'});
-      const gemelo=listaMovs().find(x=>x&&x.origen==='banco'&&x.bancoRef&&x.bancoRef!==m.id&&!idsLote.has(x.bancoRef)&&huellaCargo(x)===hNuevo);
+      const gemelo=null; /* LAB: no sustituir IDs bancarios distintos por coincidencia heurística de huella; requiere reconciliación verificada. */
       if(gemelo){gemelo.bancoRef=m.id;gemelo.bancoPendiente=!!m.pendiente;ids.add(m.id);enlazados++;return;}
       const cb=m.banco?corteDeBanco(m.banco):null; // v62: un banco recién añadido no vuelca su historial
       if(cb&&fecha<cb){ids.add(m.id);skipCorte++;return;}
