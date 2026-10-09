@@ -20419,7 +20419,15 @@ function fluxiaRenderPanel9619(tab){
   try{
     switch(tab){
       case 'resumen':
-        [renderKPIs,renderHero,renderDashboard,renderMetas,renderResumenCompartidos,renderChart,pintarResumenFamiliar].forEach(function(fn){try{fn&&fn();}catch(e){}});
+        [renderKPIs,renderHero,renderDashboard].forEach(function(fn){try{fn&&fn();}catch(e){}});
+        // v97.48: widgets secundarios tras el primer frame; no bloquean la respuesta inicial.
+        try{var _ticket=(window.__fxDashboardRenderTicket=(window.__fxDashboardRenderTicket||0)+1);
+          requestAnimationFrame(function(){setTimeout(function(){
+            if(_ticket!==window.__fxDashboardRenderTicket)return;
+            var _p=document.querySelector('.panel.active');if(!_p||_p.id!=='panel-resumen')return;
+            [renderMetas,renderResumenCompartidos,renderChart,pintarResumenFamiliar].forEach(function(fn){try{fn&&fn();}catch(e){}});
+          },0);});
+        }catch(_fastErr){[renderMetas,renderResumenCompartidos,renderChart,pintarResumenFamiliar].forEach(function(fn){try{fn&&fn();}catch(e){}});}
         break;
       case 'ingresos': try{renderIngresos();}catch(e){} break;
       case 'fijos': try{renderFijos();}catch(e){} break;
