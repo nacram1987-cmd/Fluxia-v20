@@ -8168,15 +8168,17 @@ function _silEscribir(tipo, until){
 }
 // Migración única: los «permanentes» de v93.1 pasan a durar sus días
 (function(){ try{ Object.keys(NOTIF_POLITICAS).forEach(function(t){ const k1 = 'fluxia_notif_perm_g_'+t, k2 = CLAVE_NOTIF_PERMANENTE+t; if(localStorage.getItem(k1)==='1' || localStorage.getItem(k2)==='1'){ _silEscribirLocal(t, Date.now()+politicaNotificacion(t).dias*86400000); localStorage.removeItem(k1); localStorage.removeItem(k2); } }); }catch(e){} })();
-function notifSilenciada(tipo){ return (_silLeer()[tipo]||0) > Date.now(); }
+const FX_NOTIF_PERM_KEY='v2_notif_no_mostrar_v9748';
+function fxNotifPermMap(){try{return cargarLS(FX_NOTIF_PERM_KEY,{})||{};}catch(e){return {};}}
+function notifSilenciada(tipo){return fxNotifPermMap()[tipo]===true||(_silLeer()[tipo]||0)>Date.now();}
 function notifPermanente(tipo){ return notifSilenciada(tipo); }   // compat
 function notifOculta24(tipo){ return false; }                       // compat: unificado en _silLeer
 function notifSuprimida(tipo){ return notifSilenciada(tipo); }
-function notifSilencioTexto(tipo){ return 'No mostrar '+politicaNotificacion(tipo).etiqueta; }
+function notifSilencioTexto(tipo){return 'No volver a mostrar';}
 function ocultarNotificacion(tipo, horas){ _silEscribir(tipo, Date.now()+(horas||24)*3600000); try{actualizarBadgesNav();}catch(e){} /* v91.2: NO renderAll */ }
-function ocultarNotificacionDefinitiva(tipo){ _silEscribir(tipo, Date.now()+politicaNotificacion(tipo).dias*86400000); try{actualizarBadgesNav();}catch(e){} /* v91.2: NO renderAll */ }
+function ocultarNotificacionDefinitiva(tipo){try{const m=fxNotifPermMap();m[tipo]=true;guardarLS(FX_NOTIF_PERM_KEY,m);}catch(e){}try{actualizarBadgesNav();}catch(e){}}
 function ocultarTodasNotificaciones(){ try{ datosNotificaciones().forEach(function(n){ ocultarNotificacionDefinitiva(n.tipo); }); }catch(e){} try{actualizarBadgesNav();}catch(e){} try{renderCentroNotificaciones();}catch(e){} }
-function restablecerNotificaciones(){ try{ localStorage.removeItem(NOTIF_SIL_G); }catch(e){} try{ guardarLS('v2_notif_sil', {}); }catch(e){} try{ Object.keys(NOTIF_POLITICAS).forEach(function(t){ localStorage.removeItem(CLAVE_NOTIF_OCULTA24+t); localStorage.removeItem(CLAVE_NOTIF_PERMANENTE+t); localStorage.removeItem('fluxia_notif_perm_g_'+t); }); }catch(e){} try{actualizarBadgesNav();}catch(e){} try{renderCentroNotificaciones();}catch(e){} }
+function restablecerNotificaciones(){try{guardarLS(FX_NOTIF_PERM_KEY,{});}catch(e){} try{ localStorage.removeItem(NOTIF_SIL_G); }catch(e){} try{ guardarLS('v2_notif_sil', {}); }catch(e){} try{ Object.keys(NOTIF_POLITICAS).forEach(function(t){ localStorage.removeItem(CLAVE_NOTIF_OCULTA24+t); localStorage.removeItem(CLAVE_NOTIF_PERMANENTE+t); localStorage.removeItem('fluxia_notif_perm_g_'+t); }); }catch(e){} try{actualizarBadgesNav();}catch(e){} try{renderCentroNotificaciones();}catch(e){} }
 // Un plan recién creado (sin ingresos anotados) no debe disparar avisos de margen o déficit.
 function planConDatosReales(mes){
   try{ return (typeof ingresosTotal==='function' ? ingresosTotal(mes) : 0) > 0.5; }catch(e){ return false; }
@@ -8269,6 +8271,7 @@ function posponerAvisoPago(tipo, horas){
 }
 
 function reponerEstaPospuesto(){
+  if(typeof notifSuprimida==='function'&&notifSuprimida('reponer'))return true;
   try{
     const raw = localStorage.getItem(CLAVE_SNOOZE_REPONER);
     if (!raw) return false;
@@ -13093,7 +13096,9 @@ function goToTab(tabName){
   // respuesta inmediata: primero mostrar panel y colocar scroll arriba sin lecturas de layout.
   try{ window.scrollTo(0,0); }catch(e){}
 
+  const _fxNavSerial=(window.__fxNavSerial=(window.__fxNavSerial||0)+1);
   requestAnimationFrame(function(){
+    if(_fxNavSerial!==window.__fxNavSerial)return;
     try{ fluxiaColocarSelectorMes(tabName); }catch(e){}
     try{ renderMesSelector(); }catch(e){}
     try{ fluxiaRenderPanel9619(tabName); }catch(e){}
@@ -21556,7 +21561,8 @@ function renderDashboard(){
               : ('Tienes ' + nPend + ' retiros temporales sin devolver a tus provisiones.')) +
             ' <span style="text-decoration:underline;">Ver provisiones →</span>' +
           '</div>' +
-          '<button type="button" id="dashAvisoReponerSnooze" style="margin-top:10px;width:100%;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 10px;font-size:0.8rem;font-weight:600;cursor:pointer;">Ocultar aviso 24 h</button>' +
+          '<button type="button" id="dashAvisoReponerSnooze" style="margin-top:10px;width:48%;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px;font-size:0.8rem;font-weight:600;cursor:pointer;">Ocultar 24 h</button>' +
+          '<button type="button" id="dashAvisoReponerNever" style="margin:10px 0 0 2%;width:48%;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px;font-size:0.8rem;font-weight:600;cursor:pointer;">No volver a mostrar</button>' +
         '</div>';
     }
     elAvisos.innerHTML = html;
@@ -21571,6 +21577,8 @@ function renderDashboard(){
     });
   }
 
+    const btnNever=document.getElementById('dashAvisoReponerNever');
+    if(btnNever)btnNever.addEventListener('click',function(e){e.stopPropagation();ocultarNotificacionDefinitiva('reponer');const box=document.getElementById('dashAvisoReponer');if(box)box.remove();});
   // 6. ALERTA DE MARGEN / DÉFICIT (también al inicio, debajo del aviso de reponer)
   const elAlert = document.getElementById('dashAlert');
   if (elAlert) {
@@ -21601,10 +21609,10 @@ function renderDashboard(){
     if (alertaPresupuestos){
       elAlert.innerHTML = alertaPresupuestos;
       elAlert.classList.add('show');
-    } else if (disponible < 0) {
+    } else if (disponible < 0 && !notifSuprimida('deficit')) {
       elAlert.innerHTML = '🚨 <strong>Déficit: ' + formatPesos(Math.abs(disponible)) + '</strong><br>Tus gastos superan tus ingresos este mes. Revisa tus gastos variables.';
       elAlert.classList.add('show');
-    } else if (disponible < 100) {
+    } else if (disponible < 100 && !notifSuprimida('margen')) {
       elAlert.innerHTML = '⚠️ <strong>Margen estrecho: ' + formatPesos(disponible) + '</strong><br>Ten cuidado: poco dinero para gastos no planificados.';
       elAlert.classList.add('show');
     } else {
@@ -21615,11 +21623,9 @@ function renderDashboard(){
 
     }
   // 7. Consejero local + informe semana + ¿puedo?
-  try{ pintarConsejero('dashConsejeroLista'); }catch(e){ console.error('consejero', e); }
-  try{ pintarInformeSemana(); }catch(e){ console.error('informe', e); }
-  try{ initPuedoGastar(); }catch(e){}
-  try{ initYsiSimulador(); }catch(e){}
-  try{ initGastoRapido(); }catch(e){}
+  const _dashWorkSerial=(window.__fxDashWorkSerial=(window.__fxDashWorkSerial||0)+1);
+  const _dashSecondary=function(){if(_dashWorkSerial!==window.__fxDashWorkSerial)return;const p=document.getElementById('panel-resumen');if(p&&!p.classList.contains('active'))return;try{pintarConsejero('dashConsejeroLista');}catch(e){}try{pintarInformeSemana();}catch(e){}try{initPuedoGastar();}catch(e){}try{initYsiSimulador();}catch(e){}try{initGastoRapido();}catch(e){}};
+  if(typeof requestIdleCallback==='function')requestIdleCallback(_dashSecondary,{timeout:400});else setTimeout(_dashSecondary,24);
   try{ actualizarBadgeReponer(); }catch(e){}
   try{ if (window.FluxiaPro) FluxiaPro.pintarDashPres(); }catch(e){}
 }
