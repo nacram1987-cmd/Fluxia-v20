@@ -8168,19 +8168,15 @@ function _silEscribir(tipo, until){
 }
 // Migración única: los «permanentes» de v93.1 pasan a durar sus días
 (function(){ try{ Object.keys(NOTIF_POLITICAS).forEach(function(t){ const k1 = 'fluxia_notif_perm_g_'+t, k2 = CLAVE_NOTIF_PERMANENTE+t; if(localStorage.getItem(k1)==='1' || localStorage.getItem(k2)==='1'){ _silEscribirLocal(t, Date.now()+politicaNotificacion(t).dias*86400000); localStorage.removeItem(k1); localStorage.removeItem(k2); } }); }catch(e){} })();
-const FX_NOTIF_NEVER_KEY='fluxia_notif_never_v9748';
-function fxNotifNeverRead(){try{return cargarLS(FX_NOTIF_NEVER_KEY,{})||{};}catch(e){return {};}}
-function fxNotifNever(tipo){return fxNotifNeverRead()[tipo]===true;}
-function fxNotifNeverSet(tipo){try{const v=fxNotifNeverRead();v[tipo]=true;guardarLS(FX_NOTIF_NEVER_KEY,v);}catch(e){}try{actualizarBadgesNav();}catch(e){}}
 function notifSilenciada(tipo){ return (_silLeer()[tipo]||0) > Date.now(); }
 function notifPermanente(tipo){ return notifSilenciada(tipo); }   // compat
 function notifOculta24(tipo){ return false; }                       // compat: unificado en _silLeer
-function notifSuprimida(tipo){ return fxNotifNever(tipo)||notifSilenciada(tipo); }
+function notifSuprimida(tipo){ return notifSilenciada(tipo); }
 function notifSilencioTexto(tipo){ return 'No volver a mostrar'; }
 function ocultarNotificacion(tipo, horas){ _silEscribir(tipo, Date.now()+(horas||24)*3600000); try{actualizarBadgesNav();}catch(e){} /* v91.2: NO renderAll */ }
-function ocultarNotificacionDefinitiva(tipo){ fxNotifNeverSet(tipo); }
+function ocultarNotificacionDefinitiva(tipo){ _silEscribir(tipo, 8640000000000000); try{actualizarBadgesNav();}catch(e){} /* v91.2: NO renderAll */ }
 function ocultarTodasNotificaciones(){ try{ datosNotificaciones().forEach(function(n){ ocultarNotificacionDefinitiva(n.tipo); }); }catch(e){} try{actualizarBadgesNav();}catch(e){} try{renderCentroNotificaciones();}catch(e){} }
-function restablecerNotificaciones(){ try{ guardarLS(FX_NOTIF_NEVER_KEY,{}); }catch(e){} try{ localStorage.removeItem(NOTIF_SIL_G); }catch(e){} try{ guardarLS('v2_notif_sil', {}); }catch(e){} try{ Object.keys(NOTIF_POLITICAS).forEach(function(t){ localStorage.removeItem(CLAVE_NOTIF_OCULTA24+t); localStorage.removeItem(CLAVE_NOTIF_PERMANENTE+t); localStorage.removeItem('fluxia_notif_perm_g_'+t); }); }catch(e){} try{actualizarBadgesNav();}catch(e){} try{renderCentroNotificaciones();}catch(e){} }
+function restablecerNotificaciones(){ try{ localStorage.removeItem(NOTIF_SIL_G); }catch(e){} try{ guardarLS('v2_notif_sil', {}); }catch(e){} try{ Object.keys(NOTIF_POLITICAS).forEach(function(t){ localStorage.removeItem(CLAVE_NOTIF_OCULTA24+t); localStorage.removeItem(CLAVE_NOTIF_PERMANENTE+t); localStorage.removeItem('fluxia_notif_perm_g_'+t); }); }catch(e){} try{actualizarBadgesNav();}catch(e){} try{renderCentroNotificaciones();}catch(e){} }
 // Un plan recién creado (sin ingresos anotados) no debe disparar avisos de margen o déficit.
 function planConDatosReales(mes){
   try{ return (typeof ingresosTotal==='function' ? ingresosTotal(mes) : 0) > 0.5; }catch(e){ return false; }
@@ -8304,7 +8300,7 @@ function avisarPendientesAlAbrir(){
     if (typeof totalPendienteReponer !== 'function') return;
     const pend = totalPendienteReponer();
     if (!(pend > 0.005)) return;
-    if (notifSuprimida('reponer') || reponerEstaPospuesto()) return;
+    if (reponerEstaPospuesto()) return;
     const hoy = new Date().toISOString().slice(0, 10);
     const clave = perfilKey('fluxia_aviso_reponer_dia');
     if (localStorage.getItem(clave) === hoy) return;
@@ -20441,6 +20437,8 @@ function fluxiaRenderPanel9619(tab){
     }
   }catch(e){console.warn('[v96.19 render panel]',e);}
 }
+/* v97.48: respuesta táctil inmediata, sin alterar los movimientos. */
+(function(){try{var st=document.createElement('style');st.id='fluxia-v9748-responsive-taps';st.textContent='button,[role="button"],.drawer-item,.internal-tab-btn{touch-action:manipulation;-webkit-tap-highlight-color:transparent}button:active,.drawer-item:active{filter:brightness(.96)}';document.head.appendChild(st);}catch(_e){}})();
 function renderAll(){
   const btnCSV = document.getElementById('btnImportarCSV');
   if (btnCSV && !btnCSV._listener) {
