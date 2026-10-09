@@ -549,3 +549,9 @@ GitHub será el canal oficial para gestionar, actualizar y publicar Fluxia direc
 - Conciliar Revolut por lotes con paginación, ventanas temporales solapadas, reintentos y cursor persistente por usuario/cuenta. Confirmar recepción antes de avanzar cursor; registrar rechazos con causa visible y posibilidad de reintento.
 - Si un cargo no llega desde el proveedor, indicar explícitamente «pendiente de recepción bancaria»; no inventar operaciones ni modificar saldos.
 - Prueba de aceptación obligatoria: Abarrotao aparece exactamente una vez con importe y fecha bancarios reales, persiste tras reinicio, actualización PWA y sincronización repetida, sin duplicados ni cambios injustificados en Disponible.
+
+## REGLA v97.48 · AVISOS Y LATENCIA DE INTERFAZ · 09/10/2026
+- Todos los avisos informativos repetitivos deben ofrecer «Ocultar 24 h» y «No volver a mostrar». Esta última opción no puede caducar silenciosamente; se conserva por perfil de usuario y permite restablecimiento explícito. Ocultar avisos nunca cancela obligaciones, movimientos, deudas ni incidencias financieras.
+- Los avisos financieros críticos de conciliación deben seguir siendo consultables en su bandeja o historial aun cuando se silencie la presentación visual.
+- Priorización de render: navegación y contenido principal en primer frame; cálculos informativos no críticos después y cancelables si el usuario abandona la pestaña. Evitar repintados obsoletos en navegación rápida y conservar la contabilidad sin cambios.
+- Todo cambio de rendimiento se valida en Safari móvil y PWA: cero pantallas blancas, datos ausentes, accesos bloqueados, duplicados o pérdidas de persistencia. La versión ESTABLE se conserva hasta aprobación explícita de LAB.
