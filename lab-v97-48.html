@@ -8168,15 +8168,22 @@ function _silEscribir(tipo, until){
 }
 // Migración única: los «permanentes» de v93.1 pasan a durar sus días
 (function(){ try{ Object.keys(NOTIF_POLITICAS).forEach(function(t){ const k1 = 'fluxia_notif_perm_g_'+t, k2 = CLAVE_NOTIF_PERMANENTE+t; if(localStorage.getItem(k1)==='1' || localStorage.getItem(k2)==='1'){ _silEscribirLocal(t, Date.now()+politicaNotificacion(t).dias*86400000); localStorage.removeItem(k1); localStorage.removeItem(k2); } }); }catch(e){} })();
-function notifSilenciada(tipo){ return (_silLeer()[tipo]||0) > Date.now(); }
+function notifSilenciada(tipo){
+  try{const p=cargarLS('v2_notif_perm',{})||{};if(p[tipo]===true)return true;}catch(e){}
+  return (_silLeer()[tipo]||0)>Date.now();
+}
 function notifPermanente(tipo){ return notifSilenciada(tipo); }   // compat
 function notifOculta24(tipo){ return false; }                       // compat: unificado en _silLeer
 function notifSuprimida(tipo){ return notifSilenciada(tipo); }
-function notifSilencioTexto(tipo){ return 'No mostrar '+politicaNotificacion(tipo).etiqueta; }
+function notifSilencioTexto(tipo){ return 'No volver a mostrar'; }
 function ocultarNotificacion(tipo, horas){ _silEscribir(tipo, Date.now()+(horas||24)*3600000); try{actualizarBadgesNav();}catch(e){} /* v91.2: NO renderAll */ }
-function ocultarNotificacionDefinitiva(tipo){ _silEscribir(tipo, Date.now()+politicaNotificacion(tipo).dias*86400000); try{actualizarBadgesNav();}catch(e){} /* v91.2: NO renderAll */ }
+function ocultarNotificacionDefinitiva(tipo){
+  if(!Object.prototype.hasOwnProperty.call(NOTIF_POLITICAS,tipo))return;
+  try{const p=cargarLS('v2_notif_perm',{})||{};p[tipo]=true;guardarLS('v2_notif_perm',p);}catch(e){console.warn('Aviso no silenciado',e);return;}
+  try{actualizarBadgesNav();}catch(e){}
+}
 function ocultarTodasNotificaciones(){ try{ datosNotificaciones().forEach(function(n){ ocultarNotificacionDefinitiva(n.tipo); }); }catch(e){} try{actualizarBadgesNav();}catch(e){} try{renderCentroNotificaciones();}catch(e){} }
-function restablecerNotificaciones(){ try{ localStorage.removeItem(NOTIF_SIL_G); }catch(e){} try{ guardarLS('v2_notif_sil', {}); }catch(e){} try{ Object.keys(NOTIF_POLITICAS).forEach(function(t){ localStorage.removeItem(CLAVE_NOTIF_OCULTA24+t); localStorage.removeItem(CLAVE_NOTIF_PERMANENTE+t); localStorage.removeItem('fluxia_notif_perm_g_'+t); }); }catch(e){} try{actualizarBadgesNav();}catch(e){} try{renderCentroNotificaciones();}catch(e){} }
+function restablecerNotificaciones(){ try{ guardarLS('v2_notif_perm', {}); }catch(e){} try{ localStorage.removeItem(NOTIF_SIL_G); }catch(e){} try{ guardarLS('v2_notif_sil', {}); }catch(e){} try{ Object.keys(NOTIF_POLITICAS).forEach(function(t){ localStorage.removeItem(CLAVE_NOTIF_OCULTA24+t); localStorage.removeItem(CLAVE_NOTIF_PERMANENTE+t); localStorage.removeItem('fluxia_notif_perm_g_'+t); }); }catch(e){} try{actualizarBadgesNav();}catch(e){} try{renderCentroNotificaciones();}catch(e){} }
 // Un plan recién creado (sin ingresos anotados) no debe disparar avisos de margen o déficit.
 function planConDatosReales(mes){
   try{ return (typeof ingresosTotal==='function' ? ingresosTotal(mes) : 0) > 0.5; }catch(e){ return false; }
@@ -20479,6 +20486,7 @@ function renderAll(){
   }catch(e){}
   const fxPerfStart = (window.FLUXIA_LAB_PERF && typeof performance!=='undefined') ? performance.now() : 0;
   fluxiaRenderPanel9619(activo);
+  try{if(window.FluxiaInicioDiag&&!window.FluxiaInicioDiag.primerRender)window.FluxiaInicioDiag.primerRender=performance.now();}catch(e){}
   if(fxPerfStart){try{window.FLUXIA_LAB_PERF.record(activo,performance.now()-fxPerfStart)}catch(e){}}
 
   try{ fluxiaPintarPrimerUsoInicio(); }catch(e){}
@@ -22847,14 +22855,18 @@ window.FluxiaEspejo = (function(){
   return { restaurar: restaurar, restaurarDecisionesBanco: restaurarDecisionesBanco, volcar: volcar, fusionar: fusionar, esNuestra: esNuestra, PRE: PRE, decisionANube: decisionANube };
 })();
 
+window.FluxiaInicioDiag={inicio:performance.now(),nubeLista:null,primerRender:null,primerToque:null,
+ resumen:function(){const d=x=>x==null?null:Math.round(x-this.inicio);return {cloudMs:d(this.nubeLista),renderMs:d(this.primerRender),firstTapMs:d(this.primerToque),nota:'Medición desde inicialización del motor (no incluye descarga ni parseo HTML)'};}};
+document.addEventListener('pointerdown',function(){if(window.FluxiaInicioDiag&&!window.FluxiaInicioDiag.primerToque)window.FluxiaInicioDiag.primerToque=performance.now();},{capture:true,passive:true,once:true});
 Almacen.iniciar();
 Almacen.cuandoListo(3500).then(async ()=>{
+  try{window.FluxiaInicioDiag.nubeLista=performance.now();}catch(e){}
   /* v94.88 · Nube automática: si hay sesión de Supabase + perfil, vincular y reconectar sin que el cliente haga nada */
   try{
-    if (typeof FluxiaNube !== 'undefined') {
-      /* Cloud binding is established only by explicit account authentication. */
+    if (typeof FluxiaNube !== 'undefined' && Almacen.estado === 'local' && Almacen.reconectar) {
+      /* Verificar sesión solo si el almacén está local; no repetir consulta cuando ya está sincronizado. */
       var u = await FluxiaNube.usuario();
-      if (u && typeof Almacen !== 'undefined' && Almacen.estado === 'local' && Almacen.reconectar) {
+      if (u) {
         console.log('[Fluxia v94.88] Sesión nube detectada → reconectar automático');
         await Almacen.reconectar();
       }
@@ -22878,18 +22890,18 @@ Almacen.cuandoListo(3500).then(async ()=>{
   arrancarApp();
   Almacen.marcarArrancada(recargarDesdeServidor);
   /* v95.22: recuperadores legacy de huchas desactivados; la migración quirúrgica única corre tras la reconciliación. */
-  // Vista simple/completa + estado de backup
+  // v97.48: repartir tareas auxiliares para liberar el primer frame.
   try{ initVistaModo(); }catch(e){ console.error(e); }
-  /* No automatic cash repair. */
-  try{ pintarEstadoBackup(); }catch(e){ console.error(e); }
-  try{ pintarHorizontePlan(); }catch(e){ console.error(e); }
-  try{ initPwaYBeta(); }catch(e){ console.error(e); }
-  try{ avisarPendientesAlAbrir(); }catch(e){}
-  try{ actualizarBadgeReponer(); }catch(e){}
-
-  // Las copias de seguridad se notifican dentro del centro de notificaciones,
-  // nunca como banner al entrar. En cuentas nuevas sin datos no aparece ningún aviso.
-  try{ actualizarBadgesNav(); }catch(e){}
+  setTimeout(function(){
+    try{ initPwaYBeta(); }catch(e){}
+    try{ actualizarBadgesNav(); }catch(e){}
+  },180);
+  setTimeout(function(){
+    try{ pintarEstadoBackup(); }catch(e){}
+    try{ pintarHorizontePlan(); }catch(e){}
+    try{ avisarPendientesAlAbrir(); }catch(e){}
+    try{ actualizarBadgeReponer(); }catch(e){}
+  },620);
 
 });
 
