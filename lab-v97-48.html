@@ -21551,7 +21551,7 @@ function renderDashboard(){
     const pendRep = (typeof totalPendienteReponer === 'function') ? totalPendienteReponer() : 0;
     const nPend = contarPendientesReponer();
     let html = '';
-    if (pendRep > 0.005 && !(typeof reponerEstaPospuesto === 'function' && reponerEstaPospuesto())) {
+    if (pendRep > 0.005 && !notifSuprimida('reponer') && !(typeof reponerEstaPospuesto === 'function' && reponerEstaPospuesto())) {
       html +=
         '<div class="dashboard-alert show" style="margin-bottom:10px;" id="dashAvisoReponer">' +
           '<div style="cursor:pointer;" id="dashAvisoReponerGo">' +
