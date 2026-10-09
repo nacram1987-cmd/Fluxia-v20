@@ -26,3 +26,8 @@ LAB: https://nacram1987-cmd.github.io/Fluxia-v20/lab/
 ESTABLE: https://nacram1987-cmd.github.io/Fluxia-v20/
 
 **QA web/PWA en iPhone pendiente.** No afirmar mejora temporal hasta medir arranque real.
+
+## Enlace directo anticuota de caché
+- Safari v97.53 (archivo versionado fuera de las rutas interceptadas por el SW anterior): https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.53.html
+- LAB habitual / PWA: https://nacram1987-cmd.github.io/Fluxia-v20/lab/
+- La caché LAB se versiona con cada publicación y no afecta a ESTABLE.

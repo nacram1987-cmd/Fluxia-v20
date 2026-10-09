@@ -890,3 +890,7 @@ Los bocetos visuales se entregaran siempre por separado, nunca agrupados en una 
 - Cada entrega contiene ZIP completo, master, README, enlace LAB y referencia estable.
 
 **Estado verificación:** estructura estática auditada y pendiente de Safari/PWA real. Nunca asumir que el bug está resuelto sin comprobar render en iPhone.
+
+
+### Nota operativa PWA v97.53
+Cada entrega LAB que cambie el HTML debe cambiar el nombre de la caché de su `lab/fluxia-sw.js` y el manifest. En incidencias de persistencia de PWA, mantener archivo de diagnóstico `lab/vNN.NN.html` (blob compartido de la versión) para acceso directo en Safari sin interceptar las rutas del service worker anterior. La entrada pública habitual sigue siendo `lab/index.html`, sin renombrarla. Nunca cambiar ni controlar el service worker ESTABLE de raíz.
