@@ -1,0 +1,38 @@
+limpiarDuplicadosBancoRef:()=>{
+    // v97 LAB: modo seguro no destructivo. La referencia bancaria por sí sola
+    // NO demuestra equivalencia contable; ningún registro se borra ni se guarda.
+    try{
+      if(!Array.isArray(movimientos))return {ok:false,quitados:0};
+      const grupos=new Map();
+      movimientos.forEach(function(m){
+        if(!m||!m.bancoRef)return;
+        const ref=String(m.bancoRef).trim();
+        if(!ref)return;
+        if(!grupos.has(ref))grupos.set(ref,[]);
+        grupos.get(ref).push(m);
+      });
+      const conflictos=[];
+      let candidatos=0;
+      grupos.forEach(function(lista,ref){
+        if(lista.length<2)return;
+        const huellas=new Set(lista.map(function(m){
+          return JSON.stringify({
+            importe:Number(m.importe),
+            fecha:String(m.fecha||''),
+            tipo:String(m.tipo||m.naturaleza||''),
+            origen:String(m.origen||''),
+            cuenta:String(m.cuentaId||m.cuenta||m.banco||''),
+            usuario:String(m.user_id||m.usuarioId||''),
+            estado:String(m.estado||''),
+            division:JSON.stringify(m.division||null)
+          });
+        }));
+        if(huellas.size===1)candidatos+=lista.length-1;
+        else conflictos.push({bancoRef:ref,cantidad:lista.length,motivo:'datos_contables_distintos'});
+      });
+      const informe={ok:true,quitados:0,candidatos:candidatos,conflictos:conflictos,
+        modo:'solo_diagnostico',cuando:new Date().toISOString()};
+      try{window.FluxiaUltimaAuditoriaBancoRef=informe;}catch(_){}
+      return informe;
+    }catch(e){return {ok:false,quitados:0,error:String(e)};}
+  },
