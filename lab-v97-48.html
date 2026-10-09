@@ -13055,7 +13055,6 @@ function fluxiaColocarSelectorMes(tabName){
   }catch(e){}
 }
 function goToTab(tabName){
-  window.__fxHomeRenderGeneration=(window.__fxHomeRenderGeneration||0)+1;
   if(tabName==='financiaciones') tabName='fijos';
   var anterior=null, destino=null;
   try{ anterior=document.querySelector('.panel.active'); destino=document.getElementById('panel-'+tabName); }catch(e){}
@@ -20421,20 +20420,18 @@ function fluxiaRenderPanel9619(tab){
     switch(tab){
       case 'resumen':
         [renderKPIs,renderHero,renderDashboard].forEach(function(fn){try{fn&&fn();}catch(e){}});
-        // v97.48: módulos secundarios se reparten en turnos de evento, cancelables al navegar.
+        // v97.48: gráficos y secciones secundarias fuera del primer frame interactivo.
         try{
-          var _secondary=[renderMetas,renderResumenCompartidos,renderChart,pintarResumenFamiliar];
-          var _generation=(window.__fxHomeRenderGeneration=(window.__fxHomeRenderGeneration||0)+1),_step=0;
-          function _next(){
-            if(_generation!==window.__fxHomeRenderGeneration)return;
-            var _panel=document.getElementById('panel-resumen');
-            if(_panel&&!_panel.classList.contains('active'))return;
-            try{var fn=_secondary[_step++];if(typeof fn==='function')fn();}catch(_e){}
-            if(_step<_secondary.length)setTimeout(_next,0);
-          }
-          setTimeout(_next,0);
-        }catch(_e){}
-
+          var _seq=(window.__fxHomeRenderSeq=(window.__fxHomeRenderSeq||0)+1);
+          var _rest=function(){
+            if(_seq!==window.__fxHomeRenderSeq)return;
+            var _p=document.getElementById('panel-resumen');
+            if(!_p||!_p.classList.contains('active'))return;
+            [renderMetas,renderResumenCompartidos,renderChart,pintarResumenFamiliar].forEach(function(fn){try{fn&&fn();}catch(e){}});
+          };
+          if(typeof requestIdleCallback==='function')requestIdleCallback(_rest,{timeout:1800});
+          else setTimeout(_rest,180);
+        }catch(e){}
         break;
       case 'ingresos': try{renderIngresos();}catch(e){} break;
       case 'fijos': try{renderFijos();}catch(e){} break;
