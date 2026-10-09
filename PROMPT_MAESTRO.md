@@ -894,3 +894,16 @@ Los bocetos visuales se entregaran siempre por separado, nunca agrupados en una 
 
 ### Nota operativa PWA v97.53
 Cada entrega LAB que cambie el HTML debe cambiar el nombre de la caché de su `lab/fluxia-sw.js` y el manifest. En incidencias de persistencia de PWA, mantener archivo de diagnóstico `lab/vNN.NN.html` (blob compartido de la versión) para acceso directo en Safari sin interceptar las rutas del service worker anterior. La entrada pública habitual sigue siendo `lab/index.html`, sin renombrarla. Nunca cambiar ni controlar el service worker ESTABLE de raíz.
+
+
+## Adenda v97.54-LAB — prioridad de arranque y conciliación segura
+
+- Se elimina el segundo `await FluxiaNube.usuario(); await Almacen.reconectar()` en la ruta de primer render. Nunca debe realizarse una segunda reconexión **antes de mostrar el dashboard**.
+- El outbox durable **sí** debe cargarse antes del render; si falla, jamás se borra ni ignora silenciosamente.
+- El primer render puede usar exclusivamente la caché **del perfil activo**; las lecturas remotas autoritativas de `Almacen.iniciar()` siguen vivas y aplican reconciliación y recarga cuando llegan, respetando RLS y tombstones. La caché no sustituye permanentemente a la nube.
+- `Almacen.reconectar()` permanece disponible y se invoca en segundo plano **solo** tras haber confirmado estado local y sesión real; jamás duplica trabajos de red si la nube ya está conectada.
+- El primer fotograma calcula ingresos, fijos, huchas, variables, disponible y cuadros; módulos visuales secundarios se envían a idle sin modificar datos.
+- La cabecera v97.53 se conserva intacta. No introducir CSS ni pantallas de espera que simulen velocidad.
+- Mantener bloqueo de credenciales para usuario nuevo, separación absoluta entre perfiles, papelera, rechazos permanentes, outbox persistente y recuperación desde la nube; no modificar motor financiero ni deduplicación.
+- Regresión estática y temporización medible con `FluxiaTiempos9754.report()`; sin ensayos reales en iPhone no afirmar mejoras temporales cuantificadas ni promover a ESTABLE.
+- Publicar **ambos** `lab/index.html` y `lab/v97.54.html`, SW LAB con caché nueva y artefacto ZIP; la raíz ESTABLE no se modifica.
