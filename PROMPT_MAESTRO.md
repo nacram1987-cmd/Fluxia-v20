@@ -845,3 +845,20 @@ Los bocetos visuales se entregaran siempre por separado, nunca agrupados en una 
 6. Comprobar siempre la rama efectiva de GitHub Pages. En la captura del usuario del 09/10/2026 es `pages-v9731-real-final`; `main` y dicha rama están divergidas, por lo que se prohíbe reemplazarlas o fusionarlas indiscriminadamente. Verificar configuración real en cada publicación.
 7. LAB y ESTABLE deben tener rutas y cachés inequívocas; confirmar `index.html`, service workers, manifest, SHA, workflow Pages `success`, carga en Safari y PWA, y número de versión coherente antes de afirmar despliegue.
 8. No cambiar datos reales, borrar cargos ni promover a estable mientras falten evidencias de reconciliación y persistencia. Entregar ZIP completo y enlaces LAB/ESTABLE solo tras comprobación real.
+
+---
+
+## ADENDA IMPERIAL v97.43-LAB — ARRANQUE INMEDIATO Y PRIORIDAD DE INTERACCIÓN (09/10/2026)
+
+**Ámbito:** LAB independiente en `lab/index.html`. La entrada de referencia de raíz `index.html` queda INTACTA hasta aceptación y QA manual.
+
+1. **Integridad financiera primero.** Ningún cambio de rendimiento puede alterar movimientos, ingresos, fijos, variables, huchas, cuentas compartidas, provisiones, deuda, rescates, tombstones, perfil activo, namespace, RLS o disponible. No reescribir snapshots, borrar ni resucitar cargos durante el arranque.
+2. **Primer fotograma útil e interacción.** La interfaz, menú, selector de mes y navegación NO esperarán a Chart.js, análisis, animaciones ni refresco bancario secundario. La pantalla de carga no debe simular velocidad: medir también primer toque funcional.
+3. **Gráficos de carga diferida.** Chart.js solo se solicita al entrar en Análisis o Presupuestos y se repinta la vista activa cuando termina la petición. Fallo del CDN de gráficos no bloqueará DOMContentLoaded, la nube, login, bancos ni navegación.
+4. **Bancos sin competencia con los primeros gestos.** Refresco automático del banco solo después de splash, al menos 4,5 s de espera y 1,4 s sin interacción, preferentemente en idle. La consulta explícita «Sincronizar» nunca se ralentiza. Deduplicación, conciliación, veto permanente y reglas del Disponible siguen exactamente iguales.
+5. **Separación ESTABLE/LAB.** La PWA de LAB usa scope `./` y su propia caché, sin controlar `/` ni sobrescribir el service worker de referencia; el usuario existente conserva su ruta. No borrar respaldos de ESTABLE.
+6. **Métricas sin datos personales.** En LAB `window.FluxiaArranque9743.report()` expone tiempos de inicio, DOM, primera pintura estable y tareas largas; no importes, movimientos ni credenciales.
+7. **Regresión obligatoria antes de promover:** arranque frío y caliente en Safari iOS y PWA, disponibilidad de ingresos/fijos/variables/huchas, conciliación bancaria sin duplicados, cambio de usuario aislado, offline/reconexión y navegación rápida. Sin medición en dispositivo no afirmar una cifra de segundos ni proclamar versión «estable».
+8. **Entrega:** ZIP completo de LAB, checklist, PROMPT MAESTRO y enlaces LAB/ESTABLE. La rama/página publicada debe verificarse contra el código real, evitando mostrar una versión anterior.
+
+**Estado:** v97.43-LAB propuesta de ensayo; no ha recibido todavía verificación de Safari/PWA real.

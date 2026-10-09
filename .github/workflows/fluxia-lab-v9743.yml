@@ -1,0 +1,52 @@
+name: Fluxia v97.43 LAB - QA and ZIP
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'lab/index.html'
+      - 'lab/fluxia-sw.js'
+      - 'lab/manifest.webmanifest'
+      - 'README_v97.43_LAB.md'
+      - '.github/workflows/fluxia-lab-v9743.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Static financial-integrity and fast-start checks
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          lab=Path('lab/index.html').read_text()
+          main=Path('index.html').read_text()
+          sw=Path('lab/fluxia-sw.js').read_text()
+          assert 'v97.43-LAB' in lab
+          assert 'v97.42-LAB' in main
+          assert 'fluxia-v9743-lazy-charts' in lab
+          assert '<script defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js">' not in lab
+          assert 'setTimeout(check,4500)' in lab
+          assert 'fluxia-lab-shell-v97.43' in sw
+          for marker in ['function cargarTodo()', 'function arrancarApp()', 'window.FluxiaDisponibleEngine','_reconciliar(remoto, remotoMeta)','window.FluxiaCashWithdrawal9712']:
+            assert marker in lab and marker in main, marker
+          assert lab.count('</script>') >= main.count('</script>')
+          assert Path('lab/manifest.webmanifest').exists()
+          assert Path('PROMPT_MAESTRO.md').exists()
+          print('PASS - static checks: LAB scope, non-blocking charts, intact finance markers')
+          PY
+      - name: Build full LAB ZIP
+        shell: bash
+        run: |
+          zip -q -r Fluxia_v97.43_LAB.zip lab/index.html lab/fluxia-sw.js lab/manifest.webmanifest lab/apple-touch-icon.png lab/fluxia-icon-180.png lab/fluxia-icon-192.png lab/fluxia-icon-512.png lab/fluxia-icon.svg lab/assets/brands PROMPT_MAESTRO.md README_v97.43_LAB.md
+          unzip -t Fluxia_v97.43_LAB.zip | tail -n 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Fluxia_v97.43_LAB
+          path: Fluxia_v97.43_LAB.zip
+          retention-days: 30
