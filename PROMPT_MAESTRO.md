@@ -831,3 +831,17 @@ Los bocetos visuales se entregaran siempre por separado, nunca agrupados en una 
 **Prioridad 2 — primera entrada en Gastos Variables:** medir el tiempo de primera apertura, localizar trabajo síncrono, renderizados y conciliaciones redundantes y corregirlos de forma focalizada. No romper la navegación, el menú, los importes ni el rendimiento ya confirmado por el usuario.
 
 **Protocolo de cambios:** copia recuperable del estado actual, mediciones y pruebas antes/después, LAB independiente, QA de datos reales con cautela y publicación en la rama efectiva de GitHub Pages. No modificar Disponible ni Imprimir, ya validados. No dar por resuelta la conexión bancaria solo porque se haya mostrado su último estado guardado.
+
+
+---
+
+## LEY IMPERIAL 2026-10-09 · AUDITORÍA BANCARIA Y PUBLICACIÓN SEGURA
+
+1. Nunca fusionar movimientos exclusivamente por `bancoRef`. Exigir identidad de usuario, cuenta, tipo, fecha, importe y equivalencia contable demostrable; los casos ambiguos quedan como conflictos sin mutación.
+2. `FluxiaSalud.limpiarDuplicadosBancoRef` y cualquier rutina de limpieza automática deben ser idempotentes y no alterar el Disponible en una segunda sincronización sin novedades. No ejecutar borrados o fusiones durante el renderizado.
+3. Antes de cada mutación, capturar snapshot reversible, huella de movimientos y Disponible. Si el Disponible cambia por una mera deduplicación, abortar y registrar diagnóstico, sin escrituras parciales.
+4. Las transferencias internas CaixaBank ↔ Revolut son neutras en ingresos/gastos externos; conciliar ambos extremos sin duplicarlos. Preservar los pagos fijos ya conciliados y las operaciones de Dinero en mano.
+5. Ejecutar los 12 casos de `auditorias/PRUEBAS_ACEPTACION_BANCOS_2026-10-09.md` en entorno aislado antes de publicar. Un documento de pruebas no equivale a pruebas superadas.
+6. Comprobar siempre la rama efectiva de GitHub Pages. En la captura del usuario del 09/10/2026 es `pages-v9731-real-final`; `main` y dicha rama están divergidas, por lo que se prohíbe reemplazarlas o fusionarlas indiscriminadamente. Verificar configuración real en cada publicación.
+7. LAB y ESTABLE deben tener rutas y cachés inequívocas; confirmar `index.html`, service workers, manifest, SHA, workflow Pages `success`, carga en Safari y PWA, y número de versión coherente antes de afirmar despliegue.
+8. No cambiar datos reales, borrar cargos ni promover a estable mientras falten evidencias de reconciliación y persistencia. Entregar ZIP completo y enlaces LAB/ESTABLE solo tras comprobación real.
