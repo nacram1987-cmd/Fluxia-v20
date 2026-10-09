@@ -1,7 +1,7 @@
 {
   "name": "Fluxia BETA",
   "short_name": "Fluxia BETA",
-  "description": "Fluxia LAB v97.43",
+  "description": "Fluxia LAB v97.52",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
