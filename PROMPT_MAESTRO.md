@@ -916,3 +916,11 @@ Cada entrega LAB que cambie el HTML debe cambiar el nombre de la caché de su `l
 - Una actualización financiera solicita un solo fotograma para la vista activa. La persistencia permanece inmediata; no se altera cálculo, tombstones, huchas ni efectivo.
 - Consulta automática al abrir y al recuperar conexión/primer plano, con mínimo 90 segundos desde consulta exitosa y cadencia de 12 minutos durante uso continuado. Pausar en segundo plano/offline y aplicar backoff 2–15 minutos por fallo. No prometer recepción instantánea ni push con app cerrada: depende del banco y no hay bandeja de webhook en este servidor.
 - Entrega LAB v97.55 y referencia ESTABLE v97.46, ZIP completo de ambas. No promover sin pruebas reales de Safari/PWA, dos cuentas y cargos reales.
+
+## Adenda v97.56-LAB — render sin cascadas y carga prioritaria
+- El dashboard canónico sustituye el render de KPI y héroe legacy ocultos; no regenerar análisis ni metas ocultos desde renderKPIs.
+- Los módulos secundarios de resumen se ejecutan uno por turno idle, solo si resumen sigue activo y no hay diálogo abierto. Invalidar trabajo antiguo al solicitar otro refresco.
+- Quitar el plazo fijo de 1,1 segundos para pintar, no la espera del outbox durable; mantener reconciliación autoritativa y aislamiento por perfil.
+- No consultar automáticamente el banco durante interacción reciente. Conservar endpoint y reglas LAB v97.55, cálculos, persistencia y deduplicación.
+- Minificar solo comentarios y espacios de JS, sin compresión ni mangle. Mantener orden y separación de los scripts y CSS.
+- Los tiempos JSDOM son evidencia sintética, no certificación iPhone. Conservar ESTABLE v97.46 hasta QA real Safari/PWA.

@@ -1,0 +1,9 @@
+QA v97.56 LAB — 2026-10-09
+PASS: 167 scripts parseados.
+PASS: 13 funciones financieras/almacenamiento equivalentes por AST antes/después.
+PASS: 4 funciones bancarias originales equivalentes por AST en fuente legible.
+PASS: salida minificada sin compresión/mangle; misma cantidad y orden de scripts.
+PASS: ensayo sintético de render con 1.500 movimientos ficticios, sin acceso a datos reales.
+PASS: ningún cambio a la versión ESTABLE ni al servidor bancario de v97.55.
+LIMITACIÓN: no equivale a ensayo completo en Safari/PWA, perfiles autenticados o cargos bancarios reales.
+No certificar velocidad absoluta, carga instantánea ni recepción inmediata del banco.
