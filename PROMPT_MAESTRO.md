@@ -862,3 +862,12 @@ Los bocetos visuales se entregaran siempre por separado, nunca agrupados en una 
 8. **Entrega:** ZIP completo de LAB, checklist, PROMPT MAESTRO y enlaces LAB/ESTABLE. La rama/página publicada debe verificarse contra el código real, evitando mostrar una versión anterior.
 
 **Estado:** v97.43-LAB propuesta de ensayo; no ha recibido todavía verificación de Safari/PWA real.
+
+## REGLA IMPERIAL v97.52-LAB · ARRANQUE MEDIDO Y RAMA REAL DE PAGES (09/10/2026)
+- Base de la LAB v97.52: `index-v97.51.html` de la rama `pages-v9731-real-final`, que es la rama real de publicación de GitHub Pages. NO usar `main/index.html` (v97.42 obsoleta) para desarrollar sobre datos financieros ni sustituir el `index.html` ESTABLE de Pages (v97.46).
+- Prioridad de arranque: las interacciones, login, navegación, datos del perfil autenticado y fuentes autoritativas no deben esperar a Chart.js. Cargar los gráficos bajo demanda exclusivamente al entrar en Análisis o Presupuestos, repintar la vista cuando cargue; caída del CDN nunca congela el menú.
+- Arranque bancario único y aplazado: un solo planificador de sincronización automática (ni por splash ni por DOM duplicado), tras al menos 4,5 segundos y 1,4 segundos de inactividad del usuario. La sincronización explícita nunca se retrasa. Mostrar al instante desde el estado local confiable cuántos bancos están conectados, sin afirmar una nueva sincronización.
+- La conciliación no se modifica por rendimiento: no efectuar fusiones automáticas destructivas, no reaparecer cargos vetados ni reescribir Disponible o provisiones. Preservar todos los tombstones, namespace de usuario y la nube como verdad. No mostrar datos sensibles de otro usuario durante la carga.
+- LAB aislada en `/lab/` con `lab/fluxia-sw.js`, `lab/manifest.webmanifest` y caché propia; prohibido cambiar root SW o root index por un ensayo. PWA debe llamarse Fluxia BETA.
+- Medición y aceptación: diagnosticar `FluxiaArranque9752.report()` con solo métricas temporales (sin movimientos, importes ni IDs); probar arranque frío/caliente Safari iOS + PWA, primer toque, cambio de pestañas, gráficos diferidos, bancos, login multiusuario, huchas y disponible. **No declarar objetivo de velocidad ni promover LAB como ESTABLE sin validación real**.
+- Entregables: ZIP completo y URLs separadas LAB/ESTABLE, PROMPT MAESTRO actualizado, checklist y GitHub Action de prueba de integridad. Verificar despliegue de la rama efectiva, no solo commit en main.
