@@ -530,3 +530,13 @@ GitHub será el canal oficial para gestionar, actualizar y publicar Fluxia direc
 7. Si cualquier comprobación falla, detener la declaración de publicación, conservar la última ESTABLE y corregir el flujo antes de dar la entrega por terminada.
 
 **Objetivo permanente:** ChatGPT → GitHub → GitHub Pages → Safari/PWA actualizada. Cada reparación de publicación termina únicamente cuando el procedimiento esté documentado, sea reproducible y se haya validado con una publicación real.
+
+
+## PROTOCOLO VINCULANTE DE PUBLICACIÓN · v97.45 (09/10/2026)
+- Fuente real de GitHub Pages: rama `pages-v9731-real-final` del repositorio `nacram1987-cmd/Fluxia-v20`. Modificar solo `main` NO publica la PWA.
+- Para LAB, crear o actualizar HTML completo en raíz con nombre versionado `lab-vNN-NN.html`; no entregar una página provisional. La versión visible, `<title>`, metadatos, variables de build y enlaces deben coincidir. Comprobar referencias heredadas antes de publicar.
+- Tras aceptación explícita de LAB, promover el mismo contenido completo a `index.html` en la rama Pages; preservar manifest.webmanifest con `id`, `start_url` y `scope` existentes para que la PWA instalada conserve identidad y acceso.
+- Actualizar `sw.js` cambiando `CACHE_VERSION` al número promovido para invalidar cachés antiguas; mantener network-first y protección de rutas LAB.
+- Enlaces oficiales: ESTABLE `https://nacram1987-cmd.github.io/Fluxia-v20/` y LAB `https://nacram1987-cmd.github.io/Fluxia-v20/lab-vNN-NN.html?v=NN.NN`. Enlaces versionados para diagnóstico sin cambiar la ruta canónica de PWA.
+- Tras commits verificar por separado existencia en repositorio, despliegue Pages y comportamiento real Safari/PWA. Nunca confundir commit con verificación pública ni afirmar pruebas bancarias no ejecutadas.
+- Mantener ZIP completo por versión y un histórico de versiones estables; jamás borrar datos financieros ni resetear credenciales o identificadores de la PWA al promocionar.
