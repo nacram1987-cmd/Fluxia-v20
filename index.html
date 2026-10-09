@@ -30779,7 +30779,7 @@ window.FluxiaBancoFijos = (function(){
       const importe=Math.round(Math.abs(imp)*100)/100;
       const fecha=String(m.fecha||'').slice(0,10)||new Date().toISOString().slice(0,10);
       const bizumSalida9621=!!(window.FluxiaEsBizumSaliente9621&&FluxiaEsBizumSaliente9621(m));
-      const pend=!m.pendiente&&pendienteIgual(fecha,importe);
+      const pend=!m.pendiente&&listaMovs().find(x=>x&&x.bancoRef&&String(x.bancoRef)===String(m.id)&&x.bancoPendiente); /* LAB: solo identidad bancaria exacta */
       if(pend){pend.bancoPendiente=false;pend.bancoRef=m.id;pend.fecha=fecha;ids.add(m.id);enlazados++;return;}
       // v69.1: el mismo cargo ya apuntado con otro código que YA NO viene del banco = era el pendiente → se enlaza, no se duplica
       const hNuevo=huellaCargo({banco:m.banco||banco,fecha:fecha,importe:importe,concepto:(m.contraparte&&m.contraparte.length>1?m.contraparte:m.concepto)||'Pago con tarjeta'});
@@ -30816,7 +30816,7 @@ window.FluxiaBancoFijos = (function(){
           if(_c2.tipo==='dudoso'){ clsEncolar(m,'out',importe); }
         }
       }catch(_c2e){}
-      const manual=yaExisteManual(fecha,importe);
+      const manual=null; /* LAB: conciliación manual automática suspendida: importe y fecha no identifican un cargo de forma unívoca. */
       if(manual){manual.bancoRef=m.id;ids.add(m.id);enlazados++;return;} // ya lo apuntaste tú
       const concepto=(m.contraparte&&m.contraparte.length>1?m.contraparte:m.concepto)||'Pago con tarjeta';
       const categoriaAuto = bizumSalida9621 ? 'Bizums' : detectarCategoria(m.concepto, m.contraparte); // v96.21
