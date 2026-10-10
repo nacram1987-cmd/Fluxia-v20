@@ -958,3 +958,7 @@ El usuario confirma mejora bancaria y solicita actualizar directamente la PWA. L
 
 ## Adenda v97.62 — clasificación bancaria visible
 Preparar el banner de clasificación solo en Inicio o Ingresos activos. No construir diagnósticos ni filas de Ingresos durante Inicio. Una sola tarea pendiente de pintura; reaccionar a cambios reales de pestaña incluso mediante navegación programática. Conservar sin cambios motor bancario, sincronización, clasificación, guardado y outbox durable. La descarga de GitHub Pages ya usa gzip; no atribuir a la red el tamaño HTML sin comprimir. Mantener pruebas sintéticas separadas de la validación real del iPhone.
+
+
+## Adenda v97.63 — retirar cola global de animaciones legacy
+No iniciar animaciones escalonadas sobre todas las tarjetas al abrir la app. La interfaz canónica conserva sus transiciones; las funciones explícitas de animación permanecen disponibles. Evitar temporizadores decorativos para tarjetas ocultas. Conservar cálculos, nube, outbox, bancos, seguridad y navegación. Validar ausencia de cola y funcionalidad; no confundir fin de animaciones con tiempo medido de disponibilidad real.
