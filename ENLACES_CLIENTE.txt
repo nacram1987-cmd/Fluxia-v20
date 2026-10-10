@@ -1,4 +1,4 @@
+PWA PRINCIPAL v97.59: https://nacram1987-cmd.github.io/Fluxia-v20/
 LAB v97.59: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.59.html
 LAB PWA: https://nacram1987-cmd.github.io/Fluxia-v20/lab/index.html
-ESTABLE v97.46: https://nacram1987-cmd.github.io/Fluxia-v20/
-No borrar datos ni reinstalar para actualizar.
+La PWA principal se actualiza desde la LAB probada. No reinstalar ni borrar datos.

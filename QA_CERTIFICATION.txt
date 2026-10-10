@@ -1,4 +1,4 @@
-v97.59 LAB — QA parcial, no certificación total
-PASS: 167 scripts; AST de 13 funciones financieras/persistencia y cuatro bancarias; oportunidad de frame antes de render; navegación cancelable; menú/teclado/perfil; selector; filas conservadas e invalidadas por edición/perfil; 1500 movimientos/importes; 12 secciones de Resumen y siete de Análisis equivalentes.
-NO VERIFICADO: Safari/iPhone/PWA, arranque frío, memoria prolongada, dos cuentas, nube/outbox y cargos con app cerrada.
-Estable v97.46 no modificada. Consultar auditoría.
+PWA v97.59 — promoción directa solicitada
+PASS: código HTML igual a LAB v97.59 excepto etiqueta de versión; 167 scripts compilan; id/start_url/scope/nombre de manifest preservados; shell nuevo antes de activación; actualización fallida no activa worker; limpieza de caches raíz sin borrar LAB; API/POST/LAB fuera de interceptación; sin operaciones IndexedDB/localStorage en SW.
+Pruebas funcionales LAB: AUDITORIA_RENDIMIENTO_v97.59.md.
+NO VERIFICADO: actualización efectiva en el iPhone, INP/Safari/PWA real, dos cuentas y entrega bancaria real. Copia v97.46 conservada para recuperación.

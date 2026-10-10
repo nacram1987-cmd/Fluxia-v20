@@ -1,9 +1,5 @@
-# v97.59 LAB
+# PWA v97.59
 
-- Render de navegación fuera del callback de animación, cancelable.
-- Variables conserva filas por contenido completo/perfil; invalida por edición.
-- Resumen: secundarios cancelables, importes/avisos principales primero.
-- Rescate histórico de Compartidos fuera de apertura crítica.
-- Formateadores reutilizados y escrituras DOM idempotentes.
+Actualización directa de la PWA principal desde LAB v97.59 a petición del usuario tras confirmar mejora bancaria. Sin nuevos cambios de renderizado ni lógica bancaria. Nueva caché raíz, identidad de instalación conservada, activación solo después de descargar el shell. LAB separada; copia anterior v97.46 en el ZIP.
 
-Pruebas/muestras/límites: AUDITORIA_RENDIMIENTO_v97.59.md. Estable v97.46 sin cambios.
+La publicación no equivale a verificar la instalación del teléfono ni el flujo bancario real. Abrir con conexión; cerrar y volver a abrir si aún muestra la versión anterior. No reinstalar ni borrar datos.

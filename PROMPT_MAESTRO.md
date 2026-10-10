@@ -938,3 +938,6 @@ Mantener una única goToTab canónica y hooks idempotentes cancelables. Descarta
 
 ## Revisión v97.59 LAB — respuesta y reutilización
 Render de navegación fuera del callback de animación para permitir pintura previa, cancelable por menú, pestaña y perfil. Filas de Variables reutilizadas solo si JSON completo y perfil coinciden; acciones con referencias actuales. Ediciones invalidan la reutilización. Resumen mantiene importes/avisos inmediatos y separa secundarios por mes/perfil/pestaña. No cachear cálculos financieros con heurísticas de longitud/último ID. Menor CPU síncrona no implica menor coste total ni mejor arranque. Estable v97.46 intacta hasta verificar Safari/PWA y cuentas reales.
+
+## Publicación directa PWA v97.59 — 10 octubre 2026
+El usuario confirma mejora bancaria y solicita actualizar directamente la PWA. La raíz pasa de v97.46 a v97.59-PWA, promoviendo la LAB probada sin nuevos cambios de renderizado ni de lógica bancaria. Preservar id/start_url/scope del manifest instalado y datos locales. El nuevo worker solo se activa después de descargar el shell; caché raíz separada de LAB. La v97.46 se conserva como copia anterior en el ZIP, no como versión principal vigente. Esta promoción solicitada no implica certificación adicional de Safari o bancos reales.
