@@ -979,3 +979,13 @@ Usar un único manejador delegado capture para menú/logo, registrado temprano. 
 - Prueba de regresión permanente: con datos sintéticos cuyo Disponible sea distinto del gasto variable, los totales de Variables deben coincidir con `resumenMovimientosVariables`, mientras Disponible conserva su importe en Inicio. Comprobar que la navegación, el cambio de mes y las tareas diferidas no mutan listas financieras ni ejecutan el cálculo de Disponible desde el render de Variables.
 - El usuario confirma que Bancos va mejor. Preservar las mejoras vigentes y verificar que motor bancario, sincronización, clasificación, rechazos, persistencia, outbox y aislamiento no cambian. Esta corrección de presentación no autoriza nuevos cambios contables ni en el servidor bancario.
 - Entrega correlativa con raíz/PWA, LAB, cachés nuevas y separadas, PROMPT actualizado, pruebas reproducibles y ZIP completo. No afirmar que nunca habrá regresiones ni certificar Safari/iPhone físico a partir de pruebas sintéticas o Chrome remoto.
+
+## Base vinculante v97.66 — rendimiento sin retrocesos (11/10/2026, Canarias)
+
+El usuario establece expresamente v97.66 como base de todo desarrollo posterior. Conservar el snapshot `b1d53c08fa0cc99356ab5f3f54e5e45b694f1a4c` en `baseline-v97.66-performance`, los archivos v97.66 y sus hashes. Ninguna versión antigua vuelve a ser base de trabajo por comodidad. La v97.46 es únicamente histórica.
+
+Leer y cumplir AGENTS.md y BASE_RENDIMIENTO_v97.66.md en cada cambio. Las mejoras de navegación, render visible, bancos, menú/logo, Variables y PWA de v97.66 son requisitos mínimos permanentes. No reactivar mecanismos heredados que las contradigan.
+
+La promoción requiere pruebas funcionales y comparación reproducible del candidato con v97.66 bajo las mismas condiciones de dispositivo, datos, perfil y arranque frío/caliente. Medir primer gesto, menú, Variables, Bancos, tareas largas y número de renderizados/consultas. Una regresión reproducible bloquea la promoción hasta corregirla, manteniendo la base desplegada. No eliminar assertions ni sustituir evidencia por promesas de velocidad. Conservar integridad, nube, outbox e identidad por encima de cualquier optimización.
+
+Esta fijación de base no modifica el runtime v97.66 ni certifica ensayos en iPhone físico que no se han realizado. Mantener respaldo, ZIP, PROMPT, pruebas y límites explícitos en cada entrega.

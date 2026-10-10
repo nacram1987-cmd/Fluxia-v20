@@ -1,0 +1,17 @@
+{
+  "version": "v97.66",
+  "accepted_local_date": "2026-10-11",
+  "timezone": "Atlantic/Canary",
+  "release_commit": "b1d53c08fa0cc99356ab5f3f54e5e45b694f1a4c",
+  "snapshot_branch": "baseline-v97.66-performance",
+  "files": {
+    "v97.66.html": "9674829f3ce5b48e2ee07ca0e39d855e5704ce9895a9cb8fa05bcab32775f5e5",
+    "lab/v97.66.html": "3664416809bfee4a53de5c3c5de96fb73ebe14e53fa735b04967d0672f6bc275",
+    "auditorias/base-v97.66/fluxia-sw.js": "7979b1fe919197eef00ea9314d7f89ea64f763c09e0d01a266145417e0afe0cb",
+    "auditorias/base-v97.66/lab/fluxia-sw.js": "34e7565072f85d518c7be9e01e83de499ee347c4d961a2ca61475fce806b3ea9",
+    "auditorias/base-v97.66/manifest.webmanifest": "8adfd4837e844d4eefdeaa1afd2d567c35e3a9388e32ebe640220351df4c85aa",
+    "auditorias/base-v97.66/lab/manifest.webmanifest": "ec1db664f557bb27c9daa8598ef4007f25e297d5259fa23c74ec64e735a18857"
+  },
+  "physical_iphone_benchmark": null,
+  "evidence": "auditorias/qa-v97.66/regression.cjs; QA_CERTIFICATION_v97.66.txt"
+}
