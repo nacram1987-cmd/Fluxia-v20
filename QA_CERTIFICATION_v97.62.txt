@@ -1,0 +1,10 @@
+Pruebas 10/10/2026
+167 scripts analizados sin error de sintaxis.
+14 funciones de finanzas, persistencia y navegación idénticas al original.
+137 funciones bancarias idénticas a v97.61; solo cambia pintura y programación UI.
+20 aperturas/cierres de menú; 400 movimientos sintéticos; total categoría correcto.
+DOM reutilizado; edición, escritura y perfil invalidan cache.
+Inicio no prepara diagnóstico oculto; otras pestañas no preparan clasificación; navegación programática activa pintura.
+Worker: identidad manifest, shell nuevo antes de activar, fallo conserva worker anterior, LAB separado, API/POST sin interceptar.
+No certifica Safari/PWA, dos cuentas reales ni integración bancaria real.
+Chrome remoto QA aislada: menú abre, Ingresos carga, logo vuelve a Inicio, Variables y Por categoría completan sin errores de la app observados. Avisos de extensión Chrome ajenos a la app excluidos.

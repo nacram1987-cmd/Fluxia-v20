@@ -954,3 +954,7 @@ El usuario confirma mejora bancaria y solicita actualizar directamente la PWA. L
 - Preservar funciones financieras, guardado, nube, outbox, autenticación, bancos, rechazos permanentes y nodos originales de menú/logo.
 - Actualización directa de raíz/PWA autorizada en la sesión; conservar identidad instalada, LAB independiente y referencia v97.46. No exigir reinstalación ni borrar datos.
 - Las métricas JSDOM y Chrome remoto no certifican Safari/PWA del usuario. No prometer segundos de arranque ni dar por resueltos todos los problemas sin su comprobación.
+
+
+## Adenda v97.62 — clasificación bancaria visible
+Preparar el banner de clasificación solo en Inicio o Ingresos activos. No construir diagnósticos ni filas de Ingresos durante Inicio. Una sola tarea pendiente de pintura; reaccionar a cambios reales de pestaña incluso mediante navegación programática. Conservar sin cambios motor bancario, sincronización, clasificación, guardado y outbox durable. La descarga de GitHub Pages ya usa gzip; no atribuir a la red el tamaño HTML sin comprimir. Mantener pruebas sintéticas separadas de la validación real del iPhone.
