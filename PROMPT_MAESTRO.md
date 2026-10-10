@@ -970,3 +970,12 @@ Cabecera sticky opaca sin blur, con safe-area sin recorte de altura; menú y log
 
 ## Adenda v97.65 — activación única de controles del encabezado
 Usar un único manejador delegado capture para menú/logo, registrado temprano. Nunca acumular listeners por reconstrucción del encabezado. Identificar control incluso desde SVG/span; hijos no interceptan toques. Menú alterna apertura/cierre mediante funciones canónicas; logo usa goToTab. Botones HTML nativos conservan teclado, touch-action manipulation y objetivo inmóvil. Conservar aislamiento/auth: overlays de acceso siguen bloqueando interacción; no retirar gate ni debilitar permisos. Evitar declarar causa móvil confirmada si solo se ha reproducido en navegador remoto.
+
+## Regla permanente v97.66 — Gastos variables sin Disponible (10/10/2026)
+
+- Gastos variables muestra únicamente sus gastos, totales del mes y del plan, registro, búsqueda, exportación y categorías. No debe mostrar el Disponible, «Te queda este mes», ni un saldo residual después de ingresos, fijos o huchas. El Disponible canónico de Inicio y sus cálculos se conservan sin cambios.
+- Eliminar el componente legado y el código que lo rellena; ocultarlo con CSS no es una corrección suficiente. No reintroducir `gvAjustadoVal` ni llamar a `disponibleEfectivo` desde `renderGastosVariables` para pintar un saldo en ese panel.
+- Antes de publicar, probar entrada desde menú y tarjeta de Inicio, ambas subvistas de Variables, cambio de mes, regreso por logo, navegación repetida y tareas diferidas. Debe existir un único panel activo, sin arrastre visual del dashboard ni mezcla de datos entre perfiles.
+- Prueba de regresión permanente: con datos sintéticos cuyo Disponible sea distinto del gasto variable, los totales de Variables deben coincidir con `resumenMovimientosVariables`, mientras Disponible conserva su importe en Inicio. Comprobar que la navegación, el cambio de mes y las tareas diferidas no mutan listas financieras ni ejecutan el cálculo de Disponible desde el render de Variables.
+- El usuario confirma que Bancos va mejor. Preservar las mejoras vigentes y verificar que motor bancario, sincronización, clasificación, rechazos, persistencia, outbox y aislamiento no cambian. Esta corrección de presentación no autoriza nuevos cambios contables ni en el servidor bancario.
+- Entrega correlativa con raíz/PWA, LAB, cachés nuevas y separadas, PROMPT actualizado, pruebas reproducibles y ZIP completo. No afirmar que nunca habrá regresiones ni certificar Safari/iPhone físico a partir de pruebas sintéticas o Chrome remoto.

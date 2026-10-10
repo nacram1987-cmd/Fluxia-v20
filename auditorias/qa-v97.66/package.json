@@ -1,0 +1,1 @@
+{"name":"fluxia-variables-regression-v9766","private":true,"scripts":{"test":"node regression.cjs"},"devDependencies":{"acorn":"8.19.0","jsdom":"30.1.2","fake-indexeddb":"6.2.5"}}
