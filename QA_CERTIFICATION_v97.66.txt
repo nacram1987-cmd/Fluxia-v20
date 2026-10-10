@@ -1,0 +1,16 @@
+Fluxia BETA v97.66 — comprobaciones de cambio acotado
+
+PASS: 168 scripts analizados sin error de sintaxis.
+PASS: único cambio de JS funcional: retirada del cálculo y escritura de Disponible en el render de Gastos variables. El resto de scripts permanece idéntico, salvo versión.
+PASS: 12 funciones canónicas financieras, guardado, nube y navegación idénticas a v97.65.
+PASS: 400 movimientos sintéticos, total de categorías y totales mes/plan correctos.
+PASS: Variables sin gvAjustadoVal ni tarjeta de saldo; render inmediato/diferido no llama al cálculo de Disponible.
+PASS: cambio de mes, ambas subvistas, menú, logo, entrada desde tarjeta de Inicio y navegación repetida; un panel activo y dashboard oculto al salir de Inicio.
+PASS: listas financieras y resultado de Disponible sin modificaciones durante esas pruebas.
+PASS: reutilización de DOM sin cambios; ediciones, storage y perfil invalidan la reutilización.
+PASS: módulo bancario completo idéntico; 139 funciones comparadas; diagnóstico de Ingresos no se genera en otros paneles.
+PASS: identidad PWA conservada, actualización exige shell fresco, fallo no activa worker nuevo, LAB/API/POST no interceptados, sin operaciones sobre datos financieros.
+
+Limitación: evidencia sintética, no certificación Safari/iPhone físico ni conciliación de cuentas bancarias reales. Verificación visual remota y publicación se documentan tras su comprobación.
+
+PASS Chrome remoto en fixture QA aislada v97.66: entrada por menú a Variables sin saldo, gasto sintético 7,50 EUR, total mensual y categoría 7,50 EUR; noviembre muestra 0,00 EUR; retorno a octubre y logo a Inicio muestra Disponible -7,50 EUR; tarjeta de Inicio vuelve a Variables con total 7,50 EUR y sin gvAjustadoVal. QA usa storage efímero y fetch bloqueado, no cuentas reales.
