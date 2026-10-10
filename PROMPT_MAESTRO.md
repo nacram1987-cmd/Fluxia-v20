@@ -989,3 +989,9 @@ Leer y cumplir AGENTS.md y BASE_RENDIMIENTO_v97.66.md en cada cambio. Las mejora
 La promoción requiere pruebas funcionales y comparación reproducible del candidato con v97.66 bajo las mismas condiciones de dispositivo, datos, perfil y arranque frío/caliente. Medir primer gesto, menú, Variables, Bancos, tareas largas y número de renderizados/consultas. Una regresión reproducible bloquea la promoción hasta corregirla, manteniendo la base desplegada. No eliminar assertions ni sustituir evidencia por promesas de velocidad. Conservar integridad, nube, outbox e identidad por encima de cualquier optimización.
 
 Esta fijación de base no modifica el runtime v97.66 ni certifica ensayos en iPhone físico que no se han realizado. Mantener respaldo, ZIP, PROMPT, pruebas y límites explícitos en cada entrega.
+
+## Orden permanente «con labora» — actualización de pantalla de inicio (11/10/2026)
+
+Cuando el usuario diga «con labora», promover la última LAB validada a la PWA instalada: publicar el HTML en la raíz canónica `index.html`, junto con el Service Worker y manifiesto coherentes. Entregar la actualización real de pantalla de inicio, no solo un enlace de laboratorio. La frase constituye autorización de promoción, manteniendo previamente las pruebas obligatorias de integridad y rendimiento de la base v97.66.
+
+Conservar identidad PWA, entrada permanente, datos locales/cloud y cachés separadas. No exigir reinstalación ni borrar almacenamiento. Verificar documento realmente servido, versión, worker y despliegue efectivo; no declarar actualización en iPhone sin evidencia del dispositivo. Si raíz/PWA y LAB ya tienen la misma versión, confirmar la coincidencia sin generar un build ficticio.
