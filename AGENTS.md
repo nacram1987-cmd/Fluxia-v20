@@ -12,3 +12,7 @@ Fluxia v97.66 es la base vigente desde el 11/10/2026 (Atlantic/Canary). La orden
 - Comparar rendimiento de v97.66 y candidato en el mismo entorno, datos/perfil, dispositivo y estado frío/caliente: primer gesto, menú/logo, Variables y Bancos. Documentar varias repeticiones, mediana, tareas largas y número de renderizados/consultas. Si aparece una regresión reproducible, corregir el candidato antes de promocionarlo; conservar la base desplegada.
 - No declarar tiempos iPhone ni garantía absoluta sin medirlos. Chrome/JSDOM no certifican Safari/PWA. La aceptación de esta base por el usuario no convierte limitaciones anteriores en pruebas superadas.
 - Entregar siempre URLs verificadas, ZIP completo, PROMPT actualizado, pruebas y evaluación honesta. No borrar datos ni exigir reinstalación para actualizar.
+
+## Instrucción «con labora»: actualizar la PWA instalada
+
+Cuando el usuario diga «con labora», actualizar la entrada de producción `index.html` y su Service Worker/manifiesto con la última LAB validada, para que la app de pantalla de inicio reciba esa versión. No limitar la entrega al enlace LAB. Esta frase autoriza la promoción; completar primero las comprobaciones de integridad y rendimiento exigidas por la base v97.66. Conservar id/start_url/scope de la instalación, datos y cachés separadas; no pedir reinstalar. Verificar versión servida por raíz, actualización del worker y publicación efectiva de Pages. Si PWA y LAB ya coinciden, comprobarlo y decirlo, sin inventar una nueva versión ni alterar el runtime innecesariamente.
