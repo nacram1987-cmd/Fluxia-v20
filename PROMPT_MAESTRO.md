@@ -944,3 +944,13 @@ Activación única del menú por click; nunca mover el objetivo durante pointerd
 
 ## Publicación directa PWA v97.59 — 10 octubre 2026
 El usuario confirma mejora bancaria y solicita actualizar directamente la PWA. La raíz pasa de v97.46 a v97.59-PWA, promoviendo la LAB probada sin nuevos cambios de renderizado ni de lógica bancaria. Preservar id/start_url/scope del manifest instalado y datos locales. El nuevo worker solo se activa después de descargar el shell; caché raíz separada de LAB. La v97.46 se conserva como copia anterior en el ZIP, no como versión principal vigente. Esta promoción solicitada no implica certificación adicional de Safari o bancos reales.
+
+
+## Adenda v97.61 — navegación reutilizada y tareas visibles (10/10/2026)
+- Corregir el total de categorías de Variables: nunca usar una variable fuera de su ámbito. El total usa los mismos movimientos visibles y no cambia el motor financiero.
+- Reutilizar únicamente DOM de pestañas cuya firma completa coincida: perfil, fecha, mes, plan, todas las listas financieras y controles. No cachear importes calculados. Toda escritura en Storage o renderAll invalida la reutilización.
+- Al volver a Variables, reanudar la lista incompleta con los objetos del mismo perfil. La primera carga conserva el render canónico.
+- Checklist, Ajustes y Compartidos se inicializan con los hooks de navegación; quitar la reconstrucción repetida a 200/1400 ms. Historial de salidas solo pinta el panel activo. Retirar la auditoría visual antigua del héroe oculto.
+- Preservar funciones financieras, guardado, nube, outbox, autenticación, bancos, rechazos permanentes y nodos originales de menú/logo.
+- Actualización directa de raíz/PWA autorizada en la sesión; conservar identidad instalada, LAB independiente y referencia v97.46. No exigir reinstalación ni borrar datos.
+- Las métricas JSDOM y Chrome remoto no certifican Safari/PWA del usuario. No prometer segundos de arranque ni dar por resueltos todos los problemas sin su comprobación.

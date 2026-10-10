@@ -1,0 +1,31 @@
+PASS: {
+  "parsedScripts": 167,
+  "unchangedFunctions": [
+    "disponibleEfectivo",
+    "variablesTotal",
+    "resumenMovimientosVariables",
+    "ingresosTotal",
+    "gastosFijosTotal",
+    "provisionesParaDisponible",
+    "guardarLS",
+    "cargarLS",
+    "guardarMovimientos",
+    "cargarTodo",
+    "recargarDesdeServidor",
+    "openDrawer",
+    "closeDrawer",
+    "goToTab"
+  ],
+  "menuCycles": 20,
+  "variablesRows": 400,
+  "categoryTotalCorrect": true,
+  "unchangedNavigationReusesDOM": true,
+  "sameLengthEditInvalidates": true,
+  "storageInvalidates": true,
+  "profileInvalidates": true,
+  "logoNavigates": true,
+  "warmNavigationSyntheticMs": 0.3353050000005169,
+  "errors": []
+}
+PENDIENTE: Safari/PWA del usuario, datos reales y medición INP.
+PASS: Chrome remoto aislado: menú → Variables → Por categoría → logo Inicio → Ajustes. Sin credenciales ni acceso a finanzas reales.
