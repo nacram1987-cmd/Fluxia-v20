@@ -907,3 +907,50 @@ Cada entrega LAB que cambie el HTML debe cambiar el nombre de la caché de su `l
 - Mantener bloqueo de credenciales para usuario nuevo, separación absoluta entre perfiles, papelera, rechazos permanentes, outbox persistente y recuperación desde la nube; no modificar motor financiero ni deduplicación.
 - Regresión estática y temporización medible con `FluxiaTiempos9754.report()`; sin ensayos reales en iPhone no afirmar mejoras temporales cuantificadas ni promover a ESTABLE.
 - Publicar **ambos** `lab/index.html` y `lab/v97.54.html`, SW LAB con caché nueva y artefacto ZIP; la raíz ESTABLE no se modifica.
+
+
+## Adenda v97.55-LAB · sincronización única y servidor aislado
+- Servidor activo auditado: `bandeja` es alias de `movimientos` con ventana de 40 días; una sincronización del cliente debe realizar una sola consulta y conservar esa cobertura.
+- Las llamadas concurrentes comparten la misma promesa; un fallo no ejecuta conciliación ni marca una sincronización correcta. Respuestas de un perfil anterior se rechazan antes de procesarlas.
+- El servidor LAB `Fluxia-banco-lab9755` consulta hasta dos bancos en paralelo, mantiene orden determinista, resultados parciales, blacklist, validación de usuario real y filtro por propietario. No modificar el servidor ESTABLE.
+- Una actualización financiera solicita un solo fotograma para la vista activa. La persistencia permanece inmediata; no se altera cálculo, tombstones, huchas ni efectivo.
+- Consulta automática al abrir y al recuperar conexión/primer plano, con mínimo 90 segundos desde consulta exitosa y cadencia de 12 minutos durante uso continuado. Pausar en segundo plano/offline y aplicar backoff 2–15 minutos por fallo. No prometer recepción instantánea ni push con app cerrada: depende del banco y no hay bandeja de webhook en este servidor.
+- Entrega LAB v97.55 y referencia ESTABLE v97.46, ZIP completo de ambas. No promover sin pruebas reales de Safari/PWA, dos cuentas y cargos reales.
+
+## Adenda v97.56-LAB — render sin cascadas y carga prioritaria
+- El dashboard canónico sustituye el render de KPI y héroe legacy ocultos; no regenerar análisis ni metas ocultos desde renderKPIs.
+- Los módulos secundarios de resumen se ejecutan uno por turno idle, solo si resumen sigue activo y no hay diálogo abierto. Invalidar trabajo antiguo al solicitar otro refresco.
+- Quitar el plazo fijo de 1,1 segundos para pintar, no la espera del outbox durable; mantener reconciliación autoritativa y aislamiento por perfil.
+- No consultar automáticamente el banco durante interacción reciente. Conservar endpoint y reglas LAB v97.55, cálculos, persistencia y deduplicación.
+- Minificar solo comentarios y espacios de JS, sin compresión ni mangle. Mantener orden y separación de los scripts y CSS.
+- Los tiempos JSDOM son evidencia sintética, no certificación iPhone. Conservar ESTABLE v97.46 hasta QA real Safari/PWA.
+
+## Adenda v97.57-LAB — prioridad de gestos y DOM estable
+- Trabajo visual secundario cede durante 600 ms tras gesto, edición de inputs, menú y confirmación. Cancelar con mecanismo correspondiente (idle o timeout); no apilar generaciones.
+- Reutilizar selector solo si mes, plan, etiquetas y fecha siguen iguales. No cachear cálculos ni importes. Actualizar visibilidad y etiquetas de paneles.
+- Pintura diferida para clase real mov-item de Variables, conservando foco y acciones. No virtualizar datos financieros.
+- Mantener interfaz premium canónica; sin rediseño improvisado ni franjas/badges nuevos.
+- Pruebas sintéticas no certifican iPhone. LAB v97.57 y ESTABLE v97.46 separadas, ZIP y evaluación honesta.
+
+
+## Revisión v97.58 LAB — rendimiento de interacción
+Mantener una única goToTab canónica y hooks idempotentes cancelables. Descartar trabajos de pestañas/perfiles abandonados; pausar renderizados pendientes durante apertura del menú. Conservar fallback de teclado. No reconstruir el selector de mes si no cambió. Análisis conserva resumen inmediato e importes y completa secundarios en tareas cancelables. No afirmar velocidad máxima ni Safari validado a partir de JSDOM o Chrome remoto. Mantener estable v97.46 hasta validar PWA, cuentas reales y banca. Evidencias y limitaciones en AUDITORIA_RENDIMIENTO_v97.58.md.
+
+## Revisión v97.59 LAB — respuesta y reutilización
+Render de navegación fuera del callback de animación para permitir pintura previa, cancelable por menú, pestaña y perfil. Filas de Variables reutilizadas solo si JSON completo y perfil coinciden; acciones con referencias actuales. Ediciones invalidan la reutilización. Resumen mantiene importes/avisos inmediatos y separa secundarios por mes/perfil/pestaña. No cachear cálculos financieros con heurísticas de longitud/último ID. Menor CPU síncrona no implica menor coste total ni mejor arranque. Estable v97.46 intacta hasta verificar Safari/PWA y cuentas reales.
+
+## Adenda v97.60 — menú y logo
+Activación única del menú por click; nunca mover el objetivo durante pointerdown. Logo oficial vuelve a Inicio con la navegación canónica y teclado. Mantener nodos originales, área táctil de 44 px y estado aria-expanded. No debilitar autenticación ni tocar bancos/datos. Chrome y pruebas sintéticas no equivalen a Safari/PWA del usuario. Actualizar ambos canales con cachés separadas y conservar builds anteriores. Corrección directa PWA autorizada por el usuario.
+
+## Publicación directa PWA v97.59 — 10 octubre 2026
+El usuario confirma mejora bancaria y solicita actualizar directamente la PWA. La raíz pasa de v97.46 a v97.59-PWA, promoviendo la LAB probada sin nuevos cambios de renderizado ni de lógica bancaria. Preservar id/start_url/scope del manifest instalado y datos locales. El nuevo worker solo se activa después de descargar el shell; caché raíz separada de LAB. La v97.46 se conserva como copia anterior en el ZIP, no como versión principal vigente. Esta promoción solicitada no implica certificación adicional de Safari o bancos reales.
+
+
+## Adenda v97.61 — navegación reutilizada y tareas visibles (10/10/2026)
+- Corregir el total de categorías de Variables: nunca usar una variable fuera de su ámbito. El total usa los mismos movimientos visibles y no cambia el motor financiero.
+- Reutilizar únicamente DOM de pestañas cuya firma completa coincida: perfil, fecha, mes, plan, todas las listas financieras y controles. No cachear importes calculados. Toda escritura en Storage o renderAll invalida la reutilización.
+- Al volver a Variables, reanudar la lista incompleta con los objetos del mismo perfil. La primera carga conserva el render canónico.
+- Checklist, Ajustes y Compartidos se inicializan con los hooks de navegación; quitar la reconstrucción repetida a 200/1400 ms. Historial de salidas solo pinta el panel activo. Retirar la auditoría visual antigua del héroe oculto.
+- Preservar funciones financieras, guardado, nube, outbox, autenticación, bancos, rechazos permanentes y nodos originales de menú/logo.
+- Actualización directa de raíz/PWA autorizada en la sesión; conservar identidad instalada, LAB independiente y referencia v97.46. No exigir reinstalación ni borrar datos.
+- Las métricas JSDOM y Chrome remoto no certifican Safari/PWA del usuario. No prometer segundos de arranque ni dar por resueltos todos los problemas sin su comprobación.
