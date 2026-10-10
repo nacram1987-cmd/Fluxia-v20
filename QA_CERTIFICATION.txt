@@ -1,9 +1,4 @@
-Fluxia v97.57 LAB — 2026-10-10
-PASS: 167 scripts parseados.
-PASS: 13 funciones financieras/almacenamiento y cuatro bancarias equivalentes por AST en fuente.
-PASS: selector reutiliza nodo sin cambios; reconstruye al cambiar mes.
-PASS: render conserva 1.500 movimientos ficticios, variables y Disponible.
-PASS: tareas secundarias pausadas por gesto, edición y modal; cancelación de generaciones viejas.
-PASS: scope/caché LAB separados y versión actualizada.
-PENDIENTE: Safari/PWA iPhone, dos perfiles autenticados, outbox/nube, cargos reales y Apple.com/bill.
-No certificada ESTABLE, compliance/RLS ni velocidad absoluta.
+v97.58 LAB — QA parcial, no certificación total
+PASS: navegación/cancelación/perfil/teclado; selector de mes; conservación de 1500 movimientos y totales; siete secciones de Análisis idénticas; cancelación de gráficos; comparación AST financiera/bancaria; sintaxis 167 scripts.
+NO VERIFICADO: latencia Safari/iPhone/PWA, autenticación de dos cuentas, nube/outbox real y entrega bancaria con app cerrada.
+Consultar auditoría. Estable v97.46 no modificada.

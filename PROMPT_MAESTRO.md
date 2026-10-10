@@ -931,3 +931,7 @@ Cada entrega LAB que cambie el HTML debe cambiar el nombre de la caché de su `l
 - Pintura diferida para clase real mov-item de Variables, conservando foco y acciones. No virtualizar datos financieros.
 - Mantener interfaz premium canónica; sin rediseño improvisado ni franjas/badges nuevos.
 - Pruebas sintéticas no certifican iPhone. LAB v97.57 y ESTABLE v97.46 separadas, ZIP y evaluación honesta.
+
+
+## Revisión v97.58 LAB — rendimiento de interacción
+Mantener una única goToTab canónica y hooks idempotentes cancelables. Descartar trabajos de pestañas/perfiles abandonados; pausar renderizados pendientes durante apertura del menú. Conservar fallback de teclado. No reconstruir el selector de mes si no cambió. Análisis conserva resumen inmediato e importes y completa secundarios en tareas cancelables. No afirmar velocidad máxima ni Safari validado a partir de JSDOM o Chrome remoto. Mantener estable v97.46 hasta validar PWA, cuentas reales y banca. Evidencias y limitaciones en AUDITORIA_RENDIMIENTO_v97.58.md.

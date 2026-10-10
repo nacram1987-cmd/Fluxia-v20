@@ -7008,7 +7008,7 @@ window.fluxiaRenderPanel9619=function(tab){const t=performance.now();try{return 
 for(let i=0;i<3;i++){const t=performance.now();document.getElementById('btnMenu').dispatchEvent(new PointerEvent('pointerdown',{button:0,bubbles:true}));const handler=performance.now()-t;await frame();await frame();reports.push({menuHandlerMs:+handler.toFixed(1),menuFrameOpportunityMs:+(performance.now()-t).toFixed(1),open:document.getElementById('drawerMenu').classList.contains('open')});closeDrawer();await sleep(80)}
 for(const tab of ['gastos-variables','fijos','provisiones','ingresos','compartidos','presupuestos','analisis','efectivo','simulador','ajustes','ayuda','resumen']){
 const t=performance.now();goToTab(tab);const handler=performance.now()-t;await frame();await frame();reports.push({tab,syncMs:+handler.toFixed(1),frameOpportunityMs:+(performance.now()-t).toFixed(1)});await sleep(240);}
-const offset=renders.length;for(const tab of ['gastos-variables','analisis','provisiones','fijos','resumen'])goToTab(tab);await sleep(240);
+const offset=renders.length;for(const tab of ['gastos-variables','analisis','provisiones','fijos','resumen'])goToTab(tab);await frame();await frame();await sleep(240);
 output.textContent=JSON.stringify({version:document.title,fixtureCount:movimientos.length,network:'blocked',reports,renders,rapidSwitchRenders:renders.slice(offset),longTaskSamplesMs:tasks,note:'Chrome, evento programático y oportunidad de frame; NO INP real ni Safari/iPhone'},null,2);
 }catch(e){output.textContent='QA ERROR: '+e.stack}
 },2600));
