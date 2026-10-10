@@ -924,3 +924,10 @@ Cada entrega LAB que cambie el HTML debe cambiar el nombre de la caché de su `l
 - No consultar automáticamente el banco durante interacción reciente. Conservar endpoint y reglas LAB v97.55, cálculos, persistencia y deduplicación.
 - Minificar solo comentarios y espacios de JS, sin compresión ni mangle. Mantener orden y separación de los scripts y CSS.
 - Los tiempos JSDOM son evidencia sintética, no certificación iPhone. Conservar ESTABLE v97.46 hasta QA real Safari/PWA.
+
+## Adenda v97.57-LAB — prioridad de gestos y DOM estable
+- Trabajo visual secundario cede durante 600 ms tras gesto, edición de inputs, menú y confirmación. Cancelar con mecanismo correspondiente (idle o timeout); no apilar generaciones.
+- Reutilizar selector solo si mes, plan, etiquetas y fecha siguen iguales. No cachear cálculos ni importes. Actualizar visibilidad y etiquetas de paneles.
+- Pintura diferida para clase real mov-item de Variables, conservando foco y acciones. No virtualizar datos financieros.
+- Mantener interfaz premium canónica; sin rediseño improvisado ni franjas/badges nuevos.
+- Pruebas sintéticas no certifican iPhone. LAB v97.57 y ESTABLE v97.46 separadas, ZIP y evaluación honesta.
