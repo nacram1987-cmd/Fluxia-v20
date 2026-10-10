@@ -1,0 +1,10 @@
+PASS: 167 scripts parseados.
+PASS: 13 funciones financieras/persistencia y 4 bancarias sin cambio AST.
+PASS: 20 ciclos abrir/cerrar por cierre y overlay.
+PASS: pointerdown no mueve objetivo; pointercancel no abre menú.
+PASS: logo SVG y teclado vuelven a Inicio; áreas táctiles 44px.
+PASS: autenticación de producción y estado financiero preservados.
+PASS: identidad PWA, shell fresco, actualización fallida segura, caché LAB separada.
+PASS: Chrome remoto /qa/v97.60.html, CSS raíz, almacenamiento aislado: menú → Ingresos → logo → Inicio.
+PENDIENTE: Safari/iPhone, PWA instalada del usuario, cargos reales, métricas INP.
+No certificación de toda la app ni auditoría de seguridad completa.

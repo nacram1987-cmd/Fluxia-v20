@@ -1,5 +1,5 @@
-/* Fluxia PWA v97.59: root shell. LAB keeps its own scope and cache. */
-const CACHE_VERSION='fluxia-shell-v97.59-pwa';
+/* Fluxia PWA v97.60: root shell. LAB keeps its own scope and cache. */
+const CACHE_VERSION='fluxia-shell-v97.60-pwa';
 const ENTRY='./index.html';
 const PATH=new URL(ENTRY,self.registration.scope).pathname;
 const ROOT=new URL('./',self.registration.scope).pathname;
