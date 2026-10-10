@@ -966,3 +966,7 @@ No iniciar animaciones escalonadas sobre todas las tarjetas al abrir la app. La 
 
 ## Adenda v97.64 — navegación móvil y scroll
 Cabecera sticky opaca sin blur, con safe-area sin recorte de altura; menú y logo originales siempre accesibles. Logo como botón HTML nativo, una sola activación por click/teclado. Al abrir menú, fijar body compensando scroll; al cerrar restaurar posición antes de navegación canónica. Drawer por encima de overlay/cabecera, contenido visible sin content-visibility/contain para evitar recorte móvil. Preservar funciones financieras, nube, bancos y datos. Pruebas de navegador remotas no certifican Safari/PWA física.
+
+
+## Adenda v97.65 — activación única de controles del encabezado
+Usar un único manejador delegado capture para menú/logo, registrado temprano. Nunca acumular listeners por reconstrucción del encabezado. Identificar control incluso desde SVG/span; hijos no interceptan toques. Menú alterna apertura/cierre mediante funciones canónicas; logo usa goToTab. Botones HTML nativos conservan teclado, touch-action manipulation y objetivo inmóvil. Conservar aislamiento/auth: overlays de acceso siguen bloqueando interacción; no retirar gate ni debilitar permisos. Evitar declarar causa móvil confirmada si solo se ha reproducido en navegador remoto.
