@@ -962,3 +962,7 @@ Preparar el banner de clasificación solo en Inicio o Ingresos activos. No const
 
 ## Adenda v97.63 — retirar cola global de animaciones legacy
 No iniciar animaciones escalonadas sobre todas las tarjetas al abrir la app. La interfaz canónica conserva sus transiciones; las funciones explícitas de animación permanecen disponibles. Evitar temporizadores decorativos para tarjetas ocultas. Conservar cálculos, nube, outbox, bancos, seguridad y navegación. Validar ausencia de cola y funcionalidad; no confundir fin de animaciones con tiempo medido de disponibilidad real.
+
+
+## Adenda v97.64 — navegación móvil y scroll
+Cabecera sticky opaca sin blur, con safe-area sin recorte de altura; menú y logo originales siempre accesibles. Logo como botón HTML nativo, una sola activación por click/teclado. Al abrir menú, fijar body compensando scroll; al cerrar restaurar posición antes de navegación canónica. Drawer por encima de overlay/cabecera, contenido visible sin content-visibility/contain para evitar recorte móvil. Preservar funciones financieras, nube, bancos y datos. Pruebas de navegador remotas no certifican Safari/PWA física.
