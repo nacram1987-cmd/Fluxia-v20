@@ -1,4 +1,4 @@
-LAB v97.58: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.58.html
+LAB v97.59: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.59.html
 LAB PWA: https://nacram1987-cmd.github.io/Fluxia-v20/lab/index.html
 ESTABLE v97.46: https://nacram1987-cmd.github.io/Fluxia-v20/
 No borrar datos ni reinstalar para actualizar.

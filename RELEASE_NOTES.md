@@ -1,10 +1,9 @@
-# v97.58 LAB
+# v97.59 LAB
 
-- Cancelación de renderizados de pestañas abandonadas.
-- Menú sin transición, prioridad al toque y fallback accesible.
-- Seis wrappers de navegación sustituidos por hooks cancelables.
-- Análisis dividido en tareas, conserva resumen inicial e importes.
-- Fuentes externas sin bloquear el primer dibujo.
-- Accesibilidad limitada al panel visible y avisos sin lecturas de estilos calculados.
+- Render de navegación fuera del callback de animación, cancelable.
+- Variables conserva filas por contenido completo/perfil; invalida por edición.
+- Resumen: secundarios cancelables, importes/avisos principales primero.
+- Rescate histórico de Compartidos fuera de apertura crítica.
+- Formateadores reutilizados y escrituras DOM idempotentes.
 
-Pruebas y límites: AUDITORIA_RENDIMIENTO_v97.58.md. Estable v97.46 sin cambios.
+Pruebas/muestras/límites: AUDITORIA_RENDIMIENTO_v97.59.md. Estable v97.46 sin cambios.

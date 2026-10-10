@@ -1,4 +1,4 @@
-v97.58 LAB — QA parcial, no certificación total
-PASS: navegación/cancelación/perfil/teclado; selector de mes; conservación de 1500 movimientos y totales; siete secciones de Análisis idénticas; cancelación de gráficos; comparación AST financiera/bancaria; sintaxis 167 scripts.
-NO VERIFICADO: latencia Safari/iPhone/PWA, autenticación de dos cuentas, nube/outbox real y entrega bancaria con app cerrada.
-Consultar auditoría. Estable v97.46 no modificada.
+v97.59 LAB — QA parcial, no certificación total
+PASS: 167 scripts; AST de 13 funciones financieras/persistencia y cuatro bancarias; oportunidad de frame antes de render; navegación cancelable; menú/teclado/perfil; selector; filas conservadas e invalidadas por edición/perfil; 1500 movimientos/importes; 12 secciones de Resumen y siete de Análisis equivalentes.
+NO VERIFICADO: Safari/iPhone/PWA, arranque frío, memoria prolongada, dos cuentas, nube/outbox y cargos con app cerrada.
+Estable v97.46 no modificada. Consultar auditoría.

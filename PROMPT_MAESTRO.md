@@ -935,3 +935,6 @@ Cada entrega LAB que cambie el HTML debe cambiar el nombre de la caché de su `l
 
 ## Revisión v97.58 LAB — rendimiento de interacción
 Mantener una única goToTab canónica y hooks idempotentes cancelables. Descartar trabajos de pestañas/perfiles abandonados; pausar renderizados pendientes durante apertura del menú. Conservar fallback de teclado. No reconstruir el selector de mes si no cambió. Análisis conserva resumen inmediato e importes y completa secundarios en tareas cancelables. No afirmar velocidad máxima ni Safari validado a partir de JSDOM o Chrome remoto. Mantener estable v97.46 hasta validar PWA, cuentas reales y banca. Evidencias y limitaciones en AUDITORIA_RENDIMIENTO_v97.58.md.
+
+## Revisión v97.59 LAB — respuesta y reutilización
+Render de navegación fuera del callback de animación para permitir pintura previa, cancelable por menú, pestaña y perfil. Filas de Variables reutilizadas solo si JSON completo y perfil coinciden; acciones con referencias actuales. Ediciones invalidan la reutilización. Resumen mantiene importes/avisos inmediatos y separa secundarios por mes/perfil/pestaña. No cachear cálculos financieros con heurísticas de longitud/último ID. Menor CPU síncrona no implica menor coste total ni mejor arranque. Estable v97.46 intacta hasta verificar Safari/PWA y cuentas reales.
