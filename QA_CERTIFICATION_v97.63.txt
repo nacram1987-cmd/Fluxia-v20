@@ -1,0 +1,11 @@
+Pruebas 10/10/2026
+167 scripts analizados sin error de sintaxis.
+14 funciones de finanzas, persistencia y navegación idénticas al original.
+137 funciones bancarias idénticas a v97.61; solo cambia pintura y programación UI.
+20 aperturas/cierres de menú; 400 movimientos sintéticos; total categoría correcto.
+DOM reutilizado; edición, escritura y perfil invalidan cache.
+Inicio no prepara diagnóstico oculto; otras pestañas no preparan clasificación; navegación programática activa pintura.
+Worker: identidad manifest, shell nuevo antes de activar, fallo conserva worker anterior, LAB separado, API/POST sin interceptar.
+No certifica Safari/PWA, dos cuentas reales ni integración bancaria real.
+Animaciones: antes 50 trabajos escalonados hasta 2450 ms; ahora 0. Función explícita disponible. Sin errores sintéticos.
+Chrome remoto: navegación v97.62 verificada previamente; comprobar v97.63 tras publicación.
