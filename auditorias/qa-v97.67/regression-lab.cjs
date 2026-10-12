@@ -52,6 +52,7 @@ for(const fn of ['disponibleEfectivo','variablesTotal','resumenMovimientosVariab
    assert.equal(count,1,'cold tab computes one financial signature, not two');
    w.fxNav9761Render('ingresos');
    assert.equal(count,2,'warm unchanged tab checks freshness exactly once');
+   w.goToTab('gastos-variables');
    w.fxNav9761Invalidate();
    count=0;w.fxNav9761Render('gastos-variables');
    assert.equal(count,1,'cold Variables computes one financial signature');
