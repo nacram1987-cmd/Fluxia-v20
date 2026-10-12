@@ -1,9 +1,9 @@
 'use strict';
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
-const {JSDOM,VirtualConsole}=require('jsdom');
-const acorn=require('acorn');
-const {indexedDB,IDBKeyRange}=require('fake-indexeddb');
+const {JSDOM,VirtualConsole}=require('../qa-v97.66/node_modules/jsdom');
+const acorn=require('../qa-v97.66/node_modules/acorn');
+const {indexedDB,IDBKeyRange}=require('../qa-v97.66/node_modules/fake-indexeddb');
 const source=fs.readFileSync('lab/v97.66.html','utf8');
 const candidate=fs.readFileSync('lab/v97.67.html','utf8');
 const patch=[
