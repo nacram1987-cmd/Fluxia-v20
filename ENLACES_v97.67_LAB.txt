@@ -1,0 +1,6 @@
+FLUXIA v97.67-LAB · ENLACES
+LAB (Safari, prueba): https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.67.html?v=97.67
+ESTABLE (PWA instalada, sin cambios): https://nacram1987-cmd.github.io/Fluxia-v20/
+BASE HISTÓRICA ACEPTADA: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.66.html
+REPOSITORIO: https://github.com/nacram1987-cmd/Fluxia-v20
+NOTA: No se ha activado «con labora»; la PWA instalada continúa con v97.66. No reinstalar.
