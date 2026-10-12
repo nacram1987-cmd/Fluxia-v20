@@ -9,7 +9,7 @@ const candidate=fs.readFileSync('lab/v97.67.html','utf8');
 const patch=[
  ['function fxNav9761Render(tab){var signature=fxNav9761Signature(tab),previous=fxNav9761Cache.get(tab);','function fxNav9761Render(tab){var previous=fxNav9761Cache.get(tab),signature=previous===undefined?null:fxNav9761Signature(tab);'],
  ['function closeDrawer(){var m=document.getElementById("drawerMenu");','function closeDrawer(skipResume){var m=document.getElementById("drawerMenu");'],
- ['if(fxNav9758Pending)fxNav9758Schedule(fxNav9758Pending);else fxNav9758ResumeJobs();var later=window.requestIdleCallback','if(!skipResume){if(fxNav9758Pending)fxNav9758Schedule(fxNav9758Pending);else fxNav9758ResumeJobs()}var later=window.requestIdleCallback'],
+ ['if(fxNav9758Pending)fxNav9758Schedule(fxNav9758Pending);else fxNav9758ResumeJobs();var later=window.requestIdleCallback','if(skipResume!==true){if(fxNav9758Pending)fxNav9758Schedule(fxNav9758Pending);else fxNav9758ResumeJobs()}var later=window.requestIdleCallback'],
  ['try{closeDrawer()}catch(e){}try{window.scrollTo(0,0)}catch(e){}fxNav9758Schedule(tabName)','try{closeDrawer(true)}catch(e){}try{window.scrollTo(0,0)}catch(e){}fxNav9758Schedule(tabName)']
 ];
 let rebuilt=source;
@@ -68,12 +68,17 @@ for(const fn of ['disponibleEfectivo','variablesTotal','resumenMovimientosVariab
    assert.equal(w.resumenMovimientosVariables(w.eval('mesSeleccionado')).totalMes,1401);
    const control=w.document.getElementById('btnMenu');
    const overlay=w.document.getElementById('drawerOverlay');
+   const _oldResume=w.fxNav9758ResumeJobs;let resumeCalls=0;
+   w.fxNav9758ResumeJobs=function(...a){resumeCalls++;return _oldResume(...a)};
    for(let i=0;i<12;i++){
      control.click();assert(w.document.getElementById('drawerMenu').classList.contains('open'));
      overlay.click();assert(!w.document.getElementById('drawerMenu').classList.contains('open'));
+     assert.equal(resumeCalls,i+1,'manual menu close resumes jobs even when called with click Event');
    }
    control.click();
+   const resumeBeforeNav=resumeCalls;
    w.goToTab('resumen');
+   assert.equal(resumeCalls,resumeBeforeNav,'navigation close does not schedule stale view');
    assert(!w.document.getElementById('drawerMenu').classList.contains('open'),'menu closed');
    assert(w.document.getElementById('panel-resumen').classList.contains('active'),'home activated');
    const stable=w.disponibleEfectivo(w.eval('mesSeleccionado'));
