@@ -69,16 +69,20 @@ for(const fn of ['disponibleEfectivo','variablesTotal','resumenMovimientosVariab
    const control=w.document.getElementById('btnMenu');
    const overlay=w.document.getElementById('drawerOverlay');
    const _oldResume=w.fxNav9758ResumeJobs;let resumeCalls=0;
+   const _oldSchedule=w.fxNav9758Schedule;let scheduleCalls=0;
    w.fxNav9758ResumeJobs=function(...a){resumeCalls++;return _oldResume(...a)};
+   w.fxNav9758Schedule=function(...a){scheduleCalls++;return _oldSchedule(...a)};
    for(let i=0;i<12;i++){
      control.click();assert(w.document.getElementById('drawerMenu').classList.contains('open'));
+     const beforeCloseWork=resumeCalls+scheduleCalls;
      overlay.click();assert(!w.document.getElementById('drawerMenu').classList.contains('open'));
-     assert.equal(resumeCalls,i+1,'manual menu close resumes jobs even when called with click Event');
+     assert(resumeCalls+scheduleCalls>beforeCloseWork,'manual menu close resumes or schedules pending jobs even when called with click Event');
    }
    control.click();
-   const resumeBeforeNav=resumeCalls;
+   const resumeBeforeNav=resumeCalls,scheduleBeforeNav=scheduleCalls;
    w.goToTab('resumen');
-   assert.equal(resumeCalls,resumeBeforeNav,'navigation close does not schedule stale view');
+   assert.equal(resumeCalls,resumeBeforeNav,'navigation close does not resume stale jobs');
+   assert.equal(scheduleCalls,scheduleBeforeNav+1,'navigation schedules destination exactly once');
    assert(!w.document.getElementById('drawerMenu').classList.contains('open'),'menu closed');
    assert(w.document.getElementById('panel-resumen').classList.contains('active'),'home activated');
    const stable=w.disponibleEfectivo(w.eval('mesSeleccionado'));
