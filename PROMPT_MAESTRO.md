@@ -995,3 +995,20 @@ Esta fijación de base no modifica el runtime v97.66 ni certifica ensayos en iPh
 Cuando el usuario diga «con labora», promover la última LAB validada a la PWA instalada: publicar el HTML en la raíz canónica `index.html`, junto con el Service Worker y manifiesto coherentes. Entregar la actualización real de pantalla de inicio, no solo un enlace de laboratorio. La frase constituye autorización de promoción, manteniendo previamente las pruebas obligatorias de integridad y rendimiento de la base v97.66.
 
 Conservar identidad PWA, entrada permanente, datos locales/cloud y cachés separadas. No exigir reinstalación ni borrar almacenamiento. Verificar documento realmente servido, versión, worker y despliegue efectivo; no declarar actualización en iPhone sin evidencia del dispositivo. Si raíz/PWA y LAB ya tienen la misma versión, confirmar la coincidencia sin generar un build ficticio.
+
+
+---
+
+## Adenda v97.67-LAB · Navegación inmediata sin sacrificar integridad (12/10/2026)
+
+**Base inmutable:** v97.66, respaldo `baseline-v97.66-performance`, con QA permanente. Esta LAB NO sustituye la PWA hasta orden «con labora» y validación de sus pruebas.
+
+1. En pestañas que no tienen firma previa válida, ejecutar solo el render y calcular UNA firma después de pintar. En pestañas ya visitadas, mantener comparación integral para reconocer ediciones in-place, perfil, mes y storage. PROHIBIDO reemplazar la firma completa por longitudes de listas o referencias de objetos.
+2. En navegación desde menú evitar duplicar la planificación al cerrarlo, pero mantener el comportamiento normal al cerrarlo manualmente (overlay, botón, menú).
+3. Evitar `will-change:transform` y transformación 3D global permanente en paneles si genera sobrecarga. No desactivar animaciones o transiciones de elementos interactivos ajenos a los paneles.
+4. Reducir trabajo en ruta crítica únicamente si la integridad está demostrada. Las funciones de Disponible, Ingresos, Fijos, Provisiones, Variables, persistencia, auth, outbox y bancos no pueden cambiar por optimizar UI.
+5. Benchmark exigido antes de promoción: mismo iPhone/Safari y estado frío/caliente, 20 cambios de pestaña, menú/logo, Variables, Bancos, mediana y peor cola, errores, tareas largas y estado bancario; impedir promoción por regresión reproducible. JSDOM/Chrome sirven para prevención, no como prueba definitiva iOS.
+6. QA: `node auditorias/qa-v97.66/verify-baseline.cjs`, `npm test` en `auditorias/qa-v97.66`, `node auditorias/qa-v97.67/regression-lab.cjs` con la misma instalación de dependencias.
+7. Versiones y entregables: publicar siempre LAB y referencia ESTABLE, ZIP completo, cambios, límites y pruebas; la PWA estable no se promueve por una mera solicitud de optimización. Publicarla cuando el usuario diga «con labora» tras superar QA.
+
+**Principio rector:** rendimiento de élite significa respuesta y render sin trabajo superfluo medidos objetivamente, no ocultar los retrasos ni sacrificar contabilidad/seguridad para aparentar rapidez.
