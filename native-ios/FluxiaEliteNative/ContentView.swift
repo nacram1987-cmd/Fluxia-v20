@@ -26,6 +26,7 @@ struct ContentView: View {
     @State private var selection: EliteTab = .home
     @State private var month = Date()
     @State private var showPrivacy = false
+    @State private var selectedModule: EliteFinanceModule = .fixed
     private let euro = Locale(identifier: "es_ES")
 
     var body: some View {
@@ -37,7 +38,7 @@ struct ContentView: View {
                             header
                             switch tab {
                             case .home: home
-                            case .plan: placeholder("Planificación", "Los módulos financieros se conectarán tras validar la integridad de los datos.")
+                            case .plan: financeModules
                             case .banks: placeholder("Bancos", "Sin conexión bancaria en esta versión de demostración.")
                             case .settings: settingsView
                             }
@@ -113,6 +114,44 @@ struct ContentView: View {
         }
     }
 
+    private var financeModules: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Mis finanzas").font(.title2).bold()
+            Text("Explora las secciones de la futura aplicación. Todas las cifras son ficticias.")
+                .font(.footnote).foregroundStyle(.white.opacity(0.7))
+            ForEach(EliteFinanceModule.allCases) { module in
+                Button {
+                    selectedModule = module
+                } label: {
+                    HStack(spacing: 14) {
+                        Image(systemName: module.symbol)
+                            .foregroundStyle(ElitePalette.gold)
+                            .frame(width: 28)
+                        Text(module.rawValue)
+                        Spacer()
+                        Image(systemName: selectedModule == module ? "checkmark.circle.fill" : "chevron.right")
+                            .foregroundStyle(ElitePalette.gold)
+                    }
+                    .padding(15)
+                    .background(ElitePalette.card, in: RoundedRectangle(cornerRadius: 15))
+                }
+                .buttonStyle(.plain)
+            }
+            VStack(alignment: .leading, spacing: 9) {
+                Text(selectedModule.rawValue).font(.headline)
+                Text(selectedModule.explanation)
+                    .font(.subheadline)
+                    .foregroundStyle(.white.opacity(0.8))
+                Label("Solo lectura · Demostración", systemImage: "lock.shield")
+                    .font(.caption)
+                    .foregroundStyle(ElitePalette.gold)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(18)
+            .background(ElitePalette.card, in: RoundedRectangle(cornerRadius: 18))
+        }
+    }
+
     private var settingsView: some View {
         VStack(alignment: .leading, spacing: 18) {
             Text("Configuración").font(.title2).bold()
@@ -168,5 +207,38 @@ struct ContentView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(22)
         .background(ElitePalette.card, in: RoundedRectangle(cornerRadius: 20))
+    }
+}
+
+private enum EliteFinanceModule: String, CaseIterable, Identifiable {
+    case income = "Ingresos"
+    case fixed = "Gastos fijos"
+    case variable = "Gastos variables"
+    case savings = "Huchas"
+    case shared = "Compartidos"
+    case financing = "Financiaciones"
+
+    var id: String { rawValue }
+
+    var symbol: String {
+        switch self {
+        case .income: "arrow.down.left.circle"
+        case .fixed: "calendar"
+        case .variable: "creditcard"
+        case .savings: "archivebox"
+        case .shared: "person.2"
+        case .financing: "chart.bar.xaxis"
+        }
+    }
+
+    var explanation: String {
+        switch self {
+        case .income: "Registro de ingresos con persistencia y trazabilidad, pendiente de conexión segura."
+        case .fixed: "Control de vencimientos, pagos y conciliación sin duplicar cargos variables."
+        case .variable: "Movimientos individuales y resumen mensual, sin confundir el total con Disponible."
+        case .savings: "Aportaciones, provisiones, usos y rescates con fechas históricas correctas."
+        case .shared: "Gastos compartidos, deudas y liquidaciones independientes por usuario."
+        case .financing: "Cuotas, calendario de pagos y saldo pendiente sin resurrecciones."
+        }
     }
 }
