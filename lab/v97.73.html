@@ -1200,7 +1200,7 @@ html{scroll-behavior:auto!important}
 <button class="pv-btn pv-btn-use" id="tcBtnNuevoPago" type="button">💸 Registrar pago</button>
 </div>
 </div>
-<section id="fx9773SharedMonth" aria-label="Gastos compartidos del mes"><div class="fx9773-head"><b>🧾 Gastos compartidos del mes</b><span id="fx9773SharedPeriod">—</span></div><div class="fx9773-grid"><div><span>Tickets únicos</span><strong id="fx9773SharedCount">—</strong></div><div><span>Gastos registrados</span><strong id="fx9773SharedAmount">—</strong></div><div><span>Pagados por ti</span><strong id="fx9773SharedMine">—</strong></div><div><span>Participantes · Grupos</span><strong id="fx9773SharedPeople">—</strong></div></div><p class="fx9773-note">Resumen informativo: no se suma otra vez al Disponible. Los saldos de arriba reflejan las deudas pendientes.</p></section>
+<section id="fx9773SharedMonth" aria-label="Gastos compartidos del mes"><div class="fx9773-head"><b>🧾 Gastos compartidos del mes</b><span id="fx9773SharedPeriod">—</span></div><div class="fx9773-grid"><div><span>Tickets únicos</span><strong id="fx9773SharedCount">—</strong></div><div><span>Gastos registrados</span><strong id="fx9773SharedAmount">—</strong></div><div><span>Pagados por ti</span><strong id="fx9773SharedMine">—</strong></div><div><span>Personas (contándome) · Grupos</span><strong id="fx9773SharedPeople">—</strong></div></div><p class="fx9773-note">Resumen informativo: no se suma otra vez al Disponible. Los saldos de arriba reflejan las deudas pendientes.</p></section>
 <div class="tc-caja-impact" id="compCajaImpacto" style="display:none;"></div>
 <div aria-label="Vista de compartidos" class="cv-seg" id="compVistaSeg" role="tablist">
 <button aria-selected="true" class="cv-seg-btn on" data-cvvista="saldos" role="tab" type="button">👥 Saldos</button>
@@ -1934,7 +1934,7 @@ function fx9773ResumenCompartidos(items,prefix){
   if(it.evento&&String(it.evento).trim())groups.add(String(it.evento).trim().toLowerCase());
  });
  let total=0,mine=0;receipts.forEach(e=>{total+=e.cent;if(e.own)mine+=e.cent});
- return{count:receipts.size,total:total/100,mine:mine/100,people:people.size,groups:groups.size};
+ return{count:receipts.size,total:total/100,mine:mine/100,people:receipts.size?people.size+1:0,groups:groups.size};
 }
 function fx9773PintarVariables(mes){
  const a=document.getElementById("fx9773Paid"),b=document.getElementById("fx9773SpentTotal");
