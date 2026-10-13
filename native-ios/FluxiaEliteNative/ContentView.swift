@@ -35,6 +35,8 @@ struct ContentView: View {
     @State private var selection: EliteTab = .home
     @State private var month = Date()
     @State private var showPrivacy = false
+    @ScaledMetric(relativeTo: .title2) private var brandFontSize: CGFloat = 26
+    @ScaledMetric(relativeTo: .largeTitle) private var availableFontSize: CGFloat = 38
     @State private var selectedModule: EliteFinanceModule = .fixed
     private let snapshot = DemoFinanceSnapshot.preview
     private var sampleMonth: FinanceRules.Month { snapshot.month }
@@ -74,7 +76,7 @@ struct ContentView: View {
     private var header: some View {
         VStack(alignment: .leading, spacing: 7) {
             HStack {
-                Text("FLUXIA").font(.system(size: 26, weight: .bold, design: .rounded))
+                Text("FLUXIA").font(.system(size: brandFontSize, weight: .bold, design: .rounded))
                     .tracking(3)
                 Text("ÉLITE").font(.system(size: 12, weight: .bold))
                     .foregroundStyle(LinearGradient(colors: [Color(red: 0.73, green: 0.53, blue: 0.27), Color(red: 0.98, green: 0.86, blue: 0.60), Color(red: 0.69, green: 0.47, blue: 0.23)], startPoint: .leading, endPoint: .trailing))
@@ -98,6 +100,7 @@ struct ContentView: View {
                 Spacer()
                 Text(month, format: .dateTime.month(.wide).year())
                     .font(.headline)
+                    .accessibilityLabel("Mes seleccionado: \(month.formatted(.dateTime.month(.wide).year()))")
                 Spacer()
                 Button { month = Calendar.current.date(byAdding: .month, value: 1, to: month) ?? month } label: {
                     Image(systemName: "chevron.right")
@@ -111,7 +114,8 @@ struct ContentView: View {
                 Text("DISPONIBLE · DEMOSTRACIÓN")
                     .font(.caption).tracking(1.2)
                 Text(FinanceRules.availableCents(sampleMonth).map(formattedEuros) ?? "Error de cálculo")
-                    .font(.system(size: 38, weight: .semibold, design: .rounded))
+                    .font(.system(size: availableFontSize, weight: .semibold, design: .rounded))
+                    .accessibilityLabel("Disponible ficticio: \(FinanceRules.availableCents(sampleMonth).map(formattedEuros) ?? "Error de cálculo")")
                     .monospacedDigit()
                 Text("Saldo ficticio · Sin conexión bancaria")
                     .font(.caption).foregroundStyle(ElitePalette.ink.opacity(0.7))

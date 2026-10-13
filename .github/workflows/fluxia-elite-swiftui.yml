@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   simulator:
@@ -36,39 +36,36 @@ jobs:
         run: |
           set -o pipefail
           xcodebuild -project FluxiaEliteNative.xcodeproj -scheme FluxiaEliteNative -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath build/DerivedData CODE_SIGNING_ALLOWED=NO build | tee build.log
-      - name: Capture native app screenshot on iPhone simulator
+      - name: Capture native app screenshots in light and dark themes
         working-directory: native-ios
         run: |
           set -euo pipefail
           DEVICE_ID="$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin)["devices"]; a=[x for v in d.values() for x in v if "iPhone" in x["name"] and x["isAvailable"]]; print(a[0]["udid"] if a else "")')"
           if [ -z "$DEVICE_ID" ]; then echo "No available iPhone simulator"; exit 1; fi
-          xcrun simctl boot "$DEVICE_ID"
+          xcrun simctl boot "$DEVICE_ID" 2>/dev/null || true
           xcrun simctl bootstatus "$DEVICE_ID" -b
           xcrun simctl install "$DEVICE_ID" build/DerivedData/Build/Products/Debug-iphonesimulator/FluxiaEliteNative.app
-          xcrun simctl launch "$DEVICE_ID" com.fluxia.elite.native.lab
-          sleep 4
           mkdir -p screenshots
-          xcrun simctl io "$DEVICE_ID" screenshot screenshots/Fluxia-Elite-SwiftUI-Inicio.png
-      - name: Upload screenshot of real SwiftUI rendering
+          xcrun simctl launch --terminate-running-process "$DEVICE_ID" com.fluxia.elite.native.lab -fluxia.elite.darkMode NO
+          sleep 4
+          xcrun simctl io "$DEVICE_ID" screenshot screenshots/Fluxia-Elite-SwiftUI-Inicio-Claro.png
+          xcrun simctl launch --terminate-running-process "$DEVICE_ID" com.fluxia.elite.native.lab -fluxia.elite.darkMode YES
+          sleep 4
+          xcrun simctl io "$DEVICE_ID" screenshot screenshots/Fluxia-Elite-SwiftUI-Inicio-Oscuro.png
+          test -s screenshots/Fluxia-Elite-SwiftUI-Inicio-Claro.png
+          test -s screenshots/Fluxia-Elite-SwiftUI-Inicio-Oscuro.png
+          if cmp -s screenshots/Fluxia-Elite-SwiftUI-Inicio-Claro.png screenshots/Fluxia-Elite-SwiftUI-Inicio-Oscuro.png; then
+            echo "Light and dark screenshots are identical; theme selection did not take effect"
+            exit 1
+          fi
+      - name: Upload real simulator screenshots for both themes
         uses: actions/upload-artifact@v4
         with:
-          name: Fluxia-Elite-Nativa-Vista-iPhone
-          path: native-ios/screenshots/Fluxia-Elite-SwiftUI-Inicio.png
+          name: Fluxia-Elite-SwiftUI-iPhone-Claro-y-Oscuro
+          path: |
+            native-ios/screenshots/Fluxia-Elite-SwiftUI-Inicio-Claro.png
+            native-ios/screenshots/Fluxia-Elite-SwiftUI-Inicio-Oscuro.png
           if-no-files-found: error
-      - name: Publish synthetic screenshot directly to feature branch
-        working-directory: native-ios
-        run: |
-          set -euo pipefail
-          mkdir -p ../previews/fluxia-elite-native
-          cp screenshots/Fluxia-Elite-SwiftUI-Inicio.png ../previews/fluxia-elite-native/inicio.png
-          cd ..
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add previews/fluxia-elite-native/inicio.png
-          if ! git diff --cached --quiet; then
-            git commit -m "preview: update synthetic SwiftUI iPhone screenshot [skip ci]"
-            git push origin "HEAD:${GITHUB_REF_NAME}"
-          fi
       - name: Package simulator-only build
         working-directory: native-ios
         run: |
