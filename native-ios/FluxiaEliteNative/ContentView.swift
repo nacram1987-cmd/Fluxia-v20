@@ -87,6 +87,7 @@ struct ContentView: View {
                 Button { month = Calendar.current.date(byAdding: .month, value: -1, to: month) ?? month } label: {
                     Image(systemName: "chevron.left")
                 }
+                .accessibilityLabel("Mes anterior")
                 Spacer()
                 Text(month, format: .dateTime.month(.wide).year())
                     .font(.headline)
@@ -94,6 +95,7 @@ struct ContentView: View {
                 Button { month = Calendar.current.date(byAdding: .month, value: 1, to: month) ?? month } label: {
                     Image(systemName: "chevron.right")
                 }
+                .accessibilityLabel("Mes siguiente")
             }
             .foregroundStyle(ElitePalette.ink)
             .accessibilityElement(children: .contain)
@@ -104,7 +106,7 @@ struct ContentView: View {
                 Text(FinanceRules.availableCents(sampleMonth).map(formattedEuros) ?? "Error de cálculo")
                     .font(.system(size: 38, weight: .semibold, design: .rounded))
                     .monospacedDigit()
-                Text("Importe ficticio, no conectado a tu cuenta")
+                Text("Saldo ficticio · Sin conexión bancaria")
                     .font(.caption).foregroundStyle(ElitePalette.ink.opacity(0.7))
             }
             .frame(maxWidth: .infinity).padding(.vertical, 32)
@@ -118,7 +120,7 @@ struct ContentView: View {
                 tile("Huchas", formattedEuros(sampleMonth.plannedProvisionCents), "archivebox", .savings)
                 tile("Gastos variables", formattedEuros(sampleMonth.variableExpenseCents), "creditcard", .variable)
             }
-            Text("Versión nativa inicial. Sin autenticación, datos reales ni operaciones bancarias.")
+            Text("Vista de ejemplo: cambiar de mes no modifica los importes ficticios.")
                 .font(.footnote).foregroundStyle(ElitePalette.ink.opacity(0.65))
         }
     }
@@ -251,6 +253,7 @@ struct ContentView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(16)
             .background(ElitePalette.card, in: RoundedRectangle(cornerRadius: 18))
+            .overlay(RoundedRectangle(cornerRadius: 18).stroke(ElitePalette.champagne.opacity(0.32), lineWidth: 1))
         }
         .buttonStyle(.plain)
         .accessibilityLabel("\(title), \(amount). Abrir sección")
