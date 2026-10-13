@@ -23,6 +23,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install XcodeGen
         run: brew install xcodegen
+      - name: Validate native financial accounting
+        working-directory: native-ios
+        run: |
+          swiftc FluxiaEliteNative/FinanceRules.swift tests/main.swift -o /tmp/fluxia-finance-check
+          /tmp/fluxia-finance-check
       - name: Generate native Xcode project
         working-directory: native-ios
         run: xcodegen generate
