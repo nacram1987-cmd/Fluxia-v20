@@ -1,0 +1,29 @@
+name: Fluxia v97.73 isolated monthly-spend QA (no deployment)
+on:
+  push:
+    branches: ['feature/v97.73-gasto-real-mensual']
+    paths:
+      - 'AUDITORIA_ELITE/build-candidate-v9773.cjs'
+      - 'AUDITORIA_ELITE/variable-spend-summary-regression-v9773.cjs'
+      - '.github/workflows/fluxia-v9773-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm ci --prefix auditorias/qa-v97.66 --no-audit --no-fund
+      - run: node auditorias/qa-v97.66/verify-baseline.cjs
+      - run: sha256sum -c AUDITORIA_ELITE/PROTECTED_SHA256.txt
+      - run: npm --prefix auditorias/qa-v97.66 test
+      - run: node AUDITORIA_ELITE/build-candidate-v9773.cjs
+      - run: node AUDITORIA_ELITE/variable-spend-summary-regression-v9773.cjs
+      - run: node AUDITORIA_ELITE/build-candidate-v9773.cjs --check
+      - name: Upstream v97.72 reproducibility gate — blocks promotion
+        run: node AUDITORIA_ELITE/build-candidate-v9772.cjs --check
