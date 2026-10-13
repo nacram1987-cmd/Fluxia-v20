@@ -1,0 +1,5 @@
+Fluxia v97.72-LAB — candidata pendiente de QA/Pages, no promover a ESTABLE sin «con labora».
+LAB tras desplegar y validar: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.72.html
+PWA LAB aislada: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.72/index.html
+ESTABLE intacta: https://nacram1987-cmd.github.io/Fluxia-v20/
+Referencia rápida: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.68.html

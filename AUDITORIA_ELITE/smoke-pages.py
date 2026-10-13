@@ -3,7 +3,7 @@
 import argparse,hashlib,json,urllib.request,time
 from pathlib import Path
 p=argparse.ArgumentParser();p.add_argument('--base',default='https://nacram1987-cmd.github.io/Fluxia-v20/');p.add_argument('--attempts',type=int,default=1);args=p.parse_args()
-files=['index.html','fluxia-sw.js','sw.js','manifest.webmanifest','lab/v97.68.html','lab/v97.69.html','lab/fluxia-sw.js','lab/manifest.webmanifest','lab/v97.70.html','lab/v97.70/index.html','lab/v97.70/fluxia-sw.js','lab/v97.70/manifest.webmanifest','lab/v97.71.html','lab/v97.71/index.html','lab/v97.71/fluxia-sw.js','lab/v97.71/manifest.webmanifest']
+files=['index.html','fluxia-sw.js','sw.js','manifest.webmanifest','lab/v97.68.html','lab/v97.69.html','lab/fluxia-sw.js','lab/manifest.webmanifest','lab/v97.70.html','lab/v97.70/index.html','lab/v97.70/fluxia-sw.js','lab/v97.70/manifest.webmanifest','lab/v97.71.html','lab/v97.71/index.html','lab/v97.71/fluxia-sw.js','lab/v97.71/manifest.webmanifest','lab/v97.72.html','lab/v97.72/index.html','lab/v97.72/fluxia-sw.js','lab/v97.72/manifest.webmanifest']
 for attempt in range(args.attempts):
  try:
   result=[]
@@ -13,7 +13,7 @@ for attempt in range(args.attempts):
     if r.status!=200 or body!=expected:raise RuntimeError('Deployed bytes mismatch: '+name)
     result.append({'path':name,'status':r.status,'bytes':len(body),'sha256':hashlib.sha256(body).hexdigest(),'etag':r.headers.get('ETag')})
   # Installed manifest's icon paths must resolve to real image bytes.
-  for name in ['manifest.webmanifest','lab/manifest.webmanifest','lab/v97.70/manifest.webmanifest','lab/v97.71/manifest.webmanifest']:
+  for name in ['manifest.webmanifest','lab/manifest.webmanifest','lab/v97.70/manifest.webmanifest','lab/v97.71/manifest.webmanifest','lab/v97.72/manifest.webmanifest']:
    m=json.loads(Path(name).read_text())
    for icon in m.get('icons',[]):
     url=urllib.parse.urljoin(args.base+name,icon['src'])

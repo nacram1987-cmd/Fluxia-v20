@@ -10,3 +10,6 @@ Revisar INFORME_FORENSE, MATRIZ, PRUEBAS, BASELINE y REPORTE_DESPLIEGUE. SQL seg
 
 
 Actualización v97.71: publicada como LAB tras QA, despliegue OIDC y smoke HTTP por bytes. Corrige el falso archivado por listas parciales, la restauración automática desde papelera y propone asociar Apple.com/bill a un fijo solo para confirmación. v97.68 y ESTABLE intactas. Valkiria sigue pendiente de sincronización autenticada para revisar referencias sin fusionar cargos por importe/fecha. ZIP prerelease v97.71-LAB disponible en GitHub Releases.
+
+
+Candidata v97.72: en LAB separada se corrige el descarte de propuesta por importe y se vuelve a evaluar cargos revisados sin decisión, sin modificar el cálculo ni la estable. Estado definitivo depende del workflow QA, benchmark y smoke de Pages. No confundir esto con los fijos ya pagados manualmente: caso aún no cubierto.

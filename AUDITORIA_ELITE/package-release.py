@@ -11,7 +11,7 @@ tag=release.replace('.','')
 files=subprocess.check_output(['git','ls-files','-z']).decode().split('\0')
 required={'index.html','lab/index.html','v97.65.html','v97.66.html',
  'lab/v97.66.html','lab/v97.67.html','lab/v97.68.html','lab/v97.69.html','lab/v97.70.html','lab/v97.70/index.html',
- 'lab/v97.71.html','lab/v97.71/index.html',
+ 'lab/v97.71.html','lab/v97.71/index.html','lab/v97.72.html','lab/v97.72/index.html',
  f'lab/{release}.html',f'lab/{release}/index.html',f'lab/{release}/fluxia-sw.js',f'lab/{release}/manifest.webmanifest',
  'index-v97.46.html','v97.46.html'}
 selected=[]
@@ -31,7 +31,7 @@ with ZipFile(dst,'w',ZIP_DEFLATED,compresslevel=9) as z:
   f'LAB publicada: lab/{release}.html; PWA LAB aislada: lab/{release}/index.html\nReferencia de velocidad: lab/v97.68.html\n'
   'index.html y PWA conservan su version original. No sustituir la PWA por el candidato.\n'
   'Las reglas de Papelera exigen accion explicita; los archivos antiguos permanecen para revision manual.\n'
-  'Correccion reproducible: AUDITORIA_ELITE/build-candidate-v9771.cjs y build-lab9771.cjs.\n'
+  'Correccion reproducible: AUDITORIA_ELITE/build-candidate-v9772.cjs, fijo-reconciliation-regression-v9772.cjs y v97.71 conservada.\n'
   'RLS/RPC de contactos aplicada con autorizacion y nueve comprobaciones sinteticas.\n'
   'Consultar AUDITORIA_ELITE/README.md para informes, pruebas y riesgos.\n'
   'Incluye app, recursos, referencias protegidas y QA. El resto del historial sigue en Git.\n')
