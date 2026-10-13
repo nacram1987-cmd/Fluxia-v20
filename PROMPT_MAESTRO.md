@@ -1087,3 +1087,13 @@ Conservar identidad PWA, entrada permanente, datos locales/cloud y cachés separ
 
 ### 7. Encargo operativo a ChatGPT Work
 La ejecución detallada se encuentra en **`PROMPT_WORK_FLUXIA_ELITE_EJECUCION_INTEGRAL_2026-10-13.md`**, que forma parte del presente marco normativo. Work debe **diagnosticar y ejecutar las correcciones permitidas, no limitarse a describirlas**; aplicar primero P0 de publicación, integridad, persistencia y seguridad, luego optimización no regresiva, con entregas LAB progresivas y pruebas en cada paso. Trabajar autónomamente dentro de los permisos concedidos y pedir intervención solo para autenticación, permisos o cambios destructivos/producción que realmente lo exijan. El objetivo «élite» se alcanza por **evidencia medible**, nunca por una proclamación.
+
+
+## Adenda Élite · ejecución 13/10/2026, evidencia y bloqueo de publicación
+
+- v97.69 se publicó efectivamente en Pages mediante db7790fb93f64f922d8091ee6018fb83f294c338; ocho rutas comparadas por bytes. Mantener workflow soportado desde rama efectiva y smoke HTTP: QA verde o commit en main no prueba despliegue. Prohibido usar POST /pages/builds como vía de integración o silenciar su error.
+- Pruebas obligatorias nuevas: dos cargos distintos mismo importe/día; dos IDs distintos mismo comercio; manual/pending comercio distinto; 400 IDs bancarios/diez reimportaciones; mismo ID bruto en bancos/cuentas distintas. No fusionar pagos confirmados por huella ni asociar manual/pending por importe únicamente.
+- Generador de candidato v97.70 corrige falsas fusiones pero queda BLOQUEADO por identidad bancaria sin cuenta/proveedor y compatibilidad de referencias/tombstones. No convertirlo en LAB pública ni promover por pasar un subconjunto. Mantener visible el test crítico rojo.
+- Seguridad: catálogos confirmaron contactos sin RLS y RPC de invitaciones SECURITY DEFINER invocable por anon. No declarar aislamiento integral. SQL preparado en AUDITORIA_ELITE/SEGURIDAD_PROPUESTA_NO_APLICADA.sql; aprobación y prueba en copia antes de cambios sensibles.
+- Benchmarks JSDOM de diez repeticiones son evidencia de trabajo JS/DOM, no tiempos iPhone, INP/LCP/CLS/FPS. Safari/PWA físicos siguen NO VERIFICADOS. Ninguna prueba sintética ni puntuación autoriza promoción automática.
+- Preservar raíz v97.66, LAB v97.68, referencias y almacenamiento; no reparar cifras reales mediante borrado/renumeración/reimportación ciega. Las correcciones pendientes y el dry-run forman parte de cada entrega.
