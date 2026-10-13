@@ -15,7 +15,7 @@ const files=[
 ];
 for(const [from,to,transform] of files){
  const expected=transform(fs.readFileSync(from,'utf8'));
- if(process.argv.includes('--check'))assert.equal(fs.readFileSync(to,'utf8'),expected,'candidate drift '+to);
+ if(process.argv.includes('--check')){const actual=fs.readFileSync(to,'utf8');if(actual!==expected){let i=0;while(i<actual.length&&i<expected.length&&actual[i]===expected[i])i++;console.error(JSON.stringify({file:to,firstDiff:i,actualLength:actual.length,expectedLength:expected.length,actualSnippet:actual.slice(Math.max(0,i-90),i+120),expectedSnippet:expected.slice(Math.max(0,i-90),i+120)}));throw Error('candidate drift '+to)}}
  else {fs.mkdirSync(require('node:path').dirname(to),{recursive:true});fs.writeFileSync(to,expected)}
 }
 const old=fs.readFileSync('lab/v97.71.html','utf8'),newer=fs.readFileSync('lab/v97.72.html','utf8');
