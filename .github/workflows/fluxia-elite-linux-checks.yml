@@ -51,3 +51,14 @@ jobs:
           if(!html.includes('No introduzcas credenciales'))throw Error('Credentials warning missing');
           console.log('Brand and development-only safeguards verified');
           NODE
+
+      - name: Package iPhone Safari visual preview (synthetic only)
+        run: |
+          mkdir -p preview
+          cp www/index.html preview/Fluxia-Elite-LAB-1.6-Vista-Previa.html
+          echo 'Vista previa de interfaz con datos ficticios. No introducir credenciales.' > preview/LEEME.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Fluxia-Elite-LAB-1.6-Vista-Previa
+          path: ios-app/preview/
+          retention-days: 30
