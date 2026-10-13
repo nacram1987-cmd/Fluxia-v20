@@ -18,11 +18,12 @@ const gvScript=all.find(x=>x.includes('window._fluxiaRegistrarBorradoGV=function
 assert(gvScript,'explicit bank movement delete hook missing');
 const hookStart=gvScript.indexOf('window._fluxiaRegistrarBorradoGV=function(mv)'),hookEnd=gvScript.indexOf(';function fluxiaBlacklistParaEdge',hookStart);
 assert(hookEnd>hookStart,'explicit delete hook boundary missing');
-let explicitArchives=0;const explicitCtx={window:null,FluxiaPapelera:{enviar(tipo,mv){assert.equal(tipo,'movimiento');assert.equal(mv.id,'explicit-1');explicitArchives++}},FluxiaGVBorrados:{registrar(){}},FluxiaBancoFijos:{olvidarCargo(){}}};explicitCtx.window=explicitCtx;
+let explicitArchives=0;const manualArchive=[];const explicitCtx={window:null,FluxiaPapelera:{listar(){return manualArchive},push(tipo,items,key){assert.equal(tipo,'Gasto variable');assert.equal(key,'planRescate_v2_movimientos');explicitArchives++;manualArchive.unshift({key,snapshot:items[0]})}},FluxiaGVBorrados:{registrar(){}},FluxiaBancoFijos:{olvidarCargo(){}}};explicitCtx.window=explicitCtx;
 vm.createContext(explicitCtx);vm.runInContext(gvScript.slice(hookStart,hookEnd+1),explicitCtx);
 explicitCtx._fluxiaRegistrarBorradoGV({id:'explicit-1',concepto:'Cargo eliminado',importe:12});
-assert.equal(explicitArchives,1,'explicit delete hook failed to archive movement');
-ctx.FluxiaPapelera.push('Gasto variable',[{id:'explicit-1',concepto:'Cargo eliminado',importe:12}],'v2_movimientos');
+explicitCtx._fluxiaRegistrarBorradoGV({id:'explicit-1',concepto:'Cargo eliminado',importe:12});
+assert.equal(explicitArchives,1,'explicit delete hook failed to archive once through the real Papelera API');
+ctx.FluxiaPapelera.push('Gasto variable',[{id:'explicit-1',concepto:'Cargo eliminado',importe:12}],'planRescate_v2_movimientos');
 assert.equal(JSON.parse(store.get('fluxia_papelera_v2_profile')).length,2,'Papelera explicit archival API failed');
 
 function fixedHarness(fijos){

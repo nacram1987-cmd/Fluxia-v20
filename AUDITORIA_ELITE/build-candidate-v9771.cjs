@@ -14,7 +14,7 @@ replaceOnce(
 // Keep explicit user deletions recoverable after disabling unsafe list diffs.
 replaceOnce(
  'window._fluxiaRegistrarBorradoGV=function(mv){try{if(!mv)return;try{if(window.FluxiaBancoFijos&&FluxiaBancoFijos.olvidarCargo)FluxiaBancoFijos.olvidarCargo(mv)}catch(_ol){}if(window.FluxiaGVBorrados)FluxiaGVBorrados.registrar(mv);else{if(mv.bancoRef)marcarMovimientoBorrado(String(mv.bancoRef));if(mv.id)marcarMovimientoBorrado(String(mv.id))}}catch(e){}};',
- 'window._fluxiaRegistrarBorradoGV=function(mv){try{if(!mv)return;try{if(window.FluxiaBancoFijos&&FluxiaBancoFijos.olvidarCargo)FluxiaBancoFijos.olvidarCargo(mv)}catch(_ol){}try{if(window.FluxiaPapelera&&FluxiaPapelera.enviar)FluxiaPapelera.enviar("movimiento",mv)}catch(_pap){}if(window.FluxiaGVBorrados)FluxiaGVBorrados.registrar(mv);else{if(mv.bancoRef)marcarMovimientoBorrado(String(mv.bancoRef));if(mv.id)marcarMovimientoBorrado(String(mv.id))}}catch(e){}};',
+ 'window._fluxiaRegistrarBorradoGV=function(mv){try{if(!mv)return;try{if(window.FluxiaBancoFijos&&FluxiaBancoFijos.olvidarCargo)FluxiaBancoFijos.olvidarCargo(mv)}catch(_ol){}try{var pap=window.FluxiaPapelera,key="planRescate_v2_movimientos",items=pap&&pap.listar?pap.listar():[],ya=mv.id!=null&&items.some(function(x){return x&&x.key===key&&x.snapshot&&String(x.snapshot.id)===String(mv.id)});if(pap&&pap.push&&!ya)pap.push("Gasto variable",[mv],key)}catch(_pap){}if(window.FluxiaGVBorrados)FluxiaGVBorrados.registrar(mv);else{if(mv.bancoRef)marcarMovimientoBorrado(String(mv.bancoRef));if(mv.id)marcarMovimientoBorrado(String(mv.id))}}catch(e){}};',
  'explicit movement deletion archival'
 );
 
