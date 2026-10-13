@@ -277,16 +277,7 @@ html body #drawerMenu#drawerMenu.open,html body #drawerMenu#drawerMenu.open *{co
 html body #drawerMenu .drawer-scroll{touch-action:pan-y!important;overscroll-behavior:contain!important}
 html{scroll-behavior:auto!important}
 </style><style id="fx9767-light-panel-compositor">/* Avoid persistent GPU promotion of every tab, especially on mobile Safari. */html body .panel{will-change:auto!important;transform:none!important;backface-visibility:visible!important}</style>
-
-<style id="fluxia-gv-big-amounts-restore-20261013">/* Restore prominent expenses overview on iPhone; visual-only, no accounting or data mutation. */
-#panel-gastos-variables .gv-mini{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:12px!important;padding:0!important;margin:16px 0 18px!important;border:0!important}
-#panel-gastos-variables .gv-mini>div{min-width:0!important;padding:17px 18px!important;border:1px solid var(--line)!important;border-radius:19px!important;background:linear-gradient(120deg,var(--gold-soft,#f7f4ed),var(--teal-soft,#edf8f7))!important;box-shadow:0 3px 12px rgba(10,36,44,.045)!important}
-#panel-gastos-variables .gv-mini>div:first-child{border-left:5px solid #258889!important}
-#panel-gastos-variables .gv-mini span{font-size:.76rem!important;line-height:1.35!important;font-weight:700!important;letter-spacing:.035em!important;margin-bottom:9px!important}
-#panel-gastos-variables .gv-mini strong{display:block!important;font-family:var(--mono,ui-monospace,monospace)!important;font-size:clamp(2rem,8.5vw,2.75rem)!important;line-height:1.13!important;letter-spacing:-.045em!important;color:#247f83!important;font-variant-numeric:tabular-nums!important;white-space:nowrap!important}
-@media(min-width:640px){#panel-gastos-variables .gv-mini{grid-template-columns:repeat(2,minmax(0,1fr))!important}#panel-gastos-variables .gv-mini strong{font-size:clamp(1.8rem,3.4vw,2.4rem)!important}}
-</style>
-</head>
+<style id="fx-variable-total-hero-css">#panel-gastos-variables .fx-variable-total-hero{display:block!important;width:100%!important;box-sizing:border-box!important;padding:24px 20px!important;margin:12px 0 20px!important;border-radius:22px!important;background:linear-gradient(135deg,#f5f0e7,#e7f4f2)!important;border:1px solid #d5e0dd!important}#panel-gastos-variables .fx-variable-total-hero .gv-hero-val{font-size:clamp(2.6rem,10vw,4rem)!important;line-height:1.13!important;color:#176d73!important;font-weight:750!important;margin:12px 0!important;overflow-wrap:anywhere!important}#panel-gastos-variables .fx-variable-total-hero .gv-hero-sub{max-width:none!important}</style></head>
 <script>window._offlineMode=!navigator.onLine;window.addEventListener("online",()=>{window._offlineMode=false});window.addEventListener("offline",()=>{window._offlineMode=true});</script><body>
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- PERFIL DE USUARIO · aislamiento por persona -->
@@ -1112,10 +1103,7 @@ html{scroll-behavior:auto!important}
 </div>
 <p class="hint">El día a día: comida, transporte, ocio…</p>
 <!-- Resumen exclusivo de gastos variables: no contiene Disponible -->
-<div class="gv-mini" aria-label="Resumen de gastos variables">
-<div><span>Variables del mes · incluye cartera</span><strong id="gvStatMes">—</strong></div>
-<div><span>Variables de todo el plan</span><strong id="gvStatTotal">—</strong></div>
-</div>
+<div class="gv-hero fx-variable-total-hero" aria-label="Total de gastos variables de todos los meses"><div class="gv-hero-lbl">Gastos variables · total de todos los meses</div><div class="gv-hero-val" id="gvStatTotal">—</div><div class="gv-hero-sub">Este mes, incluida cartera: <strong id="gvStatMes">—</strong></div></div>
 <!-- 2) DOS VISTAS -->
 <div class="internal-tabs" style="margin:0 0 18px;">
 <button class="internal-tab-btn active" data-internal-tab="gv-registro">➕ Añadir y ver gastos</button>
