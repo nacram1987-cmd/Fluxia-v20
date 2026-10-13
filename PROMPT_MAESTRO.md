@@ -1026,3 +1026,17 @@ Conservar identidad PWA, entrada permanente, datos locales/cloud y cachés separ
 
 **v97.68-LAB:** micro-optimización de firma de render con una asignación menos, supresión de scroll duplicado al navegar desde menú y omisión de reanudación diferida de lista al salir de la vista. Cierre manual sigue intacto; cifras reales de iPhone pendientes de medición. Cualquier discrepancia contable o visual bloquea la versión.
 
+
+---
+
+## 🔒 REGLA PERMANENTE · AUDITORÍA PREVIA OBLIGATORIA + TRAZABILIDAD DE FIJOS (13/10/2026)
+
+**Origen:** petición expresa del usuario tras confirmar que v97.68-LAB funciona con buena fluidez. Mantener v97.68-LAB como referencia funcional y de velocidad, sin modificarla; preservar también el respaldo inmutable v97.66 y el canal ESTABLE.
+
+**Auditoría antes de toda entrega:** analizar exhaustivamente la versión candidata contra la última aceptada (código, contabilidad, persistencia, bancos, cuentas, PWA, UI, tiempos de carga y respuesta); ejecutar QA sintética y pruebas representativas de Safari iOS/PWA donde sea posible. Bloquear la publicación si hay pérdida de datos, duplicados, diferencia injustificada de Disponible, cambios de diseño no autorizados, controles inoperativos o degradación reproducible de velocidad. Entregar comparativa, riesgos abiertos, LAB, ESTABLE, ZIP completo y PROMPT actualizado. No afirmar «100 %» de velocidad sin medición real.
+
+**Separar importes sin perder trazabilidad:** mostrar el total correcto de gastos variables del mes, el total de gastos fijos realmente pagados, el gasto global realizado y, en otro apartado, fijos pendientes. Nunca presentar pagos futuros o previstos como desembolsos ya realizados. El campo histórico «Total del plan» ha de utilizar un filtro contable correcto, no una suma bruta de movimientos.
+
+**Cargos de fijos visibles sin doble contabilización:** cuando un gasto bancario esté inequívocamente conciliado con un fijo, mantener una sola transacción, enlazada por sus IDs estables; permitir verla en el historial unificado marcada «Fijo · Pagado», con fecha, importe y fuente bancaria. Excluirla siempre del subtotal de Variables, porque su impacto ya está en Fijos. Las partidas fijas aún pendientes deben aparecer como pendientes de calendario, no como movimientos bancarios ficticios. Los pagos marcados manualmente deben distinguirse de los confirmados por banco. La vista de fijos enlazados debe evitar acciones de edición/borrado como variable; remitir al módulo Fijos. No cambiar regla de Disponible, idempotencia de sincronización, histórico, estados, fechas, cloud ni aislamiento de usuarios.
+
+**Contrato de aceptación técnico y escenarios de prueba obligatorios:** `auditorias/REQUISITOS_VARIABLES_FIJOS_Y_RENDIMIENTO_2026-10-13.md`. La presente adenda es normativa; **no da por implementados los cambios funcionales hasta entregar y validar una LAB nueva**.
