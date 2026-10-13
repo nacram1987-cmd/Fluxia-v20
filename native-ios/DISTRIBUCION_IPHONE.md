@@ -7,8 +7,13 @@
 - No se ha configurado firma, Apple Developer Team ID, App Store Connect ni TestFlight.
 - Nunca subir certificados, claves privadas, perfiles o claves de API al repositorio.
 
-## Cuenta Apple
-Una cuenta Apple Developer gratuita no habilita TestFlight. Para TestFlight se necesita inscripción activa en el Apple Developer Program, registro de app en App Store Connect, identidad de firma y un flujo de distribución firmado.
+## Instalación personal mediante Xcode
+La documentación de Apple indica que la membresía no es necesaria para ejecutar en los propios dispositivos desde Xcode. Hace falta un Mac con Xcode, iniciar sesión con una cuenta Apple, conectar y confiar en el iPhone, elegir un Team personal en Signing & Capabilities, usar un Bundle ID válido y ejecutar al dispositivo. El `.app` entregado por Actions sigue siendo solo para simulador y no se instala directamente.
+
+`native-ios/project.yml` permite ahora que Xcode gestione la firma al ejecutar el proyecto localmente. Los workflows de CI y el archivo de dispositivo sin firma siguen pasando explícitamente `CODE_SIGNING_ALLOWED=NO`.
+
+## TestFlight
+Para distribuir la beta mediante TestFlight se necesita membresía activa del Apple Developer Program, un identificador de app registrado, un registro de app en App Store Connect, firma de distribución y carga del build a App Store Connect.
 
 ## Preparación segura
 1. Completar y verificar funcionalidad nativa con datos sintéticos.

@@ -11,6 +11,8 @@ Run de validación: [38470940479](https://github.com/nacram1987-cmd/Fluxia-v20/a
 
 El artefacto `.app` de simulador **no se instala en un iPhone físico**. Esta ejecución no generó un archivo de dispositivo ni un IPA.
 
-## Estado Apple
+## Siguiente paso para instalar en tu propio iPhone
 
-La documentación de `native-ios/DISTRIBUCION_IPHONE.md` indica que no hay Team ID, firma, App Store Connect ni TestFlight configurados. Para instalar en un iPhone, el siguiente paso técnico exacto es habilitar una cuenta activa de Apple Developer Program, registrar el bundle ID en App Store Connect y configurar firma/notarización de CI mediante secretos protegidos; después se genera y valida un build firmado para TestFlight. No compartir certificados, claves privadas ni tokens en el chat o Git.
+Apple permite ejecutar en los dispositivos propios desde Xcode sin membresía de pago. Hace falta un Mac con Xcode: generar el proyecto con XcodeGen, conectar el iPhone, seleccionar un Team personal y firma automática en Signing & Capabilities, y ejecutar el esquema en ese dispositivo. El artefacto de esta ejecución es exclusivamente para simulador.
+
+Para beta distribuible a testers por TestFlight sí se requiere Apple Developer Program activo, Bundle ID registrado en Certificates, Identifiers & Profiles, registro de app en App Store Connect y un build firmado cargado allí. No hay actualmente Team ID, firma, App Store Connect ni TestFlight configurados. Mantener certificados y claves privadas fuera del chat y del repositorio.
