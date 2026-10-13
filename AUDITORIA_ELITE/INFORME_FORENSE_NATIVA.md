@@ -3,9 +3,9 @@
 Fecha: 13/10/2026 (Europe/Madrid)  
 Repositorio: [nacram1987-cmd/Fluxia-v20](https://github.com/nacram1987-cmd/Fluxia-v20)  
 Rama de trabajo: [feature/fluxia-elite-ios-capacitor](https://github.com/nacram1987-cmd/Fluxia-v20/tree/feature/fluxia-elite-ios-capacitor)  
-Commit de código probado: `20dd2bda28bcad5d139170e656996f63c1f5ef60`  
+Commit de código probado: `0599d7f807df52bae9c993183c7565bc8c1be306`  
 Referencia visual aprobada: `96750a275b957ded93d08fa44b5be1f9fa6fc608`  
-Workflow macOS: [run 38470940479](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38470940479) — **success**
+Workflow macOS: [run 38471782736](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38471782736) — **success**
 
 ## Dictamen
 

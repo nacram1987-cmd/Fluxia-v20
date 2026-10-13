@@ -1,7 +1,7 @@
 # Pruebas de integridad ejecutadas — app nativa
 
-Commit: `20dd2bda28bcad5d139170e656996f63c1f5ef60`  
-Resultado: [GitHub Actions run 38470940479](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38470940479) (**success**)
+Commit: `0599d7f807df52bae9c993183c7565bc8c1be306`  
+Resultado: [GitHub Actions run 38471782736](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38471782736) (**success**)
 
 ## Casos ejecutados en macOS
 

@@ -1,13 +1,13 @@
 # Distribución iOS — estado y siguiente paso
 
 Rama: [feature/fluxia-elite-ios-capacitor](https://github.com/nacram1987-cmd/Fluxia-v20/tree/feature/fluxia-elite-ios-capacitor)  
-Commit de código: `20dd2bda28bcad5d139170e656996f63c1f5ef60`  
-Run de validación: [38470940479](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38470940479)
+Commit de código: `0599d7f807df52bae9c993183c7565bc8c1be306`  
+Run de validación: [38471782736](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38471782736)
 
 ## Artefactos verificados
 
-- [Capturas reales del simulador: tema claro y oscuro](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38470940479/artifacts/11851917862) — ZIP de PNG, SHA-256 del artefacto: `a8f945b27848c267c900f65b6339e6eb866f2067b74c214a9f6d14b33820f221`.
-- [App compilada para iOS Simulator](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38470940479/artifacts/11852925612) — ZIP de `.app`, SHA-256 del artefacto: `2a6b46108f055a823278ac17d3ece29da040fea8dbd7c050d563f0fd52d2a240`.
+- [Capturas reales del simulador: tema claro y oscuro](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38471782736/artifacts/11851454754) — ZIP de PNG, SHA-256 del artefacto: `fec5dc1e6d2f9c579076ad608e89fd2395bab9b8bd840ad82771a4dfb4eb3535`.
+- [App compilada para iOS Simulator](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38471782736/artifacts/11851879067) — ZIP de `.app`, SHA-256 del artefacto: `8c4394cea884b679b200abf09fb72aead56b0d8d65e641c3ac1bd87495d5eb54`.
 
 El artefacto `.app` de simulador **no se instala en un iPhone físico**. Esta ejecución no generó un archivo de dispositivo ni un IPA.
 
