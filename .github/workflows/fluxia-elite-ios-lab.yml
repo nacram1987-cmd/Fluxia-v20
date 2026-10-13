@@ -6,6 +6,10 @@ on:
     branches: [feature/fluxia-elite-ios-capacitor]
     paths:
       - '.github/workflows/fluxia-elite-ios-lab.yml'
+      - 'ios-app/www/index.html'
+      - 'ios-app/src/**'
+      - 'ios-app/scripts/**'
+      - 'ios-app/tests/**'
 
 concurrency:
   group: fluxia-elite-ios-lab-${{ github.ref }}
@@ -57,13 +61,13 @@ jobs:
         if: success()
         run: |
           cd build/DerivedData/Build/Products/Debug-iphonesimulator
-          ditto -c -k --sequesterRsrc --keepParent App.app "$GITHUB_WORKSPACE/ios-app/Fluxia-Elite-LAB-1.5-Simulator.zip"
+          ditto -c -k --sequesterRsrc --keepParent App.app "$GITHUB_WORKSPACE/ios-app/Fluxia-Elite-LAB-1.6-Simulator.zip"
       - name: Upload simulator build
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: Fluxia-Elite-LAB-1.5-Simulator
-          path: ios-app/Fluxia-Elite-LAB-1.5-Simulator.zip
+          name: Fluxia-Elite-LAB-1.6-Simulator
+          path: ios-app/Fluxia-Elite-LAB-1.6-Simulator.zip
           if-no-files-found: error
       - name: Upload diagnostic log on failure
         if: failure()
