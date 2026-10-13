@@ -30,3 +30,7 @@ No sustituir `index.html` ni PWA ESTABLE sin la orden exacta «con labora» y QA
 
 ## Hallazgo P0 de 13/10: proponer no equivale a mostrar
 En v97.71, el filtro de pendientes descartaba propuestas basadas en importe de un único fijo por exigir nombre compatible, y la marca interna «revisado» podía bloquear nuevas propuestas de cargos históricos no conciliados. La candidata v97.72-LAB debe pasar regresión de UI, cargo antiguo, confirmación sin doble pago, rechazados, empates, seguridad y rendimiento antes de promoción. No modificar datos reales ni la estable para corregirlo.
+
+
+## v97.73 — presentación y cálculo seguros
+La vista de tickets únicos de Compartidos no crea, modifica o borra registros. Total gastado mensual de Variables deriva de fx9769SpentState y no reintroduce Disponible. Validar AUDITORIA_ELITE/shared-month-v9773-regression.cjs antes de publicar; no actualizar root PWA sin «con labora».

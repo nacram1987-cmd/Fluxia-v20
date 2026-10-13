@@ -1,0 +1,3 @@
+LAB: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.73.html
+PWA LAB aislada: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.73/index.html
+ESTABLE: https://nacram1987-cmd.github.io/Fluxia-v20/

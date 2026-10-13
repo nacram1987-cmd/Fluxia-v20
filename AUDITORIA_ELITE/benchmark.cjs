@@ -2,7 +2,7 @@
 const fs=require('node:fs'),{performance}=require('node:perf_hooks');
 const {JSDOM,VirtualConsole}=require('../auditorias/qa-v97.66/node_modules/jsdom');
 const {IDBFactory,IDBKeyRange}=require('../auditorias/qa-v97.66/node_modules/fake-indexeddb');
-const versions=['lab/v97.68.html','lab/v97.69.html','lab/v97.70.html','lab/v97.71.html','lab/v97.72.html'];
+const versions=['lab/v97.68.html','lab/v97.69.html','lab/v97.70.html','lab/v97.71.html','lab/v97.72.html','lab/v97.73.html'];
 const metrics=Object.fromEntries(versions.map(x=>[x,{construction:[],menu:[],warmVariables:[],coldVariables:[],bankPanel:[],domContentLoaded:[],errors:[]} ]));
 const summarize=a=>{const s=[...a].sort((x,y)=>x-y);return {n:s.length,median:s[Math.floor(s.length/2)],p95:s[Math.ceil(s.length*.95)-1],min:s[0],max:s.at(-1)}};
 (async()=>{for(let run=0;run<10;run++)for(const file of [...versions.slice(run%3),...versions.slice(0,run%3)]){

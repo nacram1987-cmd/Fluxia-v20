@@ -11,6 +11,8 @@ on:
       - 'lab/v97.71/**'
       - 'lab/v97.72.html'
       - 'lab/v97.72/**'
+      - 'lab/v97.73.html'
+      - 'lab/v97.73/**'
       - 'AUDITORIA_ELITE/**'
   workflow_dispatch:
 permissions:
@@ -50,6 +52,7 @@ jobs:
       - run: node AUDITORIA_ELITE/financial-regression.cjs lab/v97.71.html
       - run: node AUDITORIA_ELITE/build-candidate-v9772.cjs --check
       - run: node AUDITORIA_ELITE/fijo-reconciliation-regression-v9772.cjs lab/v97.72.html
+      - run: node AUDITORIA_ELITE/shared-month-v9773-regression.cjs lab/v97.73.html
       - run: node --expose-gc AUDITORIA_ELITE/benchmark.cjs
       - run: node AUDITORIA_ELITE/performance-gate.cjs
       - run: node AUDITORIA_ELITE/profile-regression.cjs
@@ -89,21 +92,21 @@ jobs:
       - uses: actions/checkout@v4
       - name: Package complete app, assets, protected references and audit
         env:
-          FLUXIA_RELEASE_VERSION: v97.72
+          FLUXIA_RELEASE_VERSION: v97.73
         run: python3 AUDITORIA_ELITE/package-release.py
       - uses: actions/upload-artifact@v4
         with:
-          name: Fluxia_v97.72_LAB_COMPLETO
+          name: Fluxia_v97.73_LAB_COMPLETO
           path: dist/*
           retention-days: 90
       - name: Publish validated LAB ZIP only; no stable promotion
         env:
           GH_TOKEN: ${{ github.token }}
-          FLUXIA_RELEASE_VERSION: v97.72
+          FLUXIA_RELEASE_VERSION: v97.73
         run: |
           python3 AUDITORIA_ELITE/package-release.py
-          if gh release view v97.72-LAB >/dev/null 2>&1; then
-            gh release upload v97.72-LAB dist/Fluxia_v97.72_LAB_COMPLETO.zip dist/SHA256SUMS.txt --clobber
+          if gh release view v97.73-LAB >/dev/null 2>&1; then
+            gh release upload v97.73-LAB dist/Fluxia_v97.73_LAB_COMPLETO.zip dist/SHA256SUMS.txt --clobber
           else
-            gh release create v97.72-LAB dist/Fluxia_v97.72_LAB_COMPLETO.zip dist/SHA256SUMS.txt --target "$GITHUB_SHA" --title "Fluxia v97.72 LAB: fixed-link prompt recovery" --notes-file RELEASE_NOTES_v97.72_LAB.md --prerelease
+            gh release create v97.73-LAB dist/Fluxia_v97.73_LAB_COMPLETO.zip dist/SHA256SUMS.txt --target "$GITHUB_SHA" --title "Fluxia v97.73 LAB: shared groups and monthly spent" --notes-file RELEASE_NOTES_v97.73_LAB.md --prerelease
           fi
