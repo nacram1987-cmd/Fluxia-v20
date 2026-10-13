@@ -2,9 +2,11 @@ import {validateSnapshot} from './readonly-finance.mjs';
 
 // Transport contract only: no production URL, tokens or account identifiers embedded.
 export async function fetchReadOnlySnapshot({endpoint,accessToken,expectedUserId,month,fetchImpl=fetch,signal}){
-  if(typeof endpoint!=='string'||!endpoint.startsWith('https://'))throw Error('HTTPS endpoint required');
-  const url=new URL(endpoint);
-  if(url.username||url.password||url.hash)throw Error('Unsafe endpoint');
+  if(typeof endpoint!=='string')throw Error('HTTPS endpoint required');
+  let url;
+  try{url=new URL(endpoint);}catch{throw Error('HTTPS endpoint required');}
+  if(url.protocol!=='https:')throw Error('HTTPS endpoint required');
+  if(url.username||url.password||url.hash||url.search)throw Error('Unsafe endpoint');
   if(!/^[0-9]{4}-(0[1-9]|1[0-2])$/.test(month))throw Error('Invalid month');
   if(typeof accessToken!=='string'||!accessToken.trim())throw Error('Missing access token');
   if(typeof expectedUserId!=='string'||!expectedUserId.trim())throw Error('Missing authenticated user');
