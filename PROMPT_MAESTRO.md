@@ -1107,3 +1107,12 @@ La ejecución detallada se encuentra en **`PROMPT_WORK_FLUXIA_ELITE_EJECUCION_IN
 - El módulo de identidad se instancia bajo demanda, instalado antes del libro para que el archivo scoped sea seguro en recargas. No ejecutar bancos ni render oculto en ruta crítica.
 - La valoración de una auditoría inicial de riesgos no es una caída medida de la app. Comparar versiones con mismos criterios/pruebas; separar estado operativo, cobertura y riesgos nuevos. No inflar una nota ni declarar mejora física sin medición.
 - Mantener todas las bases/estables, fórmula financiera y SHA protegidos. QA completa y HTTP por bytes antes de declarar LAB publicada. Safari/PWA física, tokens reales y latencia PSD2 no se certifican a partir de simulaciones.
+
+## Adenda v97.71 · papelera explícita y conciliación prudente de fijos (13/10/2026)
+
+- Un guardado de lista no demuestra que el usuario borró sus filas: no inferir eliminaciones comparando snapshots, listas parciales o estados aún hidratándose. La Papelera solo recibe una fila desde una acción explícita de borrado; esa acción archiva una copia recuperable y es idempotente por ID.
+- No restaurar filas de Papelera automáticamente al arrancar ni durante sincronización. La recuperación debe ser manual por elemento. Nunca borrar el original/histórico para corregir una falsa clasificación.
+- No asociar un cargo de banco a un fijo por importe solamente. Texto inequívoco puede proponer/conciliar según las reglas vigentes; con comercio desconocido y un solo fijo de igual importe, preguntar y esperar confirmación explícita. Con varios candidatos o empate, no escoger.
+- Mantener fijo pendiente, pago confirmado y cargo bancario como estados distintos. Una sugerencia no marca «pagado», no altera Disponible ni cambia la categoría contable hasta confirmar una vinculación válida.
+- Investigar supuestos duplicados con proveedor, cuenta y referencia estable; mismo nombre, fecha o importe no autoriza fusionar. No editar, eliminar ni reimportar datos reales para fabricar un cuadre.
+- Gates específicos del incidente: guardado parcial no archiva ITV; borrado manual sí puede recuperarse; carga no resucita papelera antigua; Apple.com/bill €2,99 pregunta solo con un candidato único; ambigüedad/empate no vincula. Mantener v97.68 y ESTABLE intactas.
