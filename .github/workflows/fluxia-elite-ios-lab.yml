@@ -8,6 +8,10 @@ on:
       - 'ios-app/**'
       - '.github/workflows/fluxia-elite-ios-lab.yml'
 
+concurrency:
+  group: fluxia-elite-ios-lab-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -33,6 +37,11 @@ jobs:
         run: npx cap add ios
       - name: Sync local LAB bundle
         run: npm run ios:sync:dev
+      - name: Verify generated Xcode project
+        run: |
+          test -f ios/App/App.xcodeproj/project.pbxproj
+          test -f ios/App/App/public/index.html
+          grep -q 'synthetic-no-banking' ios/App/App/public/index.html
       - name: Show Xcode version
         run: xcodebuild -version
       - name: Build unsigned simulator app
