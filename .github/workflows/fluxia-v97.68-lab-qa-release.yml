@@ -1,0 +1,79 @@
+name: Fluxia v97.68 LAB — QA and deliverable
+on:
+  push:
+    branches: [main, lab-perf-v97.68]
+    paths:
+      - '.github/workflows/fluxia-v97.68-lab-qa-release.yml'
+      - 'auditorias/qa-v97.68/**'
+      - 'lab/v97.68.html'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: fluxia-v9768-qa
+  cancel-in-progress: false
+jobs:
+  regression-and-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify immutable accepted v97.66 release
+        run: node auditorias/qa-v97.66/verify-baseline.cjs
+      - name: Install frozen QA dependencies
+        run: npm install --prefix auditorias/qa-v97.66 --no-audit --no-fund
+      - name: Regression on accepted stable v97.66
+        run: npm --prefix auditorias/qa-v97.66 test
+      - name: LAB surgical diff, full script syntax and interactive regression
+        run: node auditorias/qa-v97.68/regression-lab.cjs
+      - name: Build complete LAB ZIP after green QA
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile,ZIP_DEFLATED
+          dst=Path('dist/Fluxia_v97.68_LAB_COMPLETO.zip')
+          dst.parent.mkdir(parents=True,exist_ok=True)
+          files=[
+            'lab/v97.68.html','lab/manifest.webmanifest','lab/fluxia-sw.js',
+            'PROMPT_MAESTRO.md','BASE_RENDIMIENTO_v97.66.md',
+            'RELEASE_NOTES_v97.68_LAB.md','REAL_ASSESSMENT_v97.68_LAB.md',
+            'ENLACES_v97.68_LAB.txt',
+            'auditorias/qa-v97.68/regression-lab.cjs',
+            'auditorias/qa-v97.66/regression.cjs',
+            'auditorias/qa-v97.66/verify-baseline.cjs'
+          ]
+          files += [str(p) for p in Path('assets/brands').rglob('*.svg')]
+          files += [str(p) for p in Path('.').glob('icon-*.png')]
+          if Path('logo_fluxia.png').exists():files.append('logo_fluxia.png')
+          with ZipFile(dst,'w',compression=ZIP_DEFLATED,compresslevel=9) as zip:
+            for f in files:
+              if not Path(f).is_file():raise RuntimeError('Missing required file: '+f)
+              zip.write(f,arcname=f)
+            zip.writestr('LEEME_PRIMERO.txt',
+              'Fluxia v97.68-LAB: archivo lab/v97.68.html. No reemplazar index.html estable.\n'
+              'El despliegue LAB usa recursos del repositorio; NO borra datos ni instala PWA.\n'
+              'Enlace LAB: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.68.html\n'
+              'Enlace ESTABLE: https://nacram1987-cmd.github.io/Fluxia-v20/\n'
+              'No promocionar sin la orden «con labora» y benchmarks en iPhone.\n')
+          print('ZIP:',dst, 'bytes:',dst.stat().st_size)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Fluxia_v97.68_LAB_COMPLETO
+          path: dist/Fluxia_v97.68_LAB_COMPLETO.zip
+          retention-days: 90
+      - name: Publish prerelease with downloadable ZIP (only after QA on main)
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view v97.68-LAB >/dev/null 2>&1; then
+            gh release upload v97.68-LAB dist/Fluxia_v97.68_LAB_COMPLETO.zip --clobber
+          else
+            gh release create v97.68-LAB dist/Fluxia_v97.68_LAB_COMPLETO.zip --target "${GITHUB_SHA}" --title "Fluxia v97.68-LAB — minimal navigation work" --notes-file RELEASE_NOTES_v97.68_LAB.md --prerelease
+          fi
