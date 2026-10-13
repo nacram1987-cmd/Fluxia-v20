@@ -44,7 +44,7 @@ struct ContentView: View {
                             switch tab {
                             case .home: home
                             case .plan: financeModules
-                            case .banks: placeholder("Bancos", "Sin conexión bancaria en esta versión de demostración.")
+                            case .banks: bankDemo
                             case .settings: settingsView
                             }
                         }
@@ -154,6 +154,47 @@ struct ContentView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(18)
             .background(ElitePalette.card, in: RoundedRectangle(cornerRadius: 18))
+        }
+    }
+
+    private var bankDemo: some View {
+        let bill = ExpenseReconciliation.FixedBill(
+            id: "demo-endesa", description: "Endesa", expectedCents: 6_200, alreadyPaid: false
+        )
+        let charge = ExpenseReconciliation.Charge(
+            id: "demo-charge", description: "ENDESA", cents: 6_200
+        )
+        let match = ExpenseReconciliation.suggestMatch(charge: charge, bills: [bill])
+        return VStack(alignment: .leading, spacing: 16) {
+            Text("Bancos").font(.title2).bold()
+            Label("Sin bancos conectados", systemImage: "lock.shield")
+                .foregroundStyle(ElitePalette.gold)
+            Text("Así se mostrará la conciliación de un movimiento ficticio.")
+                .font(.subheadline).foregroundStyle(.white.opacity(0.7))
+            HStack {
+                Image(systemName: "bolt.fill").foregroundStyle(ElitePalette.gold)
+                VStack(alignment: .leading) {
+                    Text("ENDESA").font(.headline)
+                    Text("Cargo ficticio").font(.caption).foregroundStyle(.white.opacity(0.6))
+                }
+                Spacer()
+                Text(formattedEuros(charge.cents)).font(.headline).monospacedDigit()
+            }
+            .padding(16)
+            .background(ElitePalette.card, in: RoundedRectangle(cornerRadius: 18))
+            switch match {
+            case .unique:
+                Label("Coincide con gasto fijo pendiente · requiere confirmación", systemImage: "checkmark.circle")
+                    .foregroundStyle(ElitePalette.gold)
+            case .ambiguous:
+                Label("Coincidencia ambigua · requiere revisión", systemImage: "exclamationmark.triangle")
+                    .foregroundStyle(.orange)
+            case .none:
+                Label("Sin coincidencia segura", systemImage: "questionmark.circle")
+                    .foregroundStyle(.white)
+            }
+            Text("Ningún cargo se marca pagado ni se contabiliza desde esta demostración.")
+                .font(.footnote).foregroundStyle(.white.opacity(0.65))
         }
     }
 
