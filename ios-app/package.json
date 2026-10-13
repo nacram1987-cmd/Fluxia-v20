@@ -1,6 +1,6 @@
 {
   "name": "fluxia-elite-ios",
-  "version": "0.1.0",
+  "version": "1.5.0",
   "private": true,
   "description": "Fluxia Elite iOS Capacitor shell (development only)",
   "scripts": {
@@ -8,7 +8,9 @@
     "ios:sync": "node scripts/verify-web-bundle.mjs && npx cap sync ios",
     "ios:open": "npx cap open ios",
     "verify": "node scripts/verify-web-bundle.mjs",
-    "verify:native": "node scripts/verify-native-scaffold.mjs"
+    "verify:native": "node scripts/verify-native-scaffold.mjs",
+    "ios:sync:dev": "node scripts/verify-development-bundle.mjs && npx cap sync ios",
+    "verify:dev": "node scripts/verify-native-scaffold.mjs && node scripts/verify-development-bundle.mjs"
   },
   "dependencies": {
     "@capacitor/core": "^7.4.0",
