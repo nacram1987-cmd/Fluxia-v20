@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   simulator:
@@ -55,6 +55,20 @@ jobs:
           name: Fluxia-Elite-Nativa-Vista-iPhone
           path: native-ios/screenshots/Fluxia-Elite-SwiftUI-Inicio.png
           if-no-files-found: error
+      - name: Publish synthetic screenshot directly to feature branch
+        working-directory: native-ios
+        run: |
+          set -euo pipefail
+          mkdir -p ../previews/fluxia-elite-native
+          cp screenshots/Fluxia-Elite-SwiftUI-Inicio.png ../previews/fluxia-elite-native/inicio.png
+          cd ..
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add previews/fluxia-elite-native/inicio.png
+          if ! git diff --cached --quiet; then
+            git commit -m "preview: update synthetic SwiftUI iPhone screenshot [skip ci]"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
       - name: Package simulator-only build
         working-directory: native-ios
         run: |
