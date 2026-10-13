@@ -27,7 +27,17 @@ struct ContentView: View {
     @State private var month = Date()
     @State private var showPrivacy = false
     @State private var selectedModule: EliteFinanceModule = .fixed
-    private let euro = Locale(identifier: "es_ES")
+    private let sampleMonth = FinanceRules.Month(
+        incomeCents: 250_000,
+        fixedExpenseCents: 70_000,
+        variableExpenseCents: 30_000,
+        plannedProvisionCents: 10_000,
+        actualProvisionContributionCents: 10_000
+    )
+
+    private func formattedEuros(_ cents: Int64) -> String {
+        (Decimal(cents) / Decimal(100)).formatted(.currency(code: "EUR").locale(Locale(identifier: "es_ES")))
+    }
 
     var body: some View {
         TabView(selection: $selection) {
@@ -93,7 +103,7 @@ struct ContentView: View {
             VStack(spacing: 10) {
                 Text("DISPONIBLE · DEMOSTRACIÓN")
                     .font(.caption).tracking(1.2)
-                Text("1.284,50 €")
+                Text(FinanceRules.availableCents(sampleMonth).map(formattedEuros) ?? "Error de cálculo")
                     .font(.system(size: 38, weight: .semibold, design: .rounded))
                     .monospacedDigit()
                 Text("Importe ficticio, no conectado a tu cuenta")
@@ -104,10 +114,10 @@ struct ContentView: View {
             .overlay(RoundedRectangle(cornerRadius: 24).stroke(ElitePalette.gold.opacity(0.4)))
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                tile("Ingresos", "2.500,00 €", "arrow.down.left")
-                tile("Gastos fijos", "950,00 €", "calendar")
-                tile("Huchas", "265,50 €", "archivebox")
-                tile("Compartidos", "0,00 €", "person.2")
+                tile("Ingresos", formattedEuros(sampleMonth.incomeCents), "arrow.down.left")
+                tile("Gastos fijos", formattedEuros(sampleMonth.fixedExpenseCents), "calendar")
+                tile("Huchas", formattedEuros(sampleMonth.plannedProvisionCents), "archivebox")
+                tile("Gastos variables", formattedEuros(sampleMonth.variableExpenseCents), "creditcard")
             }
             Text("Versión nativa inicial. Sin autenticación, datos reales ni operaciones bancarias.")
                 .font(.footnote).foregroundStyle(.white.opacity(0.65))
