@@ -2,6 +2,11 @@ name: Fluxia Elite - iPhone device archive (manual)
 
 on:
   workflow_dispatch:
+  push:
+    branches: [feature/fluxia-elite-ios-capacitor]
+    paths:
+      - 'native-ios/**'
+      - '.github/workflows/fluxia-elite-device-archive.yml'
 
 permissions:
   contents: read
