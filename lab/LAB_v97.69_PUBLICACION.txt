@@ -1,0 +1,5 @@
+Fluxia v97.69-LAB · candidato QA verde.
+Entrada: lab/v97.69.html
+SHA del fichero: c256138f83a803f006c118fbee8cb2d382c4f61e
+Conservar ESTABLE index.html; sin promocionar a PWA.
+GitHub Pages debe reconstruir lab/ desde main con este commit de publicación.
