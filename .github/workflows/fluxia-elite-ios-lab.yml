@@ -43,7 +43,7 @@ jobs:
         if: success()
         run: |
           cd build/DerivedData/Build/Products/Debug-iphonesimulator
-          ditto -c -k --sequesterRsrc --keepParent App.app ../../../../Fluxia-Elite-LAB-1.5-Simulator.zip
+          ditto -c -k --sequesterRsrc --keepParent App.app "$GITHUB_WORKSPACE/ios-app/Fluxia-Elite-LAB-1.5-Simulator.zip"
       - name: Upload simulator build
         if: success()
         uses: actions/upload-artifact@v4
