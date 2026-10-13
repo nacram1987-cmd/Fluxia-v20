@@ -24,7 +24,7 @@ fluxia_contactos: RLS=false; anon/authenticated SELECT=true. Las políticas exis
 fluxia_datos sí tiene RLS y políticas SELECT/INSERT/UPDATE/DELETE por auth.uid; UPDATE usa WITH CHECK. Función bancaria LAB valida token con auth.getUser y filtra sesiones por user_id aunque verify_jwt=false. Estas observaciones de código NO acreditan pruebas completas con dos JWT reales.
 
 ## Riesgos residuales
-Avisos de sincronización tienen varias capas: evento banco-nuevos, toast y WebPush. No se certifica una sola notificación por cargo físico. Recuperaciones legacy y carreras nube/offline requieren ampliar ensayos. No se leyeron ni modificaron cuentas reales, no se corrigió retrospectivamente el Disponible del usuario ni se afirmó una cifra real sin sus datos. Sin ensayo iOS/API A-B, no hay promoción ni certificación profesional completa.
+Avisos de sincronización tienen varias capas: evento banco-nuevos escuchado por scripts 109 y 110, toast y llamada directa WebPush en script 97. Esta duplicación estructural es evidencia de causa candidata. No se certifica una sola notificación por cargo físico. Recuperaciones legacy y carreras nube/offline requieren ampliar ensayos. No se leyeron ni modificaron cuentas reales, no se corrigió retrospectivamente el Disponible del usuario ni se afirmó una cifra real sin sus datos. Sin ensayo iOS/API A-B, no hay promoción ni certificación profesional completa.
 
 ## Próximas cinco acciones
 1. Aplicar seguridad contactos/RPC tras aprobación, backup y tests de destinatario (P0, alto impacto, esfuerzo bajo/medio).

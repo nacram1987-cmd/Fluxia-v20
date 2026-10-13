@@ -10,3 +10,5 @@ Lectura íntegra de PROMPT_MAESTRO.md (1089 líneas), AGENTS.md y orden integral
 - 7 archivos protegidos: PROTECTED_SHA256.txt. Hash checks pasaron antes/después.
 - Backend autorizado descubierto: proyecto Fluxia; inspección de catálogos/políticas/funciones, sin lectura de movimientos ni escritura en datos reales.
 - No hay iPhone físico. Chromium local no disponible; descarga bloqueada devolvió archivo inválido. JSDOM no sustituye Safari/PWA.
+
+Inventario v97.69: 168 scripts inline, 628.730 bytes en script principal, 118.471 en módulo banco; tres sentencias setInterval. No se activó ninguna consulta bancaria real para aparentar velocidad.

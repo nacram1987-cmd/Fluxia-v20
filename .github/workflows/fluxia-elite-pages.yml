@@ -57,3 +57,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: python3 AUDITORIA_ELITE/smoke-pages.py --attempts 6
+  archive:
+    needs: smoke
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package complete app, assets, protected references and audit
+        run: python3 AUDITORIA_ELITE/package-release.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Fluxia_ELITE_AUDITORIA_2026-10-13_COMPLETO
+          path: dist/*
+          retention-days: 90
+      - name: Publish audit backup only; no candidate LAB or stable promotion
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view elite-audit-2026-10-13 >/dev/null 2>&1; then
+            gh release upload elite-audit-2026-10-13 dist/Fluxia_ELITE_AUDITORIA_2026-10-13_COMPLETO.zip dist/SHA256SUMS.txt --clobber
+          else
+            gh release create elite-audit-2026-10-13 dist/Fluxia_ELITE_AUDITORIA_2026-10-13_COMPLETO.zip dist/SHA256SUMS.txt --target "$GITHUB_SHA" --title "Fluxia Elite: audit and unpromoted fixes" --notes-file AUDITORIA_ELITE/README.md --prerelease
+          fi
