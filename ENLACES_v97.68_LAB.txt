@@ -1,0 +1,6 @@
+Fluxia v97.68-LAB
+LAB: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.68.html?v=97.68
+ESTABLE (NO MODIFICADA): https://nacram1987-cmd.github.io/Fluxia-v20/
+BASE CONGELADA: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.66.html
+GitHub: https://github.com/nacram1987-cmd/Fluxia-v20
+Nota: PWA instalada no se promociona sin «con labora» tras QA.
