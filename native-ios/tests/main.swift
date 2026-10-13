@@ -36,3 +36,12 @@ check(ExpenseReconciliation.suggestMatch(charge: charge, bills: [.init(id: "fixe
 check(ExpenseReconciliation.suggestMatch(charge: charge, bills: [endesa, .init(id: "fixed-2", description: "Endesa", expectedCents: 6_200, alreadyPaid: false)]) == .ambiguous, "duplicate candidates require review")
 check(ExpenseReconciliation.suggestMatch(charge: .init(id: "bank-1", description: "Endesa", cents: 0), bills: [endesa]) == .none, "zero amount must not match")
 print("Expense reconciliation: 5 checks passed")
+
+let movement = BankImportSafety.Movement(provider: "bank-a", accountID: "account-1", providerTransactionID: "tx-100", amountCents: -6_200)
+check(BankImportSafety.classify(movement, existing: []) == .new, "unseen movement is new")
+check(BankImportSafety.classify(movement, existing: [movement]) == .duplicate, "reimport must not duplicate")
+check(BankImportSafety.classify(.init(provider: "bank-a", accountID: "account-1", providerTransactionID: "tx-100", amountCents: -6_300), existing: [movement]) == .conflict, "same provider ID with different amount must be flagged")
+check(BankImportSafety.classify(.init(provider: "bank-a", accountID: "account-2", providerTransactionID: "tx-100", amountCents: -6_200), existing: [movement]) == .new, "transaction IDs are scoped per account")
+check(BankImportSafety.classify(.init(provider: "bank-b", accountID: "account-1", providerTransactionID: "tx-100", amountCents: -6_200), existing: [movement]) == .new, "transaction IDs are scoped per provider")
+check(BankImportSafety.classify(.init(provider: "bank-a", accountID: "account-1", providerTransactionID: "", amountCents: -6_200), existing: []) == .needsReview, "missing provider transaction ID must not be imported blindly")
+print("Bank import safety: 6 checks passed")
