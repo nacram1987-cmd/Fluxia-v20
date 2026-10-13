@@ -31,6 +31,14 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Verify Capacitor project and synthetic LAB boundary
         run: npm run verify:dev
+      - name: Generate and sync real Capacitor iOS project
+        run: |
+          npx cap add ios
+          npm run ios:sync:dev
+          test -f ios/App/App.xcodeproj/project.pbxproj
+          test -f ios/App/App/public/index.html
+          grep -q 'synthetic-no-banking' ios/App/App/public/index.html
+          echo 'iOS project generated and LAB bundle synced successfully'
       - name: Check HTML, script and brand rules
         run: |
           node --input-type=module <<'NODE'
