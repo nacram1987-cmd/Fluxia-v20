@@ -73,7 +73,7 @@ check(BankImportSafety.classify(.init(provider: "bank-a", accountID: "account-1"
 let syntheticBatch: [BankImportSafety.Movement] = (0..<400).map { index in
     BankImportSafety.Movement(
         provider: "synthetic-bank", accountID: "synthetic-account",
-        providerTransactionID: "synthetic-tx-\\(index)",
+        providerTransactionID: "synthetic-tx-\(index)",
         amountCents: -Int64((index % 83) + 1) * 100
     )
 }
