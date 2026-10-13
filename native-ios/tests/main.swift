@@ -20,3 +20,10 @@ check(FinanceRules.availableCents(month(0)) == 140_000, "zero contribution keeps
 check(FinanceRules.availableCents(month(-1)) == nil, "negative contributions rejected")
 check(FinanceRules.availableCents(month(Int64.max)) == nil, "arithmetic overflow rejected")
 print("FinanceRules: 6 native accounting checks passed")
+
+let demo = DemoFinanceSnapshot.preview
+check(demo.isSynthetic, "preview must always be labelled synthetic")
+check(!FinanceAccessGate.canMutate(demo), "demo cannot write financial records")
+check(!FinanceAccessGate.canConnectBanks(demo), "demo cannot connect banking accounts")
+check(FinanceRules.availableCents(demo.month) == 140_000, "demo balance must derive from engine")
+print("Demo safety: 4 checks passed")
