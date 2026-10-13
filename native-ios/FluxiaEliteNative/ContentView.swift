@@ -27,13 +27,8 @@ struct ContentView: View {
     @State private var month = Date()
     @State private var showPrivacy = false
     @State private var selectedModule: EliteFinanceModule = .fixed
-    private let sampleMonth = FinanceRules.Month(
-        incomeCents: 250_000,
-        fixedExpenseCents: 70_000,
-        variableExpenseCents: 30_000,
-        plannedProvisionCents: 10_000,
-        actualProvisionContributionCents: 10_000
-    )
+    private let snapshot = DemoFinanceSnapshot.preview
+    private var sampleMonth: FinanceRules.Month { snapshot.month }
 
     private func formattedEuros(_ cents: Int64) -> String {
         (Decimal(cents) / Decimal(100)).formatted(.currency(code: "EUR").locale(Locale(identifier: "es_ES")))
