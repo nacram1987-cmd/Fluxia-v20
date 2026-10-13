@@ -10,7 +10,8 @@
     "verify": "node scripts/verify-web-bundle.mjs",
     "verify:native": "node scripts/verify-native-scaffold.mjs",
     "ios:sync:dev": "node scripts/verify-development-bundle.mjs && npx cap sync ios",
-    "verify:dev": "node scripts/verify-native-scaffold.mjs && node scripts/verify-development-bundle.mjs"
+    "verify:dev": "npm run test:finance && node scripts/verify-native-scaffold.mjs && node scripts/verify-development-bundle.mjs",
+    "test:finance": "node --test tests/*.test.mjs"
   },
   "dependencies": {
     "@capacitor/core": "^7.4.0",
