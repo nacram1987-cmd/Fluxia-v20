@@ -1,0 +1,60 @@
+name: Fluxia Elite iOS LAB (unsigned simulator)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/fluxia-elite-ios-capacitor]
+    paths:
+      - 'ios-app/**'
+      - '.github/workflows/fluxia-elite-ios-lab.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build-simulator:
+    runs-on: macos-15
+    timeout-minutes: 35
+    defaults:
+      run:
+        working-directory: ios-app
+    steps:
+      - name: Checkout isolated branch
+        uses: actions/checkout@v4
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Validate native scaffold and synthetic LAB
+        run: npm run verify:dev
+      - name: Generate iOS project
+        run: npx cap add ios
+      - name: Sync local LAB bundle
+        run: npm run ios:sync:dev
+      - name: Show Xcode version
+        run: xcodebuild -version
+      - name: Build unsigned simulator app
+        run: |
+          set -o pipefail
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath build/DerivedData CODE_SIGNING_ALLOWED=NO build | tee build.log
+      - name: Package simulator build
+        if: success()
+        run: |
+          cd build/DerivedData/Build/Products/Debug-iphonesimulator
+          ditto -c -k --sequesterRsrc --keepParent App.app ../../../../Fluxia-Elite-LAB-1.5-Simulator.zip
+      - name: Upload simulator build
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Fluxia-Elite-LAB-1.5-Simulator
+          path: ios-app/Fluxia-Elite-LAB-1.5-Simulator.zip
+          if-no-files-found: error
+      - name: Upload diagnostic log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Fluxia-Elite-iOS-build-log
+          path: ios-app/build.log
+          if-no-files-found: ignore
