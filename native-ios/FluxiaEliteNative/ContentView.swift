@@ -3,7 +3,8 @@ import SwiftUI
 private enum ElitePalette {
     static let navy = Color(red: 0.97, green: 0.965, blue: 0.945)
     static let ink = Color(red: 0.09, green: 0.16, blue: 0.24)
-    static let gold = Color(red: 0.83, green: 0.69, blue: 0.42)
+    static let gold = Color(red: 0.57, green: 0.40, blue: 0.19)
+    static let champagne = Color(red: 0.91, green: 0.83, blue: 0.66)
     static let card = Color(red: 1, green: 0.998, blue: 0.985)
 }
 
@@ -107,8 +108,9 @@ struct ContentView: View {
                     .font(.caption).foregroundStyle(ElitePalette.ink.opacity(0.7))
             }
             .frame(maxWidth: .infinity).padding(.vertical, 32)
-            .background(ElitePalette.card, in: RoundedRectangle(cornerRadius: 24))
-            .overlay(RoundedRectangle(cornerRadius: 24).stroke(ElitePalette.gold.opacity(0.4)))
+            .background(LinearGradient(colors: [ElitePalette.card, Color(red: 0.965, green: 0.935, blue: 0.87)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 24))
+            .overlay(RoundedRectangle(cornerRadius: 24).stroke(ElitePalette.champagne.opacity(0.85), lineWidth: 1))
+            .shadow(color: ElitePalette.ink.opacity(0.06), radius: 14, y: 6)
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
                 tile("Ingresos", formattedEuros(sampleMonth.incomeCents), "arrow.down.left", .income)
@@ -141,6 +143,7 @@ struct ContentView: View {
                     }
                     .padding(15)
                     .background(ElitePalette.card, in: RoundedRectangle(cornerRadius: 15))
+                    .overlay(RoundedRectangle(cornerRadius: 15).stroke(ElitePalette.ink.opacity(0.06), lineWidth: 1))
                 }
                 .buttonStyle(.plain)
             }
@@ -156,6 +159,7 @@ struct ContentView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(18)
             .background(ElitePalette.card, in: RoundedRectangle(cornerRadius: 18))
+            .overlay(RoundedRectangle(cornerRadius: 18).stroke(ElitePalette.ink.opacity(0.06), lineWidth: 1))
         }
     }
 
