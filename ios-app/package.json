@@ -7,7 +7,8 @@
     "ios:add": "npx cap add ios",
     "ios:sync": "node scripts/verify-web-bundle.mjs && npx cap sync ios",
     "ios:open": "npx cap open ios",
-    "verify": "node scripts/verify-web-bundle.mjs"
+    "verify": "node scripts/verify-web-bundle.mjs",
+    "verify:native": "node scripts/verify-native-scaffold.mjs"
   },
   "dependencies": {
     "@capacitor/core": "^7.4.0",
