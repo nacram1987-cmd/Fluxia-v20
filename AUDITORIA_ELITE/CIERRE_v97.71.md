@@ -20,7 +20,12 @@ Gates locales completados: baseline v97.66 y 7 SHA protegidos; QA v97.66 (168 sc
 
 Rendimiento JSDOM/Node, 10 rondas intercaladas, 400 movimientos: v97.71 vs v97.68 mediana de construcción 642,78 vs 625,46 ms (+2,8%); DOMContentLoaded 784,14 vs 800,35 ms; navegación cálida 0,187 vs 0,195 ms; render frío 14,21 vs 15,49 ms; panel banco 0,997 vs 1,204 ms. Ninguna mediana excede el gate de +15%. Una ronda aislada de render frío dio 64,23 ms; no se repite en la mediana y queda como variabilidad host. No es métrica de Safari/iPhone.
 
-Queda pendiente la publicación Pages y comparación HTTP por bytes/recursos. Hasta que el workflow y smoke pasen, los enlaces v97.71 no deben usarse como publicados.
+Publicada: commit `5402dc85cac93b4b743e174bfd178d577803f79a`; workflow `38423064015` finalizó SUCCESS y el smoke comparó respuestas HTTP byte a byte, incluidas ambas páginas LAB y manifiestos/iconos. ZIP prerelease `v97.71-LAB` con SHA-256 `f0f85ebfc85f4cbecf7c6cc073015bef107370bfcd5d72c340db21e218da61eb`. La estable sigue intacta.
+
+LAB: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.71.html
+PWA LAB aislada: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.71/index.html
+ESTABLE: https://nacram1987-cmd.github.io/Fluxia-v20/
+Referencia v97.68: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.68.html
 
 ## Riesgos / rollback
 
