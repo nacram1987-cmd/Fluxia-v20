@@ -2,6 +2,10 @@ name: Fluxia Elite iOS LAB (unsigned simulator)
 
 on:
   workflow_dispatch:
+  push:
+    branches: [feature/fluxia-elite-ios-capacitor]
+    paths:
+      - '.github/workflows/fluxia-elite-ios-lab.yml'
 
 concurrency:
   group: fluxia-elite-ios-lab-${{ github.ref }}
