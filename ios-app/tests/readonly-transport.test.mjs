@@ -26,3 +26,12 @@ test('reject cross-account response and incorrect month',async()=>{
 test('reject failed or expired sessions without falling back to demo data',async()=>{
   await assert.rejects(fetchReadOnlySnapshot({...options,fetchImpl:async()=>({ok:false,status:401})}),/failed/);
 });
+
+test('reject unsafe endpoints before transmitting bearer token',async()=>{
+  let requests=0;
+  const fetchImpl=async()=>{requests++;throw Error('should not send');};
+  for(const endpoint of ['https://example.test/snapshot?redirect=evil','https://user:pass@example.test/snapshot','https://example.test/snapshot#fragment','https://','https://example.test@attacker.test/snapshot']){
+    await assert.rejects(fetchReadOnlySnapshot({...options,endpoint,fetchImpl}),/Unsafe endpoint|HTTPS endpoint/);
+  }
+  assert.equal(requests,0);
+});
