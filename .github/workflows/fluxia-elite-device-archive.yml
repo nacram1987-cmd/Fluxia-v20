@@ -1,0 +1,50 @@
+name: Fluxia Elite - iPhone device archive (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prepare-device-archive:
+    runs-on: macos-15
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate SwiftUI Xcode project
+        working-directory: native-ios
+        run: xcodegen generate
+      - name: Validate Swift financial engine
+        working-directory: native-ios
+        run: |
+          swiftc FluxiaEliteNative/FinanceRules.swift FluxiaEliteNative/DemoFinanceSnapshot.swift tests/main.swift -o /tmp/fluxia-native-tests
+          /tmp/fluxia-native-tests
+      - name: Build unsigned iPhone-device archive (not installable)
+        working-directory: native-ios
+        run: |
+          set -o pipefail
+          xcodebuild -project FluxiaEliteNative.xcodeproj \
+            -scheme FluxiaEliteNative -configuration Release \
+            -sdk iphoneos -destination 'generic/platform=iOS' \
+            -archivePath "$PWD/build/FluxiaEliteNative.xcarchive" \
+            CODE_SIGNING_ALLOWED=NO archive | tee device-build.log
+      - name: Package unsigned archive for future signing
+        working-directory: native-ios
+        run: |
+          ditto -c -k --sequesterRsrc --keepParent build/FluxiaEliteNative.xcarchive Fluxia-Elite-iPhone-UNSIGNED.zip
+      - name: Upload unsigned device archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: Fluxia-Elite-iPhone-UNSIGNED-NOT-INSTALLABLE
+          path: native-ios/Fluxia-Elite-iPhone-UNSIGNED.zip
+          if-no-files-found: error
+      - name: Upload diagnostic log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Fluxia-Elite-iPhone-Archive-Diagnostics
+          path: native-ios/device-build.log
+          if-no-files-found: ignore
