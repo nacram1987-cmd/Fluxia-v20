@@ -30,6 +30,8 @@ enum BankImportSafety {
             $0.providerTransactionID == incoming.providerTransactionID
         }
         if matches.isEmpty { return .new }
-        return matches.allSatisfy { $0.amountCents == incoming.amountCents } ? .duplicate : .conflict
+        // Conflicting historical amounts must never be silently deduplicated.
+        if matches.contains(where: { $0.amountCents != incoming.amountCents }) { return .conflict }
+        return .duplicate
     }
 }
