@@ -85,8 +85,3 @@ jobs:
           else
             gh release create v97.69-LAB dist/Fluxia_v97.69_LAB_COMPLETO.zip --target "$(git rev-parse HEAD)" --title "Fluxia v97.69-LAB - expense integrity" --notes-file RELEASE_NOTES_v97.69_LAB.md --prerelease
           fi
-      - name: Ask Pages to rebuild after Actions-published LAB
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh api -X POST repos/nacram1987-cmd/Fluxia-v20/pages/builds || true
