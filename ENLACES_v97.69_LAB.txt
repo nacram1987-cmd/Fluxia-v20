@@ -1,0 +1,6 @@
+Fluxia v97.69-LAB — SOLO LAB
+LAB: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.69.html?v=97.69
+ESTABLE PWA: https://nacram1987-cmd.github.io/Fluxia-v20/
+LAB v97.68 anterior confirmada rápida: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.68.html?v=97.68
+ZIP (disponible tras QA y release): https://github.com/nacram1987-cmd/Fluxia-v20/releases/download/v97.69-LAB/Fluxia_v97.69_LAB_COMPLETO.zip
+No sustituir index.html hasta orden «con labora» y QA real de iPhone.
