@@ -45,3 +45,13 @@ check(BankImportSafety.classify(.init(provider: "bank-a", accountID: "account-2"
 check(BankImportSafety.classify(.init(provider: "bank-b", accountID: "account-1", providerTransactionID: "tx-100", amountCents: -6_200), existing: [movement]) == .new, "transaction IDs are scoped per provider")
 check(BankImportSafety.classify(.init(provider: "bank-a", accountID: "account-1", providerTransactionID: "", amountCents: -6_200), existing: []) == .needsReview, "missing provider transaction ID must not be imported blindly")
 print("Bank import safety: 6 checks passed")
+
+let aliceRecord = AccountIsolation.Record(id: "r-1", ownerID: "alice", amountCents: 2_000)
+let bobRecord = AccountIsolation.Record(id: "r-2", ownerID: "bob", amountCents: 3_000)
+check(AccountIsolation.authorize(record: aliceRecord, authenticatedUserID: "alice") == .allowed, "owner can access own record")
+check(AccountIsolation.authorize(record: aliceRecord, authenticatedUserID: "bob") == .denied, "other user cannot access record")
+check(AccountIsolation.authorize(record: aliceRecord, authenticatedUserID: nil) == .denied, "anonymous user cannot access record")
+check(AccountIsolation.authorize(record: aliceRecord, authenticatedUserID: " ") == .denied, "blank session cannot access record")
+check(AccountIsolation.visibleRecords([aliceRecord, bobRecord], authenticatedUserID: "alice") == [aliceRecord], "user sees only own records")
+check(AccountIsolation.visibleRecords([aliceRecord, bobRecord], authenticatedUserID: nil).isEmpty, "signed-out user sees no records")
+print("Account isolation: 6 checks passed")
