@@ -42,7 +42,7 @@ jobs:
           set -euo pipefail
           DEVICE_ID="$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin)["devices"]; a=[x for v in d.values() for x in v if "iPhone" in x["name"] and x["isAvailable"]]; print(a[0]["udid"] if a else "")')"
           if [ -z "$DEVICE_ID" ]; then echo "No available iPhone simulator"; exit 1; fi
-          DEVICE_STATE="$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin)["devices"]; a=[x for v in d.values() for x in v if x["udid"]=="$DEVICE_ID"]; print(a[0]["state"] if a else "")')"
+          DEVICE_STATE="$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin)["devices"]; a=[x for v in d.values() for x in v if x["udid"]==sys.argv[1]]; print(a[0]["state"] if a else "")' "$DEVICE_ID")"
           if [ "$DEVICE_STATE" != "Booted" ]; then
             xcrun simctl boot "$DEVICE_ID"
           fi
