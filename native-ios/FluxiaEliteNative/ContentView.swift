@@ -25,6 +25,7 @@ private enum EliteTab: String, CaseIterable, Identifiable {
 struct ContentView: View {
     @State private var selection: EliteTab = .home
     @State private var month = Date()
+    @State private var showPrivacy = false
     private let euro = Locale(identifier: "es_ES")
 
     var body: some View {
@@ -38,7 +39,7 @@ struct ContentView: View {
                             case .home: home
                             case .plan: placeholder("Planificación", "Los módulos financieros se conectarán tras validar la integridad de los datos.")
                             case .banks: placeholder("Bancos", "Sin conexión bancaria en esta versión de demostración.")
-                            case .settings: placeholder("Configuración", "Aplicación nativa SwiftUI, independiente de la PWA.")
+                            case .settings: settingsView
                             }
                         }
                         .padding(20)
@@ -110,6 +111,40 @@ struct ContentView: View {
             Text("Versión nativa inicial. Sin autenticación, datos reales ni operaciones bancarias.")
                 .font(.footnote).foregroundStyle(.white.opacity(0.65))
         }
+    }
+
+    private var settingsView: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            Text("Configuración").font(.title2).bold()
+            Label("Modo demostración", systemImage: "checkmark.shield.fill")
+                .foregroundStyle(ElitePalette.gold)
+            Text("Esta versión nativa no tiene sesión iniciada ni acceso a cuentas bancarias.")
+                .font(.subheadline).foregroundStyle(.white.opacity(0.8))
+            Button {
+                showPrivacy.toggle()
+            } label: {
+                Label(showPrivacy ? "Ocultar información" : "Ver protección de datos", systemImage: "lock.shield")
+                    .font(.headline)
+            }
+            .buttonStyle(.bordered)
+            .tint(ElitePalette.gold)
+            if showPrivacy {
+                VStack(alignment: .leading, spacing: 9) {
+                    Label("Sin credenciales almacenadas", systemImage: "checkmark.circle")
+                    Label("Sin conexiones bancarias", systemImage: "checkmark.circle")
+                    Label("Sin escrituras en la nube", systemImage: "checkmark.circle")
+                    Label("Datos de pantalla ficticios", systemImage: "checkmark.circle")
+                }
+                .font(.footnote)
+                .foregroundStyle(.white.opacity(0.85))
+                .accessibilityElement(children: .contain)
+            }
+            Text("Fluxia Élite · SwiftUI LAB 0.1")
+                .font(.caption).foregroundStyle(.white.opacity(0.6))
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(22)
+        .background(ElitePalette.card, in: RoundedRectangle(cornerRadius: 20))
     }
 
     private func tile(_ title: String, _ amount: String, _ symbol: String) -> some View {
