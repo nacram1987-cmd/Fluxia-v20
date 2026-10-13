@@ -7,6 +7,8 @@ on:
       - 'lab/v97.69.html'
       - 'lab/v97.70.html'
       - 'lab/v97.70/**'
+      - 'lab/v97.71.html'
+      - 'lab/v97.71/**'
       - 'AUDITORIA_ELITE/**'
   workflow_dispatch:
 permissions:
@@ -38,6 +40,14 @@ jobs:
       - run: node AUDITORIA_ELITE/banco/notification-regression.cjs lab/v97.70.html
       - run: node AUDITORIA_ELITE/financial-regression.cjs lab/v97.70.html
       - run: node AUDITORIA_ELITE/financial-regression.cjs
+      - run: node AUDITORIA_ELITE/build-candidate-v9771.cjs
+      - run: node AUDITORIA_ELITE/build-lab9771.cjs
+      - run: node AUDITORIA_ELITE/ledger-safety-regression.cjs AUDITORIA_ELITE/candidate/v97.71.html
+      - run: node AUDITORIA_ELITE/bank-regression.cjs AUDITORIA_ELITE/candidate/v97.71.html --extended
+      - run: node AUDITORIA_ELITE/banco/notification-regression.cjs lab/v97.71.html
+      - run: node AUDITORIA_ELITE/financial-regression.cjs lab/v97.71.html
+      - run: node --expose-gc AUDITORIA_ELITE/benchmark.cjs
+      - run: node AUDITORIA_ELITE/performance-gate.cjs
       - run: node AUDITORIA_ELITE/profile-regression.cjs
       - name: Package validated LAB and immutable stable source
         run: |
@@ -74,18 +84,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Package complete app, assets, protected references and audit
+        env:
+          FLUXIA_RELEASE_VERSION: v97.71
         run: python3 AUDITORIA_ELITE/package-release.py
       - uses: actions/upload-artifact@v4
         with:
-          name: Fluxia_v97.70_LAB_COMPLETO
+          name: Fluxia_v97.71_LAB_COMPLETO
           path: dist/*
           retention-days: 90
       - name: Publish validated LAB ZIP only; no stable promotion
         env:
           GH_TOKEN: ${{ github.token }}
+          FLUXIA_RELEASE_VERSION: v97.71
         run: |
-          if gh release view v97.70-LAB >/dev/null 2>&1; then
-            gh release upload v97.70-LAB dist/Fluxia_v97.70_LAB_COMPLETO.zip dist/SHA256SUMS.txt --clobber
+          python3 AUDITORIA_ELITE/package-release.py
+          if gh release view v97.71-LAB >/dev/null 2>&1; then
+            gh release upload v97.71-LAB dist/Fluxia_v97.71_LAB_COMPLETO.zip dist/SHA256SUMS.txt --clobber
           else
-            gh release create v97.70-LAB dist/Fluxia_v97.70_LAB_COMPLETO.zip dist/SHA256SUMS.txt --target "$GITHUB_SHA" --title "Fluxia v97.70 LAB: scoped banking and verified security" --notes-file RELEASE_NOTES_v97.70_LAB.md --prerelease
+            gh release create v97.71-LAB dist/Fluxia_v97.71_LAB_COMPLETO.zip dist/SHA256SUMS.txt --target "$GITHUB_SHA" --title "Fluxia v97.71 LAB: explicit archive and fixed matching" --notes-file RELEASE_NOTES_v97.71_LAB.md --prerelease
           fi

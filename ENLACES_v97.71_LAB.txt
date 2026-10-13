@@ -1,0 +1,5 @@
+Estado: candidata en verificación. No usar hasta que la CI y el smoke HTTP confirmen publicación.
+LAB: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.71.html
+PWA LAB aislada: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.71/index.html
+ESTABLE (sin cambios): https://nacram1987-cmd.github.io/Fluxia-v20/
+Referencia velocidad aceptada: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.68.html
