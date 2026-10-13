@@ -26,7 +26,7 @@ jobs:
       - name: Validate native financial accounting
         working-directory: native-ios
         run: |
-          swiftc FluxiaEliteNative/FinanceRules.swift FluxiaEliteNative/DemoFinanceSnapshot.swift FluxiaEliteNative/ExpenseReconciliation.swift tests/main.swift -o /tmp/fluxia-finance-check
+          swiftc FluxiaEliteNative/FinanceRules.swift FluxiaEliteNative/DemoFinanceSnapshot.swift FluxiaEliteNative/ExpenseReconciliation.swift FluxiaEliteNative/BankImportSafety.swift tests/main.swift -o /tmp/fluxia-finance-check
           /tmp/fluxia-finance-check
       - name: Generate native Xcode project
         working-directory: native-ios
