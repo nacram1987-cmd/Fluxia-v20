@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "Fluxia Élite LAB · Demostración",
+  "short_name": "Fluxia Élite LAB",
+  "description": "Vista previa aislada de Fluxia Élite con datos ficticios. Sin bancos ni finanzas reales.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#071021",
+  "theme_color": "#0c1830",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/nacram1987-cmd/Fluxia-v20/main/fluxia-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
