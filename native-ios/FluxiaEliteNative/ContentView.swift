@@ -1,11 +1,17 @@
 import SwiftUI
 
 private enum ElitePalette {
-    static let navy = Color(red: 0.055, green: 0.11, blue: 0.18)
-    static let ink = Color(red: 0.96, green: 0.96, blue: 0.94)
-    static let gold = Color(red: 0.86, green: 0.71, blue: 0.45)
-    static let champagne = Color(red: 0.70, green: 0.55, blue: 0.33)
-    static let card = Color(red: 0.10, green: 0.17, blue: 0.25)
+    private static func adaptive(light: UIColor, dark: UIColor) -> Color {
+        Color(uiColor: UIColor { traits in
+            traits.userInterfaceStyle == .dark ? dark : light
+        })
+    }
+    static let navy = adaptive(light: UIColor(red: 0.97, green: 0.965, blue: 0.945, alpha: 1), dark: UIColor(red: 0.055, green: 0.11, blue: 0.18, alpha: 1))
+    static let ink = adaptive(light: UIColor(red: 0.09, green: 0.16, blue: 0.24, alpha: 1), dark: UIColor(red: 0.96, green: 0.96, blue: 0.94, alpha: 1))
+    static let gold = adaptive(light: UIColor(red: 0.57, green: 0.40, blue: 0.19, alpha: 1), dark: UIColor(red: 0.86, green: 0.71, blue: 0.45, alpha: 1))
+    static let champagne = adaptive(light: UIColor(red: 0.91, green: 0.83, blue: 0.66, alpha: 1), dark: UIColor(red: 0.70, green: 0.55, blue: 0.33, alpha: 1))
+    static let card = adaptive(light: UIColor(red: 1, green: 0.998, blue: 0.985, alpha: 1), dark: UIColor(red: 0.10, green: 0.17, blue: 0.25, alpha: 1))
+    static let availableEnd = adaptive(light: UIColor(red: 0.965, green: 0.935, blue: 0.87, alpha: 1), dark: UIColor(red: 0.16, green: 0.23, blue: 0.31, alpha: 1))
 }
 
 private enum EliteTab: String, CaseIterable, Identifiable {
@@ -25,6 +31,7 @@ private enum EliteTab: String, CaseIterable, Identifiable {
 }
 
 struct ContentView: View {
+    @AppStorage("fluxia.elite.darkMode") private var darkMode = false
     @State private var selection: EliteTab = .home
     @State private var month = Date()
     @State private var showPrivacy = false
@@ -61,7 +68,7 @@ struct ContentView: View {
         }
         .tint(ElitePalette.gold)
         .foregroundStyle(ElitePalette.ink)
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(darkMode ? .dark : .light)
     }
 
     private var header: some View {
@@ -110,7 +117,7 @@ struct ContentView: View {
                     .font(.caption).foregroundStyle(ElitePalette.ink.opacity(0.7))
             }
             .frame(maxWidth: .infinity).padding(.vertical, 32)
-            .background(LinearGradient(colors: [ElitePalette.card, Color(red: 0.16, green: 0.23, blue: 0.31)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 24))
+            .background(LinearGradient(colors: [ElitePalette.card, ElitePalette.availableEnd], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 24))
             .overlay(RoundedRectangle(cornerRadius: 24).stroke(ElitePalette.champagne.opacity(0.85), lineWidth: 1))
             .shadow(color: ElitePalette.champagne.opacity(0.20), radius: 14, y: 6)
 
@@ -209,6 +216,12 @@ struct ContentView: View {
     private var settingsView: some View {
         VStack(alignment: .leading, spacing: 18) {
             Text("Configuración").font(.title2).bold()
+            Toggle(isOn: $darkMode) {
+                Label("Modo oscuro", systemImage: darkMode ? "moon.stars.fill" : "sun.max.fill")
+            }
+            .tint(ElitePalette.gold)
+            Text("El modo claro es el diseño principal de Fluxia Élite.")
+                .font(.caption).foregroundStyle(ElitePalette.ink.opacity(0.7))
             Label("Modo demostración", systemImage: "checkmark.shield.fill")
                 .foregroundStyle(ElitePalette.gold)
             Text("Esta versión nativa no tiene sesión iniciada ni acceso a cuentas bancarias.")
