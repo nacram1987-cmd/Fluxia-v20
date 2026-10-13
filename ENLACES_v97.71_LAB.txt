@@ -1,4 +1,4 @@
-Estado: candidata en verificación. No usar hasta que la CI y el smoke HTTP confirmen publicación.
+Estado: publicada como LAB. CI y smoke HTTP por bytes superados; prerelease sin promoción estable.
 LAB: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.71.html
 PWA LAB aislada: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.71/index.html
 ESTABLE (sin cambios): https://nacram1987-cmd.github.io/Fluxia-v20/

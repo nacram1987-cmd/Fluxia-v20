@@ -1,6 +1,6 @@
 # Fluxia v97.71-LAB — Papelera segura y propuesta de fijo
 
-Versión LAB independiente en preparación. ESTABLE y v97.68 permanecen intactas; no promover sin la instrucción expresa «con labora».
+Versión LAB publicada tras QA sintética, despliegue y smoke HTTP por bytes. ESTABLE y v97.68 permanecen intactas; no promover sin la instrucción expresa «con labora».
 
 ## Correcciones
 
@@ -11,4 +11,9 @@ Versión LAB independiente en preparación. ESTABLE y v97.68 permanecen intactas
 
 ## Límites
 
-No se altera ni limpia información real del usuario. La clasificación de cargos Valkiria no puede resolverse sin una sincronización/exportación autenticada que exponga sus referencias estables. Esta versión necesita superar QA y smoke HTTP antes de publicarse.
+No se altera ni limpia información real del usuario. La clasificación de cargos Valkiria no puede resolverse sin una sincronización/exportación autenticada que exponga sus referencias estables. Safari/iPhone y proveedor PSD2 con credenciales reales no fueron probados.
+
+LAB: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.71.html
+PWA LAB: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.71/index.html
+ESTABLE intacta: https://nacram1987-cmd.github.io/Fluxia-v20/
+Referencia: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.68.html
