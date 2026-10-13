@@ -1,0 +1,14 @@
+[
+  {
+    "request": "unauthorized",
+    "http": 401,
+    "rejected": true,
+    "returned_movements": 0
+  },
+  {
+    "request": "invalid token",
+    "http": 401,
+    "rejected": true,
+    "returned_movements": 0
+  }
+]

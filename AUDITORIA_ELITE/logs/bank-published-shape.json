@@ -1,0 +1,62 @@
+{
+  "file": "lab/v97.70.html",
+  "boundaries": "deterministic provider/classifier/UI; no live bank, no cloud writes",
+  "tests": [
+    {
+      "name": "Different merchants, same amount/day: both retained",
+      "pass": true
+    },
+    {
+      "name": "Same merchant, two authoritative IDs in same batch: both retained",
+      "pass": true
+    },
+    {
+      "name": "Same merchant, new confirmed ID in later batch: retained",
+      "pass": true
+    },
+    {
+      "name": "Manual unrelated expense cannot absorb bank payment by amount",
+      "pass": true
+    },
+    {
+      "name": "Pending unrelated merchant cannot absorb confirmed payment",
+      "pass": true
+    },
+    {
+      "name": "Unambiguous matching manual record links exactly once",
+      "pass": true
+    },
+    {
+      "name": "Unambiguous pending-to-confirmed record links once",
+      "pass": true
+    },
+    {
+      "name": "400 bank records, ten reimports: identity/count/sum unchanged",
+      "pass": true
+    },
+    {
+      "name": "Archived bank ID blocked through ten reimports",
+      "pass": true
+    },
+    {
+      "name": "Same raw provider ID across banks cannot hide another account payment",
+      "pass": true
+    },
+    {
+      "name": "Indistinguishable missing provider IDs become explicit conflict, no silent loss",
+      "pass": true
+    },
+    {
+      "name": "Same raw ID in two accounts of same bank: two payments",
+      "pass": true
+    },
+    {
+      "name": "Existing legacy payment adopts identity without changing balance or reference",
+      "pass": true
+    },
+    {
+      "name": "Ambiguous legacy account ownership gives explicit conflict, no mutation",
+      "pass": true
+    }
+  ]
+}

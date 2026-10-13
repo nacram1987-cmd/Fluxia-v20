@@ -1,0 +1,16 @@
+{
+  "release": "v97.69-LAB",
+  "parsedScripts": 168,
+  "bankModuleIdentical": true,
+  "variableMonthly": 30,
+  "variablePlan": 40,
+  "fixedPaid": 73,
+  "pendingFixed": 35,
+  "totalRealized": 103,
+  "excludedTransfer": 500,
+  "historyLazy": true,
+  "financialBalanceUnchanged": true,
+  "physicalIphoneBenchmark": false,
+  "bankFetchStatements": 1,
+  "domErrors": []
+}

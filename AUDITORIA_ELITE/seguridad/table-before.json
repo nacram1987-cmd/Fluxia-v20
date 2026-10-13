@@ -1,0 +1,8 @@
+[
+  {
+    "relname": "fluxia_contactos",
+    "relrowsecurity": false,
+    "relforcerowsecurity": false,
+    "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres}"
+  }
+]

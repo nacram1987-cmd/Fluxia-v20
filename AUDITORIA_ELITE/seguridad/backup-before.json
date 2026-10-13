@@ -1,0 +1,53 @@
+{
+  "captured": "2026-10-13",
+  "function": {
+    "definition": "CREATE OR REPLACE FUNCTION public.accept_invitation(token_input text, usuario_id uuid)\n RETURNS json\n LANGUAGE plpgsql\n SECURITY DEFINER\nAS $function$\r\nDECLARE\r\n  v_contacto_id UUID;\r\n  v_user_id_1 UUID;\r\nBEGIN\r\n  -- Buscar la invitación pendiente\r\n  SELECT id, user_id_1 INTO v_contacto_id, v_user_id_1\r\n  FROM public.fluxia_contactos\r\n  WHERE gasto_invite_token = token_input AND estado = 'pendiente'\r\n  LIMIT 1;\r\n\r\n  IF v_contacto_id IS NULL THEN\r\n    RETURN json_build_object('success', false, 'error', 'Invitación no encontrada o ya procesada');\r\n  END IF;\r\n\r\n  -- Actualizar el estado a aceptado\r\n  UPDATE public.fluxia_contactos\r\n  SET estado = 'aceptado', fecha_aceptacion = now()\r\n  WHERE id = v_contacto_id AND user_id_2 = usuario_id;\r\n\r\n  RETURN json_build_object(\r\n    'success', true,\r\n    'contacto_id', v_contacto_id,\r\n    'usuario_invitador', v_user_id_1,\r\n    'mensaje', 'Invitación aceptada'\r\n  );\r\nEND;\r\n$function$\n",
+    "grants": "{=X/postgres,postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+    "owner": "postgres"
+  },
+  "policies": [
+    {
+      "policyname": "usuarios_ven_sus_contactos",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "((auth.uid() = user_id_1) OR (auth.uid() = user_id_2))",
+      "with_check": null
+    },
+    {
+      "policyname": "usuarios_crean_contactos",
+      "roles": "{public}",
+      "cmd": "INSERT",
+      "qual": null,
+      "with_check": "((auth.uid() = user_id_1) OR (auth.uid() = user_id_2))"
+    },
+    {
+      "policyname": "usuarios_actualizan_contactos",
+      "roles": "{public}",
+      "cmd": "UPDATE",
+      "qual": "((auth.uid() = user_id_1) OR (auth.uid() = user_id_2))",
+      "with_check": null
+    },
+    {
+      "policyname": "Ver contactos propios",
+      "roles": "{public}",
+      "cmd": "SELECT",
+      "qual": "((auth.uid() = user_id_1) OR (auth.uid() = user_id_2))",
+      "with_check": null
+    },
+    {
+      "policyname": "Crear contacto",
+      "roles": "{public}",
+      "cmd": "INSERT",
+      "qual": null,
+      "with_check": "(auth.uid() = user_id_1)"
+    },
+    {
+      "policyname": "Actualizar contacto",
+      "roles": "{public}",
+      "cmd": "UPDATE",
+      "qual": "((auth.uid() = user_id_1) OR (auth.uid() = user_id_2))",
+      "with_check": "((auth.uid() = user_id_1) OR (auth.uid() = user_id_2))"
+    }
+  ],
+  "productionModified": false
+}

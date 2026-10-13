@@ -1,0 +1,11 @@
+[
+  {
+    "prosecdef": true,
+    "proconfig": [
+      "search_path=\"\""
+    ],
+    "anon_execute": false,
+    "auth_execute": true,
+    "definition": "CREATE OR REPLACE FUNCTION public.accept_invitation(token_input text, usuario_id uuid)\n RETURNS json\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$\nDECLARE\n  caller uuid := auth.uid();\n  v_contacto_id uuid;\n  v_user_id_1 uuid;\nBEGIN\n  IF caller IS NULL OR usuario_id IS DISTINCT FROM caller THEN\n    RAISE EXCEPTION 'Unauthorized invitation recipient' USING ERRCODE = '42501';\n  END IF;\n  SELECT id, user_id_1 INTO v_contacto_id, v_user_id_1\n  FROM public.fluxia_contactos\n  WHERE gasto_invite_token = token_input AND estado = 'pendiente'\n    AND user_id_2 = caller\n  FOR UPDATE;\n  IF v_contacto_id IS NULL THEN\n    RETURN json_build_object('success', false, 'error', 'Invitación no encontrada o ya procesada');\n  END IF;\n  UPDATE public.fluxia_contactos\n  SET estado = 'aceptado', fecha_aceptacion = now()\n  WHERE id = v_contacto_id AND user_id_2 = caller AND estado = 'pendiente';\n  IF NOT FOUND THEN\n    RETURN json_build_object('success', false, 'error', 'Invitación no encontrada o ya procesada');\n  END IF;\n  RETURN json_build_object('success', true, 'contacto_id', v_contacto_id,\n    'usuario_invitador', v_user_id_1, 'mensaje', 'Invitación aceptada');\nEND;\n$function$\n"
+  }
+]

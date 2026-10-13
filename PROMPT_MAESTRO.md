@@ -1097,3 +1097,13 @@ La ejecución detallada se encuentra en **`PROMPT_WORK_FLUXIA_ELITE_EJECUCION_IN
 - Seguridad: catálogos confirmaron contactos sin RLS y RPC de invitaciones SECURITY DEFINER invocable por anon. No declarar aislamiento integral. SQL preparado en AUDITORIA_ELITE/SEGURIDAD_PROPUESTA_NO_APLICADA.sql; aprobación y prueba en copia antes de cambios sensibles.
 - Benchmarks JSDOM de diez repeticiones son evidencia de trabajo JS/DOM, no tiempos iPhone, INP/LCP/CLS/FPS. Safari/PWA físicos siguen NO VERIFICADOS. Ninguna prueba sintética ni puntuación autoriza promoción automática.
 - Preservar raíz v97.66, LAB v97.68, referencias y almacenamiento; no reparar cifras reales mediante borrado/renumeración/reimportación ciega. Las correcciones pendientes y el dry-run forman parte de cada entrega.
+
+
+## Adenda v97.70 · cierre de correcciones autorizadas y evaluación comparable
+
+- El usuario autorizó todas las intervenciones el 13/10/2026. RLS Contactos/RPC de invitaciones aplicadas con backup y prueba sintética de roles. No pedir de nuevo esa aprobación. La promoción PWA sigue requiriendo «con labora».
+- El bloqueo de IDs de v97.70 inicial queda superado por namespace proveedor/cuenta/referencia estable, pruebas ampliadas y backend LAB propio. entry_reference es la referencia de matching; transaction_id no es una referencia inmutable. Preservar bancoRef antiguo, checkpoint metadata y conflictos explícitos ante identificación insuficiente; no fusionar ni borrar para fabricar cuadre.
+- Un solo propietario del aviso bancario, ledger durable por identidad/usuario y un canal según primer/segundo plano. Reimportar diez veces conserva cargos/importe y no multiplica avisos.
+- El módulo de identidad se instancia bajo demanda, instalado antes del libro para que el archivo scoped sea seguro en recargas. No ejecutar bancos ni render oculto en ruta crítica.
+- La valoración de una auditoría inicial de riesgos no es una caída medida de la app. Comparar versiones con mismos criterios/pruebas; separar estado operativo, cobertura y riesgos nuevos. No inflar una nota ni declarar mejora física sin medición.
+- Mantener todas las bases/estables, fórmula financiera y SHA protegidos. QA completa y HTTP por bytes antes de declarar LAB publicada. Safari/PWA física, tokens reales y latencia PSD2 no se certifican a partir de simulaciones.

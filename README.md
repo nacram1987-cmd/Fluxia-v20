@@ -18,3 +18,7 @@ En iPhone: abrir el enlace en Safari. La PWA instalada mantiene su identidad y r
 
 ## Verificación pendiente de dispositivo
 El paquete y la rama se validan desde el entorno de build. El último toque real en Safari/iPhone debe confirmar que el menú aparece cerrado y que la X lo cierra.
+
+
+### v97.70-LAB · ejecución Élite autorizada
+Identidad bancaria por cuenta/proveedor, rechazo/archivo compatible, aviso único y RLS/RPC aplicados con pruebas. Consultar RELEASE_NOTES_v97.70_LAB.md, REAL_ASSESSMENT_v97.70_LAB.md y AUDITORIA_ELITE/CIERRE_v97.70.md. Root/PWA y v97.68 se conservan. No significa Safari físico validado ni promoción estable.

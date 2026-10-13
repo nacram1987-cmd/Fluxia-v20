@@ -1,0 +1,19 @@
+{
+  "file": "lab/v97.70.html",
+  "scriptCount": 168,
+  "unchangedAccountingFunctions": true,
+  "scopedArchiveAdapter": true,
+  "availablePending": 900,
+  "availableLinkedActual": 897,
+  "provisionBudgetAndExcess": true,
+  "historicalCurrentInvariant": true,
+  "internalTransferNeutral": true,
+  "navigationCycles": 20,
+  "listsUnchanged": true,
+  "deletedReimports": 10,
+  "newerCloudRevisionWins": true,
+  "emptyRemotePreserves": true,
+  "cloudNetwork": "NOT EXERCISED",
+  "iOS": "NOT VERIFIED",
+  "errors": []
+}

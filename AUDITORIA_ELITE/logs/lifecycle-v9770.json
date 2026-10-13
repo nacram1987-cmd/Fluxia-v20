@@ -1,0 +1,12 @@
+{
+  "concurrentSyncCalls": 10,
+  "providerFlights": 1,
+  "retryAfterFailure": true,
+  "profileChangeBeforeSessionRejected": true,
+  "profileChangeDuringFetchRejected": true,
+  "staleFinancialWrites": 0,
+  "labWorkerRootNotIntercepted": true,
+  "rootLabAndFinancialCachesPreserved": true,
+  "labShellAvailable": true,
+  "physicalPWA": false
+}
