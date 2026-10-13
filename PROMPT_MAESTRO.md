@@ -1012,3 +1012,17 @@ Conservar identidad PWA, entrada permanente, datos locales/cloud y cachés separ
 7. Versiones y entregables: publicar siempre LAB y referencia ESTABLE, ZIP completo, cambios, límites y pruebas; la PWA estable no se promueve por una mera solicitud de optimización. Publicarla cuando el usuario diga «con labora» tras superar QA.
 
 **Principio rector:** rendimiento de élite significa respuesta y render sin trabajo superfluo medidos objetivamente, no ocultar los retrasos ni sacrificar contabilidad/seguridad para aparentar rapidez.
+
+
+## ⚡ REGLA PERMANENTE DE RENDIMIENTO — actualización v97.68-LAB (13/10/2026)
+
+1. **La misma Fluxia, más rápida.** Ninguna optimización permite alterar interfaz, jerarquía, navegación, reglas financieras, persistencia, acceso y separación de usuarios ni conciliación. Conservar la base aceptada v97.66 y el historial de estables.
+2. **Priorización:** integridad financiera > aislamiento de cuentas > nube como fuente de verdad > idempotencia y no-resurrección > rendimiento > diseño inalterado.
+3. **Línea base y QA obligatorios:** conservar comparación de código con v97.66; medir en el mismo dispositivo, datos y red el arranque frío/caliente, primer gesto útil, menú/logo, pestañas, Variables, Bancos, LCP, INP, CLS, desplazamiento, memoria y consultas. Registrar medianas y dispersión; sin datos reales no adjudicar métricas.
+4. **Presupuesto orientativo, no resultado garantizado:** menú y botones <100 ms, pestaña ya cargada <200 ms, INP <200 ms, LCP <2,5 s, CLS <0,1 y scroll ~60 FPS; no declarar cumplimiento sin pruebas repetibles.
+5. **Sin parches falsos:** no reducir esperas únicamente por apariencia ni usar saldos provisionales; evitar tareas redundantes de scroll, reanudación, serialización y rendering; mantener invalidación completa ante cambios in-place y locales/remotos.
+6. **LAB antes de ESTABLE:** cada candidato debe entregar ZIP completo, enlaces diferenciados, prueba automatizada, registro de cambios, comparativa operativa y limitaciones. PWA y `index.html` estables no se tocan hasta promoción autorizada («con labora») y verificada.
+7. **Regla antirregresión:** toda nueva versión debe mantener o mejorar el rendimiento medido, sin sacrificar exactitud financiera ni accesibilidad. Si empeora de forma reproducible, se rechaza y se preserva la base.
+
+**v97.68-LAB:** micro-optimización de firma de render con una asignación menos, supresión de scroll duplicado al navegar desde menú y omisión de reanudación diferida de lista al salir de la vista. Cierre manual sigue intacto; cifras reales de iPhone pendientes de medición. Cualquier discrepancia contable o visual bloquea la versión.
+
