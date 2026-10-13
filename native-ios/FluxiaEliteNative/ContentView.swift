@@ -1,11 +1,11 @@
 import SwiftUI
 
 private enum ElitePalette {
-    static let navy = Color(red: 0.97, green: 0.965, blue: 0.945)
-    static let ink = Color(red: 0.09, green: 0.16, blue: 0.24)
-    static let gold = Color(red: 0.57, green: 0.40, blue: 0.19)
-    static let champagne = Color(red: 0.91, green: 0.83, blue: 0.66)
-    static let card = Color(red: 1, green: 0.998, blue: 0.985)
+    static let navy = Color(red: 0.055, green: 0.11, blue: 0.18)
+    static let ink = Color(red: 0.96, green: 0.96, blue: 0.94)
+    static let gold = Color(red: 0.86, green: 0.71, blue: 0.45)
+    static let champagne = Color(red: 0.70, green: 0.55, blue: 0.33)
+    static let card = Color(red: 0.10, green: 0.17, blue: 0.25)
 }
 
 private enum EliteTab: String, CaseIterable, Identifiable {
@@ -61,7 +61,7 @@ struct ContentView: View {
         }
         .tint(ElitePalette.gold)
         .foregroundStyle(ElitePalette.ink)
-        .preferredColorScheme(.light)
+        .preferredColorScheme(.dark)
     }
 
     private var header: some View {
@@ -70,7 +70,7 @@ struct ContentView: View {
                 Text("FLUXIA").font(.system(size: 26, weight: .bold, design: .rounded))
                     .tracking(3)
                 Text("ÉLITE").font(.system(size: 12, weight: .bold))
-                    .foregroundStyle(LinearGradient(colors: [Color(red: 0.44, green: 0.31, blue: 0.13), Color(red: 0.88, green: 0.77, blue: 0.54), Color(red: 0.38, green: 0.26, blue: 0.12)], startPoint: .leading, endPoint: .trailing))
+                    .foregroundStyle(LinearGradient(colors: [Color(red: 0.73, green: 0.53, blue: 0.27), Color(red: 0.98, green: 0.86, blue: 0.60), Color(red: 0.69, green: 0.47, blue: 0.23)], startPoint: .leading, endPoint: .trailing))
                 Spacer()
                 Image(systemName: "bell")
                     .accessibilityLabel("Notificaciones: demostración")
@@ -108,9 +108,9 @@ struct ContentView: View {
                     .font(.caption).foregroundStyle(ElitePalette.ink.opacity(0.7))
             }
             .frame(maxWidth: .infinity).padding(.vertical, 32)
-            .background(LinearGradient(colors: [ElitePalette.card, Color(red: 0.965, green: 0.935, blue: 0.87)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 24))
+            .background(LinearGradient(colors: [ElitePalette.card, Color(red: 0.16, green: 0.23, blue: 0.31)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 24))
             .overlay(RoundedRectangle(cornerRadius: 24).stroke(ElitePalette.champagne.opacity(0.85), lineWidth: 1))
-            .shadow(color: ElitePalette.ink.opacity(0.06), radius: 14, y: 6)
+            .shadow(color: ElitePalette.champagne.opacity(0.20), radius: 14, y: 6)
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
                 tile("Ingresos", formattedEuros(sampleMonth.incomeCents), "arrow.down.left", .income)
