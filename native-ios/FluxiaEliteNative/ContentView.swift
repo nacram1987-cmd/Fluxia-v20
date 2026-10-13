@@ -109,10 +109,10 @@ struct ContentView: View {
             .overlay(RoundedRectangle(cornerRadius: 24).stroke(ElitePalette.gold.opacity(0.4)))
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                tile("Ingresos", formattedEuros(sampleMonth.incomeCents), "arrow.down.left")
-                tile("Gastos fijos", formattedEuros(sampleMonth.fixedExpenseCents), "calendar")
-                tile("Huchas", formattedEuros(sampleMonth.plannedProvisionCents), "archivebox")
-                tile("Gastos variables", formattedEuros(sampleMonth.variableExpenseCents), "creditcard")
+                tile("Ingresos", formattedEuros(sampleMonth.incomeCents), "arrow.down.left", .income)
+                tile("Gastos fijos", formattedEuros(sampleMonth.fixedExpenseCents), "calendar", .fixed)
+                tile("Huchas", formattedEuros(sampleMonth.plannedProvisionCents), "archivebox", .savings)
+                tile("Gastos variables", formattedEuros(sampleMonth.variableExpenseCents), "creditcard", .variable)
             }
             Text("Versión nativa inicial. Sin autenticación, datos reales ni operaciones bancarias.")
                 .font(.footnote).foregroundStyle(.white.opacity(0.65))
@@ -232,15 +232,22 @@ struct ContentView: View {
         .background(ElitePalette.card, in: RoundedRectangle(cornerRadius: 20))
     }
 
-    private func tile(_ title: String, _ amount: String, _ symbol: String) -> some View {
-        VStack(alignment: .leading, spacing: 13) {
-            Image(systemName: symbol).foregroundStyle(ElitePalette.gold)
-            Text(title).font(.subheadline)
-            Text(amount).font(.headline).monospacedDigit()
+    private func tile(_ title: String, _ amount: String, _ symbol: String, _ module: EliteFinanceModule) -> some View {
+        Button {
+            selectedModule = module
+            selection = .plan
+        } label: {
+            VStack(alignment: .leading, spacing: 13) {
+                Image(systemName: symbol).foregroundStyle(ElitePalette.gold)
+                Text(title).font(.subheadline)
+                Text(amount).font(.headline).monospacedDigit()
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(16)
+            .background(ElitePalette.card, in: RoundedRectangle(cornerRadius: 18))
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
-        .background(ElitePalette.card, in: RoundedRectangle(cornerRadius: 18))
+        .buttonStyle(.plain)
+        .accessibilityLabel("\(title), \(amount). Abrir sección")
     }
 
     private func placeholder(_ title: String, _ message: String) -> some View {
