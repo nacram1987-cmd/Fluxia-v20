@@ -21,6 +21,29 @@ check(FinanceRules.availableCents(month(-1)) == nil, "negative contributions rej
 check(FinanceRules.availableCents(month(Int64.max)) == nil, "arithmetic overflow rejected")
 print("FinanceRules: 6 native accounting checks passed")
 
+var accountingCases = 0
+for income in [Int64(0), 1, 25_000, 250_000] {
+    for fixed in [Int64(0), 6_200, 70_000] {
+        for variable in [Int64(0), 3_000, 30_000] {
+            for planned in [Int64(0), 500, 10_000] {
+                for actual in [Int64(0), planned / 2, planned, planned + 500] {
+                    let input = FinanceRules.Month(
+                        incomeCents: income, fixedExpenseCents: fixed,
+                        variableExpenseCents: variable, plannedProvisionCents: planned,
+                        actualProvisionContributionCents: actual
+                    )
+                    let expected = income - fixed - variable - planned - max(0, actual - planned)
+                    check(FinanceRules.availableCents(input) == expected,
+                          "Disponible formula mismatch across deterministic amount combinations")
+                    accountingCases += 1
+                }
+            }
+        }
+    }
+}
+check(accountingCases == 432, "all deterministic Disponible combinations executed")
+print("FinanceRules: 432 additional deterministic amount combinations passed")
+
 let demo = DemoFinanceSnapshot.preview
 check(demo.isSynthetic, "preview must always be labelled synthetic")
 check(!FinanceAccessGate.canMutate(demo), "demo cannot write financial records")
@@ -44,7 +67,33 @@ check(BankImportSafety.classify(.init(provider: "bank-a", accountID: "account-1"
 check(BankImportSafety.classify(.init(provider: "bank-a", accountID: "account-2", providerTransactionID: "tx-100", amountCents: -6_200), existing: [movement]) == .new, "transaction IDs are scoped per account")
 check(BankImportSafety.classify(.init(provider: "bank-b", accountID: "account-1", providerTransactionID: "tx-100", amountCents: -6_200), existing: [movement]) == .new, "transaction IDs are scoped per provider")
 check(BankImportSafety.classify(.init(provider: "bank-a", accountID: "account-1", providerTransactionID: "", amountCents: -6_200), existing: []) == .needsReview, "missing provider transaction ID must not be imported blindly")
-print("Bank import safety: 6 checks passed")
+check(BankImportSafety.classify(.init(provider: "bank-a", accountID: "account-1", providerTransactionID: "tx-101", amountCents: -6_200), existing: [movement]) == .new, "same amount with a different provider transaction ID stays distinct")
+check(BankImportSafety.classify(.init(provider: "bank-a", accountID: "account-1", providerTransactionID: "   ", amountCents: -6_200), existing: []) == .needsReview, "whitespace-only bank transaction ID is rejected")
+
+let syntheticBatch: [BankImportSafety.Movement] = (0..<400).map { index in
+    BankImportSafety.Movement(
+        provider: "synthetic-bank", accountID: "synthetic-account",
+        providerTransactionID: "synthetic-tx-\\(index)",
+        amountCents: -Int64((index % 83) + 1) * 100
+    )
+}
+var importedBatch: [BankImportSafety.Movement] = []
+var duplicateDecisions = 0
+for _ in 0..<10 {
+    for transaction in syntheticBatch {
+        switch BankImportSafety.classify(transaction, existing: importedBatch) {
+        case .new:
+            importedBatch.append(transaction)
+        case .duplicate:
+            duplicateDecisions += 1
+        case .conflict, .needsReview:
+            check(false, "stable synthetic transaction unexpectedly conflicted on replay")
+        }
+    }
+}
+check(importedBatch.count == 400, "400 synthetic provider IDs remain unique after ten import passes")
+check(duplicateDecisions == 3_600, "the next nine reimports classify every existing transaction as duplicate")
+print("Bank import safety: 400 synthetic IDs across 10 passes; 400 unique, 3,600 duplicate decisions")
 
 let aliceRecord = AccountIsolation.Record(id: "r-1", ownerID: "alice", amountCents: 2_000)
 let bobRecord = AccountIsolation.Record(id: "r-2", ownerID: "bob", amountCents: 3_000)

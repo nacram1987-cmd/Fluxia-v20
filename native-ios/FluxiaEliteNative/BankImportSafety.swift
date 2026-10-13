@@ -18,10 +18,14 @@ enum BankImportSafety {
 
     /// Provider transaction IDs are scoped to both provider and account.
     /// A reused ID with changed amount is a conflict, not a new expense.
+    private static func hasNonWhitespaceValue(_ value: String) -> Bool {
+        !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
     static func classify(_ incoming: Movement, existing: [Movement]) -> Decision {
-        guard !incoming.provider.isEmpty,
-              !incoming.accountID.isEmpty,
-              !incoming.providerTransactionID.isEmpty,
+        guard hasNonWhitespaceValue(incoming.provider),
+              hasNonWhitespaceValue(incoming.accountID),
+              hasNonWhitespaceValue(incoming.providerTransactionID),
               incoming.amountCents != 0 else { return .needsReview }
 
         let matches = existing.filter {
