@@ -1,0 +1,45 @@
+name: Fluxia Elite LAB - Free Linux checks
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/fluxia-elite-ios-capacitor]
+    paths:
+      - 'ios-app/**'
+      - '.github/workflows/fluxia-elite-linux-checks.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fluxia-elite-linux-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: ios-app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Verify Capacitor project and synthetic LAB boundary
+        run: npm run verify:dev
+      - name: Check HTML, script and brand rules
+        run: |
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const html=readFileSync('www/index.html','utf8');
+          if(!html.includes('Fluxia <span>Élite</span>'))throw Error('Fluxia Elite header missing');
+          if(html.includes('∞ Fluxia'))throw Error('Duplicate infinity symbol detected');
+          if(!html.includes('linear-gradient(115deg,#705020'))throw Error('Elite gold gradient missing');
+          if(!html.includes('synthetic-no-banking'))throw Error('Synthetic data disclaimer missing');
+          if(!html.includes('No introduzcas credenciales'))throw Error('Credentials warning missing');
+          console.log('Brand and development-only safeguards verified');
+          NODE
