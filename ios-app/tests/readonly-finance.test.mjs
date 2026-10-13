@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {cents,validateSnapshot,createReadOnlySession} from '../src/readonly-finance.mjs';
+const payload=(userId='account-a')=>({schemaVersion:1,userId,month:'2026-10',totals:{income:'2500.00',fixed:'815.00',variable:'220.00',provisions:'180.00',extraContributions:'0.00',available:'1284.50'}});
+test('money parsed in integer cents without floating-point drift',()=>{assert.equal(cents('0.01'),1);assert.equal(cents('100.99'),10099);assert.equal(cents('-1.20'),-120);});
+test('reject malformed money and schema',()=>{for(const x of [123,'1,20','1.234','Infinity','NaN','1e3'])assert.throws(()=>cents(x));assert.throws(()=>validateSnapshot({...payload(),schemaVersion:2},'account-a'));});
+test('block cross-account snapshot',()=>assert.throws(()=>validateSnapshot(payload('account-b'),'account-a'),/Cross-account/));
+test('block snapshot before authentication',()=>{const s=createReadOnlySession();assert.throws(()=>s.accept(payload()),/Not authenticated/);});
+test('signout and account switch discard previous account data',()=>{const s=createReadOnlySession();s.signIn('account-a');s.accept(payload());assert.equal(s.getSnapshot().totals.available,128450);s.signOut();assert.equal(s.getSnapshot(),null);s.signIn('account-b');assert.equal(s.getSnapshot(),null);assert.throws(()=>s.accept(payload('account-a')),/Cross-account/);s.accept(payload('account-b'));assert.equal(s.getSnapshot().userId,'account-b');});
+test('snapshot does not expose write methods',()=>{const s=createReadOnlySession();assert.equal(s.createExpense,undefined);assert.equal(s.updateBalance,undefined);});
