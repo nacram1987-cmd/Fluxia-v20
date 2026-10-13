@@ -1,0 +1,92 @@
+name: Fluxia v97.69 LAB - audit, build, release
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fluxia-v97.69-lab-qa-release.yml'
+      - 'auditorias/qa-v97.69/**'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: fluxia-v9769-qa-release
+  cancel-in-progress: false
+jobs:
+  qa-build-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify frozen accepted baseline
+        run: node auditorias/qa-v97.66/verify-baseline.cjs
+      - name: Install frozen QA dependencies
+        run: npm install --prefix auditorias/qa-v97.66 --no-audit --no-fund
+      - name: Regress accepted v97.66
+        run: npm --prefix auditorias/qa-v97.66 test
+      - name: Generate candidate from previous v97.68 LAB
+        run: node auditorias/qa-v97.69/build-lab.cjs
+      - name: Regress financial integrity, fixed/variable history and UI
+        run: node auditorias/qa-v97.69/regression-lab.cjs
+      - name: Publish generated LAB only after successful QA
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lab/v97.69.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish Fluxia v97.69 LAB after reproducible financial QA"
+            git push origin HEAD:main
+          fi
+      - name: Build complete QA-passed LAB ZIP
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile,ZIP_DEFLATED
+          dst=Path('dist/Fluxia_v97.69_LAB_COMPLETO.zip')
+          dst.parent.mkdir(exist_ok=True)
+          files=[
+            'lab/v97.69.html','lab/manifest.webmanifest','lab/fluxia-sw.js',
+            'PROMPT_MAESTRO.md','AGENTS.md','BASE_RENDIMIENTO_v97.66.md',
+            'RELEASE_NOTES_v97.69_LAB.md','REAL_ASSESSMENT_v97.69_LAB.md',
+            'ENLACES_v97.69_LAB.txt',
+            'auditorias/REQUISITOS_VARIABLES_FIJOS_Y_RENDIMIENTO_2026-10-13.md',
+            'auditorias/qa-v97.69/build-lab.cjs','auditorias/qa-v97.69/regression-lab.cjs',
+            'auditorias/qa-v97.66/regression.cjs','auditorias/qa-v97.66/verify-baseline.cjs'
+          ]
+          files += [str(p) for p in Path('assets/brands').rglob('*.svg')]
+          files += [str(p) for p in Path('.').glob('icon-*.png')]
+          if Path('logo_fluxia.png').exists():files.append('logo_fluxia.png')
+          with ZipFile(dst,'w',compression=ZIP_DEFLATED,compresslevel=9) as z:
+            for f in files:
+              if not Path(f).is_file():raise RuntimeError('Missing file '+f)
+              z.write(f,arcname=f)
+            z.writestr('LEEME_PRIMERO.txt',
+              'Fluxia v97.69-LAB: abrir lab/v97.69.html. No sustituir index.html estable.\n'
+              'Enlace LAB: https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.69.html\n'
+              'Enlace ESTABLE: https://nacram1987-cmd.github.io/Fluxia-v20/\n'
+              'Candidato solo lectura: no elimina ni migra datos ni modifica la PWA instalada.\n')
+          print('ZIP verified',dst,dst.stat().st_size)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Fluxia_v97.69_LAB_COMPLETO
+          path: dist/Fluxia_v97.69_LAB_COMPLETO.zip
+          retention-days: 90
+      - name: Publish downloadable prerelease only after all tests
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view v97.69-LAB >/dev/null 2>&1; then
+            gh release upload v97.69-LAB dist/Fluxia_v97.69_LAB_COMPLETO.zip --clobber
+          else
+            gh release create v97.69-LAB dist/Fluxia_v97.69_LAB_COMPLETO.zip --target "$(git rev-parse HEAD)" --title "Fluxia v97.69-LAB - expense integrity" --notes-file RELEASE_NOTES_v97.69_LAB.md --prerelease
+          fi
+      - name: Ask Pages to rebuild after Actions-published LAB
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api -X POST repos/nacram1987-cmd/Fluxia-v20/pages/builds || true
