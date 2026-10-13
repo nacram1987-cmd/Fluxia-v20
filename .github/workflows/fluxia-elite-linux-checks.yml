@@ -55,7 +55,8 @@ jobs:
       - name: Package iPhone Safari visual preview (synthetic only)
         run: |
           mkdir -p preview
-          cp www/index.html preview/Fluxia-Elite-LAB-1.6-Vista-Previa.html
+          cp www/index.html preview/index.html
+          cp www/manifest.webmanifest www/sw.js preview/
           echo 'Vista previa de interfaz con datos ficticios. No introducir credenciales.' > preview/LEEME.txt
       - uses: actions/upload-artifact@v4
         with:
