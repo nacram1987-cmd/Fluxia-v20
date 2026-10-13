@@ -20,7 +20,7 @@ jobs:
       - name: Validate Swift financial engine
         working-directory: native-ios
         run: |
-          swiftc FluxiaEliteNative/FinanceRules.swift FluxiaEliteNative/DemoFinanceSnapshot.swift FluxiaEliteNative/ExpenseReconciliation.swift FluxiaEliteNative/BankImportSafety.swift tests/main.swift -o /tmp/fluxia-native-tests
+          swiftc FluxiaEliteNative/FinanceRules.swift FluxiaEliteNative/DemoFinanceSnapshot.swift FluxiaEliteNative/ExpenseReconciliation.swift FluxiaEliteNative/BankImportSafety.swift FluxiaEliteNative/AccountIsolation.swift tests/main.swift -o /tmp/fluxia-native-tests
           /tmp/fluxia-native-tests
       - name: Build unsigned iPhone-device archive (not installable)
         working-directory: native-ios
