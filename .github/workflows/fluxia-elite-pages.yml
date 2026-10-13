@@ -1,0 +1,59 @@
+name: Fluxia Elite - QA and verified Pages deployment
+on:
+  push:
+    branches: [pages-v9731-real-final]
+    paths:
+      - '.github/workflows/fluxia-elite-pages.yml'
+      - 'lab/v97.69.html'
+      - 'AUDITORIA_ELITE/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: fluxia-elite-pages
+  cancel-in-progress: false
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm ci --prefix auditorias/qa-v97.66 --no-audit --no-fund
+      - run: node auditorias/qa-v97.66/verify-baseline.cjs
+      - run: sha256sum -c AUDITORIA_ELITE/PROTECTED_SHA256.txt
+      - run: npm --prefix auditorias/qa-v97.66 test
+      - run: node auditorias/qa-v97.69/regression-lab.cjs
+      - run: node AUDITORIA_ELITE/build-candidate.cjs
+      - run: node AUDITORIA_ELITE/bank-regression.cjs AUDITORIA_ELITE/candidate/v97.70.html
+      - run: node AUDITORIA_ELITE/financial-regression.cjs
+      - run: node AUDITORIA_ELITE/profile-regression.cjs
+      - name: Package only tracked source; no automatic candidate LAB publication
+        run: |
+          mkdir -p _site
+          git archive HEAD | tar -x -C _site
+          rm -rf _site/.github _site/AUDITORIA_ELITE/code _site/AUDITORIA_ELITE/candidate
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+  deploy:
+    needs: quality
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy from effective Pages source branch using supported OIDC action
+        uses: actions/deploy-pages@v4
+        id: deployment
+  smoke:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 AUDITORIA_ELITE/smoke-pages.py --attempts 6

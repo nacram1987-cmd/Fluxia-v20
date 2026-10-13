@@ -1012,3 +1012,88 @@ Conservar identidad PWA, entrada permanente, datos locales/cloud y cachés separ
 7. Versiones y entregables: publicar siempre LAB y referencia ESTABLE, ZIP completo, cambios, límites y pruebas; la PWA estable no se promueve por una mera solicitud de optimización. Publicarla cuando el usuario diga «con labora» tras superar QA.
 
 **Principio rector:** rendimiento de élite significa respuesta y render sin trabajo superfluo medidos objetivamente, no ocultar los retrasos ni sacrificar contabilidad/seguridad para aparentar rapidez.
+
+
+## ⚡ REGLA PERMANENTE DE RENDIMIENTO — actualización v97.68-LAB (13/10/2026)
+
+1. **La misma Fluxia, más rápida.** Ninguna optimización permite alterar interfaz, jerarquía, navegación, reglas financieras, persistencia, acceso y separación de usuarios ni conciliación. Conservar la base aceptada v97.66 y el historial de estables.
+2. **Priorización:** integridad financiera > aislamiento de cuentas > nube como fuente de verdad > idempotencia y no-resurrección > rendimiento > diseño inalterado.
+3. **Línea base y QA obligatorios:** conservar comparación de código con v97.66; medir en el mismo dispositivo, datos y red el arranque frío/caliente, primer gesto útil, menú/logo, pestañas, Variables, Bancos, LCP, INP, CLS, desplazamiento, memoria y consultas. Registrar medianas y dispersión; sin datos reales no adjudicar métricas.
+4. **Presupuesto orientativo, no resultado garantizado:** menú y botones <100 ms, pestaña ya cargada <200 ms, INP <200 ms, LCP <2,5 s, CLS <0,1 y scroll ~60 FPS; no declarar cumplimiento sin pruebas repetibles.
+5. **Sin parches falsos:** no reducir esperas únicamente por apariencia ni usar saldos provisionales; evitar tareas redundantes de scroll, reanudación, serialización y rendering; mantener invalidación completa ante cambios in-place y locales/remotos.
+6. **LAB antes de ESTABLE:** cada candidato debe entregar ZIP completo, enlaces diferenciados, prueba automatizada, registro de cambios, comparativa operativa y limitaciones. PWA y `index.html` estables no se tocan hasta promoción autorizada («con labora») y verificada.
+7. **Regla antirregresión:** toda nueva versión debe mantener o mejorar el rendimiento medido, sin sacrificar exactitud financiera ni accesibilidad. Si empeora de forma reproducible, se rechaza y se preserva la base.
+
+**v97.68-LAB:** micro-optimización de firma de render con una asignación menos, supresión de scroll duplicado al navegar desde menú y omisión de reanudación diferida de lista al salir de la vista. Cierre manual sigue intacto; cifras reales de iPhone pendientes de medición. Cualquier discrepancia contable o visual bloquea la versión.
+
+
+---
+
+## 🔒 REGLA PERMANENTE · AUDITORÍA PREVIA OBLIGATORIA + TRAZABILIDAD DE FIJOS (13/10/2026)
+
+**Origen:** petición expresa del usuario tras confirmar que v97.68-LAB funciona con buena fluidez. Mantener v97.68-LAB como referencia funcional y de velocidad, sin modificarla; preservar también el respaldo inmutable v97.66 y el canal ESTABLE.
+
+**Auditoría antes de toda entrega:** analizar exhaustivamente la versión candidata contra la última aceptada (código, contabilidad, persistencia, bancos, cuentas, PWA, UI, tiempos de carga y respuesta); ejecutar QA sintética y pruebas representativas de Safari iOS/PWA donde sea posible. Bloquear la publicación si hay pérdida de datos, duplicados, diferencia injustificada de Disponible, cambios de diseño no autorizados, controles inoperativos o degradación reproducible de velocidad. Entregar comparativa, riesgos abiertos, LAB, ESTABLE, ZIP completo y PROMPT actualizado. No afirmar «100 %» de velocidad sin medición real.
+
+**Separar importes sin perder trazabilidad:** mostrar el total correcto de gastos variables del mes, el total de gastos fijos realmente pagados, el gasto global realizado y, en otro apartado, fijos pendientes. Nunca presentar pagos futuros o previstos como desembolsos ya realizados. El campo histórico «Total del plan» ha de utilizar un filtro contable correcto, no una suma bruta de movimientos.
+
+**Cargos de fijos visibles sin doble contabilización:** cuando un gasto bancario esté inequívocamente conciliado con un fijo, mantener una sola transacción, enlazada por sus IDs estables; permitir verla en el historial unificado marcada «Fijo · Pagado», con fecha, importe y fuente bancaria. Excluirla siempre del subtotal de Variables, porque su impacto ya está en Fijos. Las partidas fijas aún pendientes deben aparecer como pendientes de calendario, no como movimientos bancarios ficticios. Los pagos marcados manualmente deben distinguirse de los confirmados por banco. La vista de fijos enlazados debe evitar acciones de edición/borrado como variable; remitir al módulo Fijos. No cambiar regla de Disponible, idempotencia de sincronización, histórico, estados, fechas, cloud ni aislamiento de usuarios.
+
+**Contrato de aceptación técnico y escenarios de prueba obligatorios:** `auditorias/REQUISITOS_VARIABLES_FIJOS_Y_RENDIMIENTO_2026-10-13.md`. La presente adenda es normativa; **no da por implementados los cambios funcionales hasta entregar y validar una LAB nueva**.
+
+
+---
+
+## 🏆 NORMA IMPERIAL FLUXIA ÉLITE — auditoría, remediación, seguridad, despliegue y velocidad (13/10/2026)
+
+**Esta norma es vinculante para ChatGPT, Work, agentes y toda nueva versión de Fluxia.** Prioridad del sistema: (1) exactitud contable; (2) privacidad, autenticación y aislamiento real de cuentas; (3) conservación y persistencia en nube; (4) idempotencia de cargos y ausencia de resurrecciones; (5) despliegue reversible; (6) rendimiento medido y nunca degradado de forma reproducible; (7) experiencia de usuario y diseño premium sin alteraciones no solicitadas. **Cada mejora suma; ninguna mejora sacrifica integridad ni velocidad.**
+
+### 1. Bases inmutables, diagnóstico previo y reglas de intervención
+- **v97.66**: snapshot técnico inmutable `baseline-v97.66-performance` con pruebas congeladas. **v97.68-LAB**: referencia percibida por el usuario como especialmente rápida y referencia mínima de experiencia de navegación. **v97.69-LAB**: candidato funcional con cambios de totales/historial y QA sintética, **no promovido automáticamente a PWA**. La versión que sirve actualmente GitHub Pages y el estado del `index.html` han de **verificarse, no suponerse**. Antes de actuar, inspeccionar HEAD, Pages, Releases, Service Worker, manifiesto, cachés y SHA de artefactos; si aparece una nueva versión, adaptar la auditoría al estado real.
+- Todo agente DEBE leer `PROMPT_MAESTRO.md`, `AGENTS.md`, `BASE_RENDIMIENTO_v97.66.md`, `auditorias/REQUISITOS_VARIABLES_FIJOS_Y_RENDIMIENTO_2026-10-13.md` y los informes QA vigentes. Congelar hash/copia verificable de cada entrada antes de editar.
+- Prohibido sustituir de golpe el frontend monolítico o borrar datos/código histórico sin análisis de dependencias y plan reversible. Cambios **pequeños, aislados, versionados, medibles y probados**; una mejora visual no puede modificar el libro contable.
+- No efectuar cambios destructivos en cuentas, base de datos, reglas de autenticación, migraciones irreversibles o producción sin copia, plan de rollback y autorización adecuada. Nunca solicitar ni almacenar contraseñas/tokens en el código, informes o repositorio. Usar pruebas anonimizadas.
+
+### 2. Integridad financiera verificable — prioridad P0
+- Construir un **inventario de invariantes** y pruebas de propiedades para ingresos, gastos fijos, variables, financiaciones, provisiones/huchas, compartidos, Disponible, saldo bancario, transferencias propias, efectivo, histórico y anulaciones. Todo dato monetario se calcula en céntimos o con una política decimal controlada; verificar redondeos.
+- Mantener la regla de Disponible del PROMPT vigente, sin efectos secundarios por edición retroactiva; distinguir **previsiones**, **pagos realizados**, **movimientos bancarios** y **balances**. Variables ≠ Disponible. Fijos vinculados se muestran en historial como **Fijo** sin convertirse en gasto Variable ni restarse dos veces. No inventar pagos de fijos pendientes.
+- Los movimientos deben mantener identidad estable por usuario, cuenta, proveedor, referencia bancaria y fechas. Reconciliación **idempotente** ante importación, reconexión, refresco, reintento, cambio de mes o dispositivo. Borrados/rechazos son tombstones/archivos persistidos: ningún proceso asíncrono puede resucitar cargos.
+- Auditar conflictos de escritura offline/online, hidrataciones, restauraciones, outbox, sincronización y recuperación histórica antes de introducir migraciones. Probar importes bancarios diferentes de los previstos, pagos manuales, múltiples candidatos, devoluciones, rescates, transacciones retroactivas y 400+ registros.
+- Operaciones de reparación de datos: ejecutar **dry-run**, copia verificable y reporte de antes/después; no corregir automáticamente saldos reales sin trazabilidad y verificación.
+
+### 3. Aislamiento, nube y seguridad — prioridad P0
+- La nube es la fuente de verdad después del login. Un usuario nuevo sin datos comienza en cero; usuario A jamás puede leer/escribir datos de B, incluso compartiendo dispositivo. Verificar restricciones de servidor, RLS/ACL cuando procedan, funciones de backend, sesiones, tokens, cachés y stores locales; las pruebas visuales no bastan.
+- Cerrar sesión/reinstalar PWA/limpiar caché nunca borra el dato remoto ni mezcla perfiles. Tras autenticar, reconstruir desde servidor por identidad/versión, sin pisar datos recientes con caché antigua. Probar dos cuentas y dos dispositivos, offline→online, carreras y errores de red.
+- Banco conectado no equivale a banco sincronizado: representar estado real, última sincronización, latencia, límites del proveedor, errores y reintentos con backoff. No prometer tiempo real si el proveedor no lo entrega. **Una notificación por cargo** y rechazo definitivo persistente.
+
+### 4. Rendimiento élite con línea base y pruebas de no regresión — prioridad P0
+- Instrumentar **arranque frío/caliente, primer gesto útil, clic en menú/logo, cambio de pestaña, Variables con listas grandes, Bancos, tiempo de render, tareas largas, memoria y llamadas red**. Separar medida de laboratorio (JSDOM/Chrome) de medida física (Safari/PWA iPhone).
+- Comparar con **v97.68 aceptada**, y con el último candidato aceptado si es mejor, sobre **mismos datos, dispositivo, conectividad y secuencia**. Registrar mediana, p95, errores, FPS/scroll e INP/LCP/CLS si la plataforma permite medirlos. Mínimo 10 repeticiones de arranque por escenario y 20 operaciones repetidas de menú/pestañas; no inventar cifras.
+- Objetivos de diseño orientativos: interacción menú ≤100 ms, pestaña caliente ≤200 ms, INP ≤200 ms, LCP ≤2,5 s, CLS ≤0,1 y scroll cercano a 60 FPS. Son metas, **no certificaciones**. El presupuesto de rendimiento no permite falsificar datos, usar saldos provisionales ni retrasar artificialmente UI para aparentar rapidez.
+- Evitar listeners repetidos, render de paneles ocultos, serializaciones redundantes, consultas bancarias duplicadas, trabajo pesado sin prioridad y animaciones costosas. Mantener firma de datos con invalidación real tras modificaciones in-place y desde nube; jamás sustituirla por mera longitud de listas sin demostrar equivalencia.
+- **Puerta bloqueante:** si hay regresión reproducible frente a la versión aceptada, abortar promoción y corregir. Si no existe acceso a iPhone, dejar estado `RENDIMIENTO_IOS_NO_VERIFICADO` en vez de declararlo aprobado.
+
+### 5. Publicaciones y PWA reproducibles — prioridad P0
+- Corregir de raíz la cadena **GitHub → QA → artefacto → GitHub Pages → navegador Safari → PWA**. La ejecución de Actions «success» no demuestra que Pages haya actualizado; comprobar versión **realmente servida** en URL, versión del HTML, rutas, cachés, estado del worker, manifest `id/start_url/scope` y comportamiento tras abrir desde icono.
+- Incidencia observada el **13/10/2026**: el workflow v97.69 generó y publicó ZIP y HTML en el repositorio con QA verde, pero la petición adicional `POST /pages/builds` devolvió **HTTP 403** y no se verificó una nueva ejecución de `pages build and deployment`. Diagnosticar configuración real de Pages (rama frente a Actions), permisos y triggers; solucionar con mecanismo soportado y auditable, **no ocultar el 403 con `|| true`**.
+- Mantener entrada canónica `index.html` y **PWA ESTABLE inmóvil** durante trabajo LAB. Solo promocionar cuando el usuario diga **«con labora»** y tras QA/aceptación y despliegue verificables. No exigir borrar caché, reinstalar, cambiar de URL ni perder datos para actualizar.
+- Toda LAB nueva: número correlativo real, changelog, matriz de pruebas, SHA, enlace LAB, referencia ESTABLE, ZIP **completo descargable y verificable** y README claro. No generar enlaces ficticios ni declarar entrega/publicación si faltan permisos o confirmación del servidor.
+
+### 6. Calidad, mantenibilidad y seguridad evolutiva
+- Crear o fortalecer CI como **quality gate**: baseline hash, sintaxis de todos los scripts, pruebas unitarias/propiedades del libro contable, regresión financiera, 400+ movimientos, sincronización repetida, aislamiento multiusuario, interacción menú/logo, cambios de pestañas, acceso a Bancos, smoke visual móvil y smoke de despliegue.
+- Priorizar eliminación de causas raíz frente a parches superficiales; modernizar incrementalmente el HTML monolítico solo tras crear pruebas, sin alterar UX/branding aprobado. Nunca modificar backend, sincronización, seguridad o finanzas por el mero objetivo de micro-optimizar.
+- Mantener un **registro de problemas P0/P1/P2**, causa raíz, commit de corrección, prueba que demuestra cierre, riesgos residuales y plan de reversión. **No dar por solucionado lo que no se ha medido o probado.**
+- Adjuntar valoración crítica por dimensión (0–100) únicamente como estimación explícita sustentada en evidencias; puntuación global no certifica seguridad ni disponibilidad bancaria. Dar recomendaciones concretas priorizadas por riesgo, esfuerzo e impacto.
+
+### 7. Encargo operativo a ChatGPT Work
+La ejecución detallada se encuentra en **`PROMPT_WORK_FLUXIA_ELITE_EJECUCION_INTEGRAL_2026-10-13.md`**, que forma parte del presente marco normativo. Work debe **diagnosticar y ejecutar las correcciones permitidas, no limitarse a describirlas**; aplicar primero P0 de publicación, integridad, persistencia y seguridad, luego optimización no regresiva, con entregas LAB progresivas y pruebas en cada paso. Trabajar autónomamente dentro de los permisos concedidos y pedir intervención solo para autenticación, permisos o cambios destructivos/producción que realmente lo exijan. El objetivo «élite» se alcanza por **evidencia medible**, nunca por una proclamación.
+
+
+## Adenda Élite · ejecución 13/10/2026, evidencia y bloqueo de publicación
+
+- v97.69 se publicó efectivamente en Pages mediante db7790fb93f64f922d8091ee6018fb83f294c338; ocho rutas comparadas por bytes. Mantener workflow soportado desde rama efectiva y smoke HTTP: QA verde o commit en main no prueba despliegue. Prohibido usar POST /pages/builds como vía de integración o silenciar su error.
+- Pruebas obligatorias nuevas: dos cargos distintos mismo importe/día; dos IDs distintos mismo comercio; manual/pending comercio distinto; 400 IDs bancarios/diez reimportaciones; mismo ID bruto en bancos/cuentas distintas. No fusionar pagos confirmados por huella ni asociar manual/pending por importe únicamente.
+- Generador de candidato v97.70 corrige falsas fusiones pero queda BLOQUEADO por identidad bancaria sin cuenta/proveedor y compatibilidad de referencias/tombstones. No convertirlo en LAB pública ni promover por pasar un subconjunto. Mantener visible el test crítico rojo.
+- Seguridad: catálogos confirmaron contactos sin RLS y RPC de invitaciones SECURITY DEFINER invocable por anon. No declarar aislamiento integral. SQL preparado en AUDITORIA_ELITE/SEGURIDAD_PROPUESTA_NO_APLICADA.sql; aprobación y prueba en copia antes de cambios sensibles.
+- Benchmarks JSDOM de diez repeticiones son evidencia de trabajo JS/DOM, no tiempos iPhone, INP/LCP/CLS/FPS. Safari/PWA físicos siguen NO VERIFICADOS. Ninguna prueba sintética ni puntuación autoriza promoción automática.
+- Preservar raíz v97.66, LAB v97.68, referencias y almacenamiento; no reparar cifras reales mediante borrado/renumeración/reimportación ciega. Las correcciones pendientes y el dry-run forman parte de cada entrega.

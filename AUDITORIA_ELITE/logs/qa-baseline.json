@@ -1,0 +1,36 @@
+
+> test
+> node regression.cjs
+
+{
+  "parsedScripts": 168,
+  "unchangedFunctions": [
+    "disponibleEfectivo",
+    "variablesTotal",
+    "resumenMovimientosVariables",
+    "ingresosTotal",
+    "gastosFijosTotal",
+    "provisionesParaDisponible",
+    "guardarLS",
+    "cargarLS",
+    "guardarMovimientos",
+    "cargarTodo",
+    "recargarDesdeServidor",
+    "goToTab"
+  ],
+  "menuCycles": 20,
+  "variablesRows": 400,
+  "categoryTotalCorrect": true,
+  "unchangedNavigationReusesDOM": true,
+  "sameLengthEditInvalidates": true,
+  "storageInvalidates": true,
+  "profileInvalidates": true,
+  "logoNavigates": true,
+  "variablesHaveNoAvailableCard": true,
+  "noBalanceCalculationInVariables": true,
+  "monthAndSubviewRegression": true,
+  "financialListsUnchanged": true,
+  "entireBankModuleUnchanged": true,
+  "warmNavigationSyntheticMs": 0.2168099999998958,
+  "errors": []
+}

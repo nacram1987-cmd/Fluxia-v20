@@ -1,0 +1,42 @@
+{
+  "file": "AUDITORIA_ELITE/candidate/v97.70.html",
+  "boundaries": "deterministic provider/classifier/UI; no live bank, no cloud writes",
+  "tests": [
+    {
+      "name": "Different merchants, same amount/day: both retained",
+      "pass": true
+    },
+    {
+      "name": "Same merchant, two authoritative IDs in same batch: both retained",
+      "pass": true
+    },
+    {
+      "name": "Same merchant, new confirmed ID in later batch: retained",
+      "pass": true
+    },
+    {
+      "name": "Manual unrelated expense cannot absorb bank payment by amount",
+      "pass": true
+    },
+    {
+      "name": "Pending unrelated merchant cannot absorb confirmed payment",
+      "pass": true
+    },
+    {
+      "name": "Unambiguous matching manual record links exactly once",
+      "pass": true
+    },
+    {
+      "name": "Unambiguous pending-to-confirmed record links once",
+      "pass": true
+    },
+    {
+      "name": "400 bank records, ten reimports: identity/count/sum unchanged",
+      "pass": true
+    },
+    {
+      "name": "Archived bank ID blocked through ten reimports",
+      "pass": true
+    }
+  ]
+}

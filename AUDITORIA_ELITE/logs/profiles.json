@@ -1,0 +1,12 @@
+{
+  "syntheticProfiles": [
+    "A",
+    "B"
+  ],
+  "sameDeviceLocalNamespaces": true,
+  "newProfileEmpty": true,
+  "reloadPersistence": true,
+  "accountAlternations": 4,
+  "cloudAPI": "NOT TESTED WITH REAL TOKENS",
+  "twoPhysicalDevices": false
+}

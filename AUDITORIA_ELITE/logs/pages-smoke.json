@@ -1,0 +1,76 @@
+{
+  "pass": true,
+  "files": [
+    {
+      "path": "index.html",
+      "status": 200,
+      "bytes": 1909433,
+      "sha256": "9674829f3ce5b48e2ee07ca0e39d855e5704ce9895a9cb8fa05bcab32775f5e5",
+      "etag": "\"6ace1037-1d22b9\""
+    },
+    {
+      "path": "fluxia-sw.js",
+      "status": 200,
+      "bytes": 1640,
+      "sha256": "7979b1fe919197eef00ea9314d7f89ea64f763c09e0d01a266145417e0afe0cb",
+      "etag": "\"6ace1037-668\""
+    },
+    {
+      "path": "sw.js",
+      "status": 200,
+      "bytes": 2308,
+      "sha256": "3246b1bbf1fc27bbd0cff9928444248be30f84b9c549704cbae2d4fe4d965e22",
+      "etag": "\"6ace1037-904\""
+    },
+    {
+      "path": "manifest.webmanifest",
+      "status": 200,
+      "bytes": 517,
+      "sha256": "8adfd4837e844d4eefdeaa1afd2d567c35e3a9388e32ebe640220351df4c85aa",
+      "etag": "\"6ace1037-205\""
+    },
+    {
+      "path": "lab/v97.68.html",
+      "status": 200,
+      "bytes": 1909772,
+      "sha256": "946cc616edf49cf7291ca8b1e1f1bafe7f3ced73979f1bacb203c2fecbb0b047",
+      "etag": "\"6ace1037-1d240c\""
+    },
+    {
+      "path": "lab/v97.69.html",
+      "status": 200,
+      "bytes": 1915382,
+      "sha256": "d9522f8bd8fde7bead3ab50b0881dcb5406591a33dfd4aae5b250c63ab804ca1",
+      "etag": "\"6ace1037-1d39f6\""
+    },
+    {
+      "path": "lab/fluxia-sw.js",
+      "status": 200,
+      "bytes": 1343,
+      "sha256": "34e7565072f85d518c7be9e01e83de499ee347c4d961a2ca61475fce806b3ea9",
+      "etag": "\"6ace1037-53f\""
+    },
+    {
+      "path": "lab/manifest.webmanifest",
+      "status": 200,
+      "bytes": 455,
+      "sha256": "ec1db664f557bb27c9daa8598ef4007f25e297d5259fa23c74ec64e735a18857",
+      "etag": "\"6ace1037-1c7\""
+    },
+    {
+      "asset": "https://nacram1987-cmd.github.io/Fluxia-v20/fluxia-icon.png",
+      "status": 200,
+      "bytes": 2904
+    },
+    {
+      "asset": "https://nacram1987-cmd.github.io/Fluxia-v20/lab/fluxia-icon-192.png",
+      "status": 200,
+      "bytes": 24822
+    },
+    {
+      "asset": "https://nacram1987-cmd.github.io/Fluxia-v20/lab/fluxia-icon-512.png",
+      "status": 200,
+      "bytes": 56856
+    }
+  ]
+}
