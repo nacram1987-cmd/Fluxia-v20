@@ -5,6 +5,8 @@ on:
     paths:
       - '.github/workflows/fluxia-elite-pages.yml'
       - 'lab/v97.69.html'
+      - 'lab/v97.70.html'
+      - 'lab/v97.70/**'
       - 'AUDITORIA_ELITE/**'
   workflow_dispatch:
 permissions:
@@ -27,10 +29,17 @@ jobs:
       - run: npm --prefix auditorias/qa-v97.66 test
       - run: node auditorias/qa-v97.69/regression-lab.cjs
       - run: node AUDITORIA_ELITE/build-candidate.cjs
-      - run: node AUDITORIA_ELITE/bank-regression.cjs AUDITORIA_ELITE/candidate/v97.70.html
+      - run: node AUDITORIA_ELITE/bank-regression.cjs AUDITORIA_ELITE/candidate/v97.70.html --extended
+      - run: node AUDITORIA_ELITE/banco/build-edge.cjs
+      - run: node AUDITORIA_ELITE/banco/edge-regression.cjs
+      - run: node AUDITORIA_ELITE/build-lab9770.cjs
+      - run: node AUDITORIA_ELITE/bank-regression.cjs lab/v97.70.html --extended
+      - run: node AUDITORIA_ELITE/banco/lifecycle-regression.cjs
+      - run: node AUDITORIA_ELITE/banco/notification-regression.cjs lab/v97.70.html
+      - run: node AUDITORIA_ELITE/financial-regression.cjs lab/v97.70.html
       - run: node AUDITORIA_ELITE/financial-regression.cjs
       - run: node AUDITORIA_ELITE/profile-regression.cjs
-      - name: Package only tracked source; no automatic candidate LAB publication
+      - name: Package validated LAB and immutable stable source
         run: |
           mkdir -p _site
           git archive HEAD | tar -x -C _site
@@ -68,15 +77,15 @@ jobs:
         run: python3 AUDITORIA_ELITE/package-release.py
       - uses: actions/upload-artifact@v4
         with:
-          name: Fluxia_ELITE_AUDITORIA_2026-10-13_COMPLETO
+          name: Fluxia_v97.70_LAB_COMPLETO
           path: dist/*
           retention-days: 90
-      - name: Publish audit backup only; no candidate LAB or stable promotion
+      - name: Publish validated LAB ZIP only; no stable promotion
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view elite-audit-2026-10-13 >/dev/null 2>&1; then
-            gh release upload elite-audit-2026-10-13 dist/Fluxia_ELITE_AUDITORIA_2026-10-13_COMPLETO.zip dist/SHA256SUMS.txt --clobber
+          if gh release view v97.70-LAB >/dev/null 2>&1; then
+            gh release upload v97.70-LAB dist/Fluxia_v97.70_LAB_COMPLETO.zip dist/SHA256SUMS.txt --clobber
           else
-            gh release create elite-audit-2026-10-13 dist/Fluxia_ELITE_AUDITORIA_2026-10-13_COMPLETO.zip dist/SHA256SUMS.txt --target "$GITHUB_SHA" --title "Fluxia Elite: audit and unpromoted fixes" --notes-file AUDITORIA_ELITE/README.md --prerelease
+            gh release create v97.70-LAB dist/Fluxia_v97.70_LAB_COMPLETO.zip dist/SHA256SUMS.txt --target "$GITHUB_SHA" --title "Fluxia v97.70 LAB: scoped banking and verified security" --notes-file RELEASE_NOTES_v97.70_LAB.md --prerelease
           fi

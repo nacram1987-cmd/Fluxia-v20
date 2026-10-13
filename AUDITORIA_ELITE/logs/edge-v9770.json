@@ -1,0 +1,14 @@
+{
+  "serverSyntaxParsed": true,
+  "providerAccountCollisionSeparated": true,
+  "rawReferenceRetained": true,
+  "reconnectionIbanStable": true,
+  "reconnectionIdentificationHashStable": true,
+  "unstableTransactionDetailIdNotUsedAsIdentity": true,
+  "noExtraProviderRequests": true,
+  "noIbanInClientPayload": true,
+  "actualServerMappingToClientIdentity": true,
+  "fullHandlerSyntheticABIsolation": true,
+  "unauthorizedProviderRequests": 0,
+  "livePSD2": false
+}

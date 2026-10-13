@@ -1,0 +1,182 @@
+{
+  "lints": [
+    {
+      "name": "rls_enabled_no_policy",
+      "title": "RLS Enabled No Policy",
+      "level": "INFO",
+      "facing": "EXTERNAL",
+      "categories": [
+        "SECURITY"
+      ],
+      "description": "Detects cases where row level security (RLS) has been enabled on a table but no RLS policies have been created.",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "count": 7,
+      "findings": [
+        {
+          "detail": "Table \\`public.accesos\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "accesos",
+            "type": "table",
+            "schema": "public"
+          },
+          "observed_at": "2026-10-13T11:40:33.960Z"
+        },
+        {
+          "detail": "Table \\`public.banco_bandeja\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "banco_bandeja",
+            "type": "table",
+            "schema": "public"
+          },
+          "observed_at": "2026-10-13T11:40:33.960Z"
+        },
+        {
+          "detail": "Table \\`public.conexiones_banco\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "conexiones_banco",
+            "type": "table",
+            "schema": "public"
+          },
+          "observed_at": "2026-10-13T11:40:33.960Z"
+        },
+        {
+          "detail": "Table \\`public.eb_conexion\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "eb_conexion",
+            "type": "table",
+            "schema": "public"
+          },
+          "observed_at": "2026-10-13T11:40:33.960Z"
+        },
+        {
+          "detail": "Table \\`public.eb_conexiones\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "eb_conexiones",
+            "type": "table",
+            "schema": "public"
+          },
+          "observed_at": "2026-10-13T11:40:33.960Z"
+        },
+        {
+          "detail": "Table \\`public.fluxia_banco_acceso\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "fluxia_banco_acceso",
+            "type": "table",
+            "schema": "public"
+          },
+          "observed_at": "2026-10-13T11:40:33.960Z"
+        },
+        {
+          "detail": "Table \\`public.movimientos\\` has RLS enabled, but no policies exist",
+          "metadata": {
+            "name": "movimientos",
+            "type": "table",
+            "schema": "public"
+          },
+          "observed_at": "2026-10-13T11:40:33.960Z"
+        }
+      ]
+    },
+    {
+      "name": "function_search_path_mutable",
+      "title": "Function Search Path Mutable",
+      "level": "WARN",
+      "facing": "EXTERNAL",
+      "categories": [
+        "SECURITY"
+      ],
+      "description": "Detects functions where the search_path parameter is not set.",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0011_function_search_path_mutable",
+      "count": 2,
+      "findings": [
+        {
+          "detail": "Function \\`public.calcular_gasto_categoria\\` has a role mutable search_path",
+          "metadata": {
+            "name": "calcular_gasto_categoria",
+            "type": "function",
+            "schema": "public"
+          },
+          "observed_at": "2026-10-13T11:40:33.960Z"
+        },
+        {
+          "detail": "Function \\`public.generar_codigo_invitacion\\` has a role mutable search_path",
+          "metadata": {
+            "name": "generar_codigo_invitacion",
+            "type": "function",
+            "schema": "public"
+          },
+          "observed_at": "2026-10-13T11:40:33.960Z"
+        }
+      ]
+    },
+    {
+      "name": "extension_in_public",
+      "title": "Extension in Public",
+      "level": "WARN",
+      "facing": "EXTERNAL",
+      "categories": [
+        "SECURITY"
+      ],
+      "description": "Detects extensions installed in the \\`public\\` schema.",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0014_extension_in_public",
+      "count": 1,
+      "findings": [
+        {
+          "detail": "Extension \\`pg_net\\` is installed in the public schema. Move it to another schema.",
+          "metadata": {
+            "name": "pg_net",
+            "type": "extension",
+            "schema": "public"
+          },
+          "observed_at": "2026-10-13T11:40:33.960Z"
+        }
+      ]
+    },
+    {
+      "name": "authenticated_security_definer_function_executable",
+      "title": "Signed-In Users Can Execute SECURITY DEFINER Function",
+      "level": "WARN",
+      "facing": "EXTERNAL",
+      "categories": [
+        "SECURITY"
+      ],
+      "description": "Detects `SECURITY DEFINER` functions that are callable by signed-in users. Revoke `EXECUTE`, switch the function to `SECURITY INVOKER`, or move it out of your exposed API schema if signed-in users should not call it.",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable",
+      "count": 1,
+      "findings": [
+        {
+          "detail": "Function `public.accept_invitation(token_input text, usuario_id uuid)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/accept_invitation`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+          "metadata": {
+            "name": "accept_invitation",
+            "schema": "public",
+            "language": "plpgsql",
+            "arguments": "token_input text, usuario_id uuid",
+            "security_definer": true
+          },
+          "observed_at": "2026-10-13T11:40:33.960Z"
+        }
+      ]
+    },
+    {
+      "name": "auth_leaked_password_protection",
+      "title": "Leaked Password Protection Disabled",
+      "level": "WARN",
+      "facing": "EXTERNAL",
+      "categories": [
+        "SECURITY"
+      ],
+      "description": "Leaked password protection is currently disabled.",
+      "remediation": "https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection",
+      "count": 1,
+      "findings": [
+        {
+          "detail": "Supabase Auth prevents the use of compromised passwords by checking against HaveIBeenPwned.org. Enable this feature to enhance security.",
+          "metadata": {
+            "type": "auth",
+            "entity": "Auth"
+          }
+        }
+      ]
+    }
+  ]
+}

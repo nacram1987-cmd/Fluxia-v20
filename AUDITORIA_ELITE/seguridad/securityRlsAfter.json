@@ -1,0 +1,7 @@
+[
+  {
+    "relname": "fluxia_contactos",
+    "relrowsecurity": true,
+    "anon_has_table_grant": true
+  }
+]

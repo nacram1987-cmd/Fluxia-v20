@@ -1,0 +1,11 @@
+[
+  {
+    "security_regression": {
+      "synthetic_schema_removed": true,
+      "before_vulnerabilities_reproduced": 2,
+      "after_assertions_passed": 9,
+      "real_user_rows_read": 0,
+      "real_user_rows_written": 0
+    }
+  }
+]

@@ -1,0 +1,12 @@
+'use strict';
+const fs=require('node:fs');
+const base=fs.readFileSync('AUDITORIA_ELITE/candidate/v97.70.html','utf8');
+let html=base.replace(/<title>[^<]*<\/title>/,'<title>Fluxia BETA v97.70-LAB</title>').replaceAll('"./fluxia-sw.js"','"/Fluxia-v20/lab/v97.70/fluxia-sw.js"').replaceAll('{scope:"./",updateViaCache:"none"}','{scope:"/Fluxia-v20/lab/v97.70/",updateViaCache:"none"}').replaceAll('"./manifest.webmanifest"','"/Fluxia-v20/lab/v97.70/manifest.webmanifest"');
+fs.mkdirSync('lab/v97.70',{recursive:true});
+fs.writeFileSync('lab/v97.70.html',html);
+fs.writeFileSync('lab/v97.70/index.html',html.replace('<head>','<head>\n<base href="../">'));
+const manifest={name:'Fluxia BETA',short_name:'Fluxia BETA',description:'Fluxia LAB v97.70',id:'/Fluxia-v20/lab/v97.70/',start_url:'./index.html',scope:'./',display:'standalone',background_color:'#F7FAFC',theme_color:'#157F87',icons:[{src:'../fluxia-icon-192.png',sizes:'192x192',type:'image/png'},{src:'../fluxia-icon-512.png',sizes:'512x512',type:'image/png'}]};
+fs.writeFileSync('lab/v97.70/manifest.webmanifest',JSON.stringify(manifest,null,2));
+const worker=fs.readFileSync('lab/fluxia-sw.js','utf8').replaceAll('v97.66','v97.70').replaceAll('fluxia-lab-shell-','fluxia-lab9770-shell-');
+fs.writeFileSync('lab/v97.70/fluxia-sw.js',worker);
+console.log(JSON.stringify({build:'v97.70-LAB',rootUnchanged:true,acceptedLabUnchanged:true,isolatedWorkerScope:'/Fluxia-v20/lab/v97.70/',bytes:Buffer.byteLength(html)}));

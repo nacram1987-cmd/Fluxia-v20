@@ -1,17 +1,24 @@
-# Fluxia v97.31-LAB · MENÚ ORIGINAL VISIBLE
+# Fluxia v97.32 · FINAL
 
-Corrección quirúrgica: mantiene el botón original `#btnMenu` de Fluxia, el de siempre.
+Versión final preparada sobre la rama oficial de GitHub Pages, conservando el `index.html` v97.31 que ya se había publicado y corrigiendo el arranque del menú/PWA.
 
-Cambios:
-- No crea botón alternativo.
-- No usa botón PWA nuevo.
-- Fuerza el mismo `#btnMenu` original a ser visible también en modo pantalla de inicio/iOS standalone.
-- Oculta/elimina clones previos (`fxMenuTopPermanent`, botones PWA alternativos).
-- Mantiene rendimiento de v97.27/v97.29.
-- No toca datos financieros, Supabase, huchas, disponible ni movimientos.
+## Cambios
+- Menú original abre y cierra mediante una sola ruta.
+- La X y el fondo cierran el menú; el cierre limpia todos los estados incluso si estaban desincronizados.
+- El menú inicia cerrado al entrar y al volver desde segundo plano.
+- Eliminadas las reparaciones duplicadas del menú, el observador del encabezado y la desregistración/recarga forzada del service worker.
+- Actualizados la versión visible, el manifiesto y el caché del service worker.
+- Sin cambios en datos, cuentas, nube ni cálculos financieros.
 
-Commit recomendado:
+## Publicación
+Entrada: https://nacram1987-cmd.github.io/Fluxia-v20/
+Rama oficial de Pages: `pages-v9731-real-final` (se conserva como rama de publicación).
 
-```
-release: Fluxia v97.31 LAB menu original visible
-```
+En iPhone: abrir el enlace en Safari. La PWA instalada mantiene su identidad y recibe la nueva versión por el service worker.
+
+## Verificación pendiente de dispositivo
+El paquete y la rama se validan desde el entorno de build. El último toque real en Safari/iPhone debe confirmar que el menú aparece cerrado y que la X lo cierra.
+
+
+### v97.70-LAB · ejecución Élite autorizada
+Identidad bancaria por cuenta/proveedor, rechazo/archivo compatible, aviso único y RLS/RPC aplicados con pruebas. Consultar RELEASE_NOTES_v97.70_LAB.md, REAL_ASSESSMENT_v97.70_LAB.md y AUDITORIA_ELITE/CIERRE_v97.70.md. Root/PWA y v97.68 se conservan. No significa Safari físico validado ni promoción estable.

@@ -1,0 +1,12 @@
+{
+  "file": "AUDITORIA_ELITE/candidate/v97.70.html",
+  "foregroundNoticePerCharge": 1,
+  "duplicateEventRepetitions": 10,
+  "backgroundChannels": 1,
+  "userIsolation": true,
+  "accountIsolation": true,
+  "canonicalArchivePreserved": true,
+  "sameAmountOtherAccountNotPurged": true,
+  "physicalPushDelivery": false,
+  "errors": []
+}
