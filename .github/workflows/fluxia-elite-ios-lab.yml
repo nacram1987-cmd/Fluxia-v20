@@ -39,6 +39,12 @@ jobs:
           grep -q 'synthetic-no-banking' ios/App/App/public/index.html
       - name: Show Xcode version
         run: xcodebuild -version
+      - name: Install CocoaPods dependencies
+        run: |
+          if [ -f ios/App/Podfile ]; then
+            cd ios/App
+            pod install --repo-update
+          fi
       - name: Build unsigned simulator app
         run: |
           set -o pipefail
