@@ -1,9 +1,10 @@
 import SwiftUI
 
 private enum ElitePalette {
-    static let navy = Color(red: 0.035, green: 0.075, blue: 0.14)
+    static let navy = Color(red: 0.97, green: 0.965, blue: 0.945)
+    static let ink = Color(red: 0.09, green: 0.16, blue: 0.24)
     static let gold = Color(red: 0.83, green: 0.69, blue: 0.42)
-    static let card = Color(red: 0.085, green: 0.14, blue: 0.22)
+    static let card = Color(red: 1, green: 0.998, blue: 0.985)
 }
 
 private enum EliteTab: String, CaseIterable, Identifiable {
@@ -58,7 +59,8 @@ struct ContentView: View {
             }
         }
         .tint(ElitePalette.gold)
-        .preferredColorScheme(.dark)
+        .foregroundStyle(ElitePalette.ink)
+        .preferredColorScheme(.light)
     }
 
     private var header: some View {
@@ -67,7 +69,7 @@ struct ContentView: View {
                 Text("FLUXIA").font(.system(size: 26, weight: .bold, design: .rounded))
                     .tracking(3)
                 Text("ÉLITE").font(.system(size: 12, weight: .bold))
-                    .foregroundStyle(ElitePalette.gold)
+                    .foregroundStyle(LinearGradient(colors: [Color(red: 0.44, green: 0.31, blue: 0.13), Color(red: 0.88, green: 0.77, blue: 0.54), Color(red: 0.38, green: 0.26, blue: 0.12)], startPoint: .leading, endPoint: .trailing))
                 Spacer()
                 Image(systemName: "bell")
                     .accessibilityLabel("Notificaciones: demostración")
@@ -92,7 +94,7 @@ struct ContentView: View {
                     Image(systemName: "chevron.right")
                 }
             }
-            .foregroundStyle(.white)
+            .foregroundStyle(ElitePalette.ink)
             .accessibilityElement(children: .contain)
 
             VStack(spacing: 10) {
@@ -102,7 +104,7 @@ struct ContentView: View {
                     .font(.system(size: 38, weight: .semibold, design: .rounded))
                     .monospacedDigit()
                 Text("Importe ficticio, no conectado a tu cuenta")
-                    .font(.caption).foregroundStyle(.white.opacity(0.7))
+                    .font(.caption).foregroundStyle(ElitePalette.ink.opacity(0.7))
             }
             .frame(maxWidth: .infinity).padding(.vertical, 32)
             .background(ElitePalette.card, in: RoundedRectangle(cornerRadius: 24))
@@ -115,7 +117,7 @@ struct ContentView: View {
                 tile("Gastos variables", formattedEuros(sampleMonth.variableExpenseCents), "creditcard", .variable)
             }
             Text("Versión nativa inicial. Sin autenticación, datos reales ni operaciones bancarias.")
-                .font(.footnote).foregroundStyle(.white.opacity(0.65))
+                .font(.footnote).foregroundStyle(ElitePalette.ink.opacity(0.65))
         }
     }
 
@@ -146,7 +148,7 @@ struct ContentView: View {
                 Text(selectedModule.rawValue).font(.headline)
                 Text(selectedModule.explanation)
                     .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.8))
+                    .foregroundStyle(ElitePalette.ink.opacity(0.8))
                 Label("Solo lectura · Demostración", systemImage: "lock.shield")
                     .font(.caption)
                     .foregroundStyle(ElitePalette.gold)
@@ -175,7 +177,7 @@ struct ContentView: View {
                 Image(systemName: "bolt.fill").foregroundStyle(ElitePalette.gold)
                 VStack(alignment: .leading) {
                     Text("ENDESA").font(.headline)
-                    Text("Cargo ficticio").font(.caption).foregroundStyle(.white.opacity(0.6))
+                    Text("Cargo ficticio").font(.caption).foregroundStyle(ElitePalette.ink.opacity(0.6))
                 }
                 Spacer()
                 Text(formattedEuros(charge.cents)).font(.headline).monospacedDigit()
@@ -221,7 +223,7 @@ struct ContentView: View {
                     Label("Datos de pantalla ficticios", systemImage: "checkmark.circle")
                 }
                 .font(.footnote)
-                .foregroundStyle(.white.opacity(0.85))
+                .foregroundStyle(ElitePalette.ink.opacity(0.85))
                 .accessibilityElement(children: .contain)
             }
             Text("Fluxia Élite · SwiftUI LAB 0.1")
