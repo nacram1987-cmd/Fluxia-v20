@@ -127,7 +127,7 @@ struct ContentView: View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Mis finanzas").font(.title2).bold()
             Text("Explora las secciones de la futura aplicación. Todas las cifras son ficticias.")
-                .font(.footnote).foregroundStyle(.white.opacity(0.7))
+                .font(.footnote).foregroundStyle(ElitePalette.ink.opacity(0.7))
             ForEach(EliteFinanceModule.allCases) { module in
                 Button {
                     selectedModule = module
@@ -176,7 +176,7 @@ struct ContentView: View {
             Label("Sin bancos conectados", systemImage: "lock.shield")
                 .foregroundStyle(ElitePalette.gold)
             Text("Así se mostrará la conciliación de un movimiento ficticio.")
-                .font(.subheadline).foregroundStyle(.white.opacity(0.7))
+                .font(.subheadline).foregroundStyle(ElitePalette.ink.opacity(0.7))
             HStack {
                 Image(systemName: "bolt.fill").foregroundStyle(ElitePalette.gold)
                 VStack(alignment: .leading) {
@@ -197,10 +197,10 @@ struct ContentView: View {
                     .foregroundStyle(.orange)
             case .none:
                 Label("Sin coincidencia segura", systemImage: "questionmark.circle")
-                    .foregroundStyle(.white)
+                    .foregroundStyle(ElitePalette.ink)
             }
             Text("Ningún cargo se marca pagado ni se contabiliza desde esta demostración.")
-                .font(.footnote).foregroundStyle(.white.opacity(0.65))
+                .font(.footnote).foregroundStyle(ElitePalette.ink.opacity(0.65))
         }
     }
 
@@ -210,7 +210,7 @@ struct ContentView: View {
             Label("Modo demostración", systemImage: "checkmark.shield.fill")
                 .foregroundStyle(ElitePalette.gold)
             Text("Esta versión nativa no tiene sesión iniciada ni acceso a cuentas bancarias.")
-                .font(.subheadline).foregroundStyle(.white.opacity(0.8))
+                .font(.subheadline).foregroundStyle(ElitePalette.ink.opacity(0.8))
             Button {
                 showPrivacy.toggle()
             } label: {
@@ -231,7 +231,7 @@ struct ContentView: View {
                 .accessibilityElement(children: .contain)
             }
             Text("Fluxia Élite · SwiftUI LAB 0.1")
-                .font(.caption).foregroundStyle(.white.opacity(0.6))
+                .font(.caption).foregroundStyle(ElitePalette.ink.opacity(0.6))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(22)
@@ -259,7 +259,7 @@ struct ContentView: View {
     private func placeholder(_ title: String, _ message: String) -> some View {
         VStack(alignment: .leading, spacing: 16) {
             Text(title).font(.title2).bold()
-            Text(message).foregroundStyle(.white.opacity(0.7))
+            Text(message).foregroundStyle(ElitePalette.ink.opacity(0.7))
             Label("Solo demostración", systemImage: "lock.shield")
                 .foregroundStyle(ElitePalette.gold)
         }
