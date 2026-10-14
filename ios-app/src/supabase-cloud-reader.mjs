@@ -15,7 +15,7 @@ export async function readFluxiaCloudRows({supabaseUrl,publishableKey,accessToke
   const tables=[['fluxia_datos','user_id,clave,v,t,updated_at'],['planrescate_v2','id,user_id,clave,v,t,updated_at']];
   const result={};
   for(const [table,columns] of tables){
-    const rows=[];let offset=0;const limit=500;
+    const rows=[];let offset=0;const limit=500;const seen=new Set();
     while(true){
       const endpoint=new URL(root+'/rest/v1/'+table);
       endpoint.searchParams.set('select',columns);
@@ -27,6 +27,7 @@ export async function readFluxiaCloudRows({supabaseUrl,publishableKey,accessToke
       if(!res.ok)throw Error('Cloud read failed: '+table);
       const batch=await res.json();
       if(!Array.isArray(batch)||batch.some(row=>row.user_id!==expectedUserId))throw Error('Cloud identity violation');
+      for(const row of batch){const key=table==='fluxia_datos'?row.clave:row.id;if(!key||seen.has(key))throw Error('Duplicate cloud record');seen.add(key)}
       rows.push(...batch);
       if(batch.length<limit)break;
       offset+=batch.length;
