@@ -591,7 +591,7 @@ function loginScreen(){
  form.addEventListener('submit',async ev=>{
  ev.preventDefault();btn.disabled=true;error='';showLoading('Comprobando credenciales y cargando datos reales…');
  try{
- const res=await fetch(BASE+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'apikey':KEY,'Content-Type':'application/json'},body:JSON.stringify({email:email.value.trim(),password:pass.value})});
+ const res=await fetch(BASE+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'apikey':KEY,'Content-Type':'application/json'},body:JSON.stringify({email:email.value.trim(),password:pass.value}),credentials:'omit',cache:'no-store',redirect:'error'});
  const data=await res.json();pass.value='';
  if(!res.ok||!data.access_token||!data.user?.id)throw new Error('No se ha podido iniciar sesión. Comprueba los datos de acceso.');
  draftEdits.clear();token=data.access_token;owner=data.user.id;
@@ -608,7 +608,7 @@ function loginScreen(){
  await loadCanonicalProfile(profiles[0]);
 
  }catch(e){token='';owner='';items={};hideLoading();loginScreen();status(e.message||'Error de conexión');}
- finally{btn.disabled=false}
+ finally{pass.value='';btn.disabled=false}
  });
 }
 function head(title){const h=el('h1',null,title);$('#content').append(h)}
