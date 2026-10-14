@@ -2425,6 +2425,7 @@ function renderHTMLPrimaryList(mod){
  const source=backupFinance?.owner===owner&&backupFinance?.profile===activeProfile?backupFinance.modules?.[mod.id]:null;
  if(!source)return false;
  const cloud=canon(mod);
+ const huchaLedger=mod.id==='huchas'?reconstructedHuchaLedger(source.records,huchaUsesFromSource(true)):null;
  const compared=comparePrivateModuleRows(source.records,cloud);
  const isPlan=mod.id==='huchas'||mod.id==='financiaciones';
  const displayed=(compared?.results||source.records.map(row=>({row,kind:'unidentified',fields:[]}))).filter(({row})=>{
@@ -2457,7 +2458,7 @@ function renderHTMLPrimaryList(mod){
    const state={same:'Coincide con nube',missing:'Pendiente en nube',different:'Datos diferentes',duplicate:'ID duplicado',unidentified:'Sin ID'}[item.kind]||'No comprobado';
    body.append(el('small',null,String(row.fecha||row.mes||'Fecha sin documentar')+' · '+state));
    const amount=recordAmount(row);
-   if(mod.id==='huchas')appendHuchaFinancialSummary(body,row,selectedMonth,reconstructedHuchaLedger(source.records,huchaUsesFromSource(true)));
+   if(mod.id==='huchas')appendHuchaFinancialSummary(body,row,selectedMonth,huchaLedger);
    card.append(el('span','legacyMovementIcon',mod.id==='huchas'?'🏺':'📄'),body,el('strong','legacyMoney',mod.id==='huchas'?'Detalle ›':amount===null?'Ver detalle ›':money(amount)));
    card.onclick=()=>openPrivateHTMLRecord(row,mod.id);
    list.append(card)
@@ -2488,6 +2489,7 @@ function financialRecordEvidence(row,moduleId){
 }
 function renderList(){
  const m=mods.find(x=>x.id===page),arr=canon(m);
+ const cloudHuchaLedger=m.id==='huchas'&&Array.isArray(arr)?reconstructedHuchaLedger(arr,huchaUsesFromSource(false)):null;
  renderMonthSelector();head(m.title);
  const backupReady=backupFinance?.owner===owner&&backupFinance?.profile===activeProfile&&!!backupFinance.modules?.[m.id];
  if(backupReady){
@@ -2565,7 +2567,7 @@ function renderList(){
     title.append(el('strong',null,name),el('small',null,chargeMeta(data)));
     const evidence=financialRecordEvidence(data,m.id);
     title.append(el('small','eliteEvidence eliteEvidence-'+evidence.tone,evidence.label));
-    if(page==='huchas')appendHuchaFinancialSummary(title,data,selectedMonth,reconstructedHuchaLedger(arr,huchaUsesFromSource(false)));
+    if(page==='huchas')appendHuchaFinancialSummary(title,data,selectedMonth,cloudHuchaLedger);
     const btn=el('button','entry');btn.append(chargeMark(data,page),title,el('span','amount',page==='huchas'?'Detalle ›':amount===null?'Ver detalle ›':money(amount)));
     btn.onclick=()=>openDetail(data,index,m.key);list.append(btn)
    }
