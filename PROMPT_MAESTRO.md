@@ -1,6 +1,13 @@
 # 📋 PROMPT MAESTRO FLUXIA v93.8.2+
 ## Biblia de desarrollo, versionado, QA y entrega profesional
 
+## Adenda Élite v1.9.98 — protección de estable y avisos honestos (15/10/2026)
+
+- La base histórica v97.66 y el `index.html` estable actual son artefactos distintos: verificar cada uno con su SHA sin cambiar el histórico ni alterar el HTML estable. La huella actual de la estable se fijó desde el commit previo `145560c16df8c0ce0902daacbb20ffb634a04bc7`.
+- Un fallo de QA no equivale a una publicación abortada mientras GitHub Pages tenga una fuente de despliegue independiente. Informar ambos estados por separado y no proclamar certificación.
+- Una campana no señalará avisos pendientes por defecto: mostrar estado de no leídos solo tras verificar la cola real. No duplicar navegación superior e inferior.
+- El workflow de validación de Élite no publicará ni sobrescribirá un release histórico v97.73 al validar versiones de la serie v1.9.x.
+
 ## Adenda Élite v1.9.97 — evidencia antes de certificar (15/10/2026)
 
 - La cabecera de Élite agrupa icono y nombre en un único bloque central; Salir pertenece a Ajustes y no compite con la marca. Las pestañas inferiores continúan siendo la navegación principal.

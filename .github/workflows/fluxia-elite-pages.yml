@@ -34,7 +34,11 @@ jobs:
           node-version: '24'
       - run: npm ci --prefix auditorias/qa-v97.66 --no-audit --no-fund
       - run: node auditorias/qa-v97.66/verify-baseline.cjs
-      - run: sha256sum -c AUDITORIA_ELITE/PROTECTED_SHA256.txt
+      - name: Preserve v97.66 historical artifacts and current stable independently
+        run: |
+          # The first historical entry describes v97.66.html, not the later stable index.
+          tail -n +2 AUDITORIA_ELITE/PROTECTED_SHA256.txt | sha256sum -c -
+          sha256sum -c AUDITORIA_ELITE/STABLE_AT_v1.9.98_SHA256.txt
       - run: npm --prefix auditorias/qa-v97.66 test
       - run: node auditorias/qa-v97.69/regression-lab.cjs
       - run: node AUDITORIA_ELITE/build-candidate.cjs
@@ -86,30 +90,3 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: python3 AUDITORIA_ELITE/smoke-pages.py --attempts 6
-  archive:
-    needs: smoke
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-      - name: Package complete app, assets, protected references and audit
-        env:
-          FLUXIA_RELEASE_VERSION: v97.73
-        run: python3 AUDITORIA_ELITE/package-release.py
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Fluxia_v97.73_LAB_COMPLETO
-          path: dist/*
-          retention-days: 90
-      - name: Publish validated LAB ZIP only; no stable promotion
-        env:
-          GH_TOKEN: ${{ github.token }}
-          FLUXIA_RELEASE_VERSION: v97.73
-        run: |
-          python3 AUDITORIA_ELITE/package-release.py
-          if gh release view v97.73-LAB >/dev/null 2>&1; then
-            gh release upload v97.73-LAB dist/Fluxia_v97.73_LAB_COMPLETO.zip dist/SHA256SUMS.txt --clobber
-          else
-            gh release create v97.73-LAB dist/Fluxia_v97.73_LAB_COMPLETO.zip dist/SHA256SUMS.txt --target "$GITHUB_SHA" --title "Fluxia v97.73 LAB: shared groups and monthly spent" --notes-file RELEASE_NOTES_v97.73_LAB.md --prerelease
-          fi

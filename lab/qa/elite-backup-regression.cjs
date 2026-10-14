@@ -1,7 +1,7 @@
 'use strict';
 // Checks for private, same-profile cash preview. No files uploaded or cloud writes.
 const assert=require('node:assert/strict');
-const api=require('../js/fluxia-elite-backup-v1.js');
+const api=require('./load-umd.cjs')('../js/fluxia-elite-backup-v1.js');
 const id='usr-4da6c558-634d-4ae8-8a36-6d3be0e2fd39';
 const other='usr-5da6c558-634d-4ae8-8a36-6d3be0e2fd39';
 const key='fluxia_user_'+id+'__v2_efectivo';

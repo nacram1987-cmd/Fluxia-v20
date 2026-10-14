@@ -1,7 +1,7 @@
 'use strict';
 // npm-free offline regression tests for local CSV comparator. No production data.
 const assert=require('node:assert/strict');
-const p=require('../js/fluxia-espejo-csv-v1.js');
+const p=require('./load-umd.cjs')('../js/fluxia-espejo-csv-v1.js');
 const csv='Fecha;Concepto;Categoría;Importe;Origen\n2026-10-14;"Gasolinera; venta";"Tabaco";7,50;banco\n2026-10-14;"Gasolinera; venta";"Tabaco";7,50;banco\n2026-10-04;"Apple.com/bill";"Entretenimiento";22;banco\n';
 let n=0;
 function test(name,fn){fn();console.log('PASS',++n,name)}

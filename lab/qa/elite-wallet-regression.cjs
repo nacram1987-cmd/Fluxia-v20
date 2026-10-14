@@ -1,7 +1,7 @@
 'use strict';
 // Pure wallet regression from HTML mother: NEVER derive Disponible by adding cash balance.
 const assert=require('node:assert/strict');
-const wallet=require('../js/fluxia-elite-wallet-v1.js');
+const wallet=require('./load-umd.cjs')('../js/fluxia-elite-wallet-v1.js');
 let counter=0;
 const run=(title,fn)=>{fn();console.log('PASS',++counter,title)};
 const source={saldo:70,movimientos:[

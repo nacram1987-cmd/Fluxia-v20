@@ -2,11 +2,11 @@
 // Synthetic UI smoke test: zero network, zero real accounts, no financial writes.
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
-const wallet=require('../js/fluxia-elite-wallet-v1.js');
+const wallet=require('./load-umd.cjs')('../js/fluxia-elite-wallet-v1.js');
 const match=html.match(/<script>\s*\(\(\) => \{([\s\S]+?)<\/script>/);
 assert(match,'Main inline script not found');
 let js=match[1];
-const tail="loginScreen();\n})();";
+const tail="bootstrapAuth();\n})();";
 assert(js.includes(tail),'Login bootstrap expected');
 const bootstrap=[
  "token='fixture-token';owner='4da6c558-634d-4ae8-8a36-6d3be0e2fd39';",
@@ -31,7 +31,9 @@ class FakeNode{
  querySelector(){return null}
 }
 const document={
+ head:new FakeNode('head'),
  createElement(tag){return new FakeNode(tag)},
+ createTextNode(value){const node=new FakeNode('#text');node.textContent=value;return node},
  querySelector(sel){if(!nodes.has(sel))nodes.set(sel,new FakeNode('div'));return nodes.get(sel)}
 };
 const window={
