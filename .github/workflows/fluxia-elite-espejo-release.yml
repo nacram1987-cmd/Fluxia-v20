@@ -1,0 +1,53 @@
+name: Fluxia Élite · ZIP Safari completo
+on:
+  push:
+    branches: [pages-v9731-real-final]
+    paths:
+      - 'lab/fluxia-elite-safari-datos-reales.html'
+      - 'lab/versions/fluxia-elite-safari-v*.html'
+      - 'lab/js/**'
+      - '.github/workflows/fluxia-elite-espejo-release.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package auditable Safari release without production writes
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="$(grep -oE "const ELITE_SAFARI_VERSION='[0-9]+\.[0-9]+\.[0-9]+'" lab/fluxia-elite-safari-datos-reales.html | head -1 | cut -d"'" -f2)"
+          test -n "$VERSION"
+          test -f "lab/versions/fluxia-elite-safari-v$VERSION.html"
+          ROOT="build/Fluxia_Elite_BETA_v$VERSION"
+          mkdir -p "$ROOT/lab" "$ROOT/AUDITORIA"
+          cp lab/fluxia-elite-safari-datos-reales.html "$ROOT/lab/"
+          cp lab/fluxia-elite.webmanifest "$ROOT/lab/"
+          cp -a lab/js "$ROOT/lab/"
+          cp -a lab/assets "$ROOT/lab/"
+          cp -a lab/versions "$ROOT/lab/"
+          cp -a lab/qa "$ROOT/lab/"
+          cp fluxia-icon.png "$ROOT/"
+          cp AGENTS.md PROMPT_MAESTRO.md "$ROOT/"
+          cp AUDITORIA_ELITE/CONTRATO_PARIDAD_HTML_MADRE_2026-10-14.md "$ROOT/AUDITORIA/"
+          cat > "$ROOT/README.txt" <<EOF
+          FLUXIA ÉLITE BETA Safari v$VERSION — PAQUETE LAB DE AUDITORÍA
+          Inicio web: https://nacram1987-cmd.github.io/Fluxia-v20/lab/fluxia-elite-safari-datos-reales.html
+          Archivo principal: lab/fluxia-elite-safari-datos-reales.html
+          JS de paridad: lab/js/fluxia-espejo-csv-v1.js
+          QA sin datos reales: node lab/qa/espejo-csv-regression.cjs
+          Esta entrega NO sustituye HTML estable ni modifica datos en la nube.
+          Solo consulta datos tras login; CSV leído en el dispositivo. No existe paridad 51/51 certificada.
+          EOF
+          cd build
+          zip -q -r "Fluxia_Elite_BETA_v$VERSION_COMPLETO.zip" "Fluxia_Elite_BETA_v$VERSION"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Fluxia_Elite_BETA_Safari_ZIP_COMPLETO
+          path: build/*_COMPLETO.zip
+          if-no-files-found: error
+          retention-days: 60
