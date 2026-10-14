@@ -2588,6 +2588,38 @@ function huchaMonthlyContributions(hucha){
  }
  return {rows,invalid}
 }
+function huchaContributionSnapshot(hucha,period){
+ const found=huchaMonthlyContributions(hucha),seen=new Set();
+ const result={lifetimeCents:0,monthCents:0,monthKnown:0,monthUndated:0,count:0,invalid:found.invalid,duplicates:0};
+ for(const item of found.rows){
+  const op=item.record,id=String(op?.id??'').trim(),amount=op?.importe;
+  if(!id||typeof amount!=='number'||!Number.isFinite(amount)||amount<0){result.invalid++;continue}
+  if(seen.has(id)){result.duplicates++;continue}
+  seen.add(id);result.count++;
+  const cents=Math.round(amount*100);result.lifetimeCents+=cents;
+  const date=typeof op.fecha==='string'?op.fecha.trim():'';
+  if(/^\d{4}-\d{2}-\d{2}(?:T|$)/.test(date)){
+   if(date.slice(0,7)===period){result.monthCents+=cents;result.monthKnown++}
+  }else result.monthUndated++
+ }
+ result.lifetimeComplete=result.invalid===0&&result.duplicates===0;
+ result.monthComplete=result.lifetimeComplete&&result.monthUndated===0;
+ return result
+}
+function appendHuchaFinancialSummary(target,hucha,period,ledger){
+ const snapshot=huchaContributionSnapshot(hucha,period);
+ const current=ledger?.rows?.find(x=>x.id===String(hucha?.id??''));
+ const netReady=ledger?.complete&&current&&current.issues===0;
+ const section=el('div','eliteHuchaCardSummary');
+ const line=(name,value)=>{const p=el('div','eliteHuchaBalanceLine');p.append(el('span',null,name),el('strong',null,value));section.append(p)};
+ line('Aportado en '+monthTitle(period),snapshot.monthComplete?money(snapshot.monthCents/100):'—');
+ line('Aportaciones de todo el histórico',snapshot.lifetimeComplete?money(snapshot.lifetimeCents/100):'—');
+ line('Saldo histórico acumulado',netReady?money(current.provisionalCents/100):'—');
+ if(!snapshot.monthComplete)section.append(el('small','integrityWarning','Hay aportaciones sin fecha verificable o registros duplicados; no se atribuyen al mes.'));
+ if(!netReady)section.append(el('small','integrityWarning','Saldo pendiente de conciliar con usos, rescates y reposiciones del HTML original.'));
+ else section.append(el('small','periodHint','Saldo reconstruido PROVISIONAL, pendiente de cotejo con el HTML operativo.'));
+ target.append(section)
+}
 function renderHuchaMonthlyContributions(hucha){
  const data=huchaMonthlyContributions(hucha);
  if(!data.rows.length&&!data.invalid)return null;
