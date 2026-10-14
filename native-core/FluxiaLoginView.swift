@@ -34,32 +34,8 @@ public struct FluxiaLoginView: View {
 
     public var body: some View {
         Group {
-            if let identity {
-                TabView {
-                    NavigationStack {
-                        ScrollView {
-                            VStack(alignment: .leading, spacing: 14) {
-                                HStack {
-                                    Text("Fluxia Élite BETA").font(.title3.bold())
-                                    Spacer()
-                                    Button("Salir") { signOut() }
-                                }
-                                Label("Nube real · solo lectura", systemImage: "checkmark.shield")
-                                    .font(.caption)
-                                if let recordCount {
-                                    Text("\(recordCount) colecciones financieras consultadas con tu usuario")
-                                        .font(.caption).foregroundStyle(.secondary)
-                                }
-                                FluxiaRealRecordsView(records: cloudRecords)
-                            }
-                            .padding()
-                        }
-                        .background(Color(red: 0.97, green: 0.97, blue: 0.95))
-                    }
-                    .tabItem { Label("Datos reales", systemImage: "list.bullet.rectangle") }
-                    FluxiaEliteAppView(ownerID: identity)
-                        .tabItem { Label("Interfaz iOS", systemImage: "iphone") }
-                }
+            if identity != nil {
+                FluxiaNativeHomeView(records: cloudRecords, signOut: signOut)
             } else {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 10) {
@@ -185,6 +161,11 @@ public struct FluxiaLoginView: View {
                 .scrollDismissesKeyboard(.interactively)
                 .background(Color(red: 0.97, green: 0.97, blue: 0.95))
                 .safeAreaPadding(.bottom, 8)
+            }
+        }
+        .overlay {
+            if isLoading {
+                FluxiaLoadingView()
             }
         }
         .task {
