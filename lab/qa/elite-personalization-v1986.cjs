@@ -1,1 +1,20 @@
-J3VzZSBzdHJpY3QnOwpjb25zdCBhc3NlcnQ9cmVxdWlyZSgnbm9kZTphc3NlcnQvc3RyaWN0Jyk7CmNvbnN0IGZzPXJlcXVpcmUoJ25vZGU6ZnMnKTsKY29uc3Qgdm09cmVxdWlyZSgnbm9kZTp2bScpOwpjb25zdCBodG1sPWZzLnJlYWRGaWxlU3luYyhyZXF1aXJlKCdub2RlOnBhdGgnKS5qb2luKF9fZGlybmFtZSwnLi4vZmx1eGlhLWVsaXRlLXNhZmFyaS1kYXRvcy1yZWFsZXMuaHRtbCcpLCd1dGY4Jyk7CmFzc2VydC5tYXRjaChodG1sLC9FTElURV9TQUZBUklfVkVSU0lPTj0nMVwuOVwuKD86ODZ8ODd8ODh8ODkpJy8pOwphc3NlcnQubWF0Y2goaHRtbCwvwr9Dw7NtbyBxdWllcmVzIHF1ZSB0ZSBsbGFtZW1vc1w/Lyk7CmFzc2VydC5tYXRjaChodG1sLC9kaXNwbGF5X25hbWU6bmFtZVwudmFsdWVcLnRyaW1cKFwpLyk7CmFzc2VydC5tYXRjaChodG1sLC9hdXRoXC92MVwvdXNlci8pOwphc3NlcnQubWF0Y2goaHRtbCwvR3VhcmRhZG9cLiBJbmljaW8gbW9zdHJhci8pOwphc3NlcnQubWF0Y2goaHRtbCwvSG9sYSwgJ1wrY3VycmVudFVzZXJOYW1lLyk7CmFzc2VydC5tYXRjaChodG1sLC9mdW5jdGlvbiByZW5kZXJBbHdheXNWZXJpZnlcKHBhcmVudFwpLyk7CmFzc2VydC5tYXRjaChodG1sLC9RdcOpIHZlcmlmaWNhciBzaWVtcHJlLyk7CmFzc2VydC5tYXRjaChodG1sLC9OdWJlIHkgcGVyZmlsLyk7CmFzc2VydC5tYXRjaChodG1sLC9CYW5jb3MvKTsKYXNzZXJ0Lm1hdGNoKGh0bWwsL0Rpc3BvbmlibGUvKTsKYXNzZXJ0Lm1hdGNoKGh0bWwsL0hpc3RvcmlhbC8pOwpjb25zdCBzY3JpcHRzPVsuLi5odG1sLm1hdGNoQWxsKC88c2NyaXB0KD86XHNbXj5dKik/PihbXHNcU10qPyk8XC9zY3JpcHQ+L2dpKV0ubWFwKG09Pm1bMV0pLmZpbHRlcihCb29sZWFuKTsKZm9yKGNvbnN0IHNjcmlwdCBvZiBzY3JpcHRzKWFzc2VydC5kb2VzTm90VGhyb3coKCk9Pm5ldyB2bS5TY3JpcHQoc2NyaXB0KSwnSW5saW5lIEphdmFTY3JpcHQgbXVzdCBwYXJzZScpOwpjb25zb2xlLmxvZygnUEFTUyB2MS45Ljg2IHBlcnNvbmFsaXplZCBzaWdudXAgYW5kIHBlcm1hbmVudCB2ZXJpZmljYXRpb24gY2hlY2tsaXN0Jyk7Cg==
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const vm=require('node:vm');
+const html=fs.readFileSync(require('node:path').join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.(?:86|87|88|89)'/);
+assert.match(html,/¿Cómo quieres que te llamemos\?/);
+assert.match(html,/display_name:name\.value\.trim\(\)/);
+assert.match(html,/auth\/v1\/user/);
+assert.match(html,/Guardado\. Inicio mostrar/);
+assert.match(html,/Hola, '\+currentUserName/);
+assert.match(html,/function renderAlwaysVerify\(parent\)/);
+assert.match(html,/Qué verificar siempre/);
+assert.match(html,/Nube y perfil/);
+assert.match(html,/Bancos/);
+assert.match(html,/Disponible/);
+assert.match(html,/Historial/);
+const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(m=>m[1]).filter(Boolean);
+for(const script of scripts)assert.doesNotThrow(()=>new vm.Script(script),'Inline JavaScript must parse');
+console.log('PASS v1.9.86 personalized signup and permanent verification checklist');
