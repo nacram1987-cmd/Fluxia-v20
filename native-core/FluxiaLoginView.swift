@@ -14,10 +14,12 @@ public struct FluxiaLoginView: View {
     @State private var cloudRecords: [FluxiaCloudReader.Record] = []
     @State private var authSession: FluxiaAuthClient.Session?
     @State private var rememberSession = false
-    @State private var showNumberPad = false
-    @State private var numericTargetPassword = false
-    private enum LoginField: Hashable { case email, password }
-    @FocusState private var focusedField: LoginField?
+    @State private var showEmailNumbers = false
+    @State private var showPasswordKeyboard = true
+    @State private var revealPassword = false
+    @State private var upperCaseKeys = false
+    @State private var symbolKeys = false
+    @FocusState private var emailFocused: Bool
     @State private var didAttemptRestore = false
 
     public init() {}
@@ -80,8 +82,7 @@ public struct FluxiaLoginView: View {
                         .lineLimit(2)
                         .minimumScaleFactor(0.8)
                     TextField("Correo electrónico", text: $email)
-                        .focused($focusedField, equals: .email)
-                        .onTapGesture { numericTargetPassword = false }
+                        .focused($emailFocused)
                         .textContentType(.username)
                         .keyboardType(.emailAddress)
                         .textInputAutocapitalization(.never)
@@ -97,28 +98,57 @@ public struct FluxiaLoginView: View {
                     .font(.subheadline)
                     .disabled(isLoading)
                     .accessibilityLabel("Atajos para completar el correo")
-                    SecureField("Contraseña", text: $password)
-                        .focused($focusedField, equals: .password)
-                        .onTapGesture { numericTargetPassword = true }
-                        .textContentType(.password)
-                        .textFieldStyle(.roundedBorder)
+                    HStack(spacing: 8) {
+                        Button(showEmailNumbers ? "Ocultar números" : "Números para correo") {
+                            emailFocused = false
+                            showEmailNumbers.toggle()
+                        }
+                        .buttonStyle(.bordered)
+                        .font(.caption)
+                        Spacer()
+                    }
+                    if showEmailNumbers {
+                        HStack(spacing: 5) {
+                            ForEach(0..<10, id: \.self) { n in
+                                Button(String(n)) { email.append(String(n)) }
+                                    .frame(maxWidth: .infinity, minHeight: 36)
+                                    .buttonStyle(.bordered)
+                                    .font(.caption)
+                            }
+                        }
+                    }
+                    Text("Contraseña").font(.subheadline.bold())
+                    HStack(spacing: 8) {
+                        Text(revealPassword ? password : String(repeating: "●", count: password.count))
+                            .font(.system(size: 18, weight: .medium, design: .monospaced))
+                            .lineLimit(1)
+                            .frame(maxWidth: .infinity, minHeight: 36, alignment: .leading)
+                            .accessibilityLabel("\(password.count) caracteres de contraseña")
+                        Button {
+                            revealPassword.toggle()
+                        } label: {
+                            Image(systemName: revealPassword ? "eye.slash" : "eye")
+                        }
+                        .accessibilityLabel(revealPassword ? "Ocultar contraseña" : "Mostrar contraseña")
+                        Button {
+                            showPasswordKeyboard.toggle()
+                            emailFocused = false
+                        } label: {
+                            Image(systemName: "keyboard")
+                        }
+                        .accessibilityLabel("Mostrar u ocultar teclado integrado")
+                    }
+                    .padding(.horizontal, 12)
+                    .background(.white, in: RoundedRectangle(cornerRadius: 8))
+                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.28)))
+                    if showPasswordKeyboard {
+                        Text("Teclado integrado: mezcla letras, números y símbolos sin perder lo escrito")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        passwordKeyboard
+                    }
                     Toggle("Recordar sesión en este dispositivo", isOn: $rememberSession)
                         .font(.subheadline)
-                    HStack(spacing: 10) {
-                        Button("Números para correo") { showPad(forPassword: false) }
-                            .buttonStyle(.bordered)
-                            .tint(!numericTargetPassword && showNumberPad ? .blue : .secondary)
-                        Button("Números para contraseña") { showPad(forPassword: true) }
-                            .buttonStyle(.bordered)
-                            .tint(numericTargetPassword && showNumberPad ? .blue : .secondary)
-                    }
-                    .font(.caption)
-                    if showNumberPad {
-                        Text(numericTargetPassword ? "Los números irán a CONTRASEÑA" : "Los números irán a CORREO")
-                            .font(.caption.bold())
-                            .foregroundStyle(.blue)
-                        numericPad
-                    }
                     Button {
                         Task { await signIn() }
                     } label: {
@@ -156,56 +186,63 @@ public struct FluxiaLoginView: View {
     }
 
     private func insertEmailPart(_ text: String) {
-        // Always insert in the email field, even when password keypad was selected.
-        focusedField = nil
+        emailFocused = false
         email.append(text)
-        numericTargetPassword = false
     }
 
-    private func showPad(forPassword: Bool) {
-        numericTargetPassword = forPassword
-        focusedField = nil
-        showNumberPad = true
-    }
-
-    private var numericPad: some View {
-        VStack(spacing: 8) {
-            ForEach(0..<3, id: \.self) { row in
-                HStack(spacing: 8) {
-                    ForEach(1..<4, id: \.self) { column in
-                        let digit = String(row * 3 + column)
-                        Button(digit) { appendDigit(digit) }
-                            .frame(maxWidth: .infinity, minHeight: 42)
-                            .buttonStyle(.bordered)
+    private var passwordKeyboard: some View {
+        VStack(spacing: 6) {
+            HStack(spacing: 4) {
+                ForEach(Array("1234567890").map(String.init), id: \.self) { key in
+                    passwordKey(key)
+                }
+            }
+            ForEach(["qwertyuiop", "asdfghjkl", "zxcvbnm"], id: \.self) { row in
+                HStack(spacing: 4) {
+                    ForEach(Array(row).map(String.init), id: \.self) { letter in
+                        passwordKey(upperCaseKeys ? letter.uppercased() : letter)
                     }
                 }
             }
-            HStack(spacing: 8) {
-                Button("Borrar") {
-                    if numericTargetPassword {
-                        if !password.isEmpty { password.removeLast() }
-                    } else {
-                        if !email.isEmpty { email.removeLast() }
+            HStack(spacing: 6) {
+                Button(upperCaseKeys ? "MAYÚS ✓" : "Mayús") { upperCaseKeys.toggle() }
+                    .buttonStyle(.bordered)
+                Button(symbolKeys ? "Símbolos ✓" : "Símbolos") { symbolKeys.toggle() }
+                    .buttonStyle(.bordered)
+                Spacer(minLength: 0)
+                Button {
+                    if !password.isEmpty { password.removeLast() }
+                } label: {
+                    Image(systemName: "delete.left")
+                }
+                .buttonStyle(.bordered)
+                .accessibilityLabel("Borrar último carácter")
+                Button("Listo") { showPasswordKeyboard = false }
+                    .buttonStyle(.borderedProminent)
+            }
+            if symbolKeys {
+                HStack(spacing: 4) {
+                    ForEach(["@", ".", "-", "_", "!", "?", "#", "$", "%", "&"], id: \.self) { key in
+                        passwordKey(key)
                     }
                 }
-                .frame(maxWidth: .infinity, minHeight: 42)
-                .buttonStyle(.bordered)
-                Button("0") { appendDigit("0") }
-                    .frame(maxWidth: .infinity, minHeight: 42)
-                    .buttonStyle(.bordered)
-                Button("Listo") { showNumberPad = false; focusedField = nil }
-                    .frame(maxWidth: .infinity, minHeight: 42)
-                    .buttonStyle(.borderedProminent)
             }
         }
         .disabled(isLoading)
-        .accessibilityElement(children: .contain)
     }
 
-    private func appendDigit(_ digit: String) {
-        focusedField = nil
-        if numericTargetPassword { password.append(digit) }
-        else { email.append(digit) }
+    private func passwordKey(_ value: String) -> some View {
+        Button {
+            // Append directly to one bound value. No keyboard focus changes or field replacement.
+            password.append(value)
+        } label: {
+            Text(value)
+                .font(.system(size: 14, weight: .medium))
+                .frame(maxWidth: .infinity, minHeight: 38)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.bordered)
+        .accessibilityLabel("Añadir " + value + " a la contraseña")
     }
 
     private func restoreSession() async {
