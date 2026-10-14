@@ -2099,7 +2099,7 @@ function renderPrivateHTMLModule(mod){
 }
 function huchaBalanceAudit(rows){
  if(!Array.isArray(rows))return {complete:false,count:0,known:0,totalCents:null,unknown:0,duplicateIds:[]};
- const keys=['saldoActual','saldo_actual','saldoAcumulado','saldo_acumulado','saldoDisponible','saldo_disponible'];
+ const keys=['saldoActual','saldo_actual','saldoAcumulado','saldo_acumulado','saldoDisponible','saldo_disponible','saldo','saldo_hucha'];
  const seen=new Set(),duplicates=[],records=[];
  for(const row of rows){
   const id=String(row?.id??'').trim();
