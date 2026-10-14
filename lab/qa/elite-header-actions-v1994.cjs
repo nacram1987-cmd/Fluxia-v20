@@ -1,0 +1,12 @@
+const fs=require('fs');const assert=require('assert');const vm=require('vm');
+const root=process.cwd();const html=fs.readFileSync(root+'/lab/fluxia-elite-safari-datos-reales.html','utf8');
+assert(html.includes("const ELITE_SAFARI_VERSION='1.9.94'"));
+assert(html.includes("menu.setAttribute('aria-label','Abrir ajustes y perfil')"));
+assert(html.includes("menu.textContent='⚙︎'"));
+assert(html.includes("menu.onclick=()=>navigateElite('ajustes')"));
+assert(html.includes("more.append(el('span','sym','⋯')"));
+assert(html.includes('.eliteHeader #logout{position:absolute;right:54px'));
+assert(html.includes('.eliteHeader #eliteNotifications{position:absolute;right:10px'));
+const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(m=>m[1]).filter(Boolean);
+for(const script of scripts)assert.doesNotThrow(()=>new vm.Script(script),'Inline JavaScript must parse');
+console.log('PASS v1.9.94 header actions are distinct and centered');
