@@ -11,6 +11,16 @@
   return data;
  }
  function normalizeRows(rows){return (Array.isArray(rows)?rows:[]).map(row=>({...row,bankRef:String(row.bankRef||row.mov_id||row.id||row.movimientoId||'').trim(),amount:row.amount??row.importe,concept:row.concept??row.concepto,operationDate:row.operationDate??row.fecha,source:'original-bank-connector'}))}
- const api={version:'1.0.0',source:'Fluxia-banco',configure,call,normalizeRows};
+ function mergeRows(previous,incoming){
+  const rows=[],seen=new Set(),duplicates=[];
+  [...(Array.isArray(previous)?previous:[]),...(Array.isArray(incoming)?incoming:[])].forEach(row=>{
+   const bankRef=String(row?.bankRef||'').trim();
+   if(!bankRef){rows.push(row);return}
+   if(seen.has(bankRef)){duplicates.push(bankRef);return}
+   seen.add(bankRef);rows.push(row);
+  });
+  return {rows,duplicates:[...new Set(duplicates)]};
+ }
+ const api={version:'1.1.0',source:'Fluxia-banco',configure,call,normalizeRows,mergeRows};
  if(typeof module!=='undefined'&&module.exports)module.exports=api;if(root)root.FluxiaEliteBankConnector=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
