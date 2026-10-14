@@ -2168,6 +2168,22 @@ function huchaUsesAudit(huchas,uses){
  }
  return result
 }
+function renderHuchaUsesAudit(huchas,uses,label){
+ const report=huchaUsesAudit(huchas,uses),card=el('section','eliteHuchaBalance');
+ card.append(el('strong',null,'🧾 Retiros de huchas · trazabilidad'));
+ if(!report.sourceReady){card.append(el('p','integrityWarning','No está disponible la colección de usos de '+label+'. No puede determinarse el saldo neto.'));return card}
+ card.append(el('p','periodHint',report.count+' operaciones encontradas · '+report.linked+' vinculadas por ID único · '+report.unlinked+' sin asociación inequívoca · '+report.duplicate+' sin ID o repetidas.'));
+ card.append(el('p','periodHint','Vinculadas: '+report.temporary+' temporales · '+report.definitive+' definitivas.'));
+ card.append(el('p','integrityWarning','Importe bruto de usos vinculados: '+money(report.linkedCents/100)+'. NO es saldo neto: faltan reposiciones y usos sin ID. Solo lectura.'));
+ const details=el('details','eliteHuchaBalanceDetails');details.append(el('summary',null,'Ver retiros vinculados por hucha'));
+ for(const h of huchas){
+  const v=report.perHucha[String(h.id)];
+  if(!v)continue;
+  const line=el('div','eliteHuchaBalanceLine');
+  line.append(el('span',null,String(h.nombre||'Hucha')+' · '+v.count+' usos'),el('strong',null,money(v.cents/100)));details.append(line)
+ }
+ card.append(details);return card
+}
 function renderHuchaBalances(rows,origin){
  const audit=huchaBalanceAudit(rows);
  const panel=el('section','eliteHuchaBalance');
