@@ -1,0 +1,15 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const context={};vm.createContext(context);vm.runInContext(fs.readFileSync(require('node:path').join(__dirname,'../js/fluxia-elite-financial-engine-v1.js'),'utf8'),context);
+const engine=context.FluxiaEliteFinancialEngine;
+assert.equal(engine.cents(35),3500n);
+assert.equal(engine.cents(7.5),750n);
+assert.equal(engine.role({cuentaComoFijo:true}),'fixed-linked');
+assert.equal(engine.role({origen:'efectivo'}),'cash');
+const available=engine.available({incomeCents:250000n,realExpensesCents:100000n,plannedProvisionsCents:35000n,excessContributionsCents:500n});
+assert.equal(available.ok,true);assert.equal(available.cents,114500n);
+const hucha=engine.hucha({contributions:[{importe:35},{importe:35}],uses:[{tipo:'temporal',importe:10,repuesto:4},{tipo:'definitivo',importe:5}]});
+assert.equal(hucha.ok,true);assert.equal(hucha.availableCents,59n*100n);
+assert.equal(engine.certification({canonical:true,htmlSnapshot:true,variablesCompared:true,bankReconciled:true,huchaReconciled:true,engineRules:true}).certified,true);
+assert.equal(engine.certification({canonical:true}).certified,false);
+console.log('PASS v1.9.77 cent-exact financial engine, Available rule, hucha ledger and certification gates');
