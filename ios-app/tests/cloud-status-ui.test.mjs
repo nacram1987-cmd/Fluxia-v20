@@ -29,3 +29,19 @@ test('mismatched account response fails closed',async()=>{
  await f.button.handler();
  assert.match(f.target.textContent,/Sin conexión verificada/);
 });
+
+test('switching accounts invalidates in-flight response and hides prior status',async()=>{
+ const f=fixture();const listeners={};
+ f.root.addEventListener=(name,cb)=>{listeners[name]=cb};
+ let resolve;
+ const pending=new Promise(r=>{resolve=r});
+ installCloudStatus({...f,sessionProvider:async()=>({supabaseUrl:'https://example.supabase.co',publishableKey:'pk',accessToken:'token',expectedUserId:user}),reader:async()=>pending});
+ const request=f.button.handler();
+ await new Promise(r=>setImmediate(r));
+ listeners['fluxia:session-changed']();
+ resolve({user_id:user,parity_status:'NOT_CERTIFIED',rows:{fluxia_datos:[{v:'secret'}],planrescate_v2:[]}});
+ await request;
+ assert.match(f.target.textContent,/Sesión cambiada/);
+ assert.doesNotMatch(f.target.textContent,/1 registros|secret/);
+ assert.equal(f.button.disabled,false);
+});
