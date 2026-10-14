@@ -1524,7 +1524,6 @@ function renderHome(){
   row.onclick=()=>{page=item.module.id;render();openDetail(item.record,item.index,item.module.key)};
   $('#content').append(row);
  }
- renderSourceAudit();
  const footer=el('div','versionFooter');
  footer.append(el('span',null,'Fluxia Élite BETA · Safari v'+ELITE_SAFARI_VERSION));
  const history=el('button',null,'📋 Checklist y versiones');history.onclick=showVersionHistory;
