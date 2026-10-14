@@ -773,6 +773,235 @@ function renderCSVAudit(){
  $('#content').append(card);
 }
 
+
+function cashOrFinanceSource(keys,check){
+ for(const key of keys)if(Object.prototype.hasOwnProperty.call(extraFinance,key)){
+  const v=extraFinance[key];
+  if(check(v))return {key,value:v,updatedAt:sourceUpdated[key]||null,present:true};
+ }
+ return {key:null,value:null,updatedAt:null,present:false}
+}
+function financeSourceNotice(source,thing){
+ const elDate=source.updatedAt?new Date(source.updatedAt):null;
+ const dateLabel=elDate&&!Number.isNaN(elDate.getTime())?new Intl.DateTimeFormat('es-ES',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/Madrid'}).format(elDate):'sin fecha verificable';
+ const stale=!elDate||Number.isNaN(elDate.getTime())||Date.now()-elDate.getTime()>24*60*60*1000;
+ const note=el('div',stale?'legacySourceWarning':'legacySourceInfo');
+ note.append(el('strong',null,stale?'⚠️ Copia histórica: no equivale al saldo actual':'ℹ️ Última copia leída'));
+ note.append(el('p',null,source.present?'Datos de '+thing+' almacenados el '+dateLabel+'. No mezclar con movimientos en tiempo real ni considerar el saldo actual confirmado.':'No se ha encontrado una copia legible de '+thing+' para este perfil. No se representa como cero.'));
+ return note
+}
+function legacyExplanatory(title,description){
+ const node=el('div','legacyInfoPanel');
+ node.append(el('strong',null,title),el('p',null,description));
+ return node
+}
+function motherLink(label='Abrir Fluxia HTML para operar ↗'){
+ const a=el('a','motherLink',label);a.href='https://nacram1987-cmd.github.io/Fluxia-v20/';a.target='_blank';a.rel='noopener noreferrer';return a
+}
+function showMotherOperation(heading){
+ const d=$('#detailContent');d.replaceChildren(el('h2',null,heading));
+ d.append(el('p','editIntro','Esta operación financiera ya existe en Fluxia HTML, pero Élite sigue en fase de paridad. Hasta validar escrituras, no simularemos que el movimiento queda registrado.'));
+ d.append(motherLink('Ir al HTML original para hacerlo realmente ↗'));
+ d.append(el('p','notice','Tu cartera y tu Disponible deben actualizarse una sola vez, con fecha, categoría e identificadores originales.'));
+ $('#detail').classList.add('open')
+}
+function renderWallet(){
+ renderMonthSelector();head('💵 Dinero en mano');
+ $('#content').append(el('p','welcomeDescription','Tu efectivo físico: billetes y monedas. Es distinto del Disponible del mes.'));
+ const source=cashOrFinanceSource(['v2_efectivo','planRescate_v2_efectivo'],v=>v!==null&&typeof v==='object'&&!Array.isArray(v)&&Array.isArray(v.movimientos));
+ $('#content').append(financeSourceNotice(source,'Dinero en mano'));
+ if(!source.present||!window.FluxiaWalletAudit){
+  $('#content').append(legacyExplanatory('Cartera sin datos actuales','No se puede deducir el efectivo en mano a partir de los movimientos bancarios ni de otras huchas.'));
+  $('#content').append(motherLink());return
+ }
+ const wallet=window.FluxiaWalletAudit.inspect(source.value);
+ if(!wallet.ok){$('#content').append(legacyExplanatory('Cartera pendiente de revisar',wallet.reason));$('#content').append(motherLink());return}
+ const hero=el('section','legacyWalletHero');
+ hero.append(el('small',null,'En el bolsillo · según última copia de nube'),el('strong',null,money(wallet.saldoCents/100)),el('small',null,'Saldo histórico consultado · NO confirmado para hoy'));
+ $('#content').append(hero);
+ const monthly=window.FluxiaWalletAudit.month(wallet,selectedMonth);
+ if(monthly){
+  const stats=el('div','legacyStatsRow');
+  for(const [label,value] of [['Entradas',monthly.entradasCents],['Gastos',monthly.gastosCents],['Desde huchas',monthly.usosProvisionCents]]){
+   const item=el('div','legacyStat');item.append(el('small',null,label),el('strong',null,money(value/100)));stats.append(item)
+  }
+  $('#content').append(stats);
+ }
+ $('#content').append(legacyExplanatory('Regla financiera original','Meter efectivo modifica la cartera, pero no el Disponible. Gastar en efectivo genera un único gasto variable. Pagar con una provisión reduce cartera y provisión sin descontar de nuevo el Disponible.'));
+ const actions=el('div','legacyActionRow');
+ for(const [name,desc] of [['➕ Meter','Solo cartera'],['🛒 Gastar','Cartera + Variable'],['🏺 Provisión','Cartera + Hucha']]){
+  const btn=el('button','legacyAction');btn.append(el('strong',null,name),el('small',null,desc));btn.onclick=()=>showMotherOperation(name+' · Dinero en mano');actions.append(btn)
+ }
+ $('#content').append(actions);
+ if(wallet.warnings.length){
+  $('#content').append(el('p','legacyAlert','⚠️ '+wallet.warnings.length+' anomalías de identificadores/importes/tipos en la copia. No se han corregido automáticamente.'));
+ }
+ $('#content').append(el('h2','moduleTitle','Historial de efectivo · '+monthTitle(selectedMonth)));
+ if(!monthly?.count)$('#content').append(el('p','notice','No constan movimientos fechados de este periodo en la copia consultada; esto no certifica ausencia de operaciones reales.'));
+ for(const m of (monthly?.records||[]).slice(0,60)){
+  const item=el('div','legacyMovementCard'),icon=el('span','legacyMovementIcon',m.clase==='entrada'?'💶':m.tipo==='salida_provision'?'🏺':'🛒'),body=el('div','legacyMovementBody');
+  body.append(el('strong',null,m.concepto||'Movimiento de cartera'),el('small',null,(m.fecha||'Fecha no válida')+' · '+(m.tipo==='salida_provision'?'Pago desde provisión':m.tipo==='entrada'?'Entrada de efectivo':'Gasto en efectivo')));
+  item.append(icon,body,el('strong','legacyMoney',m.cents===null?'—':(m.clase==='salida'?'−':'+')+money(m.cents/100)));$('#content').append(item)
+ }
+ if(monthly?.records.length>60)$('#content').append(el('p','periodHint','Mostrando los primeros 60 movimientos; consulta la versión HTML completa para el histórico.'));
+ $('#content').append(motherLink('Editar, borrar o registrar movimientos en el HTML ↗'))
+}
+function activeImportedCSV(){
+ const c=csvAudit;
+ return c&&c.ownerId===owner&&c.profile===activeProfile&&c.parsed?.month===selectedMonth?c.parsed:null
+}
+function renderBudgets(){
+ renderMonthSelector();head('💰 Presupuestos');
+ $('#content').append(el('p','welcomeDescription','Límites por categoría tal como los planificaste en Fluxia BETA.'));
+ const source=cashOrFinanceSource(['v2_presupuestos','planRescate_v2_presupuestos'],Array.isArray);
+ $('#content').append(financeSourceNotice(source,'Presupuestos'));
+ const budgetList=source.present?source.value:[];
+ const csv=activeImportedCSV();
+ if(!csv)$('#content').append(legacyExplanatory('Gastos de categoría todavía sin comparar','Importa el CSV desde Variables para ver importes exportados del mes. Nunca utilizamos una copia bancaria desactualizada como gasto del mes actual.'));
+ else $('#content').append(legacyExplanatory('Gasto observado en CSV · no conciliado','Los importes proceden exclusivamente del archivo importado, pueden contener registros repetidos y no sustituyen el cálculo contable del HTML.'));
+ if(!source.present||!budgetList.length)$('#content').append(el('p','notice','Esta copia no contiene límites de categoría utilizables. No significa que tus presupuestos actuales estén a cero.'));
+ const sums=new Map((csv&&window.FluxiaCSVParity?window.FluxiaCSVParity.csvCategoryTotals(csv):[]).map(x=>[x.name.toLocaleLowerCase('es'),x.cents]));
+ for(const budget of budgetList.slice(0,60)){
+  const category=String(budget?.categoria||'Sin categoría'),limit=Number(budget?.limite);
+  if(!Number.isFinite(limit)||limit<0)continue;
+  const used=sums.get(category.toLocaleLowerCase('es'));
+  const row=el('div','legacyBudgetCard');
+  const top=el('div','legacyBudgetTop');top.append(el('strong',null,category),el('span',null,money(limit)));
+  row.append(top);
+  if(typeof used==='number'){
+   const bar=el('div','legacyBudgetBar'),fill=el('span','legacyBudgetFill');
+   const percentage=limit>0?Math.min(100,used/(limit*100)*100):0;
+   fill.style.width=percentage+'%';bar.append(fill);row.append(bar);
+   row.append(el('small',null,money(used/100)+' del CSV importado · '+(limit>0?Math.round(used/(limit*100)*100)+'% del límite':'Sin límite positivo')))
+  }else{row.append(el('small',null,'Sin gastos actuales conciliados para esta categoría'))}
+  $('#content').append(row)
+ }
+ const cats=cashOrFinanceSource(['planRescate_v2_categorias'],Array.isArray);
+ if(cats.present&&cats.value.length){
+  $('#content').append(el('h2','moduleTitle','Categorías originales disponibles'));
+  const tags=el('div','legacyTagList');
+  for(const c of cats.value.slice(0,35))tags.append(el('span','legacyTag',String(c.nombre||c.id||'Categoría')));
+  $('#content').append(tags)
+ }
+ $('#content').append(motherLink('Crear o editar límites en Fluxia HTML ↗'))
+}
+function renderLegacyAnalysis(){
+ renderMonthSelector();head('📈 Análisis');
+ $('#content').append(el('p','welcomeDescription','Resumen visual claro, con importes de origen y sin inventar Disponible.'));
+ const csv=activeImportedCSV();
+ if(!csv){
+  $('#content').append(legacyExplanatory('Importa el CSV para analizar gastos reales','El análisis todavía no puede igualar las estadísticas del HTML sin resolver sus fuentes de gastos e ingresos. Carga el CSV desde Variables.'));
+  const b=el('button','legacyPrimary','Ir a Variables e importar CSV');b.onclick=()=>navigateElite('variables');$('#content').append(b);return
+ }
+ const cats=window.FluxiaCSVParity.csvCategoryTotals(csv);
+ const hero=el('div','legacyAnalysisHero');hero.append(el('small',null,'Gastos exportados del periodo · no Disponible'),el('strong',null,money(csv.cents/100)),el('small',null,csv.records.length+' filas · '+cats.length+' categorías · sin deduplicar'));$('#content').append(hero);
+ const maximum=Math.max(1,...cats.map(c=>c.cents));
+ $('#content').append(el('h2','moduleTitle','¿En qué se distribuye el gasto?'));
+ for(const c of cats){
+  const card=el('div','legacyCategoryRow'),top=el('div','legacyBudgetTop');
+  top.append(el('strong',null,c.name),el('span',null,money(c.cents/100)));
+  const bar=el('div','legacyBudgetBar'),fill=el('span','legacyBudgetFill');
+  fill.style.width=Math.max(1,Math.min(100,c.cents/maximum*100))+'%';bar.append(fill);
+  card.append(top,bar,el('small',null,c.count+' movimientos en el CSV'));$('#content').append(card)
+ }
+ $('#content').append(el('p','legacyAlert','⚠️ Es un análisis de la exportación y no incluye todavía la conciliación completa de Fijos, Huchas, ingresos ni el Disponible.'))
+}
+function renderLegacySimulator(){
+ renderMonthSelector();head('🔮 Simular');
+ $('#content').append(el('p','welcomeDescription','Prueba escenarios sin modificar ni guardar tus finanzas.'));
+ $('#content').append(legacyExplanatory('Simulación parcial y segura','El HTML calcula escenarios a partir del Disponible real. Como Élite todavía no lo tiene conciliado, aquí solo mostraremos la diferencia hipotética que produciría el cambio, nunca un Disponible inventado.'));
+ const card=el('div','legacyFormCard'),inputs={};
+ for(const [key,label] of [['income','Ingreso extra (€)'],['expense','Gasto extra (€)'],['saving','Ahorro o provisión extra (€)']]){
+  const line=el('label','legacyField');line.append(el('span',null,label));
+  const input=el('input','legacyNumber');input.type='number';input.min='0';input.max='100000000';input.step='0.01';input.inputMode='decimal';input.value='0';line.append(input);card.append(line);inputs[key]=input
+ }
+ const count=el('label','legacyField');count.append(el('span',null,'Número de meses'));const months=el('select','legacyNumber');
+ for(const value of [1,3,6,12]){const opt=el('option',null,String(value));opt.value=String(value);months.append(opt)}count.append(months);card.append(count);
+ const calculate=el('button','legacyPrimary','Calcular impacto hipotético'),result=el('div','legacySimResult');
+ calculate.onclick=()=>{
+  const values=[inputs.income,inputs.expense,inputs.saving].map(i=>Number(i.value));
+  if(values.some(v=>!Number.isFinite(v)||v<0||v>100000000)){result.textContent='Introduce importes válidos, positivos y dentro del límite.';return}
+  const cents=Math.round(values[0]*100)-Math.round(values[1]*100)-Math.round(values[2]*100),n=Number(months.value);
+  result.replaceChildren(el('small',null,'Variación hipotética mensual, sin Disponible inicial'),el('strong',null,(cents>=0?'+':'−')+money(Math.abs(cents)/100)),el('small',null,'En '+n+' meses, aplicando el mismo cambio: '+money(cents*n/100)+'. No se guarda nada.'));
+ };
+ card.append(calculate,result);$('#content').append(card);
+ $('#content').append(motherLink('Abrir simulador financiero completo del HTML ↗'))
+}
+function renderLegacyPayments(){
+ renderMonthSelector();head('🧾 Pagos y usos');
+ $('#content').append(el('p','welcomeDescription','Usos de provisiones y pagos históricos, separados de los cargos variables.'));
+ const source=cashOrFinanceSource(['v2_usos','planRescate_v2_usos'],Array.isArray);
+ $('#content').append(financeSourceNotice(source,'Usos de huchas'));
+ if(!source.present){$('#content').append(motherLink());return}
+ const rows=source.value.map((data,index)=>({data,index,state:monthStatus(data,selectedMonth)})).filter(x=>x.state==='match'||x.state==='legacy');
+ $('#content').append(el('p','periodHint',rows.length+' registros asociados al mes en esta copia histórica. No son un extracto bancario en directo.'));
+ if(!rows.length)$('#content').append(el('p','notice','No se localizan usos del periodo en esta copia; revisa los registros actuales en el HTML.'));
+ for(const {data} of rows.slice(0,60)){
+  const item=el('div','legacyMovementCard'),body=el('div','legacyMovementBody');
+  body.append(el('strong',null,String(data.concepto||data.provision||'Uso de provisión')),el('small',null,String(data.fecha||data.mes||'Fecha no documentada')+' · '+String(data.tipo||'Uso')));
+  const amount=recordAmount(data);item.append(el('span','legacyMovementIcon','🏺'),body,el('strong','legacyMoney',amount===null?'—':money(amount)));$('#content').append(item)
+ }
+ $('#content').append(motherLink('Consultar y editar pagos actuales en el HTML ↗'))
+}
+function renderLegacyNotifications(){
+ renderMonthSelector();head('🔔 Notificaciones');
+ const source=cashOrFinanceSource(['planRescate_v2_notificaciones'],v=>!!v&&typeof v==='object'&&!Array.isArray(v));
+ $('#content').append(financeSourceNotice(source,'preferencias de notificaciones'));
+ $('#content').append(legacyExplanatory('Sin confundir configuración con avisos reales','Esta colección guarda preferencias históricas, no garantiza que hayamos importado los nuevos cargos, avisos bancarios o descartes permanentes. Su cola y estados siguen pendientes de paridad.'));
+ $('#content').append(motherLink('Abrir notificaciones reales en Fluxia HTML ↗'))
+}
+function renderLegacySettings(){
+ head('⚙️ Ajustes');
+ const identity=el('div','legacyFormCard');identity.append(el('h2',null,'Sesión y almacenamiento'));
+ identity.append(el('p','periodHint','Cuenta autenticada: '+(owner?'…'+owner.slice(-6):'No identificada')));
+ identity.append(el('p','periodHint','Perfil activo: '+(activeProfile?'…'+activeProfile.slice(-10,-2):'Sin perfil')));
+ identity.append(el('p','periodHint','Versión Élite Safari: v'+ELITE_SAFARI_VERSION));
+ identity.append(legacyExplanatory('Nube protegida por cuenta','Solo se leen claves del usuario autenticado. La importación CSV no se almacena y se pierde al cerrar la sesión.'));
+ $('#content').append(identity);
+ $('#content').append(el('h2','moduleTitle','Datos originales recuperados'));
+ const list=el('div','legacySettingList');
+ const report=[
+  ['💵 Dinero en mano',!!extraFinance.v2_efectivo||!!extraFinance.planRescate_v2_efectivo],
+  ['💰 Presupuestos',Array.isArray(extraFinance.v2_presupuestos)||Array.isArray(extraFinance.planRescate_v2_presupuestos)],
+  ['🧾 Pagos',Array.isArray(extraFinance.v2_usos)||Array.isArray(extraFinance.planRescate_v2_usos)],
+  ['🏷️ Categorías',Array.isArray(extraFinance.planRescate_v2_categorias)],
+  ['🔔 Preferencias de avisos',!!extraFinance.planRescate_v2_notificaciones]
+ ];
+ for(const [label,yes] of report){
+  const row=el('div','legacySettingRow');row.append(el('span',null,label),el('strong',null,yes?'Copia disponible':'Sin copia'));list.append(row)
+ }$('#content').append(list);
+ $('#content').append(legacyExplanatory('Importante','Disponibilidad de una copia NO significa sincronización actual. El HTML sigue siendo la referencia para editar, restaurar o recuperar datos.'));
+ $('#content').append(motherLink('Abrir ajustes y copias de seguridad del HTML ↗'))
+}
+function renderLegacyHelp(){
+ head('❓ Ayuda');
+ $('#content').append(el('p','welcomeDescription','Todo lo esencial de Fluxia BETA, explicado desde la nueva interfaz.'));
+ const topics=[
+  ['Dinero en mano','Efectivo físico. Meter dinero no baja el Disponible; un gasto de cartera crea un Variable; el uso de provisión no se descuenta dos veces.','efectivo'],
+  ['Presupuestos','Límites mensuales por categoría; el gasto observado debe provenir del mes y perfil correctos.','presupuestos'],
+  ['Compartidos','Gastos, personas y liquidaciones con una deuda calculada una sola vez.','compartidos'],
+  ['Pagos y huchas','Aportaciones, usos y rescates conservan sus fechas y saldos históricos.','huchas'],
+  ['Bancos','No hay sincronización nueva activada en Élite. La conexión vigente permanece en el HTML hasta su integración segura.','bancos'],
+  ['Datos actuales','Los CSV se comparan en memoria. Las colecciones antiguas no sustituyen a los datos actuales del HTML.','variables']
+ ];
+ for(const [title,description,id] of topics){
+  const details=el('details','legacyHelpItem');details.append(el('summary',null,title),el('p',null,description));
+  const btn=el('button','legacyHelpButton','Ir al módulo ›');btn.onclick=()=>navigateElite(id);details.append(btn);$('#content').append(details)
+ }
+ $('#content').append(motherLink('Abrir ayuda y operaciones del HTML original ↗'))
+}
+function renderLegacySection(id){
+ if(id==='efectivo')return renderWallet();
+ if(id==='presupuestos')return renderBudgets();
+ if(id==='simulador')return renderLegacySimulator();
+ if(id==='analisis')return renderLegacyAnalysis();
+ if(id==='pagos')return renderLegacyPayments();
+ if(id==='notificaciones')return renderLegacyNotifications();
+ if(id==='ajustes')return renderLegacySettings();
+ if(id==='ayuda')return renderLegacyHelp();
+ renderMonthSelector();head('Módulo original de Fluxia');$('#content').append(legacyExplanatory('Sin vista equivalente','Este apartado necesita su flujo completo del HTML madre.'));$('#content').append(motherLink());
+}
+
 function renderHome(){
  renderMonthSelector();
  $('#content').append(el('div','sectioneyebrow','TU ESPACIO FINANCIERO'));
