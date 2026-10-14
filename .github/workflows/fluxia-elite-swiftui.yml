@@ -55,8 +55,12 @@ jobs:
           xcrun simctl launch --terminate-running-process "$DEVICE_ID" com.fluxia.elite.native.lab -fluxia.demoMode YES -fluxia.elite.darkMode YES
           sleep 4
           xcrun simctl io "$DEVICE_ID" screenshot screenshots/Fluxia-Elite-SwiftUI-Inicio-Oscuro.png
+          xcrun simctl launch --terminate-running-process "$DEVICE_ID" com.fluxia.elite.native.lab -fluxia.elite.darkMode NO
+          sleep 4
+          xcrun simctl io "$DEVICE_ID" screenshot screenshots/Fluxia-Elite-SwiftUI-Acceso-Sin-Configurar.png
           test -s screenshots/Fluxia-Elite-SwiftUI-Inicio-Claro.png
           test -s screenshots/Fluxia-Elite-SwiftUI-Inicio-Oscuro.png
+          test -s screenshots/Fluxia-Elite-SwiftUI-Acceso-Sin-Configurar.png
           if cmp -s screenshots/Fluxia-Elite-SwiftUI-Inicio-Claro.png screenshots/Fluxia-Elite-SwiftUI-Inicio-Oscuro.png; then
             echo "Light and dark screenshots are identical; theme selection did not take effect"
             exit 1
@@ -64,10 +68,11 @@ jobs:
       - name: Upload real simulator screenshots for both themes
         uses: actions/upload-artifact@v4
         with:
-          name: Fluxia-Elite-SwiftUI-iPhone-Claro-y-Oscuro
+          name: Fluxia-Elite-SwiftUI-iPhone-Acceso-y-Temas
           path: |
             native-ios/screenshots/Fluxia-Elite-SwiftUI-Inicio-Claro.png
             native-ios/screenshots/Fluxia-Elite-SwiftUI-Inicio-Oscuro.png
+            native-ios/screenshots/Fluxia-Elite-SwiftUI-Acceso-Sin-Configurar.png
           if-no-files-found: error
       - name: Package simulator-only build
         working-directory: native-ios
