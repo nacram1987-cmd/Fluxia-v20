@@ -1,1 +1,22 @@
-J3VzZSBzdHJpY3QnOwpjb25zdCBhc3NlcnQ9cmVxdWlyZSgnbm9kZTphc3NlcnQvc3RyaWN0Jyk7CmNvbnN0IGZzPXJlcXVpcmUoJ25vZGU6ZnMnKTsKY29uc3QgcGF0aD1yZXF1aXJlKCdub2RlOnBhdGgnKTsKY29uc3Qgdm09cmVxdWlyZSgnbm9kZTp2bScpOwpjb25zdCByb290PXBhdGguam9pbihfX2Rpcm5hbWUsJy4uJyk7CmNvbnN0IGh0bWw9ZnMucmVhZEZpbGVTeW5jKHBhdGguam9pbihyb290LCdmbHV4aWEtZWxpdGUtc2FmYXJpLWRhdG9zLXJlYWxlcy5odG1sJyksJ3V0ZjgnKTsKY29uc3QgbW9kdWxlU291cmNlPWZzLnJlYWRGaWxlU3luYyhwYXRoLmpvaW4ocm9vdCwnanMvZmx1eGlhLWVsaXRlLXBhc3NrZXktdjEuanMnKSwndXRmOCcpOwphc3NlcnQubWF0Y2goaHRtbCwvRUxJVEVfU0FGQVJJX1ZFUlNJT049JzFcLjlcLig/OjgzfDg0fDg1fDg2fDg3fDg4fDg5KScvKTsKYXNzZXJ0Lm1hdGNoKGh0bWwsL2pzXC9mbHV4aWEtZWxpdGUtcGFzc2tleS12MVwuanMvKTsKYXNzZXJ0Lm1hdGNoKGh0bWwsL0ZhY2UgSUQgXC8gcGFzc2tleSBlbiBlc3RlIGRpc3Bvc2l0aXZvLyk7CmFzc2VydC5tYXRjaChodG1sLC9wYXNza2V5XC5yZWdpc3Rlclwob3duZXJcKS8pOwphc3NlcnQubWF0Y2goaHRtbCwvcGFzc2tleVwuYXV0aGVudGljYXRlXChvd25lclwpLyk7CmFzc2VydC5tYXRjaChodG1sLC9MYSBsbGF2ZSBwcml2YWRhIHBlcm1hbmVjZSBlbiBlc3RlIGRpc3Bvc2l0aXZvLyk7CmFzc2VydC5kb2VzTm90TWF0Y2gobW9kdWxlU291cmNlLC9zZXJ2aWNlX3JvbGV8U1VQQUJBU0VfU0VSVklDRV9ST0xFL2kpOwphc3NlcnQubWF0Y2gobW9kdWxlU291cmNlLC9uYXZpZ2F0b3JcLmNyZWRlbnRpYWxzXC5jcmVhdGUvKTsKYXNzZXJ0Lm1hdGNoKG1vZHVsZVNvdXJjZSwvbmF2aWdhdG9yXC5jcmVkZW50aWFsc1wuZ2V0Lyk7CmFzc2VydC5tYXRjaChtb2R1bGVTb3VyY2UsL2F1dGhlbnRpY2F0b3JBdHRhY2htZW50OidwbGF0Zm9ybScvKTsKYXNzZXJ0LmRvZXNOb3RUaHJvdygoKT0+bmV3IHZtLlNjcmlwdChtb2R1bGVTb3VyY2UpKTsKY29uc3Qgc2NyaXB0cz1bLi4uaHRtbC5tYXRjaEFsbCgvPHNjcmlwdCg/OlxzW14+XSopPz4oW1xzXFNdKj8pPFwvc2NyaXB0Pi9naSldLm1hcChtPT5tWzFdKS5maWx0ZXIoQm9vbGVhbik7CmZvcihjb25zdCBzY3JpcHQgb2Ygc2NyaXB0cylhc3NlcnQuZG9lc05vdFRocm93KCgpPT5uZXcgdm0uU2NyaXB0KHNjcmlwdCksJ0lubGluZSBKYXZhU2NyaXB0IG11c3QgcGFyc2UnKTsKY29uc29sZS5sb2coJ1BBU1MgdjEuOS44MyBsb2NhbCBGYWNlIElEL3Bhc3NrZXkgZGV2aWNlLWdhdGUgY29udHJhY3QnKTsK
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const vm=require('node:vm');
+const root=path.join(__dirname,'..');
+const html=fs.readFileSync(path.join(root,'fluxia-elite-safari-datos-reales.html'),'utf8');
+const moduleSource=fs.readFileSync(path.join(root,'js/fluxia-elite-passkey-v1.js'),'utf8');
+assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.(?:83|84|85|86|87|88|89)'/);
+assert.match(html,/js\/fluxia-elite-passkey-v1\.js/);
+assert.match(html,/Face ID \/ passkey en este dispositivo/);
+assert.match(html,/passkey\.register\(owner\)/);
+assert.match(html,/passkey\.authenticate\(owner\)/);
+assert.match(html,/La llave privada permanece en este dispositivo/);
+assert.doesNotMatch(moduleSource,/service_role|SUPABASE_SERVICE_ROLE/i);
+assert.match(moduleSource,/navigator\.credentials\.create/);
+assert.match(moduleSource,/navigator\.credentials\.get/);
+assert.match(moduleSource,/authenticatorAttachment:'platform'/);
+assert.doesNotThrow(()=>new vm.Script(moduleSource));
+const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(m=>m[1]).filter(Boolean);
+for(const script of scripts)assert.doesNotThrow(()=>new vm.Script(script),'Inline JavaScript must parse');
+console.log('PASS v1.9.83 local Face ID/passkey device-gate contract');
