@@ -1,17 +1,19 @@
 # Pruebas de integridad ejecutadas — app nativa
 
-Commit: `0599d7f807df52bae9c993183c7565bc8c1be306`  
-Resultado: [GitHub Actions run 38471782736](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38471782736) (**success**)
+Commit: `3656a75f3ae34022b084c0aef72bdc37ebf62e0c`  
+Resultado: [GitHub Actions run 38515243267](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38515243267) (**success**)
 
 ## Casos ejecutados en macOS
 
 - `FinanceRules`: 6 checks base y 432 combinaciones deterministas de ingreso, fijos, variables, provisión prevista y aportación real.
 - Demo: 4 checks; confirma datos sintéticos y deshabilita mutaciones y conexión bancaria.
-- Conciliación fijo/cargo: 5 checks; coincidencia exacta de concepto e importe, importe distinto, pagado, ambiguo y cero.
-- Importación bancaria: identidad por proveedor/cuenta/ID, conflicto si el importe del mismo ID cambia, aislamiento de proveedor/cuenta, ID vacío/solo espacios y 400 IDs sintéticos pasados diez veces: 400 únicos y 3.600 decisiones de duplicado.
-- Aislamiento cliente: 6 checks de dueño, usuario distinto, sesión anónima/vacía y filtrado.
+- Conciliación fijo/cargo: 7 checks; incluye ID de cargo y de fijo vacíos o en blanco.
+- Importación bancaria: 10 decisiones deterministas sobre identidad por proveedor/cuenta/ID, conflicto por importe modificado y entradas inválidas. Se verifica que espacios alrededor de proveedor, cuenta o ID no permiten volver a importar el mismo cargo. Además, 400 IDs sintéticos se pasan diez veces: 400 únicos y 3.600 decisiones de duplicado.
+- Aislamiento cliente: 8 checks; propietario, usuario distinto, sesión anónima/vacía, registros con identidad en blanco y filtrado.
 
-Después se generó el proyecto Xcode, se compiló con `xcodebuild` para iOS Simulator, se instaló y lanzó en el simulador y se guardaron PNG del tema claro y oscuro. El job también empaquetó el `.app` del simulador.
+- `LedgerLifecycle`: 10 checks sintéticos sobre transiciones, control de propietario, evento antes/después, replay idempotente, papelera, restauración y tombstone terminal. Esta máquina es un valor en memoria: no constituye persistencia ni autenticación.
+
+Después se generó el proyecto Xcode, se compiló con `xcodebuild` para iOS Simulator, se instaló y lanzó en el simulador y se guardaron PNG del tema claro y oscuro. El job empaquetó el `.app` del simulador. Artefactos del run 38515243267: [capturas claro/oscuro](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38515243267/artifacts/11871243043) y [app de simulador](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38515243267/artifacts/11872021454).
 
 ## No cubierto
 
