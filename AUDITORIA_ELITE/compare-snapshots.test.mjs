@@ -10,3 +10,8 @@ test('ledger cent mismatch fails',()=>{const r=compareSnapshots(snap([]),snap([]
 test('different profile is blocked',()=>assert.throws(()=>compareSnapshots(snap([]),{...snap([]),profile_id:'other'}),/SCOPE_MISMATCH/));
 test('missing ledger blocks certification',()=>assert.equal(compareSnapshots(snap([]),{...snap([]),ledger:{}}).certified,false));
 test('duplicate canonical IDs blocked',()=>assert.throws(()=>compareSnapshots(snap([row('a'),row('a')]),snap([])),/duplicate canonical_id/));
+
+test('row from another user blocked',()=>assert.throws(()=>compareSnapshots(snap([{...row('a'),user_id:'intruder'}]),snap([row('a')])),/ROW_SCOPE_MISMATCH/));
+test('row from another month blocked',()=>assert.throws(()=>compareSnapshots(snap([{...row('a'),accounting_month:'2026-09'}]),snap([row('a')])),/ROW_SCOPE_MISMATCH/));
+test('missing field differs from null',()=>{const r=compareSnapshots(snap([row('a')]),snap([{...row('a'),fixed_link:null}]));assert.deepEqual(r.same_id_value_mismatch[0].fields,['fixed_link'])});
+test('unsafe cents rejected',()=>assert.throws(()=>compareSnapshots(snap([row('a',Number.MAX_SAFE_INTEGER+1)]),snap([])),/invalid row/));
