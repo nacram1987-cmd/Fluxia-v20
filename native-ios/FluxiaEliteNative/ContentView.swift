@@ -6,14 +6,23 @@ struct ContentView: View {
     @State private var selection: EliteTab = .home
     @State private var month = Date()
     @State private var showPrivacy = false
+    @State private var showingAddEntry = false
     @ScaledMetric(relativeTo: .title2) private var brandFontSize: CGFloat = 26
     @ScaledMetric(relativeTo: .largeTitle) private var availableFontSize: CGFloat = 38
     @State private var selectedModule: EliteFinanceModule = .fixed
-    private let snapshot = DemoFinanceSnapshot.preview
-    private var sampleMonth: FinanceRules.Month { snapshot.month }
+    @StateObject private var ledger = DemoLedgerModel()
+    private var sampleMonth: FinanceRules.Month { ledger.month(month) }
 
     private func formattedEuros(_ cents: Int64) -> String {
         (Decimal(cents) / Decimal(100)).formatted(.currency(code: "EUR").locale(Locale(identifier: "es_ES")))
+    }
+
+    private func monthTitle(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "es_ES")
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.dateFormat = "LLLL yyyy"
+        return formatter.string(from: date).capitalized
     }
 
     var body: some View {
@@ -42,6 +51,9 @@ struct ContentView: View {
         .tint(ElitePalette.gold)
         .foregroundStyle(ElitePalette.ink)
         .preferredColorScheme(darkMode ? .dark : .light)
+        .sheet(isPresented: $showingAddEntry) {
+            NewDemoEntrySheet(model: ledger, initialMonth: month)
+        }
     }
 
     private var header: some View {
@@ -55,7 +67,7 @@ struct ContentView: View {
                 Image(systemName: "bell")
                     .accessibilityLabel("Notificaciones: demostración")
             }
-            Text("iOS NATIVO · LAB · DATOS FICTICIOS")
+            Text("DEMO INTERACTIVA · DATOS FICTICIOS")
                 .font(.caption2).fontWeight(.semibold)
                 .foregroundStyle(ElitePalette.gold)
         }
@@ -69,9 +81,9 @@ struct ContentView: View {
                 }
                 .accessibilityLabel("Mes anterior")
                 Spacer()
-                Text(month.formatted(.dateTime.month(.wide).year().locale(Locale(identifier: "es_ES"))))
+                Text(monthTitle(month))
                     .font(.headline)
-                    .accessibilityLabel("Mes seleccionado: \(month.formatted(.dateTime.month(.wide).year().locale(Locale(identifier: "es_ES"))))")
+                    .accessibilityLabel("Mes seleccionado: \(monthTitle(month))")
                 Spacer()
                 Button { month = Calendar.current.date(byAdding: .month, value: 1, to: month) ?? month } label: {
                     Image(systemName: "chevron.right")
@@ -82,13 +94,13 @@ struct ContentView: View {
             .accessibilityElement(children: .contain)
 
             VStack(spacing: 10) {
-                Text("DISPONIBLE · DEMOSTRACIÓN")
+                Text("DISPONIBLE · DEMO")
                     .font(.caption).tracking(1.2)
                 Text(FinanceRules.availableCents(sampleMonth).map(formattedEuros) ?? "Error de cálculo")
                     .font(.system(size: availableFontSize, weight: .semibold, design: .rounded))
                     .accessibilityLabel("Disponible ficticio: \(FinanceRules.availableCents(sampleMonth).map(formattedEuros) ?? "Error de cálculo")")
                     .monospacedDigit()
-                Text("Saldo ficticio · Sin conexión bancaria")
+                Text("Saldo de prueba · Sin conexión bancaria")
                     .font(.caption).foregroundStyle(ElitePalette.ink.opacity(0.7))
             }
             .frame(maxWidth: .infinity).padding(.vertical, 32)
@@ -102,7 +114,35 @@ struct ContentView: View {
                 tile("Huchas", formattedEuros(sampleMonth.plannedProvisionCents), "archivebox", .savings)
                 tile("Gastos variables", formattedEuros(sampleMonth.variableExpenseCents), "creditcard", .variable)
             }
-            Text("Vista de ejemplo: cambiar de mes no modifica los importes ficticios.")
+            Button { showingAddEntry = true } label: {
+                Label("Añadir movimiento de prueba", systemImage: "plus.circle.fill")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(ElitePalette.blue)
+
+            if let storageMessage = ledger.storageMessage {
+                Label(storageMessage, systemImage: "exclamationmark.triangle.fill")
+                    .font(.footnote).foregroundStyle(.orange)
+            }
+
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Movimientos del periodo").font(.headline)
+                ForEach(ledger.entries(in: month), id: \.id) { entry in
+                    HStack {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(entry.title).font(.subheadline)
+                            Text(entry.kind.label).font(.caption).foregroundStyle(ElitePalette.ink.opacity(0.65))
+                        }
+                        Spacer()
+                        Text(formattedEuros(entry.amountCents)).font(.subheadline.weight(.semibold)).monospacedDigit()
+                    }
+                    .padding(12)
+                    .background(ElitePalette.card, in: RoundedRectangle(cornerRadius: 14))
+                }
+            }
+            Text("Demo cifrada en este dispositivo. No modifica tus datos reales ni la nube.")
                 .font(.footnote).foregroundStyle(ElitePalette.ink.opacity(0.65))
         }
     }
@@ -110,7 +150,7 @@ struct ContentView: View {
     private var financeModules: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Mis finanzas").font(.title2).bold()
-            Text("Explora las secciones de la futura aplicación. Todas las cifras son ficticias.")
+            Text("Prueba el registro de ingresos, gastos y provisiones con importes ficticios.")
                 .font(.footnote).foregroundStyle(ElitePalette.ink.opacity(0.7))
             ForEach(EliteFinanceModule.allCases) { module in
                 Button {
@@ -136,7 +176,7 @@ struct ContentView: View {
                 Text(selectedModule.explanation)
                     .font(.subheadline)
                     .foregroundStyle(ElitePalette.ink.opacity(0.8))
-                Label("Solo lectura · Demostración", systemImage: "lock.shield")
+                Label("Los movimientos se editan desde Inicio · Demo", systemImage: "lock.shield")
                     .font(.caption)
                     .foregroundStyle(ElitePalette.gold)
             }
@@ -194,7 +234,7 @@ struct ContentView: View {
             Toggle(isOn: $darkMode) {
                 Label("Modo oscuro", systemImage: darkMode ? "moon.stars.fill" : "sun.max.fill")
             }
-            .tint(ElitePalette.gold)
+        .tint(ElitePalette.blue)
             Text("El modo claro es el diseño principal de Fluxia Élite.")
                 .font(.caption).foregroundStyle(ElitePalette.ink.opacity(0.7))
             Label("Modo demostración", systemImage: "checkmark.shield.fill")
@@ -208,7 +248,7 @@ struct ContentView: View {
                     .font(.headline)
             }
             .buttonStyle(.bordered)
-            .tint(ElitePalette.gold)
+            .tint(ElitePalette.blue)
             if showPrivacy {
                 VStack(alignment: .leading, spacing: 9) {
                     Label("Sin credenciales almacenadas", systemImage: "checkmark.circle")
@@ -260,6 +300,81 @@ struct ContentView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(22)
         .background(ElitePalette.card, in: RoundedRectangle(cornerRadius: 20))
+    }
+}
+
+private struct NewDemoEntrySheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @ObservedObject var model: DemoLedgerModel
+    @State private var title = ""
+    @State private var amount = ""
+    @State private var kind: EncryptedLedgerStore.Entry.Kind = .variableExpense
+    @State private var year: Int
+    @State private var month: Int
+
+    init(model: DemoLedgerModel, initialMonth: Date) {
+        self.model = model
+        let components = Calendar.current.dateComponents([.year, .month], from: initialMonth)
+        _year = State(initialValue: components.year ?? Calendar.current.component(.year, from: Date()))
+        _month = State(initialValue: components.month ?? Calendar.current.component(.month, from: Date()))
+    }
+
+    private var selectedPeriod: Date {
+        Calendar.current.date(from: DateComponents(year: year, month: month, day: 1)) ?? Date()
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("Movimiento sintético") {
+                    TextField("Concepto", text: $title)
+                        .textInputAutocapitalization(.sentences)
+                    TextField("Importe en euros", text: $amount)
+                        .keyboardType(.decimalPad)
+                    Picker("Tipo", selection: $kind) {
+                        ForEach(EncryptedLedgerStore.Entry.Kind.allCases) { item in
+                            Text(item.label).tag(item)
+                        }
+                    }
+                }
+                Section("Periodo contable") {
+                    Picker("Mes", selection: $month) {
+                        ForEach(1...12, id: \.self) { number in
+                            Text(monthName(number)).tag(number)
+                        }
+                    }
+                    Picker("Año", selection: $year) {
+                        ForEach((Calendar.current.component(.year, from: Date()) - 5)...(Calendar.current.component(.year, from: Date()) + 1), id: \.self) { value in
+                            Text(String(value)).tag(value)
+                        }
+                    }
+                    Text("El importe se contabiliza en el mes seleccionado.")
+                        .font(.footnote).foregroundStyle(.secondary)
+                }
+                if let message = model.storageMessage {
+                    Section { Text(message).foregroundStyle(.red) }
+                }
+            }
+            .navigationTitle("Añadir movimiento")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) { Button("Cancelar") { dismiss() } }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Guardar") {
+                        guard let cents = EuroAmountParser.cents(from: amount),
+                              model.add(title: title, amountCents: cents, kind: kind, date: selectedPeriod) else { return }
+                        dismiss()
+                    }
+                    .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || EuroAmountParser.cents(from: amount) == nil)
+                }
+            }
+        }
+    }
+
+    private func monthName(_ number: Int) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "es_ES")
+        return (formatter.monthSymbols?[number - 1] ?? String(number)).capitalized
     }
 }
 

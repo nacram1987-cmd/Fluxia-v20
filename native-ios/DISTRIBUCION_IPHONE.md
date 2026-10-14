@@ -3,6 +3,7 @@
 ## Estado
 - App independiente SwiftUI en `native-ios/`, rama `feature/fluxia-elite-ios-capacitor`.
 - GitHub Actions de simulador: compila sin firma y ejecuta pruebas.
+- GitHub Actions prepara además un `.ipa` de dispositivo **sin firmar**, para que pueda firmarse con una cuenta Apple desde Xcode/Sideloadly.
 - GitHub Actions de dispositivo: flujo **manual** `fluxia-elite-device-archive.yml`; genera un `.xcarchive` **sin firmar**, no instalable.
 - No se ha configurado firma, Apple Developer Team ID, App Store Connect ni TestFlight.
 - Nunca subir certificados, claves privadas, perfiles o claves de API al repositorio.
@@ -28,4 +29,8 @@ La PWA estable queda fuera de este procedimiento.
 ## Configuración de autenticación nativa
 El proyecto acepta `FLUXIA_SUPABASE_URL` y `FLUXIA_SUPABASE_PUBLISHABLE_KEY` como build settings, que Xcode copia a claves de configuración en el Info.plist generado. Se pueden pasar localmente a `xcodebuild` o definir en un `.xcconfig` local fuera de Git. No añadir valores de cuentas privilegiadas, `service_role`, tokens ni credenciales al repositorio. El cliente rechaza HTTP y claves que no usen el prefijo publicable moderno `sb_publishable_`.
 
-CI compila sin estos valores y muestra una pantalla de configuración pendiente; no necesita una clave. No hay consultas a tablas financieras. Las tablas de ledger y bancos carecen de políticas RLS verificadas para el cliente iOS, por lo que el inicio de sesión por sí solo no habilita ni autoriza datos financieros.
+El workflow usa la URL y la clave **publishable** pública ya usada por la PWA. Nunca incluye una clave `service_role` ni contraseñas. Tras autenticar, la app lee exclusivamente las claves financieras conocidas de `public.fluxia_datos`, filtradas por el UUID de la sesión; sus políticas SELECT/INSERT/UPDATE/DELETE verificadas restringen filas a `auth.uid() = user_id`. Si hay varios perfiles, exige escoger uno. El adaptador es de solo lectura y no altera ni migra valores.
+
+La vista real muestra los registros recibidos, pero aún no calcula Disponible ni permite editarlos desde la cuenta: los importes y estados de todos los perfiles no se han contrastado end-to-end. La demo interactiva usa únicamente registros sintéticos y un almacén cifrado local separado. Las tablas `movimientos` y bancarias sin política RLS no se consultan.
+
+La compilación, las consultas desde una cuenta propia, la vista de datos reales y el `.ipa` nuevo siguen pendientes de verificación de Actions. No se consultaron filas financieras desde esta revisión ni se hicieron escrituras en Supabase. La app necesita que el usuario escriba su propia contraseña tras descargar una build; no se incluye ninguna cuenta ni contraseña de prueba.

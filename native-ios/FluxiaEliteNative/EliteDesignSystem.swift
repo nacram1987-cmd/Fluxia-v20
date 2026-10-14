@@ -11,12 +11,16 @@ enum ElitePalette {
     }
 
     static let navy = adaptive(
-        light: UIColor(red: 0.97, green: 0.965, blue: 0.945, alpha: 1),
+        light: UIColor(red: 0.955, green: 0.972, blue: 0.99, alpha: 1),
         dark: UIColor(red: 0.055, green: 0.11, blue: 0.18, alpha: 1)
     )
     static let ink = adaptive(
-        light: UIColor(red: 0.09, green: 0.16, blue: 0.24, alpha: 1),
+        light: UIColor(red: 0.055, green: 0.14, blue: 0.25, alpha: 1),
         dark: UIColor(red: 0.96, green: 0.96, blue: 0.94, alpha: 1)
+    )
+    static let blue = adaptive(
+        light: UIColor(red: 0.12, green: 0.31, blue: 0.52, alpha: 1),
+        dark: UIColor(red: 0.43, green: 0.66, blue: 0.88, alpha: 1)
     )
     static let gold = adaptive(
         light: UIColor(red: 0.57, green: 0.40, blue: 0.19, alpha: 1),
@@ -27,11 +31,11 @@ enum ElitePalette {
         dark: UIColor(red: 0.70, green: 0.55, blue: 0.33, alpha: 1)
     )
     static let card = adaptive(
-        light: UIColor(red: 1, green: 0.998, blue: 0.985, alpha: 1),
+        light: UIColor(red: 1, green: 1, blue: 1, alpha: 1),
         dark: UIColor(red: 0.10, green: 0.17, blue: 0.25, alpha: 1)
     )
     static let availableEnd = adaptive(
-        light: UIColor(red: 0.965, green: 0.935, blue: 0.87, alpha: 1),
+        light: UIColor(red: 0.88, green: 0.93, blue: 0.98, alpha: 1),
         dark: UIColor(red: 0.16, green: 0.23, blue: 0.31, alpha: 1)
     )
 }

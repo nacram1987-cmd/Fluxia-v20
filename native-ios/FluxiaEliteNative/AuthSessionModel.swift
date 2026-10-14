@@ -28,6 +28,22 @@ final class AuthSessionModel: ObservableObject {
 
     var isConfigured: Bool { client != nil }
 
+    func financeProfiles() async throws -> [FluxiaCloudFinanceRepository.Profile] {
+        guard let client, case .authenticated(let ownerID) = state,
+              AuthAccessState.mayReadPersonalData(state: state, requestedOwnerID: ownerID) else {
+            throw FinanceReadError.unauthenticated
+        }
+        return try await FluxiaCloudFinanceRepository(client: client).profiles(ownerID: ownerID)
+    }
+
+    func financePreview(profileID: String) async throws -> [FluxiaCloudFinanceRepository.Section] {
+        guard let client, case .authenticated(let ownerID) = state,
+              AuthAccessState.mayReadPersonalData(state: state, requestedOwnerID: ownerID) else {
+            throw FinanceReadError.unauthenticated
+        }
+        return try await FluxiaCloudFinanceRepository(client: client).load(ownerID: ownerID, profileID: profileID)
+    }
+
     func start() {
         guard let client, authEventsTask == nil else { return }
         authEventsTask = Task {
@@ -80,4 +96,6 @@ final class AuthSessionModel: ObservableObject {
             message = "No se pudo cerrar la sesión. Inténtalo de nuevo."
         }
     }
+
+    enum FinanceReadError: Error { case unauthenticated }
 }

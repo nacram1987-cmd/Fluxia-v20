@@ -44,6 +44,12 @@ for income in [Int64(0), 1, 25_000, 250_000] {
 }
 check(accountingCases == 432, "all deterministic Disponible combinations executed")
 print("FinanceRules: 432 additional deterministic amount combinations passed")
+check(EuroAmountParser.cents(from: "12,34") == 1_234, "Spanish decimal comma converts exactly to cents")
+check(EuroAmountParser.cents(from: "0.01") == 1, "one cent parses without floating point")
+check(EuroAmountParser.cents(from: "12,345") == nil, "more than two decimal places are rejected")
+check(EuroAmountParser.cents(from: "-1,00") == nil, "negative money input is rejected")
+check(EuroAmountParser.cents(from: "92233720368547759") == nil, "Int64 cents overflow is rejected")
+print("Euro amount parsing: 5 exact-cents input checks passed")
 
 let demo = DemoFinanceSnapshot.preview
 check(demo.isSynthetic, "preview must always be labelled synthetic")
@@ -211,13 +217,13 @@ let ledgerDirectory = FileManager.default.temporaryDirectory
     .appendingPathComponent("fluxia-ledger-tests-\(UUID().uuidString)", isDirectory: true)
 let testKey = SymmetricKey(data: Data(repeating: 0x5a, count: 32))
 let encryptedStore = EncryptedLedgerStore(directoryURL: ledgerDirectory, keyProvider: { _ in testKey })
-let localEntry = EncryptedLedgerStore.Entry(id: "entry-1", ownerID: "synthetic-user", year: 2026, month: 10,
+let localEntry = EncryptedLedgerStore.Entry(id: "entry-1", ownerID: "synthetic-user", title: "Compra sintética", year: 2026, month: 10,
                                             kind: .variableExpense, amountCents: 1250, operationID: "append-1")
 check(try! encryptedStore.append(localEntry, authenticatedOwnerID: "synthetic-user") == .inserted(revision: 1),
       "encrypted local append persists a synthetic entry")
 check(try! encryptedStore.append(localEntry, authenticatedOwnerID: "synthetic-user") == .duplicateOperation,
       "replaying an append operation does not duplicate it")
-let conflictingReplay = EncryptedLedgerStore.Entry(id: "entry-other", ownerID: "synthetic-user", year: 2026, month: 10,
+let conflictingReplay = EncryptedLedgerStore.Entry(id: "entry-other", ownerID: "synthetic-user", title: "Otro gasto", year: 2026, month: 10,
                                                   kind: .variableExpense, amountCents: 900, operationID: "append-1")
 check(try! encryptedStore.append(conflictingReplay, authenticatedOwnerID: "synthetic-user") == .conflictingOperation,
       "reusing an idempotency key for a different payload is surfaced as conflict")
@@ -233,7 +239,7 @@ check(String(data: encryptedBytes, encoding: .utf8) == nil,
 check(try! reopenedStore.permanentlyDelete(recordID: "entry-1", ownerID: "synthetic-user", operationID: "delete-1",
                                            authenticatedOwnerID: "synthetic-user") == .inserted(revision: 2),
       "explicit delete writes an audited tombstone")
-let attemptedResurrection = EncryptedLedgerStore.Entry(id: "entry-1", ownerID: "synthetic-user", year: 2026, month: 10,
+let attemptedResurrection = EncryptedLedgerStore.Entry(id: "entry-1", ownerID: "synthetic-user", title: "Compra sintética", year: 2026, month: 10,
                                                        kind: .variableExpense, amountCents: 1250, operationID: "append-2")
 check(try! reopenedStore.append(attemptedResurrection, authenticatedOwnerID: "synthetic-user") == .rejected,
       "a tombstoned record cannot be resurrected by a later append")

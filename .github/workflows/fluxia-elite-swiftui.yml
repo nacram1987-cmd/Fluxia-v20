@@ -19,6 +19,11 @@ jobs:
   simulator:
     runs-on: macos-15
     timeout-minutes: 35
+    # Supabase publishable key: public client identifier. Server access remains
+    # constrained by Auth and the verified fluxia_datos owner-only RLS policies.
+    env:
+      FLUXIA_SUPABASE_URL: https://kylduzmrfbubeamfrbbr.supabase.co
+      FLUXIA_SUPABASE_PUBLISHABLE_KEY: sb_publishable_5hX9-6-J7MlJfvmeWZcz5w_U-KlTCaj
     steps:
       - uses: actions/checkout@v4
       - name: Install XcodeGen
@@ -26,7 +31,7 @@ jobs:
       - name: Validate native financial accounting
         working-directory: native-ios
         run: |
-          swiftc FluxiaEliteNative/MonthlyLedgerProjection.swift FluxiaEliteNative/LedgerLifecycle.swift FluxiaEliteNative/FinanceRules.swift FluxiaEliteNative/DemoFinanceSnapshot.swift FluxiaEliteNative/ExpenseReconciliation.swift FluxiaEliteNative/BankImportSafety.swift FluxiaEliteNative/AccountIsolation.swift FluxiaEliteNative/AuthAccessState.swift FluxiaEliteNative/EncryptedLedgerStore.swift tests/main.swift -o /tmp/fluxia-finance-check
+          swiftc FluxiaEliteNative/MonthlyLedgerProjection.swift FluxiaEliteNative/LedgerLifecycle.swift FluxiaEliteNative/FinanceRules.swift FluxiaEliteNative/DemoFinanceSnapshot.swift FluxiaEliteNative/ExpenseReconciliation.swift FluxiaEliteNative/BankImportSafety.swift FluxiaEliteNative/AccountIsolation.swift FluxiaEliteNative/AuthAccessState.swift FluxiaEliteNative/EuroAmountParser.swift FluxiaEliteNative/EncryptedLedgerStore.swift tests/main.swift -o /tmp/fluxia-finance-check
           /tmp/fluxia-finance-check
       - name: Generate native Xcode project
         working-directory: native-ios
@@ -57,13 +62,13 @@ jobs:
           xcrun simctl io "$DEVICE_ID" screenshot screenshots/Fluxia-Elite-SwiftUI-Inicio-Oscuro.png
           xcrun simctl launch --terminate-running-process "$DEVICE_ID" com.fluxia.elite.native.lab -fluxia.elite.darkMode NO
           sleep 4
-          xcrun simctl io "$DEVICE_ID" screenshot screenshots/Fluxia-Elite-SwiftUI-Acceso-Sin-Configurar.png
+          xcrun simctl io "$DEVICE_ID" screenshot screenshots/Fluxia-Elite-SwiftUI-Acceso-Login.png
           test -s screenshots/Fluxia-Elite-SwiftUI-Inicio-Claro.png
           test -s screenshots/Fluxia-Elite-SwiftUI-Inicio-Oscuro.png
-          test -s screenshots/Fluxia-Elite-SwiftUI-Acceso-Sin-Configurar.png
+          test -s screenshots/Fluxia-Elite-SwiftUI-Acceso-Login.png
           test "$(stat -f%z screenshots/Fluxia-Elite-SwiftUI-Inicio-Claro.png)" -gt 250000
           test "$(stat -f%z screenshots/Fluxia-Elite-SwiftUI-Inicio-Oscuro.png)" -gt 250000
-          test "$(stat -f%z screenshots/Fluxia-Elite-SwiftUI-Acceso-Sin-Configurar.png)" -gt 100000
+          test "$(stat -f%z screenshots/Fluxia-Elite-SwiftUI-Acceso-Login.png)" -gt 100000
           if cmp -s screenshots/Fluxia-Elite-SwiftUI-Inicio-Claro.png screenshots/Fluxia-Elite-SwiftUI-Inicio-Oscuro.png; then
             echo "Light and dark screenshots are identical; theme selection did not take effect"
             exit 1
@@ -75,7 +80,7 @@ jobs:
           path: |
             native-ios/screenshots/Fluxia-Elite-SwiftUI-Inicio-Claro.png
             native-ios/screenshots/Fluxia-Elite-SwiftUI-Inicio-Oscuro.png
-            native-ios/screenshots/Fluxia-Elite-SwiftUI-Acceso-Sin-Configurar.png
+            native-ios/screenshots/Fluxia-Elite-SwiftUI-Acceso-Login.png
           if-no-files-found: error
       - name: Package simulator-only build
         working-directory: native-ios
@@ -87,6 +92,27 @@ jobs:
         with:
           name: Fluxia-Elite-Nativa-SwiftUI-Simulador
           path: native-ios/Fluxia-Elite-Nativa-SwiftUI-Simulador.zip
+          if-no-files-found: error
+      - name: Compile unsigned iPhone device build
+        working-directory: native-ios
+        run: |
+          set -o pipefail
+          xcodebuild -project FluxiaEliteNative.xcodeproj -scheme FluxiaEliteNative -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath build/DeviceDerivedData CODE_SIGNING_ALLOWED=NO build | tee device-build.log
+      - name: Package unsigned iPhone IPA
+        working-directory: native-ios
+        run: |
+          set -euo pipefail
+          APP_PATH="build/DeviceDerivedData/Build/Products/Release-iphoneos/FluxiaEliteNative.app"
+          test -d "$APP_PATH"
+          mkdir -p build/UnsignedIPA/Payload
+          ditto "$APP_PATH" build/UnsignedIPA/Payload/FluxiaEliteNative.app
+          (cd build/UnsignedIPA && /usr/bin/zip -qry "$GITHUB_WORKSPACE/native-ios/Fluxia-Elite-Nativa-iPhone-SIN-FIRMAR.ipa" Payload)
+          test -s Fluxia-Elite-Nativa-iPhone-SIN-FIRMAR.ipa
+      - name: Upload unsigned iPhone IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: Fluxia-Elite-Nativa-iPhone-SIN-FIRMAR
+          path: native-ios/Fluxia-Elite-Nativa-iPhone-SIN-FIRMAR.ipa
           if-no-files-found: error
       - name: Upload diagnostic log
         if: failure()

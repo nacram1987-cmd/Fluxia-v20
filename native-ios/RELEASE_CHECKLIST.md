@@ -1,6 +1,6 @@
 # Fluxia Élite nativa — puerta de entrada a TestFlight
 
-Estado: **NO DISTRIBUIBLE TODAVÍA**. Solo datos ficticios.
+Estado: **NO DISTRIBUIBLE TODAVÍA**. La lectura real autenticada está implementada y pendiente de validar; la demo editable contiene únicamente datos ficticios.
 
 ## Preparación técnica
 - [x] Proyecto SwiftUI independiente en `native-ios/`.
@@ -10,7 +10,10 @@ Estado: **NO DISTRIBUIBLE TODAVÍA**. Solo datos ficticios.
 - [x] Detección conservadora de posible coincidencia fijo/cargo bancario.
 - [x] Capturas reales del simulador: tema claro, tema oscuro y acceso sin configurar; inspeccionadas en el commit `efab495873719695d00ef0e1b687732ed1bb1f71`.
 - [x] Gate de autenticación y configuración sin clave: pruebas puras y pantalla de acceso verificados; el ledger sigue deshabilitado.
-- [ ] Almacén local AES-GCM/Keychain implementado como capa aislada; pruebas de persistencia, propietario, repetición y tombstone pendientes de CI. Aún no conectado a login ni interfaz.
+- [ ] Almacén local AES-GCM/Keychain usado solo por la demo sintética; pruebas de persistencia, propietario, repetición, conflicto y tombstone pendientes de CI.
+- [ ] Lectura autenticada de perfiles y claves `fluxia_datos` (solo `SELECT`, RLS por propietario) implementada; prueba con una cuenta real y selección de perfil pendiente. No calcula Disponible ni escribe en nube.
+- [ ] Demo editable de ingresos, gastos y provisiones con importes convertidos directamente a céntimos; flujo UI y persistencia cifrada pendientes de CI/simulador.
+- [ ] IPA nativo sin firma empaquetado por Actions; requiere firma posterior antes de instalar en iPhone.
 - [ ] Login nativo probado con una cuenta de prueba y configuración legítima del proyecto.
 - [ ] Restauración/cierre de sesión comprobados end-to-end en dispositivo con cuenta de prueba.
 - [ ] Persistencia en nube auditada y migraciones reversibles.

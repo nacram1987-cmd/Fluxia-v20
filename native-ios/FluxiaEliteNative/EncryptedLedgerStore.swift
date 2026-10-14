@@ -6,9 +6,23 @@ import Security
 /// it does not imply cloud sync or server-side isolation.
 final class EncryptedLedgerStore {
     struct Entry: Codable, Equatable {
-        enum Kind: String, Codable { case income, fixedExpense, variableExpense, plannedProvision, provisionContribution }
+        enum Kind: String, Codable, CaseIterable, Identifiable, Hashable {
+            case income, fixedExpense, variableExpense, plannedProvision, provisionContribution
+
+            var id: String { rawValue }
+            var label: String {
+                switch self {
+                case .income: "Ingreso"
+                case .fixedExpense: "Gasto fijo"
+                case .variableExpense: "Gasto variable"
+                case .plannedProvision: "Provisión prevista"
+                case .provisionContribution: "Aportación a hucha"
+                }
+            }
+        }
         let id: String
         let ownerID: String
+        let title: String
         let year: Int
         let month: Int
         let kind: Kind
@@ -66,7 +80,7 @@ final class EncryptedLedgerStore {
     func append(_ entry: Entry, authenticatedOwnerID: String?) throws -> AppendResult {
         Self.transactionLock.lock(); defer { Self.transactionLock.unlock() }
         guard Self.valid(entry.ownerID), authenticatedOwnerID == entry.ownerID,
-              Self.valid(entry.id), Self.valid(entry.operationID),
+              Self.valid(entry.id), Self.valid(entry.title), Self.valid(entry.operationID),
               (1...9999).contains(entry.year), (1...12).contains(entry.month), entry.amountCents > 0 else {
             return .rejected
         }
@@ -122,7 +136,9 @@ final class EncryptedLedgerStore {
             let snapshot = try JSONDecoder().decode(Snapshot.self, from: clear)
             guard snapshot.ownerID == ownerID,
                   Set(snapshot.entries.map(\.id)).count == snapshot.entries.count,
-                  snapshot.entries.allSatisfy({ $0.ownerID == ownerID && !snapshot.tombstones.contains($0.id) }) else {
+                  snapshot.entries.allSatisfy({ $0.ownerID == ownerID && Self.valid($0.id) && Self.valid($0.title)
+                      && $0.amountCents > 0 && (1...9999).contains($0.year) && (1...12).contains($0.month)
+                      && !snapshot.tombstones.contains($0.id) }) else {
                 throw StoreError.corruptOrUnauthenticData
             }
             return snapshot
