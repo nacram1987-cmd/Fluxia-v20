@@ -1,6 +1,16 @@
 # Fluxia Élite BETA · Historial Safari (independiente de PWA HTML y SwiftUI)
 Fecha: 2026-10-14
 
+## v1.4.0 · Octubre completo, control mensual y PWA Élite (14/10/2026)
+- **Selector mensual:** eliminado input month circular de iOS; la cabecera muestra mes/año, flechas y un selector desplegable separado. Dónde mirar: Inicio, Fijos, Variables, Huchas, Ingresos, Compartidos.
+- **Cobertura de octubre de 2026 comprobada mediante SQL de solo lectura:** movimientos 11 con fecha exacta, fijos 15 marcados `mes=octubre` sin año, ingresos 5 `mes=octubre` sin año, compartidos 1 con fecha exacta. No atribuir año inventado a fijos/ingresos históricos.
+- **Dashboard y listados:** muestra recuento visible combinado de fechas exactas y registros por nombre de mes; los distingue en bloques de "fecha/periodo confirmado" y "mes sin año" para no computar doble ni atribuir saldo. No equivale aún a paridad total con todos los subsistemas HTML/bancos.
+- **Barra inferior:** cinco accesos: Inicio, Fijos, Variables, Huchas y Más; Más ofrece Ingresos, Compartidos, Financiaciones y checklist. Tarjetas de Inicio siguen dando acceso directo a los seis módulos.
+- **PWA independiente:** manifest exclusivo `lab/fluxia-elite.webmanifest`, inicio en LAB Safari, icono oficial, display standalone. No se ha añadido service worker offline ni se ha alterado `index.html`/service worker estable. Requiere internet y acceso autenticado.
+- **Copia versionada:** https://nacram1987-cmd.github.io/Fluxia-v20/lab/versions/fluxia-elite-safari-v1.4.0.html
+- **QA:** sintaxis JavaScript y estructura de versión/cabecera, selector, menú e histórico revisados. **Pendiente:** comprobar efectividad de GitHub Pages (acceso externo no confirmado), Safari real, instalación PWA desde Safari y regresión de rendimiento.
+- **No finalizado:** conciliación contable HTML ↔ Élite, persistencia de operaciones reales, banco, permisos y auditoría de integridad completa. No anunciar perfección financiera sin esas pruebas.
+
 ## v1.3.0 · Recuperación de navegación mensual de Fluxia HTML (14/10/2026)
 - **Dónde probar:** Inicio, Ingresos, Fijos, Variables, Huchas, Compartidos y Financiaciones; selector de mes con flechas y selector de año/mes. La barra inferior ahora incluye Compartidos.
 - **Listas:** movimientos con fecha completa agrupados estrictamente por `AAAA-MM`; registros `mes: "julio"` sin año se muestran en bloque histórico, distinguidos para no inventar 2026/2027. Búsqueda y filtro por categoría mantienen un máximo inicial de 80 elementos por bloque.
