@@ -44,7 +44,7 @@ jobs:
           Solo consulta datos tras login; CSV leído en el dispositivo. No existe paridad 51/51 certificada.
           EOF
           cd build
-          zip -q -r "Fluxia_Elite_BETA_v$VERSION_COMPLETO.zip" "Fluxia_Elite_BETA_v$VERSION"
+          zip -q -r "Fluxia_Elite_BETA_v${VERSION}_COMPLETO.zip" "Fluxia_Elite_BETA_v$VERSION"
       - uses: actions/upload-artifact@v4
         with:
           name: Fluxia_Elite_BETA_Safari_ZIP_COMPLETO
