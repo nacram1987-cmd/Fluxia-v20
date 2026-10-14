@@ -1,6 +1,27 @@
 # Fluxia Élite BETA · Historial Safari (independiente de PWA HTML y SwiftUI)
 Fecha: 2026-10-14
 
+## v1.9.0 · Recuperación de módulos del HTML madre y cartera física (14/10/2026)
+
+**Checklist y ubicación de mejoras**
+- Inicio: sección compacta «Todo lo que tenías en Fluxia BETA» con Dinero en mano, Presupuestos, Análisis, Simular, Pagos y Bancos.
+- Más: tres grupos —Tus finanzas, Planificación, Control y ayuda— con accesos a Ingresos, Compartidos, Financiaciones, Efectivo, Pagos, Presupuestos, Simulador, Análisis, Bancos, Notificaciones, Ajustes y Ayuda.
+- Dinero en mano: lectura por perfil de v2_efectivo o planRescate_v2_efectivo, saldo histórico con fecha de copia, entradas, salidas, pago desde provisión e historial por mes. Nunca confundir saldo de cartera con Disponible.
+- Dinero en mano: los controles Meter/Gastar/Provisión explican su efecto y derivan al HTML operativo mientras falte la escritura fiable de Élite; nunca crean gastos simulados en la nube.
+- Presupuestos: límites por categoría y categorías originales, con comparación de CSV importado del mismo mes y perfil, sin sumar dos fuentes.
+- Análisis: distribución por categorías exclusivamente del CSV exportado; no se inventa Disponible ni movimientos bancarios.
+- Simular: calcula el impacto hipotético de ingresos, gastos y ahorro; sin saldo inicial ficticio ni persistencia.
+- Pagos: histórico de v2_usos o planRescate_v2_usos; las copias no se suman.
+- Notificaciones, Ajustes y Ayuda: estados de fuentes, protección de perfiles y enlaces a la operativa original.
+- Sesión: al salir se limpian perfil, fuentes adicionales, CSV, comparaciones y datos cargados.
+- Navegación inferior: continúa compacta con Inicio, Fijos, Variables, Huchas y Más.
+
+**QA:** código JavaScript analizado; pruebas sintéticas de cartera 20/20, navegación 15 módulos + menú + logout 17/17, CSV 16/16, libro mayor 10/10: total 63/63. Sin certificación de Safari real, motor contable ni sincronización bancaria.
+**Fuente monetaria verificada:** planRescate_v2_efectivo contiene un saldo histórico 0 y ningún movimiento, pero fue actualizada el 5/10/2026. No es prueba de que hoy el usuario tenga 0 € en mano; Élite lo etiqueta como copia antigua.
+**P0 pendiente:** 51 Variables actuales de octubre, cargo adicional 7,50 €, saldos contables, operaciones de cartera/presupuestos/provisiones y banco.
+**Protección:** no hay escrituras Supabase ni cambios en el index.html estable.
+**Rollback inmutable:** https://nacram1987-cmd.github.io/Fluxia-v20/lab/versions/fluxia-elite-safari-v1.9.0.html
+
 ## v1.8.0 · Conciliación local de CSV original y variables por política HTML (14/10/2026)
 
 **Novedades ejecutables y dónde comprobarlas**
