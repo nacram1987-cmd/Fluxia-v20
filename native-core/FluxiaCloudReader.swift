@@ -63,4 +63,47 @@ public struct FluxiaCloudReader {
             offset += page.count
         }
     }
+    /// Strict audit reader: only six known HTML financial arrays.
+    /// This intentionally excludes bank tokens, credentials, backups and trash.
+    public func fetchCanonicalFinance(ownerID: UUID, accessToken: String,
+                                      session: URLSession = .shared) async throws -> [Record] {
+        let keys = [
+            "planRescate_v2_movimientos",
+            "planRescate_v2_ingresos",
+            "planRescate_v2_fijos",
+            "planRescate_v2_provisiones",
+            "planRescate_v2_financiaciones",
+            "planRescate_v2_compartidos"
+        ]
+        guard projectURL.scheme == "https", !publishableKey.isEmpty else {
+            throw ReaderError.invalidConfiguration
+        }
+        guard !accessToken.isEmpty else { throw ReaderError.unauthenticated }
+        var components = URLComponents(
+            url: projectURL.appendingPathComponent("rest/v1/fluxia_datos"),
+            resolvingAgainstBaseURL: false
+        )!
+        components.queryItems = [
+            URLQueryItem(name: "select", value: "user_id,clave,v,t,updated_at"),
+            URLQueryItem(name: "user_id", value: "eq.\(ownerID.uuidString.lowercased())"),
+            URLQueryItem(name: "clave", value: "in.(\(keys.joined(separator: ",")))"),
+            URLQueryItem(name: "limit", value: "20")
+        ]
+        guard let url = components.url else { throw ReaderError.invalidConfiguration }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue(publishableKey, forHTTPHeaderField: "apikey")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.cachePolicy = .reloadIgnoringLocalCacheData
+        let (data, response) = try await session.data(for: request)
+        guard let http = response as? HTTPURLResponse else { throw ReaderError.invalidPayload }
+        guard (200..<300).contains(http.statusCode) else { throw ReaderError.badResponse(http.statusCode) }
+        let rows = try JSONDecoder().decode([Record].self, from: data)
+        guard rows.allSatisfy({ $0.user_id == ownerID && keys.contains($0.clave) }) else {
+            throw ReaderError.invalidPayload
+        }
+        return rows
+    }
+
 }
