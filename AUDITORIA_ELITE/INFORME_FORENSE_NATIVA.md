@@ -1,11 +1,11 @@
 # Informe forense — Fluxia Élite nativa
 
-Fecha: 14/10/2026 (Europe/Madrid)  
-Repositorio: [nacram1987-cmd/Fluxia-v20](https://github.com/nacram1987-cmd/Fluxia-v20)  
-Rama de trabajo: [feature/fluxia-elite-ios-capacitor](https://github.com/nacram1987-cmd/Fluxia-v20/tree/feature/fluxia-elite-ios-capacitor)  
-Commit de código probado: `41742a2d033e54b88b9b9ccedcf46673df814a0a`  
-Referencia visual aprobada: `96750a275b957ded93d08fa44b5be1f9fa6fc608`  
-Workflow macOS: [run 38515699070](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38515699070) — **success**
+Fecha: 14/10/2026 (Europe/Madrid)
+Repositorio: [nacram1987-cmd/Fluxia-v20](https://github.com/nacram1987-cmd/Fluxia-v20)
+Rama de trabajo: [feature/fluxia-elite-ios-capacitor](https://github.com/nacram1987-cmd/Fluxia-v20/tree/feature/fluxia-elite-ios-capacitor)
+Commit de código probado: `e1ae19100ae734ccc5e2fb46e324d900ffd0f0c4`
+Referencia visual aprobada: `96750a275b957ded93d08fa44b5be1f9fa6fc608`
+Workflow macOS: [run 38518030887](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38518030887) — **success**
 
 ## Dictamen
 
@@ -16,8 +16,8 @@ El proyecto compila como aplicación SwiftUI real para simulador y conserva el m
 | Área | Estado observado | Evidencia / límite |
 |---|---|---|
 | Compilación y CI | Verificado | XcodeGen, `xcodebuild` para iOS Simulator, ejecución y captura `simctl` en el run indicado. |
-| Diseño | Parcial | Paleta cálida/navy/oro, selector persistente claro/oscuro; texto del logo y Disponible con escalado Dynamic Type y etiquetas VoiceOver. Se capturaron ambos temas. No hubo inspección manual de VoiceOver ni de iPhone físico. |
-| Arquitectura | Parcial | Reglas, conciliación, deduplicación, aislamiento defensivo y ciclo de vida del movimiento viven en archivos separados. La UI y navegación siguen concentradas en `ContentView.swift`; el ciclo de vida es solo memoria. |
+| Diseño | Parcial | Paleta cálida/navy/oro, selector persistente claro/oscuro; texto del logo y Disponible con escalado Dynamic Type y etiquetas VoiceOver. Ambos temas se capturaron e inspeccionaron visualmente; mes en español. No hubo inspección de VoiceOver ni de iPhone físico. |
+| Arquitectura | Parcial | Reglas, conciliación, deduplicación, aislamiento defensivo, ciclo de vida y tokens visuales están separados. `ContentView.swift` todavía concentra presentación y navegación; el ciclo de vida es solo memoria. |
 | Motor financiero | Parcial | Disponible en céntimos y fórmula mensual probados. No existe libro de movimientos CRUD con estados, periodos, pagos, archivado y recuperación. |
 | Integridad | Parcial | Identidades bancarias se comparan tras recortar espacios; conciliación exacta rechaza IDs vacíos; lifecycle deja tombstone terminal en el agregado de memoria. Falta persistencia e importación real, así que no certifica integridad end-to-end. |
 | Autenticación y nube | No implementado | No hay sesión, almacén remoto, RLS/ACL conectado, outbox ni recuperación tras reinstalación. `AccountIsolation` solo filtra datos ficticios en cliente. |
@@ -33,8 +33,9 @@ El proyecto compila como aplicación SwiftUI real para simulador y conserva el m
 - Rechazo de proveedor, cuenta o referencia bancaria vacíos o compuestos solo por espacios.
 - Máquina de estados financiera con auditoría de transición, control de propietario, operación idempotente y estado terminal tras borrado; no persiste entre ejecuciones.
 - Normalización de espacios en claves bancarias antes de deduplicar; IDs en blanco rechazados por conciliación y defensa de propietario.
-- Run 38515699070: 6 checks contables, 432 combinaciones, 4 de demo, 7 conciliación, 10 decisiones de importación + lote de 400 IDs/10 pasadas, 8 de aislamiento y 10 del ciclo de vida y 7 de proyección mensual; build de simulador y capturas de ambos temas satisfactorios.
-- Artefactos: [capturas](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38515699070/artifacts/11872411018) · [app simulador](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38515699070/artifacts/11872455791).
+- Extraídos `ElitePalette` y `EliteTab` a `EliteDesignSystem.swift`; el mes usa locale `es_ES` en texto y VoiceOver.
+- Run 38518030887: 6 checks contables, 432 combinaciones, 4 demo, 7 conciliación, 10 decisiones de importación + 400 IDs/10 pasadas, 8 aislamiento, 10 lifecycle y 7 proyección; build, capturas y empaquetado satisfactorios.
+- Artefactos: [capturas](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38518030887/artifacts/11873051503) · [app simulador](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38518030887/artifacts/11872647715).
 
 No se tocaron `index.html`, workers, manifiestos, PWA ESTABLE, `main` ni `pages-v9731-real-final`. La comparación GitHub de la rama de desarrollo refleja solo archivos del workflow nativo, la app nativa, pruebas, documentación y una captura histórica bajo `previews/`.
 

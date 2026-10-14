@@ -8,7 +8,7 @@ Estado: **NO DISTRIBUIBLE TODAVÍA**. Solo datos ficticios.
 - [x] Archivo sin firmar para dispositivo físico compilado previamente.
 - [x] Motor de Disponible en céntimos y pruebas de regresión.
 - [x] Detección conservadora de posible coincidencia fijo/cargo bancario.
-- [ ] Captura SwiftUI publicada y revisada visualmente.
+- [x] Capturas reales de simulador de ambos temas subidas a Actions e inspeccionadas en el commit `e1ae19100ae734ccc5e2fb46e324d900ffd0f0c4`.
 - [ ] Flujo de autenticación por cuenta aislada, probado.
 - [ ] Persistencia en nube auditada y migraciones reversibles.
 - [ ] Integridad financiera de extremo a extremo verificada.

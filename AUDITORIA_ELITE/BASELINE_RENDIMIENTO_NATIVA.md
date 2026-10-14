@@ -1,12 +1,13 @@
 # Línea base de rendimiento — Fluxia Élite nativa
 
-Commit evaluado: `0599d7f807df52bae9c993183c7565bc8c1be306`.  
-Runner: GitHub Actions `macos-15`; simulator build y capturas en [run 38471782736](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38471782736).
+Commit evaluado: `e1ae19100ae734ccc5e2fb46e324d900ffd0f0c4`.
+Runner: GitHub Actions `macos-15`; build, pruebas y capturas en [run 38518030887](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38518030887).
 
 ## Medidas disponibles
 
 - Compilación iOS Simulator: `BUILD SUCCEEDED`.
-- Se generaron dos capturas reales con `simctl`, una por tema.
+- Checks financieros incluidos en el workflow: aprobados.
+- Se generaron y revisaron dos capturas reales `simctl`, una por tema; la fecha aparece en español.
 - El job no contiene benchmark de arranque, primer gesto, navegación, listas, memoria o consumo.
 
 ## Estado

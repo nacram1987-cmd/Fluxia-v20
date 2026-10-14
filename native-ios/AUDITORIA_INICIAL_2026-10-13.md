@@ -28,6 +28,8 @@ El workflow SwiftUI subía una captura como artefacto y también hacía `git com
 
 La corrección elimina la escritura Git del workflow, reduce el permiso a `contents: read`, y produce artefactos separados para capturas reales del simulador en tema claro y oscuro. El job rechaza capturas ausentes o idénticas. El cambio de tipografía usa métricas escalables y añade etiquetas de accesibilidad para el mes y el Disponible.
 
-## Verificación pendiente de este cambio
+## Actualización de verificación — 14/10/2026
 
-El nuevo commit debe superar el workflow macOS: compilación de la app, ejecución de las pruebas financieras existentes, render de ambos temas y carga del artefacto de capturas. Hasta que ese run termine, los cambios no se consideran validados. El siguiente bloqueo material para la beta funcional es diseñar e implementar persistencia/autenticación con aislamiento de servidor; no hay backend ni credenciales de servicio configurados en este entorno.
+Los cambios nativos posteriores se validaron en el commit `e1ae19100ae734ccc5e2fb46e324d900ffd0f0c4`, workflow [run 38518030887](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38518030887): checks financieros, build iOS Simulator, capturas reales de modo claro/oscuro y empaquetado terminaron en `success`. Se extrajeron los tokens de diseño y pestañas a `EliteDesignSystem.swift`; el selector mensual ahora fija locale `es_ES`. Capturas inspeccionadas: [artefacto claro/oscuro](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38518030887/artifacts/11873051503). La app sigue siendo demo de lectura con datos ficticios.
+
+La auditoría de metadatos confirmó proyecto Supabase activo, pero la app nativa no tiene autenticación ni persistencia conectadas; siete tablas de movimientos/banca carecen de políticas RLS y hay avisos de seguridad. No se leyeron filas financieras ni se escribió en producción. El siguiente bloqueo es definir autenticación/sesión y persistencia con un esquema servidor transaccional y controles de propietario verificables; no habilitar directamente snapshots de `fluxia_datos` como libro mayor.
