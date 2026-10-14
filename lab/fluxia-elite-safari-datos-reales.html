@@ -299,7 +299,7 @@ function showDraftEditor(data,index,key){
  if(amountKey)inputField('Importe registrado ('+amountKey+')',amountKey,'number',active[amountKey],true);
  if(dateKey){
   const raw=String(active[dateKey]||'');
-  const iso=/^\\d{4}-\\d{2}-\\d{2}/.test(raw)?raw.slice(0,10):'';
+  const iso=/^\d{4}-\d{2}-\d{2}/.test(raw)?raw.slice(0,10):'';
   const date=inputField('Fecha real ('+dateKey+')',dateKey,iso?'date':'text',iso||raw);
   if(date.type==='text')date.placeholder='Fecha original: mantener formato fuente'
  }
@@ -328,7 +328,7 @@ function showDraftEditor(data,index,key){
   if(!changed[nameKey]||changed[nameKey].length>200){errorBox.textContent='Escribe un concepto válido de hasta 200 caracteres.';errorBox.classList.remove('hide');return}
   if(amountKey&&(!Number.isFinite(changed[amountKey])||Math.abs(changed[amountKey])>100000000)){errorBox.textContent='Importe no válido.';errorBox.classList.remove('hide');return}
   if(dateKey&&changed[dateKey]&&/fecha|date/i.test(dateKey)){
-   const temp={[dateKey]:changed[dateKey]};if(!actualChargeDate(temp)&&/^\\d{4}-\\d{2}-\\d{2}/.test(changed[dateKey])){errorBox.textContent='Fecha no válida.';errorBox.classList.remove('hide');return}
+   const temp={[dateKey]:changed[dateKey]};if(!actualChargeDate(temp)&&/^\d{4}-\d{2}-\d{2}/.test(changed[dateKey])){errorBox.textContent='Fecha no válida.';errorBox.classList.remove('hide');return}
   }
   draftEdits.set(key+':'+index,changed);openDetail(original,index,key);
  };
