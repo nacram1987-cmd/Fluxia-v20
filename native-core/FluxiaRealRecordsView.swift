@@ -2,8 +2,8 @@
 import SwiftUI
 import Foundation
 
-/// Authenticated, strictly read-only inspection of canonical Fluxia HTML records.
-/// Do not use this inventory as a financial ledger or to compute Disponible.
+/// Read-only native browser of canonical Fluxia finance collections.
+/// A source amount is NOT a paid amount or an accounting total.
 @MainActor
 struct FluxiaRealRecordsView: View {
     let records: [FluxiaCloudReader.Record]
@@ -19,119 +19,199 @@ struct FluxiaRealRecordsView: View {
 
     private struct Module: Identifiable {
         let title: String
-        let canonicalKey: String
-        let symbol: String
-        var id: String { canonicalKey }
+        let key: String
+        var id: String { key }
     }
-
     private let modules: [Module] = [
-        .init(title: "Movimientos", canonicalKey: "planRescate_v2_movimientos", symbol: "list.bullet.rectangle"),
-        .init(title: "Ingresos", canonicalKey: "planRescate_v2_ingresos", symbol: "arrow.down.left"),
-        .init(title: "Gastos fijos", canonicalKey: "planRescate_v2_fijos", symbol: "receipt"),
-        .init(title: "Provisiones", canonicalKey: "planRescate_v2_provisiones", symbol: "archivebox"),
-        .init(title: "Financiaciones", canonicalKey: "planRescate_v2_financiaciones", symbol: "creditcard"),
-        .init(title: "Compartidos", canonicalKey: "planRescate_v2_compartidos", symbol: "person.2")
+        .init(title: "Variables", key: "planRescate_v2_movimientos"),
+        .init(title: "Ingresos", key: "planRescate_v2_ingresos"),
+        .init(title: "Fijos", key: "planRescate_v2_fijos"),
+        .init(title: "Huchas", key: "planRescate_v2_provisiones"),
+        .init(title: "Financiaciones", key: "planRescate_v2_financiaciones"),
+        .init(title: "Compartidos", key: "planRescate_v2_compartidos")
     ]
 
-    private struct DisplayRow: Identifiable {
+    private struct Item: Identifiable {
         let id: Int
         let title: String
         let amount: String?
-        let period: String
+        let period: String?
+        let category: String?
+        let state: String?
+        let source: String?
+        let identifier: String?
+        let extras: [String]
     }
-
     @State private var selectedKey = "planRescate_v2_movimientos"
-    @State private var showAll = false
     @State private var searchTerm = ""
+    @State private var periodFilter = "Todos"
+    @State private var showAll = false
+    @State private var selectedItem: Item?
 
-    private func items(for key: String) -> [DisplayRow]? {
-        // Only read keys identified by the canonical HTML contract.
-        guard modules.contains(where: { $0.canonicalKey == key }),
-              let record = records.first(where: { $0.clave == key }),
-              let raw = record.v,
+    private func str(_ source: [String: Any], keys: [String]) -> String? {
+        for k in keys {
+            if let value = source[k] as? String, !value.isEmpty { return value }
+        }
+        return nil
+    }
+    private func money(_ number: NSNumber?) -> String? {
+        guard let number else { return nil }
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.locale = Locale(identifier: "es_ES")
+        return formatter.string(from: number)
+    }
+    private var parsed: [Item]? {
+        guard modules.contains(where: { $0.key == selectedKey }),
+              let raw = records.first(where: { $0.clave == selectedKey })?.v,
               let data = raw.data(using: .utf8),
-              let decoded = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]]
+              let objects = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]]
         else { return nil }
-
-        return decoded.enumerated().map { i, object in
-            let name = (object["concepto"] as? String)
-                ?? (object["nombre"] as? String)
-                ?? "Registro sin concepto"
-            let amount = object["importe"] as? NSNumber
-            let monthly = object["importeMensual"] as? NSNumber
-            let quota = object["cuota"] as? NSNumber
-            let displayed = amount ?? monthly ?? quota
-            let moneyFormatter = NumberFormatter()
-            moneyFormatter.numberStyle = .currency
-            moneyFormatter.locale = Locale(identifier: "es_ES")
-            let formatted = displayed.flatMap { moneyFormatter.string(from: $0) }
-            let month = (object["mes"] as? String)
-                ?? (object["fecha"] as? String)
-                ?? (object["inicio"] as? String)
-                ?? "Sin fecha de periodo"
-            return DisplayRow(id: i, title: name, amount: formatted, period: month)
+        return objects.enumerated().map { index, obj in
+            let name = str(obj, keys: ["concepto", "nombre", "descripcion"]) ?? "Registro sin concepto"
+            let amount = money((obj["importe"] as? NSNumber) ?? (obj["importeMensual"] as? NSNumber) ?? (obj["cuota"] as? NSNumber) ?? (obj["importe_total"] as? NSNumber))
+            let period = str(obj, keys: ["mes", "fecha", "inicio"])
+            let category = str(obj, keys: ["categoria", "tipo"])
+            let state = str(obj, keys: ["estado", "status"])
+            let origin = str(obj, keys: ["origen"])
+            let identifier = str(obj, keys: ["id", "movimientoId"])
+            var extra: [String] = []
+            if let initial = money(obj["importeInicial"] as? NSNumber) { extra.append("Importe inicial: " + initial) }
+            if let payer = str(obj, keys: ["pagado_por", "persona"]) { extra.append("Persona: " + payer) }
+            if let end = str(obj, keys: ["fin"]) { extra.append("Fin: " + end) }
+            return Item(id: index, title: name, amount: amount, period: period, category: category, state: state, source: origin, identifier: identifier, extras: extra)
+        }
+    }
+    private var periods: [String] {
+        ["Todos"] + Array(Set((parsed ?? []).compactMap(\.period))).sorted()
+    }
+    private var visibleRows: [Item] {
+        (parsed ?? []).filter { row in
+            (periodFilter == "Todos" || row.period == periodFilter)
+            && (searchTerm.isEmpty || [row.title, row.period ?? "", row.category ?? "", row.state ?? ""]
+                .contains(where: { $0.localizedCaseInsensitiveContains(searchTerm) }))
         }
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Label("Registros reales de tu nube", systemImage: "checkmark.shield")
-                .font(.headline)
-            Text("Consulta directa, sin editar, conciliar ni recalcular saldos. La app HTML continúa siendo la fuente de verdad.")
-                .font(.caption).foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Label("Datos reales", systemImage: "checkmark.shield")
+                    .font(.headline)
+                Spacer()
+                Text("SOLO LECTURA")
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundStyle(.secondary)
+            }
             if showModulePicker {
-            Picker("Módulo", selection: $selectedKey) {
-                ForEach(modules) { module in
-                    Text(module.title).tag(module.canonicalKey)
+                Picker("Módulo", selection: $selectedKey) {
+                    ForEach(modules) { module in Text(module.title).tag(module.key) }
                 }
+                .pickerStyle(.menu)
             }
-            .pickerStyle(.menu)
-            .onChange(of: selectedKey) { _, _ in showAll = false; searchTerm = "" }
-            }
-            TextField("Buscar conceptos reales", text: $searchTerm)
+            TextField("Buscar concepto, categoría o estado", text: $searchTerm)
                 .textInputAutocapitalization(.never)
                 .textFieldStyle(.roundedBorder)
-            if let allRows = items(for: selectedKey) {
-                let rows = allRows.filter { searchTerm.isEmpty || $0.title.localizedCaseInsensitiveContains(searchTerm) || $0.period.localizedCaseInsensitiveContains(searchTerm) }
+            HStack(spacing: 8) {
+                Text("Periodo").font(.caption).foregroundStyle(.secondary)
+                Picker("Periodo", selection: $periodFilter) {
+                    ForEach(periods, id: \.self) { value in Text(value).tag(value) }
+                }
+                .pickerStyle(.menu)
+                Spacer()
+            }
+            if let parsed {
                 HStack {
-                    Text(searchTerm.isEmpty ? "\(rows.count) registros reales" : "\(rows.count) de \(allRows.count) registros")
-                        .font(.subheadline.bold())
+                    Text("\(visibleRows.count) de \(parsed.count) registros")
+                        .font(.subheadline.weight(.semibold))
                     Spacer()
                     Button(showAll ? "Ver menos" : "Ver más") { showAll.toggle() }
                         .font(.caption)
                 }
-                ForEach(Array(rows.prefix(showAll ? 200 : 12))) { item in
-                    HStack(alignment: .firstTextBaseline, spacing: 12) {
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text(item.title).font(.subheadline).lineLimit(2)
-                            Text(item.period).font(.caption).foregroundStyle(.secondary)
-                        }
-                        Spacer()
-                        if let amount = item.amount {
-                            Text(amount).font(.subheadline.monospacedDigit())
-                        }
-                    }
-                    .padding(.vertical, 4)
-                    Divider()
+                if visibleRows.isEmpty {
+                    Text("No hay registros que coincidan con estos filtros.")
+                        .font(.subheadline).foregroundStyle(.secondary)
+                        .padding(.vertical, 18)
                 }
-                if rows.count > 200 {
-                    Text("Vista limitada a 200 registros para mantener la fluidez.")
+                LazyVStack(spacing: 0) {
+                    ForEach(Array(visibleRows.prefix(showAll ? 200 : 15))) { item in
+                        Button { selectedItem = item } label: {
+                            HStack(alignment: .center, spacing: 10) {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(item.title).font(.subheadline.weight(.medium))
+                                        .lineLimit(2).foregroundStyle(.primary)
+                                    HStack(spacing: 6) {
+                                        if let period = item.period { Text(period) }
+                                        if let category = item.category { Text("· " + category) }
+                                    }
+                                    .font(.caption).foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                                    if let state = item.state {
+                                        Text(state).font(.caption2).foregroundStyle(.secondary)
+                                    }
+                                }
+                                Spacer(minLength: 4)
+                                VStack(alignment: .trailing, spacing: 5) {
+                                    if let amount = item.amount {
+                                        Text(amount).font(.subheadline.weight(.semibold))
+                                            .monospacedDigit().foregroundStyle(.primary)
+                                    }
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption2).foregroundStyle(.tertiary)
+                                }
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.vertical, 10)
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        Divider()
+                    }
+                }
+                if visibleRows.count > 200 {
+                    Text("Mostrando hasta 200 registros por rendimiento.")
                         .font(.caption).foregroundStyle(.secondary)
                 }
             } else {
-                Label("No se ha encontrado esta colección canónica para tu cuenta. No se interpreta como saldo cero.",
-                      systemImage: "exclamationmark.triangle")
+                Label("Colección no disponible o formato no reconocido; no implica saldo cero.", systemImage: "exclamationmark.triangle")
                     .font(.subheadline).foregroundStyle(.orange)
             }
+            Text("Importes originales, sin sumas ni estados de pago inferidos. Disponible pendiente de conciliación.")
+                .font(.caption2).foregroundStyle(.secondary)
         }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.white, in: RoundedRectangle(cornerRadius: 16))
         .onChange(of: initialKey) { _, newValue in
             selectedKey = newValue
-            showAll = false
             searchTerm = ""
+            periodFilter = "Todos"
+            showAll = false
         }
-        .padding(16)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.white, in: RoundedRectangle(cornerRadius: 18))
+        .onChange(of: selectedKey) { _, _ in
+            searchTerm = ""
+            periodFilter = "Todos"
+            showAll = false
+        }
+        .sheet(item: $selectedItem) { item in
+            NavigationStack {
+                List {
+                    LabeledContent("Concepto", value: item.title)
+                    if let amount = item.amount { LabeledContent("Importe de origen", value: amount) }
+                    if let period = item.period { LabeledContent("Fecha o periodo", value: period) }
+                    if let category = item.category { LabeledContent("Categoría/tipo", value: category) }
+                    if let state = item.state { LabeledContent("Estado registrado", value: state) }
+                    if let source = item.source { LabeledContent("Origen", value: source) }
+                    if let identifier = item.identifier { LabeledContent("Identificador", value: identifier) }
+                    ForEach(item.extras, id: \.self) { line in Text(line) }
+                }
+                .navigationTitle("Detalle real")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar { ToolbarItem(placement: .topBarTrailing) {
+                    Button("Cerrar") { selectedItem = nil }
+                }}
+            }
+        }
     }
 }
 #endif
