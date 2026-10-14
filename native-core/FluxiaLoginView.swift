@@ -13,6 +13,10 @@ public struct FluxiaLoginView: View {
     @State private var recordCount: Int?
     @State private var cloudRecords: [FluxiaCloudReader.Record] = []
     @State private var authSession: FluxiaAuthClient.Session?
+    @State private var rememberSession = false
+    @State private var showNumberPad = false
+    @State private var numericTargetPassword = true
+    @State private var didAttemptRestore = false
 
     public init() {}
 
@@ -79,6 +83,21 @@ public struct FluxiaLoginView: View {
                     SecureField("Contraseña", text: $password)
                         .textContentType(.password)
                         .textFieldStyle(.roundedBorder)
+                    Toggle("Recordar sesión en este dispositivo", isOn: $rememberSession)
+                        .font(.subheadline)
+                    Button(showNumberPad ? "Ocultar teclado numérico" : "Mostrar teclado numérico") {
+                        showNumberPad.toggle()
+                    }
+                    .font(.subheadline)
+                    .foregroundStyle(Color(red: 0.09, green: 0.21, blue: 0.34))
+                    if showNumberPad {
+                        Picker("Insertar números en", selection: $numericTargetPassword) {
+                            Text("Contraseña").tag(true)
+                            Text("Correo").tag(false)
+                        }
+                        .pickerStyle(.segmented)
+                        numericPad
+                    }
                     Button {
                         Task { await signIn() }
                     } label: {
@@ -98,12 +117,79 @@ public struct FluxiaLoginView: View {
                     if let message {
                         Text(message).font(.caption).foregroundStyle(.red)
                     }
-                    Text("La contraseña no se almacena. Esta versión consulta los registros, pero no los modifica.")
+                    Text("La contraseña no se almacena. Si activas recordar sesión, solo se guarda el token de renovación en el llavero iOS. En Appetize, el dispositivo virtual puede reiniciarse y perderlo.")
                         .font(.caption).foregroundStyle(.secondary)
                 }
                 .padding(24)
                 .frame(maxWidth: 480)
             }
+        }
+        .task {
+            guard !didAttemptRestore else { return }
+            didAttemptRestore = true
+            await restoreSession()
+        }
+    }
+
+    private var numericPad: some View {
+        VStack(spacing: 8) {
+            ForEach(0..<3, id: \.self) { row in
+                HStack(spacing: 8) {
+                    ForEach(1..<4, id: \.self) { column in
+                        let digit = String(row * 3 + column)
+                        Button(digit) { appendDigit(digit) }
+                            .frame(maxWidth: .infinity, minHeight: 42)
+                            .buttonStyle(.bordered)
+                    }
+                }
+            }
+            HStack(spacing: 8) {
+                Button("Borrar") {
+                    if numericTargetPassword {
+                        if !password.isEmpty { password.removeLast() }
+                    } else {
+                        if !email.isEmpty { email.removeLast() }
+                    }
+                }
+                .frame(maxWidth: .infinity, minHeight: 42)
+                .buttonStyle(.bordered)
+                Button("0") { appendDigit("0") }
+                    .frame(maxWidth: .infinity, minHeight: 42)
+                    .buttonStyle(.bordered)
+                Button("Listo") { showNumberPad = false }
+                    .frame(maxWidth: .infinity, minHeight: 42)
+                    .buttonStyle(.borderedProminent)
+            }
+        }
+        .disabled(isLoading)
+        .accessibilityElement(children: .contain)
+    }
+
+    private func appendDigit(_ digit: String) {
+        if numericTargetPassword { password.append(digit) }
+        else { email.append(digit) }
+    }
+
+    private func restoreSession() async {
+        guard let token = FluxiaSecureSession.readRefreshToken(),
+              let (url, key) = cloudConfiguration else { return }
+        isLoading = true
+        defer { isLoading = false }
+        do {
+            let refreshed = try await FluxiaAuthClient(projectURL: url, publishableKey: key)
+                .refresh(token)
+            let rows = try await FluxiaCloudReader(projectURL: url, publishableKey: key)
+                .fetchCanonicalFinance(ownerID: refreshed.user.id, accessToken: refreshed.access_token)
+            guard rows.allSatisfy({ $0.user_id == refreshed.user.id }) else { return }
+            rememberSession = true
+            _ = FluxiaSecureSession.saveRefreshToken(refreshed.refresh_token)
+            cloudRecords = rows
+            recordCount = rows.count
+            authSession = refreshed
+            identity = refreshed.user.id
+        } catch {
+            // Do not discard a saved session on a transient network failure.
+            message = "No se ha podido recuperar la sesión. Accede manualmente."
         }
     }
 
@@ -126,12 +212,21 @@ public struct FluxiaLoginView: View {
             cloudRecords = rows
             authSession = session
             identity = session.user.id
+            if rememberSession { 
+                if !FluxiaSecureSession.saveRefreshToken(session.refresh_token) {
+                    message = "Sesión iniciada, pero no se pudo guardar en el llavero."
+                }
+            } else {
+                FluxiaSecureSession.deleteRefreshToken()
+            }
         } catch {
             message = "No se ha podido autenticar o leer la nube: \(error.localizedDescription)"
         }
     }
 
     private func signOut() {
+        FluxiaSecureSession.deleteRefreshToken()
+        rememberSession = false
         identity = nil
         authSession = nil
         recordCount = nil
