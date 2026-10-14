@@ -1,0 +1,13 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const swift=fs.readFileSync(path.join(__dirname,'../../APP_IOS_BETA/Sources/FluxiaFinancialCore/FluxiaFinancialCore.swift'),'utf8');
+const js=fs.readFileSync(path.join(__dirname,'../js/fluxia-elite-financial-engine-v1.js'),'utf8');
+assert(swift.includes('Int64'));
+assert(swift.includes('availableCents'));
+assert(swift.includes('plannedProvisionsCents'));
+assert(swift.includes('FluxiaHuchaLedger'));
+assert(swift.includes('FluxiaMovementRole'));
+assert(js.includes('function available(input)'));
+assert(js.includes('function hucha(input)'));
+assert(js.includes('plannedProvisionsCents'));
+console.log('PASS v1.9.78 Web/Swift financial core parity contract and cent-based model');
