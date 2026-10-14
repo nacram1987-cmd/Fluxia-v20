@@ -26,6 +26,17 @@ jobs:
         run: |
           set -euo pipefail
           xcodebuild -project FluxiaEliteBeta.xcodeproj -scheme FluxiaEliteBeta -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
+      - name: Verify real Supabase configuration in bundled Info.plist
+        working-directory: native-core
+        run: |
+          set -euo pipefail
+          PLIST="build/Build/Products/Debug-iphonesimulator/FluxiaEliteBeta.app/Info.plist"
+          test -f "$PLIST"
+          URL_VALUE=$(/usr/libexec/PlistBuddy -c 'Print :FLUXIA_SUPABASE_URL' "$PLIST")
+          KEY_VALUE=$(/usr/libexec/PlistBuddy -c 'Print :FLUXIA_SUPABASE_PUBLISHABLE_KEY' "$PLIST")
+          test "$URL_VALUE" = "https://kylduzmrfbubeamfrbbr.supabase.co"
+          case "$KEY_VALUE" in sb_publishable_*) ;; *) echo "::error::Missing public Supabase key in built iOS app"; exit 1 ;; esac
+          echo "Supabase connection parameters are present in compiled iOS app."
       - name: Package simulator .app
         working-directory: native-core
         run: |
@@ -45,6 +56,7 @@ jobs:
         uses: appetizeio/github-action-appetize@v1.1.0
         with:
           apiToken: ${{ secrets.APPETIZE_API_TOKEN }}
+          publicKey: znpbyrvr7s6xat4q7mm2jh54ga
           appFile: FluxiaEliteBeta-iOS-Simulator.zip
           platform: ios
           note: "Fluxia Élite BETA · rama nativa de pruebas"
