@@ -1,0 +1,18 @@
+{
+  "name": "Fluxia Élite BETA",
+  "short_name": "Fluxia Élite",
+  "description": "Entorno de pruebas financiero independiente de Fluxia PWA estable",
+  "start_url": "/Fluxia-v20/lab/fluxia-elite-safari-datos-reales.html",
+  "scope": "/Fluxia-v20/lab/",
+  "display": "standalone",
+  "background_color": "#f7f6f2",
+  "theme_color": "#173951",
+  "icons": [
+    {
+      "src": "../fluxia-icon.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
