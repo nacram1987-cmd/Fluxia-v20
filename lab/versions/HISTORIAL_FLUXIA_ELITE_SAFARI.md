@@ -1,6 +1,16 @@
 # Fluxia Élite BETA · Historial Safari (independiente de PWA HTML y SwiftUI)
 Fecha: 2026-10-14
 
+## v1.2.0 · Logos comerciales y checklist navegable (14/10/2026)
+- Dónde comprobar: entrar en cualquier módulo, consultar cargos visibles de comercios reconocibles. Prioridad: logotipo comercial vía búsqueda pública (Wikidata, identificador P154). Si no existe o falla, icono genérico por concepto. Logos Apple/Amazon reconocidos previamente.
+- Dónde comprobar: Inicio → 📋 Checklist y versiones. Checklist con secciones, comprobaciones visuales y explicación de cada nueva función.
+- Velocidad: lazy lookup mediante IntersectionObserver, máximo dos búsquedas simultáneas, resultados deduplicados y cacheados en memoria por nombre de comercio. Sin nuevas librerías.
+- Privacidad: se transmite al buscador solo nombre de comercio sanitizado; se excluyen conceptos típicamente sensibles como transferencias, IBAN, nómina. Las búsquedas son a terceros y requieren internet.
+- Datos: NO se modifican importes, fechas, cargos, cuentas o estados. No se activa persistencia de ediciones.
+- Copia inmutable: https://nacram1987-cmd.github.io/Fluxia-v20/lab/versions/fluxia-elite-safari-v1.2.0.html
+- QA local en código: sintaxis JS válida y comprobación estructural de activación de búsqueda en red, caché y checklist. NO medido todavía en Safari real. La publicación de Pages no está verificada externamente.
+- Pendiente: catálogo completo de logos comerciales originales HTML, autorización/licencia de uso según proveedor y origen, motor financiero, escrituras persistentes, benchmark Safari y errores reales de red.
+
 ## v1.1.0 · Corrección CRÍTICA de carga real (14/10/2026)
 - Hallazgo contrastado con esquema y consulta SQL de sólo lectura: 762 filas de nube, 1 cuenta autenticada; las colecciones canónicas se almacenan con la forma `p_usr-<perfil>__planRescate_v2_<módulo>`, no con los nombres sin prefijo que usaba v1.0.0.
 - Se identificó 1 perfil canónico completo con seis colecciones: movimientos 323, ingresos 41, fijos 98, provisiones 7, financiaciones 8 y compartidos 12 en el instante del análisis. Las cantidades son instantáneas y sólo confirman forma de los datos, no balance.
