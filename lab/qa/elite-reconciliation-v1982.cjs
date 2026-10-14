@@ -1,1 +1,15 @@
-J3VzZSBzdHJpY3QnOwpjb25zdCBhc3NlcnQ9cmVxdWlyZSgnbm9kZTphc3NlcnQvc3RyaWN0Jyk7CmNvbnN0IGZzPXJlcXVpcmUoJ25vZGU6ZnMnKTtjb25zdCB2bT1yZXF1aXJlKCdub2RlOnZtJyk7CmNvbnN0IGh0bWw9ZnMucmVhZEZpbGVTeW5jKHJlcXVpcmUoJ25vZGU6cGF0aCcpLmpvaW4oX19kaXJuYW1lLCcuLi9mbHV4aWEtZWxpdGUtc2FmYXJpLWRhdG9zLXJlYWxlcy5odG1sJyksJ3V0ZjgnKTsKYXNzZXJ0Lm1hdGNoKGh0bWwsL0VMSVRFX1NBRkFSSV9WRVJTSU9OPScxXC45XC4oPzo4Mnw4M3w4NHw4NXw4Nnw4N3w4OHw4OSknLyk7CmFzc2VydC5tYXRjaChodG1sLC9lbmxhY2VzIGV4cGzDrWNpdG9zIHZlcmlmaWNhYmxlcy8pOwphc3NlcnQubWF0Y2goaHRtbCwvQ29pbmNpZGVuY2lhcyBwb3Igbm9tYnJlIGUgaW1wb3J0ZSBzaW4gSUQvKTsKYXNzZXJ0Lm1hdGNoKGh0bWwsL1ZhcmlhYmxlcyByZWFsZXMgbm8gdmluY3VsYWRhcyBleHBsw61jaXRhbWVudGUvKTsKYXNzZXJ0Lm1hdGNoKGh0bWwsL21vZHVsZUlkPT09J2luZ3Jlc29zJy8pOwphc3NlcnQubWF0Y2goaHRtbCwvQ29icmFkb3MvKTsKYXNzZXJ0Lm1hdGNoKGh0bWwsL25vIHNlIGVzY3JpYmUsIGVsaW1pbmEgbmkgdHJhbnNmb3JtYSBuaW5nw7puIHJlZ2lzdHJvLyk7CmFzc2VydC5kb2VzTm90TWF0Y2goaHRtbCwvcGFyZWphcyBjYW5kaWRhdGFzIMO6bmljYXMgwrcvLCdOYW1lL2Ftb3VudCBtYXRjaGluZyBtdXN0IG5vdCBiZSB0cmVhdGVkIGFzIHJlY29uY2lsaWF0aW9uJyk7CmNvbnN0IHNjcmlwdHM9Wy4uLmh0bWwubWF0Y2hBbGwoLzxzY3JpcHQoPzpcc1tePl0qKT8+KFtcc1xTXSo/KTxcL3NjcmlwdD4vZ2kpXS5tYXAobWF0Y2g9Pm1hdGNoWzFdKS5maWx0ZXIoQm9vbGVhbik7CmZvcihjb25zdCBzY3JpcHQgb2Ygc2NyaXB0cylhc3NlcnQuZG9lc05vdFRocm93KCgpPT5uZXcgdm0uU2NyaXB0KHNjcmlwdCkpOwpjb25zb2xlLmxvZygnUEFTUyB2MS45LjgyIGluY29tZS9maXhlZC92YXJpYWJsZSByZWNvbmNpbGlhdGlvbiBjb250cmFjdCcpOwo=
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');const vm=require('node:vm');
+const html=fs.readFileSync(require('node:path').join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.(?:82|83|84|85|86|87|88|89)'/);
+assert.match(html,/enlaces explícitos verificables/);
+assert.match(html,/Coincidencias por nombre e importe sin ID/);
+assert.match(html,/Variables reales no vinculadas explícitamente/);
+assert.match(html,/moduleId==='ingresos'/);
+assert.match(html,/Cobrados/);
+assert.match(html,/no se escribe, elimina ni transforma ningún registro/);
+assert.doesNotMatch(html,/parejas candidatas únicas ·/,'Name/amount matching must not be treated as reconciliation');
+const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(match=>match[1]).filter(Boolean);
+for(const script of scripts)assert.doesNotThrow(()=>new vm.Script(script));
+console.log('PASS v1.9.82 income/fixed/variable reconciliation contract');
