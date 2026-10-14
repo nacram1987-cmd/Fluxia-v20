@@ -1,0 +1,16 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+const a=html.indexOf('function renderHistoricalOperations('),b=html.indexOf('function openDetail(',a);
+assert(a>=0&&b>a);
+const el=(tag,cls,txt)=>({tag,cls,textContent:txt,children:[],append(...items){this.children.push(...items)}});
+const context=vm.createContext({el,field:(x,keys)=>keys.map(k=>x[k]).find(v=>typeof v==='string')||null,actualChargeDate:x=>x.fecha?{label:x.fecha}:null,recordAmount:x=>typeof x.importe==='number'?x.importe:null,money:n=>n+' €'});
+vm.runInContext(html.slice(a,b),context,{timeout:1000});
+const panel=context.renderHistoricalOperations({aportaciones:[{concepto:'Aportación',importe:35,fecha:'2026-10-10'}],rescates:[{concepto:'Rescate',importe:20,fecha:'2026-10-11'}],usos:[{tipo:'uso',importe:8}],historial:[]});
+assert.equal(panel.children.filter(x=>x.tag==='details').length,3);
+assert.equal(context.renderHistoricalOperations({saldo:70}),null);
+const detail=html.slice(b,html.indexOf('const moduleActions=',b));
+assert(detail.includes("key==='planRescate_v2_provisiones'"));
+assert(html.includes("const ELITE_SAFARI_VERSION='1.9.51'"));
+for(const part of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(part[1])new vm.Script(part[1]);
+console.log('PASS: v1.9.51 hucha history read-only display and inline script parsing');
