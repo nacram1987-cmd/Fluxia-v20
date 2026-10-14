@@ -1,0 +1,10 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const html=fs.readFileSync(require('node:path').join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.80'/);
+assert.match(html,/function renderBankAdapterReadiness\(\)/);
+assert.match(html,/Previsualizaci[oó]n sin escritura/);
+assert.match(html,/fluxia-elite-bank-adapter-v1\.js/);
+assert.doesNotMatch(html,/<script[^>]+src=["'][^"']*supabase[^"']*["']/i,'Elite must not add a second direct banking client');
+console.log('PASS v1.9.80 bank preflight integration contract');
