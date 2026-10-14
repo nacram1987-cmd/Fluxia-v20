@@ -47,6 +47,7 @@ jobs:
           apiToken: ${{ secrets.APPETIZE_API_TOKEN }}
           appFile: FluxiaEliteBeta-iOS-Simulator.zip
           platform: ios
+          note: "Fluxia Élite BETA · rama nativa de pruebas"
       - name: Native simulator build summary
         if: always()
         run: |
