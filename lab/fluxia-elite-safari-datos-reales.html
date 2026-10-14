@@ -2239,6 +2239,24 @@ function renderHuchaReplenishments(huchas,uses){
  }
  card.append(detail);return card
 }
+function temporaryUseOutstanding(use){
+ if(!use||String(use.tipo||'').toLowerCase()!=='temporal')return {kind:'not_temporal'};
+ const amount=use.importe,repaid=use.repuesto;
+ if(typeof amount!=='number'||!Number.isFinite(amount)||amount<0||typeof repaid!=='number'||!Number.isFinite(repaid)||repaid<0)return {kind:'unknown'};
+ const owed=Math.round(amount*100)-Math.round(repaid*100);
+ if(owed<0)return {kind:'overpaid',cents:owed};
+ const history=use.reposiciones;
+ if(Array.isArray(history)){
+  const ids=new Set();let actual=0;
+  for(const entry of history){
+   const id=String(entry?.id??'').trim(),value=entry?.importe;
+   if(!id||ids.has(id)||typeof value!=='number'||!Number.isFinite(value)||value<0)return {kind:'history_ambiguous'};
+   ids.add(id);actual+=Math.round(value*100)
+  }
+  if(actual!==Math.round(repaid*100))return {kind:'history_mismatch',reportedCents:Math.round(repaid*100),historyCents:actual}
+ }else if(repaid>0)return {kind:'history_unavailable'};
+ return {kind:'verified_summary',cents:owed,amountCents:Math.round(amount*100),repaidCents:Math.round(repaid*100)}
+}
 function huchaUsesFromSource(isHtml){
  if(isHtml){
   if(backupFinance?.owner!==owner||backupFinance?.profile!==activeProfile)return null;
