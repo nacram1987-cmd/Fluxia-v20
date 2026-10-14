@@ -1,6 +1,19 @@
 # Fluxia Élite BETA · Historial Safari (independiente de PWA HTML y SwiftUI)
 Fecha: 2026-10-14
 
+## v1.9.1 · Importación privada de Dinero en mano del mismo perfil (14/10/2026)
+
+**Nuevo en esta subversión y dónde verlo**
+- Dinero en mano → «Seleccionar copia del perfil (.json)»: permite leer desde el dispositivo el archivo creado por «Ajustes → 💾 Copia solo este perfil» en el HTML BETA.
+- Verifica tipo de exportación, identificación EXACTA de perfil y presencia de la clave de cartera de ese perfil. Una copia global, de otro usuario o con estructura incorrecta es rechazada.
+- Extrae exclusivamente la cartera y el momento de exportación; no importa bancas, contraseñas ni resto del backup al estado de Élite. No llama a red y no guarda el archivo en disco, nube ni localStorage.
+- El saldo mostrado será el **del instante de la copia exportada**, no un supuesto balance bancario en directo. La copia se elimina de la sesión al cerrar o cambiar de perfil.
+- Mantiene las tres reglas contables del HTML: meter solo cartera; gastar carrito + variable único; pagar con provisión no descontar dos veces.
+- Conserva anteriores mejoras v1.9.0: paneles de Efectivo, Presupuestos, Simular, Análisis, Pagos, Notificaciones, Ajustes y Ayuda y navegación compacta.
+- Protección de cuenta y privacidad QA: 16/16 tests aislados de perfiles distintos, copias globales, campos ilegibles y formatos maliciosos, sin red.
+- Copia de rollback v1.9.1: https://nacram1987-cmd.github.io/Fluxia-v20/lab/versions/fluxia-elite-safari-v1.9.1.html
+- Limitación: las operaciones de escritura real de cartera siguen en el HTML hasta validar 51/51 Variables y persistencia en nube.
+
 ## v1.9.0 · Recuperación de módulos del HTML madre y cartera física (14/10/2026)
 
 **Checklist y ubicación de mejoras**
