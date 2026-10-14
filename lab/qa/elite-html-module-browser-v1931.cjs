@@ -1,0 +1,25 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+const start=html.indexOf('function readBackupFinancialModules('),end=html.indexOf('function readPrivateBackupSources(',start);
+assert(start>=0&&end>start,'Missing HTML module backup parser');
+const profile='usr-11111111-1111-4111-8111-111111111111',other='usr-22222222-2222-4222-8222-222222222222';
+const names=['ingresos','fijos','movimientos','provisiones','compartidos','financiaciones'];
+const c=vm.createContext({mods:names.map(x=>({id:x,key:'planRescate_v2_'+x}))});
+vm.runInContext(html.slice(start,end),c,{timeout:1000});
+const keys={};
+for(const name of names)keys['fluxia_user_'+profile+'__v2_'+name]=[{id:name}];
+keys['fluxia_user_'+other+'__v2_ingresos']=[{id:'alien'}];
+const found=c.readBackupFinancialModules({keys},profile);
+let n=0;
+function check(label,fn){fn();n++;console.log('PASS',label)}
+check('All six modules present',()=>assert.equal(Object.keys(found).length,6));
+check('Cross-profile data excluded',()=>assert.deepEqual(found.ingresos.records.map(r=>r.id),['ingresos']));
+check('Real record identifiers retained',()=>assert.equal(found.financiaciones.records[0].id,'financiaciones'));
+check('Malformed collections ignored',()=>{const bad={keys:{['fluxia_user_'+profile+'__v2_movimientos']:{saldo:7}}};assert.equal(Object.keys(c.readBackupFinancialModules(bad,profile)).length,0)});
+check('Original module views remain accessible',()=>assert(html.includes('renderPrivateHTMLModule(m);')));
+check('Private HTML list is read only',()=>{const a=html.indexOf('function renderPrivateHTMLModule('),b=html.indexOf('function renderList(){',a);assert(!html.slice(a,b).includes('authRequest('));assert(!html.slice(a,b).includes('fetch('))});
+check('Version label',()=>assert(html.includes("const ELITE_SAFARI_VERSION='1.9.31'")));
+for(const match of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(match[1])new vm.Script(match[1]);
+check('Inline JS parses',()=>assert(true));
+console.log('RESULT',n,'HTML six-module import inspection regressions passed');
