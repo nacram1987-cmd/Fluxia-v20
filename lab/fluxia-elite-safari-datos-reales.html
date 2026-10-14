@@ -310,8 +310,9 @@ const $=s=>document.querySelector(s),el=(tag,cls,txt)=>{const n=document.createE
 const money=v=>typeof v==='number'&&isFinite(v)?new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(v):null;
 const field=(obj,keys)=>{for(const k of keys){let v=obj[k];if(typeof v==='string'&&v.trim())return v}return null};
 const canon=m=>{const a=items[m.key];return Array.isArray(a)?a:null};
-const ELITE_SAFARI_VERSION='1.9.79';
+const ELITE_SAFARI_VERSION='1.9.80';
 const ELITE_CHANGELOG=[
+ ['1.9.80','Preflight bancario visible en Élite: muestra fuente auxiliar, bandeja, tombstones, duplicados, conflictos e inválidos y genera una previsualización sin escritura. La conexión real sigue bloqueada hasta certificar proveedor, perfil, RLS y paridad.'],
  ['1.9.79','Adaptador bancario seguro de solo planificación: reutiliza la identidad estable del conector original, bloquea tombstones y resurrecciones, detecta conflictos y conserva los movimientos fijos como referencia. Sin conexión real ni escrituras.'],
  ['1.9.78','El motor financiero cent-exact tiene contraparte Swift para el futuro cliente iPhone: misma regla del Disponible, mismas huchas y mismas invariantes, sin crear una contabilidad paralela.'],
  ['1.9.77','Salto arquitectónico: motor financiero determinista independiente de la interfaz, importes en céntimos, regla del Disponible, huchas y certificación portable a SwiftUI.'],
@@ -974,7 +975,33 @@ function showBanksAudit(){
  const source=el('a','motherLink','Abrir Bancos en el HTML original ↗');source.href='https://nacram1987-cmd.github.io/Fluxia-v20/';source.target='_blank';source.rel='noopener noreferrer';d.append(source);
  d.append(el('p','notice','Adaptador v1 preparado: conserva bancoRef/identidad estable, bloquea tombstones, detecta conflictos y evita deduplicar por parecido. Sigue en modo planificación: no conecta, no importa y no escribe.'));
  d.append(el('p','periodHint','Para activarlo faltan autorización del proveedor, prueba con el mismo perfil y corte, credenciales válidas del conector original, RLS verificada y paridad 51/51. Nunca se mostrarán cargos bancarios de otra cuenta.'));
+ d.append(renderBankAdapterReadiness());
  $('#detail').classList.add('open');
+}
+
+function renderBankAdapterReadiness(){
+ const panel=el('section','integrityPanel');
+ panel.append(el('h3',null,'🧪 Preflight del adaptador bancario'));
+ const adapter=window.FluxiaEliteBankAdapter;
+ const existing=Array.isArray(extraFinance?.v2_movimientos)?extraFinance.v2_movimientos:[];
+ const inbox=['banco_bandeja','bankInbox','bancoBandeja'].map(key=>extraFinance?.[key]).find(value=>Array.isArray(value))||[];
+ const tombstones={
+  deletedBankRefs:['deletedBankRefs','borradosBanco','FluxiaGVBorrados','bankTombstones'].flatMap(key=>Array.isArray(extraFinance?.[key])?extraFinance[key]:[]),
+  excludedBankRefs:['excludedBankRefs','excluidosBanco'].flatMap(key=>Array.isArray(extraFinance?.[key])?extraFinance[key]:[])
+ };
+ const checks=[['Adaptador cargado',!!adapter],['Fuente bancaria auxiliar',existing.length>0],['Bandeja de proveedor disponible',inbox.length>0],['Tombstones legibles',tombstones.deletedBankRefs.length+tombstones.excludedBankRefs.length>0]];
+ const list=el('div','legacySettingList');
+ for(const [label,ok] of checks){const row=el('div','legacySettingRow');row.append(el('span',null,label),el('strong',null,ok?'✓ Disponible':'Pendiente'));list.append(row)}
+ panel.append(list);
+ if(!adapter){panel.append(el('p','integrityWarning','No se puede auditar el adaptador porque el módulo no se ha cargado.'));return panel}
+ const audit=adapter.planImport(existing,inbox,tombstones);
+ panel.append(el('p','periodHint','Registros contables leídos: '+existing.length+' · lote de bandeja: '+inbox.length+' · tombstones: '+(tombstones.deletedBankRefs.length+tombstones.excludedBankRefs.length)+'.'));
+ if(inbox.length)panel.append(el('p',audit.ok?'periodHint':'integrityWarning','Previsualización sin escritura: nuevas '+audit.additions.length+' · duplicados '+audit.duplicates.length+' · bloqueados '+audit.blocked.length+' · conflictos '+audit.conflicts.length+' · inválidos '+audit.invalid.length+'.'));
+ else panel.append(el('p','periodHint','No existe un lote del proveedor en esta sesión. El sistema no simula cargos ni interpreta la ausencia como saldo cero.'));
+ if(audit.conflicts.length)panel.append(el('p','integrityWarning','Hay conflictos con el mismo bankRef y datos distintos. La importación queda bloqueada hasta resolverlos de forma explícita.'));
+ if(audit.invalid.length)panel.append(el('p','integrityWarning','Hay movimientos sin identidad, importe o fecha válida. No se deduplican ni se incorporan automáticamente.'));
+ panel.append(el('p','periodHint','Regla de seguridad: solo se podrá activar proveedor → conector original → Edge/bandeja → registro canónico cuando el perfil, los permisos y la paridad estén certificados.'));
+ return panel
 }
 
 let motherAudit=null;let fullProfileAudit=null;
