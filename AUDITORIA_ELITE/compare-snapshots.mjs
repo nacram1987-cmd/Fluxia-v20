@@ -12,7 +12,10 @@ export function compareSnapshots(html, elite) {
     if (!Array.isArray(snapshot.movements)) throw new Error(label + ': movements missing');
     const m = new Map();
     for (const row of snapshot.movements) {
-      if (!row.canonical_id || !Number.isSafeInteger(row.amount_cents)) throw new Error(label + ': invalid row');
+      if (!row || typeof row.canonical_id !== 'string' || !row.canonical_id.trim() || !Number.isSafeInteger(row.amount_cents)) throw new Error(label + ': invalid row');
+      for (const key of ['user_id','profile_id','accounting_month']) {
+        if (row[key] != null && row[key] !== snapshot[key]) throw new Error(label + ': ROW_SCOPE_MISMATCH ' + key);
+      }
       if (m.has(row.canonical_id)) throw new Error(label + ': duplicate canonical_id ' + row.canonical_id);
       m.set(row.canonical_id, row);
     }
@@ -23,7 +26,7 @@ export function compareSnapshots(html, elite) {
   for (const [id, original] of a) {
     if (!b.has(id)) { missing_from_elite.push(id); continue; }
     const current = b.get(id);
-    const differences = fields.filter(f => (original[f] ?? null) !== (current[f] ?? null));
+    const differences = fields.filter(f => original[f] !== current[f]);
     if (differences.length) same_id_value_mismatch.push({canonical_id:id, fields:differences});
   }
   for (const id of b.keys()) if (!a.has(id)) unexpected_in_elite.push(id);
