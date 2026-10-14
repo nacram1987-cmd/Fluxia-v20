@@ -1,0 +1,834 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#f7f7f4"><title>Fluxia Élite BETA v1.6.0 · Safari</title><link rel="manifest" href="../fluxia-elite.webmanifest"><link rel="apple-touch-icon" href="../../fluxia-icon.png"><meta name="apple-mobile-web-app-title" content="Fluxia Élite BETA"><meta name="fluxia-elite-version" content="1.6.0">
+<style>
+:root{--navy:#163750;--gold:#bb9859;--muted:#667889;--bg:#f7f7f4;--line:#e6e9e8}*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif;background:var(--bg);color:var(--navy)}button,input{font:inherit}button{cursor:pointer}button:disabled{opacity:.48}#app{max-width:650px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;padding-bottom:calc(68px + env(safe-area-inset-bottom))}header{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:9px;padding:12px 15px}.brandIcon{width:34px;height:34px;border-radius:9px;object-fit:cover}.brand{display:flex;flex-direction:column;line-height:1.03}.brand strong{font:600 25px Georgia,serif;letter-spacing:-.6px}.brand small{font-size:9px;letter-spacing:1.7px;color:var(--gold);font-weight:750}.grow{flex:1}.textbutton{background:none;border:0;color:var(--navy);font-size:13px;font-weight:650}.content{padding:18px 14px;flex:1}h1{font:600 25px Georgia,serif;margin:4px 0 14px}.intro{font-size:13px;color:var(--muted);line-height:1.5}.card{border:1px solid var(--line);background:white;border-radius:19px;padding:17px;margin-bottom:13px;box-shadow:0 2px 8px #1d314009}.hero{background:var(--navy);color:#fff;border:0}.hero small{color:#d6e2e5}.hero .big{font-size:37px;display:block;margin:7px 0;font-family:Georgia,serif}.muted{color:var(--muted);font-size:12px}.pill{background:#f1eee7;border-radius:8px;color:#936d36;padding:5px 7px;font-size:10px;font-weight:700}.titleRow{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;gap:7px}.titleRow h2{font-size:16px;margin:0}label{font-size:12px;display:block;margin-bottom:13px;color:var(--muted);font-weight:650}input,select{width:100%;margin-top:6px;border:1px solid #d6dede;border-radius:11px;padding:12px;background:white;min-height:42px;font-size:16px;color:var(--navy)}.primary{background:var(--navy);color:white;border:0;border-radius:12px;padding:14px 18px;font-weight:700;width:100%}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.tile{background:white;border:1px solid var(--line);border-radius:16px;padding:16px 13px;text-align:left;color:var(--navy);min-width:0}.tile .symbol{font-size:22px}.tile strong{display:block;margin:8px 0 4px}.tile span:last-child{font-size:12px;color:var(--muted)}.toolrow{display:flex;gap:9px;align-items:center;margin:8px 0 14px}.toolrow input,.toolrow select{margin-top:0}.toolrow select{width:42%;min-width:120px;font-size:13px}.entries{display:flex;flex-direction:column;gap:8px}.entry{background:white;border:1px solid var(--line);border-radius:14px;padding:12px 13px;width:100%;display:flex;align-items:center;gap:10px;text-align:left;color:inherit}.entryMain{min-width:0;flex:1}.entryMain strong{display:block;font-size:13px;overflow-wrap:anywhere}.entryMain small{display:block;color:var(--muted);font-size:11px;margin-top:5px}.amount{font-size:14px;font-weight:750;white-space:nowrap}.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:8px 6px calc(7px + env(safe-area-inset-bottom));display:flex;gap:2px;justify-content:center;z-index:12}.bottom button{border:0;background:transparent;color:#7a8793;min-width:0;flex:1;max-width:95px;display:flex;flex-direction:column;align-items:center;font-size:10px;gap:3px;padding:4px 0}.bottom button.active{color:var(--navy);font-weight:800}.bottom .sym{font-size:18px}.error{background:#fff2ed;color:#a63d20;border:1px solid #f0c9bb;padding:11px;border-radius:10px;font-size:13px;margin:12px 0}.notice{font-size:11px;color:var(--muted);line-height:1.5;margin:15px 0}.back{border:0;background:transparent;color:var(--navy);padding:3px;font-size:14px;font-weight:700}.loading{text-align:center;padding:55px 10px}.spinner{border:3px solid #dce5e8;border-top-color:var(--gold);width:36px;height:36px;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 20px}@keyframes spin{to{transform:rotate(360deg)}}#detail{position:fixed;inset:0;background:#0c203866;z-index:25;display:none;align-items:flex-end;justify-content:center}#detail.open{display:flex}.sheet{background:#fff;width:100%;max-width:650px;max-height:85dvh;overflow:auto;border-radius:22px 22px 0 0;padding:23px 18px calc(25px + env(safe-area-inset-bottom))}.sheet dl{display:grid;grid-template-columns:95px 1fr;gap:12px;font-size:13px}.sheet dt{color:var(--muted)}.sheet dd{margin:0;overflow-wrap:anywhere}.empty{text-align:center;color:var(--muted);padding:25px;font-size:13px}.hide{display:none!important}@media(min-width:680px){.bottom{max-width:650px;margin:auto}.sheet{border-radius:20px;margin-bottom:15px}#detail{align-items:center}}
+
+/* Fluxia HTML heritage: warm ivory surfaces, navy-and-gold hierarchy and compact cards. */
+:root{--navy:#142d49;--gold:#bc9859;--muted:#73818b;--bg:#f6f4ef;--line:#e8e3d9}
+body{background:linear-gradient(180deg,#f8f7f3 0%,#f1f2ef 100%);-webkit-font-smoothing:antialiased}
+header{box-shadow:0 2px 16px #18364c0a;border-bottom-color:#ede9df;padding:10px 15px}
+.brandIcon{width:32px;height:32px}.brand strong{font-size:24px}
+.content{padding:14px 13px}h1{font-family:Georgia,serif;font-size:24px}
+.card{border-radius:16px;padding:15px;box-shadow:0 4px 16px #152c4010}
+.hero{background:linear-gradient(135deg,#193b56,#0e263e);position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:150px;height:150px;border:1px solid #ffffff26;border-radius:50%;right:-55px;top:-60px;pointer-events:none}
+.tile{border-radius:15px;padding:13px 12px;box-shadow:0 1px 5px #193b5609}
+.tile .symbol{display:inline-flex;align-items:center;justify-content:center;background:#f6f0e5;color:#9d773a;width:31px;height:31px;border-radius:9px;font-size:19px}
+.tile strong{margin:7px 0 3px;font-size:13px}.tile span:last-child{font-size:11px}
+.entry{background:#fffefa;border-color:#e8e6df}.entry:active,.tile:active{background:#f4f1ea}
+.bottom{box-shadow:0 -6px 22px #152e4410}.bottom button.active{color:#173b57}.bottom button.active .sym{color:#b48b49}
+.primary{background:linear-gradient(120deg,#1d425f,#10273f);box-shadow:0 7px 18px #17354d23}
+:focus-visible{outline:3px solid #ba9759;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* ÉLITE VISUAL v2: warmth, brand identity, bespoke financial tiles. No image libraries or animations. */
+:root{--navy:#173951;--gold:#b68a4e;--muted:#747f88;--bg:#f7f6f2;--line:#ebe7df;--pearl:#fffefa;--mint:#e6f0e9}
+body{background:#f7f6f2;color:#203d4c}
+header{background:#fffefa;box-shadow:0 3px 16px #253d4910;gap:10px;padding:9px 14px}
+.brandIcon{width:37px;height:37px;border-radius:12px;box-shadow:0 3px 8px #14374c19}
+.brand strong{font:600 27px Georgia,serif;letter-spacing:-.9px;color:#1d3e52}
+.brand small{font-size:9px;letter-spacing:1.15px}
+#help{background:#f3eee4;color:#826032;border:1px solid #ece2d2;border-radius:999px;padding:7px 11px}
+.content{padding:17px 14px}
+h1{color:#18364b}
+.sectioneyebrow{display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:1.3px;color:#a27e49;font-weight:800;font-size:10px;margin:4px 0 5px}
+.sectioneyebrow:before{content:"";width:14px;height:2px;background:#b79458;border-radius:2px}
+.welcomeTitle{font:600 27px Georgia,serif;letter-spacing:-.7px;margin:0 0 4px;color:#1b3b4f}
+.welcomeDescription{font-size:12px;color:#77828a;line-height:1.5;margin:0 0 16px}
+.card.hero{background:linear-gradient(135deg,#e4efec 0%,#e7f1ea 53%,#f4f0e5 100%);color:#183e4c;border:1px solid #d2e2d8;border-radius:20px;box-shadow:0 8px 26px #2e76601a;min-height:162px;padding:20px 19px}
+.hero:after{width:175px;height:175px;border:1px solid #ffffffa8;right:-55px;top:-72px;box-shadow:0 0 0 31px #ffffff20,0 0 0 65px #ffffff1c}
+.hero .big{font-size:44px;line-height:1.1;color:#17394b;margin:14px 0 13px}
+.hero small{color:#526f69;font-size:11px;line-height:1.4;max-width:270px;display:block;position:relative;z-index:1}
+.heroHeadline{font-size:12px;letter-spacing:.4px;font-weight:750;position:relative;z-index:1}
+.heroBadge{display:inline-block;float:right;position:relative;z-index:1;background:#fff9eb;color:#916d33;border:1px solid #e3d4b3;border-radius:999px;padding:4px 9px;font-size:10px;font-weight:800}
+.moduleTitle{font:600 21px Georgia,serif;color:#24445a;margin:19px 0 12px}
+.grid{gap:11px}
+.tile{position:relative;overflow:hidden;border:1px solid #ede6dc;min-height:116px;padding:14px 13px 13px;border-radius:17px;box-shadow:0 6px 16px #24435509;transition:transform .14s ease,box-shadow .14s ease}
+.tile:active{transform:scale(.985)}
+.tile:before{content:"";height:3px;position:absolute;top:0;left:0;right:0;background:var(--tileAccent,#b68a4e);opacity:.85}
+.tile .symbol{width:37px;height:37px;font-size:20px;background:var(--tileBg,#f8eee0);color:var(--tileText,#a37537);border-radius:12px}
+.tile strong{font-size:14px;color:#203d50;margin:8px 0 5px}
+.tile span:last-child{font-size:11px;color:#7a8185}
+.tile[data-section="ingresos"]{--tileAccent:#84bca5;--tileBg:#e6f4eb;--tileText:#32755b}
+.tile[data-section="fijos"]{--tileAccent:#b9a1d9;--tileBg:#f1eafa;--tileText:#765a9d}
+.tile[data-section="variables"]{--tileAccent:#d9b286;--tileBg:#fff1df;--tileText:#ad7536}
+.tile[data-section="huchas"]{--tileAccent:#88b8c5;--tileBg:#e5f2f5;--tileText:#36778b}
+.tile[data-section="compartidos"]{--tileAccent:#daa3a3;--tileBg:#fbebec;--tileText:#ae6268}
+.tile[data-section="financiaciones"]{--tileAccent:#b6b7a0;--tileBg:#f1f2e7;--tileText:#707653}
+.entry{box-shadow:0 1px 4px #16375006;padding:13px 14px}
+.entry:before{content:"";width:3px;align-self:stretch;border-radius:5px;background:#e4d0a8;flex:0 0 3px}
+.entryMain strong{font-size:13px}.entryMain small{font-size:11px}
+.amount{color:#244f58;font-weight:800}
+.bottom{background:#fffefa;border-color:#ebe7df;box-shadow:0 -4px 18px #233c4a0c}
+.bottom button{gap:4px}.bottom button.active{color:#183e50}
+.bottom button.active .sym{color:#9d773b}
+.bottom button.active:after{content:"";height:3px;width:16px;background:#b99154;border-radius:5px;position:absolute;bottom:calc(5px + env(safe-area-inset-bottom))}
+.pill{background:#f5ebd9}
+@media(prefers-reduced-motion:reduce){.tile{transition:none}}
+
+
+/* Charge icons and actual transaction dates, without network requests. */
+.chargeEmoji{display:inline-flex;align-items:center;justify-content:center;flex:0 0 38px;width:38px;height:38px;border-radius:12px;background:#f4eee4;font-size:20px}
+.entry:before{display:none}.verifiedDate{font-size:13px;font-weight:700;color:#2c6c59;background:#eaf2eb;padding:10px;border-radius:9px}
+@media(max-width:355px){.entry{padding:10px}.chargeEmoji{flex-basis:33px;width:33px;height:33px;font-size:18px}.amount{font-size:12px}}
+
+
+/* Sandbox editor (session-only) for parity inspection, never a write to Supabase */
+.draftTag{color:#8a6027;background:#fbefd8;padding:6px 9px;border-radius:8px;font-size:11px;font-weight:750}
+.editIntro{font-size:12px;line-height:1.5;color:#6b7c84}
+.editActions{display:flex;gap:8px;margin-top:15px}
+.editActions button{flex:1;min-height:43px;border-radius:11px;border:1px solid #d9dfde;background:white;color:#1a3a4f;font-weight:700}
+.editActions .primary{background:#193c54;color:white;border:0}
+.draftCompare{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.draftCompare div{background:#f5f5f0;border-radius:11px;padding:10px;min-width:0;overflow-wrap:anywhere}
+.draftCompare strong{display:block;font-size:11px;color:#6b7c84;margin-bottom:6px}
+.draftCompare span{display:block;font-size:12px}
+.editorError{padding:9px;background:#fff0e8;color:#9c402b;font-size:12px;border-radius:9px;margin-top:9px}
+
+.previewOperation{background:#fffbf1;border:1px solid #e9dfce;border-radius:12px;padding:12px;margin:12px 0}.previewOperation h3{font-size:14px;margin:0 0 11px}
+
+/* Versioned financial-home improvements: lightweight DOM-only source records. */
+.versionFooter{margin:13px 0 8px;border-top:1px solid #e5dfd4;padding:12px 2px;font-size:11px;color:#667986;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.versionFooter button{border:1px solid #e4d7c0;border-radius:9px;color:#856536;background:#faf3e5;padding:7px 9px;font-size:11px;font-weight:700}
+.financeStrip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}
+.financeStrip .stat{background:#fffefa;border:1px solid #e7e4db;border-radius:14px;padding:12px;min-width:0}
+.financeStrip .stat strong{font-size:25px;display:block;color:#25495a;line-height:1.2}
+.financeStrip .stat span{font-size:11px;color:#75828b}
+.recentCard{display:flex;gap:10px;align-items:center;background:#fffefa;border:1px solid #e9e5dc;border-radius:12px;padding:11px;margin-bottom:7px;width:100%;text-align:left;color:#203b4d}
+.recentCard .recentText{min-width:0;flex:1}.recentCard .recentText strong{display:block;font-size:12px;overflow-wrap:anywhere}.recentCard .recentText small{display:block;color:#72818c;font-size:11px;margin-top:4px}
+.recentCard .recentAmount{font-size:12px;font-weight:700;white-space:nowrap}
+.tile .tileRecent{display:block;font-size:11px;color:#405d5d;margin-top:5px;line-height:1.35}
+.versionSheet{background:#fdf8ed;border-radius:12px;padding:11px;font-size:12px;color:#785b35;line-height:1.6}
+
+.brandImage{width:31px;height:31px;max-width:100%;max-height:100%;object-fit:contain}.chargeEmoji:has(.brandImage){background:#fff;border:1px solid #eee5d7}
+
+.checklistPanel{background:#fffaf0;border:1px solid #e9dbc0;border-radius:14px;padding:12px;margin:12px 0}.checklistPanel h3{font:600 18px Georgia,serif;margin:0 0 10px}.checkRow{display:flex;gap:9px;border-top:1px solid #efe6d7;padding:10px 0}.checkIcon{color:#40826c;font-weight:800}.checkRow strong{display:block;font-size:12px}.checkLocation{display:block;font-size:10px;color:#8a693a;margin:5px 0}.checkRow p{margin:2px 0;font-size:11px;line-height:1.45;color:#637987}
+
+.monthSelector{display:flex;align-items:center;gap:6px;background:#fffefa;border:1px solid #e7dfd1;border-radius:13px;padding:6px 8px;margin:-1px 0 15px;box-shadow:0 2px 11px #26394b08}
+.monthArrow{border:0;background:#f5eee3;color:#825f31;font-size:25px;line-height:1;border-radius:9px;width:36px;height:37px;flex:0 0 36px}
+.monthCenter{flex:1;text-align:center;cursor:pointer;min-width:0}.monthCenter strong{display:block;font-size:14px;font-weight:800;color:#23435a}.monthCenter small{display:block;font-size:10px;color:#9f7d47;margin-top:2px}
+.monthCenter{border:0;background:transparent;min-height:38px;padding:3px 7px}
+.monthPanel{display:grid;grid-template-columns:85px 1fr 90px;gap:8px;padding:11px;margin:-10px 0 14px;border:1px solid #ece3d4;border-radius:0 0 12px 12px;background:#fffefa}
+.monthPanel select{font-size:13px;margin:0;padding:9px;min-width:0}
+.monthApply{grid-column:1/-1;border:0;border-radius:9px;background:#19394f;color:white;min-height:39px;font-size:12px;font-weight:750}
+
+.periodHint{color:#657784;font-size:11px;line-height:1.5;margin:10px 0}
+.recordGroup{font-size:12px;color:#896940;font-weight:750;margin:13px 0 7px;padding-left:5px}
+.bottom button{font-size:9px;max-width:80px}.bottom button .sym{font-size:17px}
+.integrityPanel{background:#fff8e9;border:1px solid #e4c797;border-radius:14px;padding:13px;margin:12px 0}.integrityPanel h3{font:600 17px Georgia,serif;margin:0 0 9px}.integrityWarning{font-size:12px;line-height:1.55;color:#825528}.motherLink{display:block;font-size:12px;font-weight:700;text-decoration:none;color:#165274;padding:11px;border:1px solid #b9cbd1;background:#f6faf9;border-radius:10px;text-align:center;margin:10px 0}
+#splash{position:fixed;inset:0;z-index:40;background:radial-gradient(circle at 50% 35%,#274763,#10273e 75%);color:white;display:none;align-items:center;justify-content:center;text-align:center;padding:28px}
+#splash.active{display:flex}#splash .splashLogo{width:76px;height:76px;border-radius:20px;object-fit:contain;box-shadow:0 16px 42px #07172677}
+#splash h1{font:600 41px Georgia,serif;color:#fff;margin:17px 0 0}#splash .splashBeta{display:block;color:#d1ad6a;letter-spacing:2px;font-size:11px;font-weight:750;margin:6px 0 30px}
+#splash .spinner{border-color:#ffffff3c;border-top-color:#d1ad6a}
+#splash .splashStatus{color:#d8e0e5;font-size:12px}
+#onboarding{position:fixed;inset:0;z-index:35;background:#152e48cf;display:none;align-items:center;justify-content:center;padding:20px}
+#onboarding.active{display:flex}
+#onboarding .welcomeCard{background:#fffdf8;border-radius:22px;width:100%;max-width:450px;padding:27px 22px;box-shadow:0 20px 80px #091b2f64}
+.welcomeCard .stepIcon{font-size:34px;background:#f6eedf;border-radius:17px;width:62px;height:62px;display:grid;place-items:center;margin-bottom:17px}
+.welcomeCard h2{font:600 25px Georgia,serif;margin:0 0 11px}.welcomeCard p{color:#667889;font-size:14px;line-height:1.55;min-height:80px}
+.welcomeActions{display:flex;gap:9px;align-items:center;margin-top:17px}.welcomeActions button{border:0;border-radius:10px;min-height:43px;padding:10px 13px}
+.welcomeActions .next{background:#142d49;color:white;flex:1;font-weight:700}.welcomeActions .skip{background:transparent;color:#677581}
+.welcomeProgress{height:4px;border-radius:10px;background:#e7e7df;overflow:hidden}.welcomeProgress i{height:100%;display:block;background:#b89352}
+</style></head><body><div id="app">
+<header><img class="brandIcon" src="../../fluxia-icon.png" alt="Icono original Fluxia"><div class="brand"><strong>fluxia</strong><small>ÉLITE BETA · v1.6.0</small></div><div class="grow"></div><button id="help" class="textbutton hide">Ayuda</button><button id="logout" class="textbutton hide">Salir</button></header>
+<main class="content" id="content"><div class="loading"><div class="spinner"></div>Preparando vista de contraste…</div></main>
+<nav id="bottom" class="bottom hide"></nav></div>
+<div id="splash" role="status" aria-live="polite"><div><img class="splashLogo" src="../../fluxia-icon.png" alt="Logo oficial Fluxia"><h1>fluxia</h1><span class="splashBeta">ÉLITE BETA</span><div class="spinner"></div><p class="splashStatus" id="splashStatus">Conectando con tu nube…</p></div></div>
+<div id="onboarding" role="dialog" aria-modal="true" aria-label="Bienvenida a Fluxia"><div class="welcomeCard"><div class="stepIcon" id="stepIcon">✦</div><div class="titleRow"><span class="pill" id="stepCount">1 / 6</span><button class="textbutton" id="helpClose" aria-label="Cerrar tutorial">✕</button></div><h2 id="stepTitle"></h2><p id="stepText"></p><div class="welcomeProgress"><i id="stepProgress"></i></div><div class="welcomeActions"><button class="skip" id="skipTutorial">Omitir</button><button class="skip" id="prevTutorial">Anterior</button><button class="next" id="nextTutorial">Siguiente →</button></div></div></div>
+<div id="detail"><div class="sheet"><div class="titleRow"><h2>Detalle de registro real</h2><button id="close" class="textbutton">Cerrar ✕</button></div><div id="detailContent"></div></div></div>
+<script>
+(() => {
+'use strict';
+const BASE='https://kylduzmrfbubeamfrbbr.supabase.co';
+const KEY='sb_publishable_5hX9-6-J7MlJfvmeWZcz5w_U-KlTCaj';
+const mods=[
+{id:'inicio',title:'Inicio',icon:'⌂'},
+{id:'ingresos',title:'Ingresos',icon:'↙',key:'planRescate_v2_ingresos'},
+{id:'fijos',title:'Fijos',icon:'▤',key:'planRescate_v2_fijos'},
+{id:'variables',title:'Variables',icon:'▱',key:'planRescate_v2_movimientos'},
+{id:'huchas',title:'Huchas',icon:'◈',key:'planRescate_v2_provisiones'},
+{id:'compartidos',title:'Compartidos',icon:'♧',key:'planRescate_v2_compartidos'},
+{id:'financiaciones',title:'Financiaciones',icon:'◎',key:'planRescate_v2_financiaciones'}];
+let token='',owner='',items={},page='inicio',search='',period='Todos',error='',loading=false, tutorialIndex=0,searchTimer=null;
+let selectedMonth=new Date().getFullYear()+'-'+String(new Date().getMonth()+1).padStart(2,'0');
+let selectedDay=new Date().getDate();let sourceDivergence=[];let rawSources={};let sourceUpdated={};
+let draftEdits=new Map();let currentDetail=null;let activeProfile='';
+const TUTORIAL_VERSION='1';
+const steps=[['✦','Bienvenido a Fluxia Élite','Tu espacio financiero con la identidad azul y oro de Fluxia. Esta vista Safari permite navegar por registros auténticos.'],['◈','Disponible fiable','Nunca mostramos un saldo inventado. El Disponible aparecerá cuando el motor contable esté conciliado con Fluxia HTML.'],['↙','Ingresos y gastos','Entra en Ingresos, Fijos y Variables. Busca conceptos y revisa los importes originales sin alterarlos.'],['◆','Huchas y previsiones','Consulta las provisiones reales. Aportaciones, rescates y operaciones retroactivas no se recalculan hasta validar la lógica histórica.'],['♧','Compartidos y financiación','Accede a los módulos desde sus tarjetas de Inicio. Abre un registro para revisar fecha, importe y categoría originales.'],['✓','Seguridad y límites actuales','Cada cuenta consulta solo sus propias colecciones en Supabase. Esta vista no modifica bancos ni saldos; la app iOS nativa sigue desarrollándose.']];
+const $=s=>document.querySelector(s),el=(tag,cls,txt)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n};
+const money=v=>typeof v==='number'&&isFinite(v)?new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(v):null;
+const field=(obj,keys)=>{for(const k of keys){let v=obj[k];if(typeof v==='string'&&v.trim())return v}return null};
+const canon=m=>{const a=items[m.key];return Array.isArray(a)?a:null};
+const ELITE_SAFARI_VERSION='1.6.0';
+const ELITE_CHANGELOG=[
+ ['1.6.0','Auditoría explícita de desfase respecto a 51 Variables en el HTML; fechas de última actualización de fuentes; acceso al HTML madre y pantalla Bancos sin conexión ficticia.'],
+ ['1.5.0','Selector día/mes/año, auditoría de cobertura de octubre contra la segunda fuente real del HTML y registros divergentes visibles sin duplicar importes.'],
+ ['1.4.0','Octubre completo y visible con fecha confirmada o mes sin año; selector mensual limpio; barra inferior con 5 accesos y menú Más; modo PWA independiente sin modificar HTML estable.'],
+ ['1.3.0','Selector mensual de año/mes en todos los módulos, listas separadas por periodo, históricos ambiguos distinguidos, planes de huchas/financiaciones y acceso directo a Compartidos.'],
+ ['1.2.0','Búsqueda online de logotipos comerciales, carga diferida y checklist de cambios.'],
+ ['1.1.0','CORRECCIÓN CRÍTICA: carga de colecciones por clave canónica con prefijo del perfil, identificada desde la cuenta autenticada. Datos reales por módulo e identidad de comercios.'],
+ ['1.0.0','Versionado formal e interfaz de dashboard. La lectura usaba claves sin prefijo y no recuperaba las colecciones canónicas; conservar solo para comparación.'],
+ ['pre-versionado','Vista Safari anterior conservada como copia histórica.']
+];
+const MONTHS=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+function monthTitle(ym){
+ const match=/^(\d{4})-(0[1-9]|1[0-2])$/.exec(ym);if(!match)return 'Mes sin seleccionar';
+ return MONTHS[Number(match[2])-1][0].toUpperCase()+MONTHS[Number(match[2])-1].slice(1)+' '+match[1]
+}
+function monthShift(ym,delta){
+ const match=/^(\d{4})-(0[1-9]|1[0-2])$/.exec(ym);
+ if(!match)return ym;
+ const date=new Date(Date.UTC(Number(match[1]),Number(match[2])-1+delta,1));
+ return date.getUTCFullYear()+'-'+String(date.getUTCMonth()+1).padStart(2,'0');
+}
+function recordMonth(obj){
+ const d=actualChargeDate(obj);
+ if(d)return {ym:String(Math.floor(d.sort/10000))+'-'+String(Math.floor(d.sort/100)%100).padStart(2,'0'),exact:true};
+ const raw=field(obj,['mes','periodo']);
+ if(raw){
+  const v=raw.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+  const month=MONTHS.findIndex(m=>m===v||v.startsWith(m+' '));
+  const yearMatch=/\b20\d{2}\b/.exec(v);
+  if(month>=0){
+    return yearMatch?{ym:yearMatch[0]+'-'+String(month+1).padStart(2,'0'),exact:false}:
+      {month:month+1,legacy:true};
+  }
+  const iso=/^(20\d{2})-(0[1-9]|1[0-2])$/.exec(v);
+  if(iso)return {ym:iso[1]+'-'+iso[2],exact:false}
+ }
+ return null
+}
+function monthStatus(obj,ym){
+ const m=recordMonth(obj);if(!m)return 'undated';
+ if(m.ym)return m.ym===ym?'match':'other';
+ return m.legacy&&m.month===Number(ym.slice(5))?'legacy':'other'
+}
+function monthRecords(mod){
+ const arr=canon(mod);if(!arr)return [];
+ const isPlan=mod.id==='huchas'||mod.id==='financiaciones';
+ return arr.map((data,index)=>{
+  let state=monthStatus(data,selectedMonth);
+  // Plans have a validity period, unlike an individual bank charge.
+  if(isPlan){
+   const start=typeof data.inicio==='string'?data.inicio:null;
+   const finish=typeof data.fin==='string'?data.fin:null;
+   const startYm=start&&/^\d{4}-\d{2}/.test(start)?start.slice(0,7):null;
+   const finishYm=finish&&/^\d{4}-\d{2}/.test(finish)?finish.slice(0,7):null;
+   if((!startYm||startYm<=selectedMonth)&&(!finishYm||finishYm>=selectedMonth))state='plan';
+   else if(startYm||finishYm)state='other';
+   else state='undated';
+  }
+  return {data,index,monthStatus:state}
+ }).filter(x=>x.monthStatus==='match'||x.monthStatus==='legacy'||(isPlan&&(x.monthStatus==='plan'||x.monthStatus==='undated')))
+}
+function moveMonth(delta){selectedMonth=monthShift(selectedMonth,delta);selectedDay=Math.min(selectedDay,daysInSelectedMonth());search='';period='Todos';render()}
+function daysInSelectedMonth(){const [y,m]=selectedMonth.split('-').map(Number);return new Date(Date.UTC(y,m,0)).getUTCDate()}
+function fullSelectedDate(){const date=new Date(Date.UTC(Number(selectedMonth.slice(0,4)),Number(selectedMonth.slice(5))-1,selectedDay));return new Intl.DateTimeFormat('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(date)}
+function renderMonthSelector(){
+ const shell=el('div','monthSelector');
+ const prev=el('button','monthArrow','‹');prev.setAttribute('aria-label','Mes anterior');prev.onclick=()=>moveMonth(-1);
+ const center=el('button','monthCenter');center.type='button';
+ center.append(el('strong',null,monthTitle(selectedMonth)),el('small',null,'📅 '+fullSelectedDate()+' · Cambiar fecha ▾'));
+ const next=el('button','monthArrow','›');next.setAttribute('aria-label','Mes siguiente');next.onclick=()=>moveMonth(1);
+ center.onclick=()=>{const panel=$('#monthPanel');panel.classList.toggle('hide')};
+ shell.append(prev,center,next);$('#content').append(shell);
+ const panel=el('div','monthPanel hide');panel.id='monthPanel';
+ const monthPick=el('select'),yearPick=el('select'),dayPick=el('select');
+ const fillDays=()=>{const days=new Date(Date.UTC(Number(yearPick.value||selectedMonth.slice(0,4)),Number(monthPick.value||selectedMonth.slice(5)),0)).getUTCDate();const before=dayPick.value||String(selectedDay);dayPick.replaceChildren();for(let i=1;i<=days;i++){const op=el('option',null,'Día '+i);op.value=String(i);dayPick.append(op)}dayPick.value=String(Math.min(Number(before)||1,days))};
+ for(let i=0;i<12;i++){const op=el('option',null,MONTHS[i][0].toUpperCase()+MONTHS[i].slice(1));op.value=String(i+1).padStart(2,'0');monthPick.append(op)}
+ const thisYear=new Date().getFullYear(),selectedYear=Number(selectedMonth.slice(0,4));
+ for(let y=Math.min(2023,selectedYear);y<=Math.max(thisYear+2,selectedYear);y++){const op=el('option',null,String(y));op.value=String(y);yearPick.append(op)}
+ monthPick.value=selectedMonth.slice(5);yearPick.value=selectedMonth.slice(0,4);fillDays();monthPick.onchange=fillDays;yearPick.onchange=fillDays;
+ const apply=el('button','monthApply','Aplicar periodo');apply.onclick=()=>{
+  selectedMonth=yearPick.value+'-'+monthPick.value;selectedDay=Number(dayPick.value);search='';period='Todos';render()
+ };
+ panel.append(dayPick,monthPick,yearPick,apply);$('#content').append(panel);
+}
+function moduleTotalsNote(module,rows){
+ const unyear=rows.filter(x=>x.monthStatus==='legacy').length;
+ if(module.id==='fijos'||module.id==='ingresos'||module.id==='variables'){
+  const hint=el('p','periodHint',unyear?
+   '⚠️ '+unyear+' registros están marcados solo con el mes, sin año. Se muestran aparte como históricos no fechados; no se asignan contablemente a '+monthTitle(selectedMonth)+'.':
+   'Solo aparecen registros asociados al periodo seleccionado. Importes contables pendientes de validación.');
+  return hint;
+ }
+ return el('p','periodHint','Consulta del mes seleccionado. No convierte previsiones en pagos realizados.');
+}
+
+const recordAmount=obj=>{
+ for(const k of ['importe','importeMensual','cuota','importe_total']){if(typeof obj[k]==='number'&&Number.isFinite(obj[k]))return obj[k]}
+ return null
+};
+const datedRows=m=>{
+ const a=canon(m);
+ if(!a)return [];
+ const rows=[];
+ for(let i=0;i<a.length;i++){
+  const d=actualChargeDate(a[i]);
+  if(d)rows.push({record:a[i],date:d,index:i,module:m})
+ }
+ rows.sort((x,y)=>y.date.sort-x.date.sort);
+ return rows
+};
+const ELITE_CHECKLIST=[
+ ['Inicio y Variables · octubre','🚨 Referencia de aceptación: 51 gastos','Se muestra el recuento de movimientos alcanzados y la diferencia de cobertura, sin afirmar una conciliación inexistente.'],
+ ['Integridad · lectura nube','🕒 Fecha de las fuentes','La actualización real del almacenamiento aparece en pantalla, evitando confundir respaldos antiguos con actividad bancaria reciente.'],
+ ['Más → Bancos','🏦 Integración bancaria pendiente','Módulo de auditoría que enlaza el HTML, sin simular una conexión ni duplicar cuentas.'],
+ ['Mes y fecha','📅 Día, mes y año visibles','El selector muestra la fecha completa y permite elegir día, mes y año sin filtros diarios accidentales.'],
+ ['Octubre 2026','🔎 Segunda fuente de movimientos','Detecta diferencias entre colecciones reales del HTML; presenta cargos adicionales para conciliarlos, nunca sumarlos dos veces.'],
+ ['Integridad','🛡️ Protección contable','Las diferencias de fuentes son informativas, no ediciones ni nuevos cargos.'],
+ ['Selector mensual','🗓️ Selector sin control circular','Mes centrado y desplegable separado, con botones anterior/siguiente.'],
+ ['Inicio y gastos','🧾 Todos los registros de octubre visibles','Se muestran tanto los registros con fecha exacta como los históricos con mes pero sin año; no se incluyen estos últimos en totales financieros.'],
+ ['Navegación','☷ Barra inferior ligera','Cinco pestañas prioritarias y menú Más para Compartidos, Financiaciones y versiones.'],
+ ['Instalación iPhone','📱 Acceso PWA separado','Manifiesto exclusivo de LAB; no cambia la PWA estable original.'],
+ ['Inicio y módulos','🗓️ Selector de mes y año','Puedes cambiar de periodo desde todas las pantallas; los resultados se recalculan solo en la interfaz.'],
+ ['Variables y Compartidos','📅 Cargos divididos por mes','Los movimientos con fecha se muestran solo en su periodo y los de mes sin año se separan sin asignarles un año.'],
+ ['Navegación','👥 Compartidos visible','Seis pestañas abajo incluyendo Compartidos.'],
+ ['Huchas y Financiaciones','📂 Planes por vigencia','Planes vigentes aparecen en su periodo; sin fecha clara, se señalan aparte.'],
+ ['Todas las pestañas','🗓️ Selector mensual compartido','Cambio de mes y año visible en Inicio, Ingresos, Fijos, Variables, Huchas y Compartidos.'],
+ ['Variables e Ingresos','📅 Registros separados por periodo','No se mezclan cargos de julio, agosto y octubre; los históricos sin año se muestran diferenciados.'],
+ ['Navegación inferior','👥 Compartidos accesible','La sexta pestaña da acceso directo al módulo Compartidos.'],
+ ['Movimientos y cargos','🌐 Búsqueda en internet','Para cada comercio identificable se consulta Wikidata y se busca su logotipo documentado.'],
+ ['Movimientos y cargos','🏷️ Logos auténticos primero','Se intenta mostrar el logo de marca. Si no se localiza un archivo fiable, aparece el icono por concepto.'],
+ ['Pantallas financieras','⚡ Protección de velocidad','Las imágenes y búsquedas se cargan al hacerse visibles; máximo dos consultas de logos simultáneas y caché de sesión.'],
+ ['Dashboard','💼 Datos financieros','Continúan las seis colecciones reales recuperadas por perfil, fechas originales y movimientos fechados.'],
+ ['Ayuda / Versiones','📋 Checklist por versión','Consulta cada cambio y la pestaña en la que debes revisarlo.'],
+ ['Datos y seguridad','🔒 Sin modificar cargos','No se alteran fechas, importes ni bancos; las ediciones reales aún necesitan conciliación.']
+];
+function renderChecklist(parent){
+ const box=el('section','checklistPanel');box.append(el('h3',null,'Checklist de novedades · v'+ELITE_SAFARI_VERSION));
+ for(const [where,what,details] of ELITE_CHECKLIST){
+  const item=el('div','checkRow');
+  const copy=el('div');copy.append(el('strong',null,what),el('span','checkLocation','Dónde mirar: '+where),el('p',null,details));
+  item.append(el('span','checkIcon','✓'),copy);box.append(item);
+ }parent.append(box);
+}
+
+function showVersionHistory(){
+ const d=$('#detailContent');d.replaceChildren(el('h2',null,'Historial de Fluxia Élite Safari'));
+ d.append(el('p','editIntro','Numeración independiente de la PWA estable HTML y de las compilaciones SwiftUI. Cada entrega conservará una copia identificada.'));
+ for(const [version,notes] of ELITE_CHANGELOG){
+  const card=el('div','versionSheet');card.append(el('strong',null,version),el('div',null,notes));
+  d.append(card);
+ }
+ renderChecklist(d);
+ const link=el('a',null,'Abrir copia anterior archivada ↗');
+ link.href='fluxia-elite-safari-v1.5.0.html';
+ link.target='_blank';link.rel='noopener noreferrer';
+ link.style.display='block';link.style.margin='15px 0';d.append(link);
+ d.append(el('p','notice','Disponible todavía sin reconciliar. Nunca confundir importes originales con totales contables.'));
+ $('#detail').classList.add('open');
+}
+
+
+/* Icons and dates derived only from existing record fields; no fabricated charge dates. */
+const chargeIcon=(obj,module='')=>{
+ const existing=field(obj,['emoji','emoticono','icono','icon','simbolo']);
+ if(existing && /[\u{1F300}-\u{1FAFF}\u2600-\u27BF]/u.test(existing))return existing;
+ const name=[field(obj,['concepto','nombre','descripcion','comercio','beneficiario'])||'',field(obj,['categoria','tipo'])||''].join(' ').toLocaleLowerCase('es');
+ const matches=[
+ [/endesa|iberdrola|luz|electric|energia|energía|factura electric/, '⚡'],
+ [/agua|emasesa|canal isabel/, '💧'],
+ [/securitas|alarma|seguridad/, '🛡️'],
+ [/gasolin|repsol|cepsa|shell|combustible|diesel|diésel/, '⛽'],
+ [/itv|seguro coche|taller|neumatic|neumátic|vehículo|vehiculo|coche|auto/, '🚗'],
+ [/mercadona|carrefour|lidl|aldi|dia |supermerc|alimentaci|compra semanal/, '🛒'],
+ [/hipoteca|alquiler|vivienda|hogar|comunidad|casa/, '🏠'],
+ [/telefon|teléfon|movistar|vodafone|orange|internet|fibra|mobile/, '📱'],
+ [/nómina|nomina|salario|sueldo|pensión|pension|ingreso laboral/, '💼'],
+ [/restaurante|bar |cafeter|comida fuera/, '🍽️'],
+ [/farmacia|salud|médic|medic/, '💊'],
+ [/boda|alianza/, '💍'],
+ [/netflix|spotify|disney|streaming|suscrip/, '🎬'],
+ [/impuesto|tributo|hacienda|ibi/, '🏛️'],
+ [/ahorro|hucha|provisi/, '💰'],
+ [/financia|cuota|prestamo|préstamo/, '💳']
+ ];
+ for(const [pattern,emoji] of matches)if(pattern.test(name))return emoji;
+ return ({ingresos:'💼',fijos:'📋',variables:'💳',huchas:'💰',compartidos:'👥',financiaciones:'💳'})[module]||'🧾';
+};
+
+const brandName=obj=>[field(obj,['concepto','nombre','descripcion','comercio'])||'',field(obj,['categoria'])||''].join(' ').toLocaleLowerCase('es');
+const brandFor=obj=>{
+ const n=brandName(obj);
+ if(/(^|[^a-z])apple([^a-z]|$)|itunes|icloud|apple\.com/i.test(n))return {name:'Apple',src:'../assets/brands/apple.svg'};
+ if(/amazon|amzn|prime video|amazon marketplace/i.test(n))return {name:'Amazon',src:'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg'};
+ return null;
+};
+const logoResults=new Map(),logoPending=new Map(),logoQueue=[];
+let logoTasks=0,logoObserver=null;
+const maxLogoTasks=2;
+function merchantTerm(obj){
+ const defined=brandFor(obj);if(defined)return defined.name;
+ const raw=field(obj,['comercio','beneficiario','concepto','nombre']);
+ if(!raw||/iban|transferencia|bizum|nómina|pensión|factura n[ºo]|referencia|recibo n[ºo]/i.test(raw))return null;
+ const name=raw.replace(/\b\d[\w./-]*\b/g,' ').replace(/[^a-zA-ZÀ-ÿ\s-]/g,' ').replace(/\s+/g,' ').trim().split(' ').slice(0,3).join(' ');
+ return name.length>=4&&name.length<=38?name:null;
+}
+async function remoteBrandLogo(name){
+ const api='https://www.wikidata.org/w/api.php?format=json&origin=*';
+ const controller=new AbortController();
+ const timer=setTimeout(()=>controller.abort(),3800);
+ try{
+  const res=await fetch(api+'&action=wbsearchentities&search='+encodeURIComponent(name)+'&language=es&limit=5',{signal:controller.signal});
+  if(!res.ok)return null;
+  const data=await res.json();
+  const normal=t=>String(t||'').toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');
+  const hit=(data.search||[]).find(x=>normal(x.label)===normal(name)&&/^Q\d+$/.test(x.id));
+  if(!hit)return null;
+  const detail=await fetch(api+'&action=wbgetentities&ids='+hit.id+'&props=claims',{signal:controller.signal});
+  if(!detail.ok)return null;
+  const entity=(await detail.json()).entities?.[hit.id];
+  const filename=entity?.claims?.P154?.find(c=>c.mainsnak?.datavalue?.type==='string')?.mainsnak?.datavalue?.value;
+  if(typeof filename!=='string'||!/\.(png|svg|jpe?g)$/i.test(filename)||filename.length>160)return null;
+  return {name:hit.label,src:'https://commons.wikimedia.org/wiki/Special:Redirect/file/'+encodeURIComponent(filename)+'?width=96'};
+ }catch{return null}finally{clearTimeout(timer)}
+}
+function pumpLogoQueue(){
+ while(logoTasks<maxLogoTasks&&logoQueue.length){
+  const t=logoQueue.shift();logoTasks++;
+  remoteBrandLogo(t.name).then(result=>{logoResults.set(t.key,result);t.resolve(result)})
+   .finally(()=>{logoPending.delete(t.key);logoTasks--;pumpLogoQueue()})
+ }
+}
+function discoverMerchantLogo(name){
+ const key=name.toLocaleLowerCase('es');
+ if(logoResults.has(key))return Promise.resolve(logoResults.get(key));
+ if(logoPending.has(key))return logoPending.get(key);
+ const promise=new Promise(resolve=>{logoQueue.push({name,key,resolve});pumpLogoQueue()});
+ logoPending.set(key,promise);return promise;
+}
+function chargeMark(obj,module){
+ const wrap=el('span','chargeEmoji'),brand=brandFor(obj),term=merchantTerm(obj);
+ const fallback=()=>{wrap.replaceChildren(el('span',null,chargeIcon(obj,module)));wrap.setAttribute('aria-label','Icono de categoría')};
+ const show=info=>{
+  if(!info?.src){fallback();return}
+  const img=el('img','brandImage');img.alt='Logo '+info.name;img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';img.onerror=fallback;img.src=info.src;
+  wrap.replaceChildren(img);wrap.setAttribute('aria-label','Logo comercial '+info.name);
+ };
+ fallback();
+ if(!term)return wrap;
+ const perform=async()=>{
+  if(brand?.src)show(brand);
+  const found=await discoverMerchantLogo(term);
+  if(found&&wrap.isConnected)show(found);
+ };
+ wrap.addEventListener('fluxia-visible-logo',perform,{once:true});
+ if('IntersectionObserver' in window){
+  if(!logoObserver)logoObserver=new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting){logoObserver.unobserve(e.target);e.target.dispatchEvent(new Event('fluxia-visible-logo'))}},{rootMargin:'80px'});
+  logoObserver.observe(wrap);
+ }else{queueMicrotask(()=>wrap.dispatchEvent(new Event('fluxia-visible-logo')))}
+ return wrap;
+}
+const actualChargeDate=obj=>{
+ for(const key of ['fechaCargo','fecha_cargo','fechaOperacion','fecha_operacion','fechaMovimiento','fecha_movimiento','fechaPago','fecha_pago','fecha','date']){
+  const raw=obj[key];if(typeof raw!=='string'||!raw.trim())continue;
+  const value=raw.trim();
+  let y,m,d;
+  let match=value.match(/^(\d{4})-(\d{2})-(\d{2})(?:T|\s|$)/);
+  if(match){[,y,m,d]=match}else{
+   match=value.match(/^(\d{2})[\/.-](\d{2})[\/.-](\d{4})(?:\s|$)/);
+   if(match){[,d,m,y]=match}else{continue}
+  }
+  const day=Number(d),month=Number(m),year=Number(y);
+  if(year<2000||year>2100||month<1||month>12||day<1||day>31)continue;
+  const check=new Date(Date.UTC(year,month-1,day));
+  if(check.getUTCFullYear()!==year||check.getUTCMonth()!==month-1||check.getUTCDate()!==day)continue;
+  return {label:String(day).padStart(2,'0')+'/'+String(month).padStart(2,'0')+'/'+year,sort:year*10000+month*100+day,source:key};
+ }
+ return null;
+};
+const chargeMeta=obj=>{
+ const date=actualChargeDate(obj);
+ const period=field(obj,['mes','periodo','inicio']);
+ const category=field(obj,['categoria','tipo']);
+ return [date?date.label:period?('Periodo: '+period):'Fecha no disponible',category].filter(Boolean).join(' · ');
+};
+
+function status(msg){const p=el('p','error',msg);$('#content').prepend(p)}
+async function authRequest(path,accessToken,options={}){
+ const res=await fetch(BASE+path,{...options,headers:{'apikey':KEY,'Authorization':'Bearer '+accessToken,'Content-Type':'application/json',...(options.headers||{})},cache:'no-store'});
+ if(!res.ok)throw new Error('Supabase devolvió '+res.status+'. Comprueba la sesión y los permisos.');
+ return res.json();
+}
+function showLoading(label){$('#splashStatus').textContent=label;$('#splash').classList.add('active')}
+function hideLoading(){$('#splash').classList.remove('active')}
+function tutorialKey(){return 'fluxia_elite_tutorial_'+TUTORIAL_VERSION+'_'+owner}
+function closeTutorial(){if(owner){try{localStorage.setItem(tutorialKey(),'seen')}catch{}}$('#onboarding').classList.remove('active')}
+function updateTutorial(){const [icon,title,description]=steps[tutorialIndex];$('#stepIcon').textContent=icon;$('#stepTitle').textContent=title;$('#stepText').textContent=description;$('#stepCount').textContent=(tutorialIndex+1)+' / '+steps.length;$('#stepProgress').style.width=((tutorialIndex+1)*100/steps.length)+'%';$('#prevTutorial').disabled=tutorialIndex===0;$('#nextTutorial').textContent=tutorialIndex===steps.length-1?'Empezar ✓':'Siguiente →'}
+function openTutorial(force=false){if(!owner)return;let seen=false;try{seen=localStorage.getItem(tutorialKey())==='seen'}catch{}if(force||!seen){tutorialIndex=0;updateTutorial();$('#onboarding').classList.add('active')}}
+
+async function loadCanonicalProfile(prefix){
+ if(!token||!owner||!/^p_usr-[a-f0-9-]{36}__$/.test(prefix))throw new Error('Perfil financiero no válido');
+ const required=mods.filter(x=>x.key).map(x=>x.key);
+ const allowed=new Set(required.map(k=>prefix+k));
+ const optional=['v2_movimientos','v2_fijos'];for(const key of optional)allowed.add(prefix+key);
+ const query='/rest/v1/fluxia_datos?select=user_id,clave,v,updated_at&user_id=eq.'+encodeURIComponent(owner)+'&clave='+encodeURIComponent('in.('+[...allowed].join(',')+')')+'&limit=12';
+ const rows=await authRequest(query,token);
+ if(!Array.isArray(rows)||rows.some(x=>x.user_id!==owner||!allowed.has(x.clave)))throw new Error('Protección de perfil: datos inesperados');
+ if(required.some(k=>!rows.some(r=>r.clave===prefix+k)))throw new Error('Faltan colecciones canónicas de este perfil');
+ const next={};const fresh={};for(const k of required)next[k]=null;
+ for(const row of rows){let parsed;try{parsed=typeof row.v==='string'?JSON.parse(row.v):row.v}catch{throw new Error('Datos no interpretables en '+row.clave)}
+  if(!Array.isArray(parsed))throw new Error('La colección no es una lista: '+row.clave);
+  const key=row.clave.slice(prefix.length);fresh[key]=row.updated_at||null;
+  if(required.includes(key))next[key]=parsed;else if(optional.includes(key))next['__source_'+key]=parsed;
+ }
+ draftEdits.clear();items=next;sourceUpdated=fresh;activeProfile=prefix;rawSources={movimientos:next.__source_v2_movimientos||[],fijos:next.__source_v2_fijos||[]};
+ sourceDivergence=identifyUnmatchedOctober(next.planRescate_v2_movimientos||[],rawSources.movimientos);
+ page='inicio';search='';period='Todos';
+ render();hideLoading();openTutorial();
+}
+function showProfilePicker(profiles){
+ $('#bottom').classList.add('hide');$('#content').replaceChildren();
+ $('#content').append(el('h1',null,'Elige tu perfil financiero'));
+ $('#content').append(el('p','intro','Tu cuenta contiene varios perfiles. Por seguridad nunca mezclaremos sus movimientos.'));
+ const list=el('div','entries');for(let i=0;i<profiles.length;i++){
+   const button=el('button','entry','👤  Perfil '+(i+1)+' · Abrir sus datos');
+   button.onclick=async()=>{showLoading('Cargando solo el perfil seleccionado…');try{await loadCanonicalProfile(profiles[i])}catch(e){hideLoading();status(e.message)}};
+   list.append(button);
+ }$('#content').append(list);
+}
+
+function loginScreen(){
+ $('#bottom').classList.add('hide');$('#logout').classList.add('hide');$('#help').classList.add('hide');$('#content').replaceChildren();
+ $('#content').append(el('h1',null,'Bienvenido a Fluxia'));
+ $('#content').append(el('p','intro','Accede con tu cuenta habitual. Esta vista funciona directamente en Safari y lee las colecciones reales, sin datos de demostración.'));
+ const box=el('section','card');const form=el('form');
+ const l1=el('label',null,'Correo electrónico'),email=el('input');email.type='email';email.autocomplete='username';email.required=true;email.placeholder='tu-correo@dominio.com';l1.append(email);
+ const l2=el('label',null,'Contraseña'),pass=el('input');pass.type='password';pass.autocomplete='current-password';pass.required=true;l2.append(pass);
+ const btn=el('button','primary','Acceder a mi nube');btn.type='submit';form.append(l1,l2,btn);box.append(form);$('#content').append(box);
+ $('#content').append(el('p','notice','No guarda la contraseña ni tokens en el navegador. No crea, modifica ni elimina registros financieros.'));
+ form.addEventListener('submit',async ev=>{
+ ev.preventDefault();btn.disabled=true;error='';showLoading('Comprobando credenciales y cargando datos reales…');
+ try{
+ const res=await fetch(BASE+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'apikey':KEY,'Content-Type':'application/json'},body:JSON.stringify({email:email.value.trim(),password:pass.value})});
+ const data=await res.json();pass.value='';
+ if(!res.ok||!data.access_token||!data.user?.id)throw new Error('No se ha podido iniciar sesión. Comprueba los datos de acceso.');
+ draftEdits.clear();token=data.access_token;owner=data.user.id;
+ // Discover canonical keys inside the authenticated account. Profiles are never merged.
+ const indexRows=await authRequest('/rest/v1/fluxia_datos?select=clave,user_id&user_id=eq.'+encodeURIComponent(owner)+'&clave=like.p_*__planRescate_v2_ingresos&limit=50',token);
+ if(!Array.isArray(indexRows)||indexRows.some(x=>x.user_id!==owner))throw new Error('Consulta no autorizada');
+ const profiles=[...new Set(indexRows.map(x=>x.clave.match(/^(p_usr-[a-f0-9-]{36}__)planRescate_v2_ingresos$/)?.[1]).filter(Boolean))].sort();
+ if(profiles.length!==1){
+   hideLoading();
+   if(!profiles.length){throw new Error('No se encuentra el perfil financiero canónico dentro de esta cuenta. No se mostrarán datos ajenos ni ceros ficticios.')}
+   showProfilePicker(profiles);
+   return;
+ }
+ await loadCanonicalProfile(profiles[0]);
+
+ }catch(e){token='';owner='';items={};hideLoading();loginScreen();status(e.message||'Error de conexión');}
+ finally{btn.disabled=false}
+ });
+}
+function head(title){const h=el('h1',null,title);$('#content').append(h)}
+function renderNav(){
+ const b=$('#bottom');b.replaceChildren();b.classList.remove('hide');
+ const choices=['inicio','fijos','variables','huchas'];
+ const icons={inicio:'⌂',ingresos:'💼',fijos:'📋',variables:'💳',huchas:'💰'};
+ for(const id of choices){
+  const m=mods.find(x=>x.id===id),btn=el('button',(m.id===page?'active':''));
+  btn.append(el('span','sym',icons[id]),el('span',null,m.title));
+  btn.onclick=()=>{page=m.id;search='';period='Todos';render()};
+  b.append(btn)
+ }
+ const more=el('button',!choices.includes(page)?'active':'');
+ more.append(el('span','sym','☷'),el('span',null,'Más'));
+ more.onclick=showMoreModules;b.append(more);
+}
+function showMoreModules(){
+ const d=$('#detailContent');d.replaceChildren();
+ d.append(el('h2',null,'Todos tus módulos'));
+ for(const [id,emoji] of [['ingresos','💼'],['compartidos','👥'],['financiaciones','📅']]){
+  const m=mods.find(x=>x.id===id),btn=el('button','entry');
+  btn.append(el('span','chargeEmoji',emoji),el('span','entryMain',m.title),el('span','amount','Abrir ›'));
+  btn.onclick=()=>{$('#detail').classList.remove('open');page=id;search='';period='Todos';render()};d.append(btn)
+ }
+ const banks=el('button','entry','🏦 Bancos · conexión y auditoría');banks.onclick=showBanksAudit;d.append(banks);
+ const mother=el('a','motherLink','↗ Abrir Fluxia HTML madre');mother.href='https://nacram1987-cmd.github.io/Fluxia-v20/';mother.target='_blank';mother.rel='noopener noreferrer';d.append(mother);
+ const help=el('button','entry','📋 Checklist y versiones');help.onclick=showVersionHistory;d.append(help);
+ const close=el('button','entry','Cerrar');close.onclick=()=>$('#detail').classList.remove('open');d.append(close);
+ $('#detail').classList.add('open');
+}
+function identifyUnmatchedOctober(canonical,alternate){
+ // A source differs if the SAME id has a different October date/amount, or an October id is missing.
+ // This is an audit view ONLY, never a new financial posting.
+ const index=new Map(canonical.map(m=>[String(m.id||''),m]));
+ return alternate.filter(m=>{
+  const dt=actualChargeDate(m);
+  if(!dt||String(Math.floor(dt.sort/10000))+'-'+String(Math.floor(dt.sort/100)%100).padStart(2,'0')!=='2026-10')return false;
+  const match=index.get(String(m.id||''));
+  if(!match)return true;
+  return actualChargeDate(match)?.sort!==dt.sort||recordAmount(match)!==recordAmount(m);
+ }).map(record=>({record,reason:index.has(String(record.id||''))?'Registro divergente entre fuentes':'No incluido en la colección canónica'}));
+}
+function renderSourceAudit(){
+ const matches=sourceDivergence.filter(x=>monthStatus(x.record,selectedMonth)==='match');
+ if(!matches.length)return;
+ const container=el('section','checklistPanel');
+ container.append(el('h3',null,'🔎 Datos adicionales del HTML pendientes de conciliación'));
+ container.append(el('p','periodHint',matches.length+' movimientos del mes encontrados en otra fuente real. No se suman al Disponible ni se incorporan automáticamente para evitar duplicados.'));
+ for(const item of matches){
+  const line=el('div','checkRow'),copy=el('div');
+  const name=field(item.record,['concepto','nombre'])||'Movimiento sin concepto';
+  copy.append(el('strong',null,name),el('span','checkLocation',chargeMeta(item.record)+' · '+item.reason));
+  const amount=recordAmount(item.record);
+  if(amount!==null)copy.append(el('p',null,'Importe de origen: '+money(amount)));
+  line.append(chargeMark(item.record,'variables'),copy);container.append(line);
+ }
+ $('#content').append(container);
+}
+
+const REFERENCE_VARIABLES_OCT2026=51;
+function actualOctoberBankItems(){
+ const main=canon(mods.find(m=>m.id==='variables'))||[];
+ const legacy=rawSources.movimientos||[];
+ const mainIds=new Set(main.filter(x=>actualChargeDate(x)?.label?.endsWith('/10/2026')).map(x=>String(x.id)));
+ const canonical=main.filter(x=>monthStatus(x,'2026-10')==='match');
+ const extra=legacy.filter(x=>monthStatus(x,'2026-10')==='match'&&!mainIds.has(String(x.id)));
+ return {main:canonical.length,extra:extra.length,visible:canonical.length+extra.length}
+}
+function financialGapInfo(){
+ if(selectedMonth!=='2026-10')return;
+ const counts=actualOctoberBankItems();
+ const box=el('section','integrityPanel');
+ const title=el('h3',null,'Integridad financiera · Octubre 2026');
+ box.append(title);
+ const note=el('p','integrityWarning','⚠️ HTML madre: '+REFERENCE_VARIABLES_OCT2026+' gastos variables comunicados. Esta vista solo localiza '+counts.visible+' movimientos en las fuentes históricas consultadas ('+counts.main+' canónicos y '+counts.extra+' adicionales). No se trata todavía de una comparación contable equivalente.');
+ box.append(note);
+ const latest=Object.entries(sourceUpdated).filter(([k])=>k==='planRescate_v2_movimientos'||k==='v2_movimientos').map(([k,v])=>v).filter(Boolean).sort().reverse()[0];
+ if(latest){const when=new Date(latest);box.append(el('p','periodHint','Última actualización registrada de esas fuentes: '+(Number.isNaN(when.getTime())?latest:new Intl.DateTimeFormat('es-ES',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/Madrid'}).format(when))+'.'))}
+ box.append(el('p','periodHint','La conciliación bancaria activa del HTML puede usar otras fuentes y estados. No se considera completa la migración hasta igualar los 51 y demostrar que se trata de los mismos registros.'));
+ const open=el('a','motherLink','↗ Abrir HTML madre para comprobar octubre');open.href='https://nacram1987-cmd.github.io/Fluxia-v20/';open.rel='noopener noreferrer';open.target='_blank';box.append(open);
+ $('#content').append(box)
+}
+function showBanksAudit(){
+ const d=$('#detailContent');d.replaceChildren(el('h2',null,'🏦 Bancos · integración'));
+ d.append(el('p','integrityWarning','La nueva Élite aún NO dispone de conexión bancaria propia validada. No hemos importado ni conciliado los cargos actuales de octubre.'));
+ d.append(el('p','editIntro','El HTML madre mantiene el flujo de conexión, clasificación y conciliación existente. No debemos crear una segunda conexión independiente sin garantizar reutilización de identidades bancarias, permisos, controles ant duplicados y estados de notificación.'));
+ const source=el('a','motherLink','Abrir Bancos en el HTML original ↗');source.href='https://nacram1987-cmd.github.io/Fluxia-v20/';source.target='_blank';source.rel='noopener noreferrer';d.append(source);
+ d.append(el('p','notice','Próximo bloqueo técnico: acceso al código íntegro del conector bancario original y prueba de paridad 51/51, mismo perfil y mes. Nunca se mostrarán cargos bancarios de otra cuenta.'));
+ $('#detail').classList.add('open');
+}
+
+function renderHome(){
+ renderMonthSelector();
+ $('#content').append(el('div','sectioneyebrow','TU ESPACIO FINANCIERO'));
+ $('#content').append(el('h1','welcomeTitle','Todo bajo control.'));
+ $('#content').append(el('p','welcomeDescription','Información real de tu nube · edición financiera protegida ✨'));
+ const hero=el('div','card hero');
+ const heroTop=el('div');heroTop.append(el('span','heroHeadline','◈  Disponible'),el('span','heroBadge','SIN CONCILIAR'));
+ hero.append(heroTop,el('strong','big','—'),el('small',null,'El saldo necesita contrastar ingresos, pagos y provisiones con el motor original. Las cifras de tus registros sí están visibles a continuación.'));
+ $('#content').append(hero);
+ financialGapInfo();
+ const modArr=mods.filter(m=>m.key);
+ const loaded=modArr.filter(m=>canon(m)!==null);
+ const rowsCount=loaded.reduce((sum,m)=>sum+monthRecords(m).length,0);
+ const stats=el('div','financeStrip');
+ const stat1=el('div','stat');stat1.append(el('strong',null,String(rowsCount)),el('span',null,'Registros asociados a '+monthTitle(selectedMonth)+' (incluye mes sin año)'));
+ const stat2=el('div','stat');stat2.append(el('strong',null,loaded.length+' / '+modArr.length),el('span',null,'Colecciones consultadas'));
+ stats.append(stat1,stat2);$('#content').append(stats);
+ $('#content').append(el('h2','moduleTitle','Tus movimientos y planes'));
+ const group=el('div','grid');
+ const priority=['ingresos','fijos','huchas','compartidos','variables','financiaciones'];
+ const moduleEmojis={ingresos:'💼',fijos:'📋',huchas:'💰',compartidos:'👥',variables:'💳',financiaciones:'📅'};
+ for(const id of priority){
+  const m=mods.find(x=>x.id===id),arr=canon(m),btn=el('button','tile');
+  btn.dataset.section=m.id;
+  btn.append(el('span','symbol',moduleEmojis[m.id]),el('strong',null,m.title),el('span',null,arr?monthRecords(m).length+' asociados al mes':'Colección no disponible'));
+  const latest=datedRows(m).find(x=>monthStatus(x.record,selectedMonth)==='match');
+  if(latest){
+   const sum=recordAmount(latest.record);
+   btn.append(el('span','tileRecent','📅 '+latest.date.label+(sum===null?'':' · '+money(sum))));
+  }else if(arr?.length){btn.append(el('span','tileRecent','Sin fecha exacta registrada'))}
+  btn.onclick=()=>{page=m.id;search='';period='Todos';render()};group.append(btn)
+ }
+ $('#content').append(group);
+ const recent=modArr.flatMap(datedRows).filter(x=>monthStatus(x.record,selectedMonth)==='match').sort((a,b)=>b.date.sort-a.date.sort).slice(0,8);
+ $('#content').append(el('h2','moduleTitle','Cargos y movimientos · '+monthTitle(selectedMonth)));
+ if(!recent.length){$('#content').append(el('p','notice','No se han identificado fechas exactas en las colecciones consultadas. No se inventan días de cargo.'))}
+ for(const item of recent){
+  const row=el('button','recentCard');
+  row.append(chargeMark(item.record,item.module.id));
+  const content=el('span','recentText');
+  content.append(el('strong',null,field(item.record,['concepto','nombre','descripcion'])||'Registro sin concepto'),el('small',null,item.date.label+' · '+item.module.title+(item.record.cuentaComoFijo||item.record.vinculoFijoId?' · Fijo vinculado':'')));
+  const number=recordAmount(item.record);
+  row.append(content,el('span','recentAmount',number===null?'Ver detalle':money(number)));
+  row.onclick=()=>{page=item.module.id;render();openDetail(item.record,item.index,item.module.key)};
+  $('#content').append(row);
+ }
+ renderSourceAudit();
+ const footer=el('div','versionFooter');
+ footer.append(el('span',null,'Fluxia Élite BETA · Safari v'+ELITE_SAFARI_VERSION));
+ const history=el('button',null,'📋 Checklist y versiones');history.onclick=showVersionHistory;
+ footer.append(history);$('#content').append(footer);
+ $('#content').append(el('p','notice','Registros auténticos. Importes de origen ≠ totales contabilizados. Los pagos y saldos siguen pendientes de conciliación.'));
+}
+function renderList(){
+ const m=mods.find(x=>x.id===page),arr=canon(m);
+ renderMonthSelector();head(m.title);
+ if(!arr){$('#content').append(el('p','error','Colección no disponible para esta cuenta; no equivale a saldo cero.'));return}
+ const periodRows=monthRecords(m),fixed=periodRows.filter(x=>x.monthStatus==='match'),legacy=periodRows.filter(x=>x.monthStatus==='legacy');
+ const stats=el('div','financeStrip');
+ const a=el('div','stat');a.append(el('strong',null,String(periodRows.length)),el('span',null,'Registros visibles del mes'));
+ const verified=el('p','periodHint',fixed.length+' con periodo confirmado · '+legacy.length+' históricos de mes sin año');
+ const b=el('div','stat');b.append(el('strong',null,String(legacy.length)),el('span',null,'Solo mes, sin año'));
+ stats.append(a,b);$('#content').append(stats,verified);
+ const tools=el('div','toolrow'),q=el('input');q.type='search';q.placeholder='Buscar en '+monthTitle(selectedMonth);q.value=search;q.autocomplete='off';tools.append(q);
+ const categories=['Todas',...new Set(periodRows.map(x=>field(x.data,['categoria','tipo'])).filter(Boolean))].sort((a,b)=>a==='Todas'?-1:b==='Todas'?1:a.localeCompare(b,'es'));
+ const sel=el('select');for(const name of categories){const option=el('option',null,name);option.value=name;sel.append(option)}sel.value=categories.includes(period)?period:'Todas';tools.append(sel);$('#content').append(tools);
+ $('#content').append(moduleTotalsNote(m,periodRows));
+ if(page==='variables'){financialGapInfo();renderSourceAudit()}
+ const list=el('div','entries'),count=el('div','muted');$('#content').append(count,list);
+ const draw=()=>{
+  list.replaceChildren();const query=search.toLocaleLowerCase('es').trim();
+  const matches=periodRows.filter(({data})=>{
+   const cat=field(data,['categoria','tipo'])||'';
+   return (sel.value==='Todas'||cat===sel.value)&&(!query||[field(data,['concepto','nombre','descripcion'])||'',cat,field(data,['origen'])||''].some(x=>x.toLocaleLowerCase('es').includes(query)));
+  });
+  const exact=matches.filter(x=>x.monthStatus==='match'||x.monthStatus==='plan'),historical=matches.filter(x=>x.monthStatus==='legacy'||x.monthStatus==='undated');
+  const dated=x=>actualChargeDate(x.data)?.sort||0;
+  exact.sort((x,y)=>dated(y)-dated(x));
+  count.textContent=matches.length+' registros mostrados · '+arr.length+' en nube en todos los periodos';
+  const addGroup=(title,rows)=>{
+   if(!rows.length)return;
+   list.append(el('h3','recordGroup',title));
+   for(const {data,index} of rows.slice(0,80)){
+    const name=field(data,['concepto','nombre','descripcion'])||'Registro sin concepto',amount=recordAmount(data);
+    const title=el('div','entryMain');
+    title.append(el('strong',null,name),el('small',null,chargeMeta(data)));
+    const btn=el('button','entry');btn.append(chargeMark(data,page),title,el('span','amount',amount===null?'Ver detalle ›':money(amount)));
+    btn.onclick=()=>openDetail(data,index,m.key);list.append(btn)
+   }
+   if(rows.length>80)list.append(el('p','periodHint','Mostrando 80 de '+rows.length+'. Utiliza la búsqueda o categoría para localizar el resto.'));
+  };
+  addGroup((page==='huchas'||page==='financiaciones'?'📂 Planes vigentes · ':'📅 Registros del periodo · ')+monthTitle(selectedMonth),exact);
+  addGroup(page==='huchas'||page==='financiaciones'?'⚠️ Planes sin vigencia fechada · revisar':'⚠️ Históricos: mes sin año · no contabilizados',historical);
+  if(!matches.length)list.append(el('p','empty','No hay registros asociados a '+monthTitle(selectedMonth)+'. Cambia de mes o revisa los históricos.'));
+ };
+ q.oninput=()=>{search=q.value;if(searchTimer)clearTimeout(searchTimer);searchTimer=setTimeout(draw,110)};
+ sel.onchange=()=>{period=sel.value;draw()};draw();
+}
+function openDetail(data,index,key){
+ currentDetail={data,index,key};const d=$('#detailContent');d.replaceChildren();
+ const preview=draftEdits.get(key+':'+index);const entry=preview?.record||data;
+ d.append(el('h2',null,(brandFor(entry)?.name||chargeIcon(entry,page))+'  '+(field(entry,['concepto','nombre','descripcion'])||'Registro original')));
+ const verifiedDate=actualChargeDate(entry);
+ if(verifiedDate)d.append(el('p','verifiedDate','📅 Fecha registrada: '+verifiedDate.label));
+ else d.append(el('p','muted','Fecha exacta no disponible: solo se mostrará si está guardada'));
+ const dl=el('dl');
+ for(const [k,title] of [['importe','Importe'],['importeMensual','Importe mensual'],['cuota','Cuota'],['importe_total','Importe total'],['mes','Mes'],['fecha','Fecha'],['fechaCargo','Fecha cargo'],['fechaPago','Fecha pago'],['categoria','Categoría'],['estado','Estado'],['origen','Origen'],['id','Identificador']]){
+  if(entry[k]===undefined||entry[k]===null)continue;
+  dl.append(el('dt',null,title),el('dd',null,typeof entry[k]==='number'&&/importe|cuota/.test(k)?money(entry[k]):String(entry[k])))
+ }
+ d.append(dl);
+ if(preview)d.append(el('p','draftTag','BORRADOR DE PRUEBA · NO GUARDADO EN NUBE'));
+ if(preview?.operation)d.append(el('p','editIntro','🧪 '+preview.operation.label+' · '+money(preview.operation.amount)+' · '+preview.operation.date+' · SIN EFECTO CONTABLE'));
+ const actions=el('div','editActions');
+ const edit=el('button','primary','✏️ Probar edición');
+ edit.onclick=()=>showDraftEditor(data,index,key);
+ actions.append(edit);
+ if(draftEdits.has(key+':'+index)){
+  const discard=el('button',null,'Descartar borrador');
+  discard.onclick=()=>{draftEdits.delete(key+':'+index);openDetail(data,index,key)};
+  actions.append(discard)
+ }
+ d.append(actions,el('p','notice','El editor de prueba no modifica Supabase, no recalcula Disponible ni cambia registros HTML. Las escrituras reales permanecen bloqueadas hasta validar las reglas contables.'));
+ $('#detail').classList.add('open')
+}
+
+const moduleActions={
+ 'planRescate_v2_fijos':[['pagado','📌 Pago de fijo','Evitar duplicar cargos vinculados.'],['pendiente','⏳ Pendiente','Un fijo previsto no es un cargo ejecutado.']],
+ 'planRescate_v2_provisiones':[['aporte','💰 Aportación','No descontar dos veces aportes previstos.'],['rescate','💶 Rescate','Imputar a su fecha histórica.'],['uso','🧾 Uso de hucha','No duplicar gasto.']],
+ 'planRescate_v2_ingresos':[['ingreso','💼 Reconocimiento de ingreso','Requiere conciliación contable.']],
+ 'planRescate_v2_movimientos':[['variable','💳 Clasificación','Los fijos vinculados no pueden duplicarse.']],
+ 'planRescate_v2_compartidos':[['liquidar','👥 Liquidación','Validar deuda y pago.']],
+ 'planRescate_v2_financiaciones':[['cuota','📅 Pago de cuota','Previsto no equivale a pagado.']]
+};
+
+function showDraftEditor(data,index,key){
+ const d=$('#detailContent');d.replaceChildren();
+ const original=JSON.parse(JSON.stringify(data));
+ const active=draftEdits.get(key+':'+index)?.record||original;
+ d.append(el('span','draftTag','MODO PRUEBA · SIN GUARDAR EN LA NUBE'));
+ d.append(el('h2',null,'Editar registro'));
+ d.append(el('p','editIntro','Prueba los cambios con tus datos reales. La vista previa se mantiene solo durante esta sesión y desaparece al salir.'));
+ const form=el('form');
+ const nameKey=['concepto','nombre','descripcion'].find(k=>typeof original[k]==='string')||'concepto';
+ const amountKey=['importe','importeMensual','cuota','importe_total'].find(k=>typeof original[k]==='number');
+ const dateKey=['fechaCargo','fecha_cargo','fechaOperacion','fecha_operacion','fechaPago','fecha_pago','fecha'].find(k=>typeof original[k]==='string');
+ const controls=[];
+ function inputField(label,key,type,value,required=false){
+  const wrapper=el('label',null,label),input=el('input');input.type=type;input.value=value??'';input.required=required;if(type==='number'){input.step='0.01';input.inputMode='decimal'}wrapper.append(input);form.append(wrapper);controls.push({key,input});return input
+ }
+ inputField('Concepto',nameKey,'text',active[nameKey]||'',true);
+ if(amountKey)inputField('Importe registrado ('+amountKey+')',amountKey,'number',active[amountKey],true);
+ if(dateKey){
+  const raw=String(active[dateKey]||'');
+  const iso=/^\d{4}-\d{2}-\d{2}/.test(raw)?raw.slice(0,10):'';
+  const date=inputField('Fecha real ('+dateKey+')',dateKey,iso?'date':'text',iso||raw);
+  if(date.type==='text')date.placeholder='Fecha original: mantener formato fuente'
+ }
+ if(typeof original.mes==='string')inputField('Periodo / mes', 'mes','text',active.mes);
+ if(typeof original.categoria==='string')inputField('Categoría','categoria','text',active.categoria);
+ if(typeof original.estado==='string')inputField('Estado original (no marca pagos)','estado','text',active.estado);
+ const choices=moduleActions[key]||[];
+ const finance=el('section','previewOperation');
+ finance.append(el('h3',null,'Operaciones del módulo · simulación'));
+ const actionLabel=el('label',null,'Tipo de operación'),action=el('select');
+ const option=el('option',null,'Solo modificar datos del registro');option.value='';action.append(option);
+ for(const [id,label] of choices){const op=el('option',null,label);op.value=id;action.append(op)}
+ actionLabel.append(action);finance.append(actionLabel);
+ const warning=el('p','editIntro','Estas operaciones NO cambian tu nube ni la contabilidad.');
+ const aLabel=el('label',null,'Importe a simular'),aInput=el('input');aInput.type='number';aInput.step='0.01';aInput.inputMode='decimal';aLabel.append(aInput);
+ const dLabel=el('label',null,'Fecha real de la operación'),dInput=el('input');dInput.type='date';dLabel.append(dInput);
+ finance.append(warning,aLabel,dLabel);form.append(finance);
+ action.onchange=()=>{const chosen=choices.find(c=>c[0]===action.value);warning.textContent=chosen?chosen[2]+' · No guardado en nube.':'No hay escritura financiera habilitada.';aLabel.classList.toggle('hide',!chosen);dLabel.classList.toggle('hide',!chosen)};
+ action.onchange();
+ const errorBox=el('div','editorError hide');
+ form.append(errorBox);
+ const compare=el('div','draftCompare');compare.append(el('div',null),el('div',null));
+ form.append(compare);
+ const actions=el('div','editActions');
+ const cancel=el('button',null,'Cancelar');cancel.type='button';cancel.onclick=()=>openDetail(original,index,key);
+ const save=el('button','primary','Guardar prueba');save.type='submit';
+ actions.append(cancel,save);form.append(actions);
+ function refreshPreview(){
+  const changed=Object.assign({},original);
+  for(const {key,input} of controls){changed[key]=input.type==='number'?Number(input.value):input.value.trim()}
+  compare.children[0].replaceChildren(el('strong',null,'ANTES'),el('span',null,JSON.stringify(Object.fromEntries(controls.map(({key})=>[key,original[key]??null])))));
+  compare.children[1].replaceChildren(el('strong',null,'DESPUÉS'),el('span',null,JSON.stringify(Object.fromEntries(controls.map(({key})=>[key,changed[key]??null])))));
+  return changed
+ }
+ controls.forEach(({input})=>input.addEventListener('input',refreshPreview));refreshPreview();
+ form.onsubmit=e=>{
+  e.preventDefault();errorBox.classList.add('hide');
+  const changed=refreshPreview();
+  if(!changed[nameKey]||changed[nameKey].length>200){errorBox.textContent='Escribe un concepto válido de hasta 200 caracteres.';errorBox.classList.remove('hide');return}
+  if(amountKey&&(!Number.isFinite(changed[amountKey])||Math.abs(changed[amountKey])>100000000)){errorBox.textContent='Importe no válido.';errorBox.classList.remove('hide');return}
+  if(dateKey&&changed[dateKey]&&/fecha|date/i.test(dateKey)){
+   const temp={[dateKey]:changed[dateKey]};if(!actualChargeDate(temp)&&/^\d{4}-\d{2}-\d{2}/.test(changed[dateKey])){errorBox.textContent='Fecha no válida.';errorBox.classList.remove('hide');return}
+  }
+  const selected=choices.find(c=>c[0]===action.value);
+  let operation=null;
+  if(selected){
+    const num=Number(aInput.value);
+    if(!aInput.value.trim()||!Number.isFinite(num)||num<=0||num>10000000){errorBox.textContent='Importe de operación no válido.';errorBox.classList.remove('hide');return}
+    if(!dInput.value||!actualChargeDate({fecha:dInput.value})){errorBox.textContent='Introduce una fecha válida de operación.';errorBox.classList.remove('hide');return}
+    if(key==='planRescate_v2_movimientos'&&(original.cuentaComoFijo||original.vinculoFijoId)){errorBox.textContent='Cargo vinculado a Fijos: se debe revisar en Fijos, sin duplicar un movimiento variable.';errorBox.classList.remove('hide');return}
+    operation={label:selected[1],amount:num,date:dInput.value};
+  }
+  draftEdits.set(key+':'+index,{record:changed,operation});openDetail(original,index,key);
+ };
+ d.append(form)
+}
+
+function render(){if(!token){loginScreen();return}$('#logout').classList.remove('hide');$('#help').classList.remove('hide');renderNav();$('#content').replaceChildren();if(page==='inicio')renderHome();else renderList()}
+$('#close').onclick=()=>$('#detail').classList.remove('open');$('#detail').onclick=e=>{if(e.target.id==='detail')$('#detail').classList.remove('open')};
+$('#help').onclick=()=>openTutorial(true);
+$('#helpClose').onclick=closeTutorial;$('#skipTutorial').onclick=closeTutorial;
+$('#prevTutorial').onclick=()=>{if(tutorialIndex>0){tutorialIndex--;updateTutorial()}};
+$('#nextTutorial').onclick=()=>{if(tutorialIndex===steps.length-1)closeTutorial();else{tutorialIndex++;updateTutorial()}};
+$('#logout').onclick=()=>{draftEdits.clear();token='';owner='';items={};$('#onboarding').classList.remove('active');loginScreen()};loginScreen();
+})();
+</script></body></html>
