@@ -1,6 +1,17 @@
 # Fluxia Élite BETA · Historial Safari (independiente de PWA HTML y SwiftUI)
 Fecha: 2026-10-14
 
+## v1.6.0 · Paridad bloqueada por fuente anticuada (14/10/2026)
+- **Regla imperial y referencia de aceptación del usuario:** 51 gastos variables en octubre 2026, según HTML madre. La vista Élite actual no los reproduce. No se permite declarar 51/51 hasta reconciliación por ID, fecha, importe, estado y origen.
+- **Hallazgo de raíz confirmado con SQL:** los registros de `p_usr-…__planRescate_v2_movimientos` y `p_usr-…__v2_movimientos`, y las dos familias de fijos, llevan `updated_at=2026-10-05`. Sus 11/14 cargos fechados en octubre son una instantánea anticuada. Supabase sí recibió cinco claves de actividad bancaria/identidad el 13–14 octubre, pero no son las colecciones de movimientos que usa Élite.
+- **Dashboard y Variables:** alerta de desfase, número de cargos visibles en fuentes históricas, fecha real de actualización de datos y enlace directo a HTML estable.
+- **Más → Bancos:** nueva pantalla informativa del estado de integración; no finge sincronización y permite abrir el HTML original para la operativa bancaria vigente.
+- **Seguridad:** sin nueva conexión Open Banking, sin credenciales bancarias en el frontend, sin modificación de movimientos/saldos y sin migración de datos.
+- **Copia archivada:** https://nacram1987-cmd.github.io/Fluxia-v20/lab/versions/fluxia-elite-safari-v1.6.0.html
+- **Verificado:** sintaxis JavaScript, estructura del código, nombre y versión, separación por usuario en consultas y ausencia de escrituras financieras.
+- **No verificado:** publicación efectiva de Pages, navegación Safari, UX del iPhone y reconciliación real de los 51. El HTML original gigante no pudo recuperarse entero usando la herramienta GitHub: pendiente de inspección íntegra con un mecanismo de transferencia apto.
+- **Próxima fase P0:** localizar fuente operativa activa y banco original del HTML, contrato de autenticación y derivación contable; implementar lector de idénticos datos en Élite y comprobar exactamente 51/51 antes de activar edición.
+
 ## v1.5.0 · Día visible y auditoría real de octubre frente a dos colecciones del HTML (14/10/2026)
 - **Dónde mirar:** selector en Inicio y módulos: ahora muestra día de la semana, día del mes, mes y año. Pulsar abre desplegable de día/mes/año. Elegir un día NO recorta silenciosamente el listado mensual; selecciona referencia visual mientras los cargos se siguen consultando por mes.
 - **Dónde mirar:** Inicio y Variables, «Datos adicionales del HTML pendientes de conciliación»: compara colección canónica `planRescate_v2_movimientos` con `v2_movimientos` del mismo perfil autenticado por ID, fecha e importe, y muestra registros divergentes sin sumarlos al saldo.
