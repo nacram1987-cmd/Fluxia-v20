@@ -12,10 +12,17 @@ targets:
     sources:
       - path: FluxiaEliteApp.swift
       - path: FluxiaEliteAppView.swift
+      - path: FluxiaLoginView.swift
       - path: FluxiaLedger.swift
+      - path: FluxiaAuthClient.swift
+      - path: FluxiaCloudReader.swift
+      - path: FluxiaLegacyDocument.swift
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.fluxia.elitebeta
         GENERATE_INFOPLIST_FILE: YES
         TARGETED_DEVICE_FAMILY: '1,2'
         CODE_SIGN_STYLE: Automatic
+        INFOPLIST_KEY_FLUXIA_SUPABASE_URL: https://kylduzmrfbubeamfrbbr.supabase.co
+        # Publishable key supplied at build time; never commit a privileged key.
+        INFOPLIST_KEY_FLUXIA_SUPABASE_PUBLISHABLE_KEY: $(FLUXIA_SUPABASE_PUBLISHABLE_KEY)
