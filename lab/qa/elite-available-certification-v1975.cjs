@@ -1,0 +1,10 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+assert(html.includes('function availableCertificationReport()'));
+assert(html.includes('function renderAvailableCertification()'));
+assert(html.includes("Motor Disponible determinista aún no certificado"));
+assert(html.includes("Disponible bloqueado: no se muestra una cifra inventada"));
+assert(html.includes("['Motor contable certificado',false]"));
+assert(html.includes('renderAvailableCertification()'));
+console.log('PASS v1.9.75 available certification remains blocked until all accounting evidence is verified');
