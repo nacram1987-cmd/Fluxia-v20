@@ -87,6 +87,16 @@ public struct FluxiaLoginView: View {
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
                         .textFieldStyle(.roundedBorder)
+                    HStack(spacing: 8) {
+                        Button("@") { insertEmailPart("@") }
+                        Button(".") { insertEmailPart(".") }
+                        Button(".com") { insertEmailPart(".com") }
+                        Button("gmail.com") { insertEmailPart("gmail.com") }
+                    }
+                    .buttonStyle(.bordered)
+                    .font(.subheadline)
+                    .disabled(isLoading)
+                    .accessibilityLabel("Atajos para completar el correo")
                     SecureField("Contraseña", text: $password)
                         .focused($focusedField, equals: .password)
                         .onTapGesture { numericTargetPassword = true }
@@ -143,6 +153,13 @@ public struct FluxiaLoginView: View {
             didAttemptRestore = true
             await restoreSession()
         }
+    }
+
+    private func insertEmailPart(_ text: String) {
+        // Always insert in the email field, even when password keypad was selected.
+        focusedField = nil
+        email.append(text)
+        numericTargetPassword = false
     }
 
     private func showPad(forPassword: Bool) {
