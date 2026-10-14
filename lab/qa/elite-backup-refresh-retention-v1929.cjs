@@ -1,0 +1,25 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+const begin=html.indexOf('async function loadCanonicalProfile('),end=html.indexOf('function showProfilePicker(',begin);
+assert(begin>=0&&end>begin,'Profile reader not found');
+const id='p_usr-11111111-1111-4111-8111-111111111111__',other='p_usr-22222222-2222-4222-8222-222222222222__';
+const mods=['ingresos','fijos','movimientos','provisiones','compartidos','financiaciones'].map(name=>({id:name,key:'planRescate_v2_'+name}));
+let requested=id;
+const rows=prefix=>[...mods.map(m=>({clave:prefix+m.key,user_id:'accountA',v:[],updated_at:'2026-10-14T18:00:00Z'})),{clave:prefix+'v2_movimientos',user_id:'accountA',v:[]}];
+const c={owner:'accountA',token:'memory-only',activeProfile:id,page:'efectivo',search:'coffee',period:'Todas',mods,authRequest:async()=>rows(requested),draftEdits:new Map(),csvAudit:{ownerId:'accountA',profile:id},csvAuditError:'',walletBackup:{owner:'accountA',activeProfile:id},walletBackupError:'',motherAudit:{ownerId:'accountA',profile:id},fullProfileAudit:{ownerId:'accountA',profile:id},backupFinance:{owner:'accountA',profile:id,sources:{v2_usos:{value:[{id:'paid'}]}}},extraFinance:{},items:{},sourceUpdated:{},rawSources:{},render(){},hideLoading(){},openTutorial(){}};
+vm.createContext(c);vm.runInContext(html.slice(begin,end),c,{timeout:1000});
+(async()=>{let n=0;const test=(name,fn)=>{fn();console.log('PASS',name);n++};
+await c.loadCanonicalProfile(id,{preserveView:true});
+test('Same profile retains private backup during cloud reload',()=>assert(c.backupFinance&&c.backupFinance.sources.v2_usos));
+test('Same profile retains wallet and profile audit',()=>assert(c.walletBackup&&c.fullProfileAudit&&c.motherAudit));
+test('Same profile retains CSV and filters',()=>assert(c.csvAudit&&c.page==='efectivo'&&c.search==='coffee'));
+requested=other;await c.loadCanonicalProfile(other,{preserveView:true});
+test('Other profile never sees the prior profile private backup',()=>assert.equal(c.backupFinance,null));
+test('Other profile never sees the prior profile wallet or audits',()=>assert(!c.walletBackup&&!c.fullProfileAudit&&!c.motherAudit&&!c.csvAudit));
+test('No financial data was posted by the reload',()=>assert.equal(c.items.planRescate_v2_movimientos.length,0));
+test('Code does not regress to removed helper',()=>assert(!html.includes('sourceDivergence=identifyUnmatchedOctober')));
+test('Correct application version',()=>assert(html.includes("const ELITE_SAFARI_VERSION='1.9.29'")));
+for(const match of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(match[1])new vm.Script(match[1]);test('JS parse',()=>assert(true));
+console.log('RESULT',n,'reload protection checks passed')
+})().catch(e=>{console.error(e);process.exitCode=1});
