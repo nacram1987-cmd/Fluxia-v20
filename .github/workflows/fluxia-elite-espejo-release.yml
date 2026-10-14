@@ -39,7 +39,12 @@ jobs:
           Inicio web: https://nacram1987-cmd.github.io/Fluxia-v20/lab/fluxia-elite-safari-datos-reales.html
           Archivo principal: lab/fluxia-elite-safari-datos-reales.html
           JS de paridad: lab/js/fluxia-espejo-csv-v1.js
+          Dinero en mano: lab/js/fluxia-elite-wallet-v1.js
+          Lector privado de copia HTML: lab/js/fluxia-elite-backup-v1.js
           QA sin datos reales: node lab/qa/espejo-csv-regression.cjs
+          QA cartera: node lab/qa/elite-wallet-regression.cjs
+          QA copias perfil: node lab/qa/elite-backup-regression.cjs
+          QA interfaz: node lab/qa/elite-modules-smoke.cjs
           Esta entrega NO sustituye HTML estable ni modifica datos en la nube.
           Solo consulta datos tras login; CSV leído en el dispositivo. No existe paridad 51/51 certificada.
           EOF
