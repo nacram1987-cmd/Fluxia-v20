@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
 const html=fs.readFileSync(require('node:path').join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
-assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.(?:86|87|88|89|90|91|92|93)'/);
+assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.(?:86|87|88|89|90|91|92|93|94)'/);
 assert.match(html,/¿Cómo quieres que te llamemos\?/);
 assert.match(html,/display_name:name\.value\.trim\(\)/);
 assert.match(html,/auth\/v1\/user/);
