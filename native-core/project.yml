@@ -1,0 +1,21 @@
+name: FluxiaEliteBeta
+options:
+  bundleIdPrefix: com.fluxia.elitebeta
+settings:
+  base:
+    SWIFT_VERSION: 6.0
+    IPHONEOS_DEPLOYMENT_TARGET: '17.0'
+targets:
+  FluxiaEliteBeta:
+    type: application
+    platform: iOS
+    sources:
+      - path: FluxiaEliteApp.swift
+      - path: FluxiaEliteAppView.swift
+      - path: FluxiaLedger.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.fluxia.elitebeta
+        GENERATE_INFOPLIST_FILE: YES
+        TARGETED_DEVICE_FAMILY: '1,2'
+        CODE_SIGN_STYLE: Automatic
