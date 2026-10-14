@@ -34,3 +34,14 @@ Fecha: 2026-10-14. Estado: especificación, no implementación terminada.
 - Pruebas de dos usuarios, meses, dispositivos, offline/online, re-login, importación y cero duplicados.
 - Medición real de rendimiento; no prometer cifras no medidas.
 - Build verificable, enlace de prueba y ZIP completo solo cuando existan.
+
+
+## PARIDAD HTML MADRE OBLIGATORIA — 14/10/2026
+
+El objetivo no es una app financiera distinta, ni una demo con datos aproximados: **es reproducir el 100 % de la semántica, datos, operaciones, bancos, estados y resultados del HTML/PWA operativo actual** y evolucionar por seguridad, mantenimiento, rendimiento y diseño. Un módulo visual sin CRUD/persistencia original NO está implementado.
+
+**Caso de bloqueo P0:** el HTML muestra 51 Variables en octubre según revisión del usuario; CSV `fluxia-variables-Octubre.csv` exportó 52 filas / 811,39 €; no aparece el cargo del 14/10 de 7,50 € de gasolinera categorizado Tabaco. Existen seis repeticiones por campos de texto en CSV, SIN IDs bancarios: no suprimirlas ni asumir que son duplicados. Comparar registros reales por IDs, importes en céntimos, fechas, categorías, estados y vínculos, para mismo usuario/periodo/corte.
+
+Los módulos nativos deberán superar paridad en Dashboard/Disponible, Ingresos, Variables, Fijos, Huchas, Compartidos, Financiaciones, Bancos, notificaciones y archivo. Ni `MonthlyLedgerProjection` ni `BankImportSafety` por separado equivalen todavía al motor HTML: requieren adaptación comprobada contra sus reglas originales y datos actuales. Mantener lecturas seguras, sin escrituras de producción ni nueva conexión bancaria paralela hasta pruebas completas.
+
+Condiciones de publicación: 0 registros ausentes, 0 dobles contabilizaciones, 0,00 € de discrepancia contable, acceso usuario aislado, QA automatizada y Safari/iPhone real, copia reversible. Al entregar compilación, proporcionar versión, checklist de cambios y dónde comprobarlos, pruebas y limitaciones explícitas. La estable HTML continúa intacta.
