@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {buildEliteAuditEnvelope} from '../src/audit-parity-adapter.mjs';
+const payload={schemaVersion:1,userId:'u1',month:'2026-10',totals:{income:'100.00',fixed:'10.00',variable:'7.50',provisions:'5.00',extraContributions:'0.00',available:'77.50'}};
+const m={canonical_id:'bank-1',amount_cents:750,user_id:'u1',profile_id:'p1',accounting_month:'2026-10',concept:'Fuel station',category:'Tabaco'};
+const args={payload,authenticatedUserId:'u1',profileId:'p1',cutoff:'2026-10-14T12:00:00+02:00',canonicalMovements:[m]};
+test('authenticated read-only snapshot maps cents without fabricating missing ledgers',()=>{const e=buildEliteAuditEnvelope(args);assert.equal(e.ledger.variable_cents,750);assert.equal(e.ledger.fixed_paid_cents,null);assert.equal(e.parity_status,'BLOCKED_INCOMPLETE_LEDGER')});
+test('cross-account payload rejected',()=>assert.throws(()=>buildEliteAuditEnvelope({...args,authenticatedUserId:'u2'}),/Cross-account/));
+test('cross-profile movement rejected',()=>assert.throws(()=>buildEliteAuditEnvelope({...args,canonicalMovements:[{...m,profile_id:'p2'}]}),/Cross-scope/));
+test('duplicate canonical identity rejected',()=>assert.throws(()=>buildEliteAuditEnvelope({...args,canonicalMovements:[m,m]}),/Invalid canonical/));
+test('totals-only snapshot cannot be silently treated as movement export',()=>assert.throws(()=>buildEliteAuditEnvelope({...args,canonicalMovements:undefined}),/export required/));
+test('invalid cutoff rejected',()=>assert.throws(()=>buildEliteAuditEnvelope({...args,cutoff:'yesterday'}),/Invalid cutoff/));
