@@ -1,0 +1,42 @@
+name: Fluxia Élite · Espejo financiero (solo QA)
+on:
+  push:
+    branches:
+      - pages-v9731-real-final
+    paths:
+      - 'lab/fluxia-elite-safari-datos-reales.html'
+      - 'lab/js/fluxia-espejo-csv-v1.js'
+      - 'lab/qa/**'
+      - '.github/workflows/fluxia-elite-espejo-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  parity-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Guardrails · HTML/JS and release metadata
+        run: |
+          node - <<'NODE'
+          const fs=require('node:fs'),assert=require('node:assert/strict');
+          const s=fs.readFileSync('lab/fluxia-elite-safari-datos-reales.html','utf8');
+          const version=s.match(/const ELITE_SAFARI_VERSION='([^']+)'/)?.[1];
+          assert(version, 'version missing');
+          assert(s.includes('v'+version+' · Safari'),'title mismatch');
+          assert(s.includes('content="'+version+'"'),'metadata mismatch');
+          assert(s.includes('js/fluxia-espejo-csv-v1.js'),'CSV module missing');
+          assert(s.includes('renderCSVAudit()'),'CSV parity UI missing');
+          assert(s.includes('originalVisibleVariable'),'HTML mother variable rule missing');
+          assert(!s.includes('gvAjustadoVal'),'wrong Disponible into Variables');
+          assert(fs.existsSync('lab/versions/fluxia-elite-safari-v'+version+'.html'),'version snapshot required');
+          console.log('PASS app syntax metadata and immutable snapshot v'+version);
+          NODE
+      - name: CSV imported data parser and month matching (offline)
+        run: node lab/qa/espejo-csv-regression.cjs
+      - name: Contabilidad sin duplicados (offline)
+        run: node lab/qa/fluxia-elite-paridad.test.cjs
