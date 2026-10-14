@@ -1,1 +1,23 @@
-J3VzZSBzdHJpY3QnOwpjb25zdCBhc3NlcnQ9cmVxdWlyZSgnbm9kZTphc3NlcnQvc3RyaWN0Jyk7CmNvbnN0IGZzPXJlcXVpcmUoJ25vZGU6ZnMnKTsKY29uc3QgcGF0aD1yZXF1aXJlKCdub2RlOnBhdGgnKTsKY29uc3Qgdm09cmVxdWlyZSgnbm9kZTp2bScpOwpjb25zdCByb290PXBhdGguam9pbihfX2Rpcm5hbWUsJy4uJyk7CmNvbnN0IGh0bWw9ZnMucmVhZEZpbGVTeW5jKHBhdGguam9pbihyb290LCdmbHV4aWEtZWxpdGUtc2FmYXJpLWRhdG9zLXJlYWxlcy5odG1sJyksJ3V0ZjgnKTsKY29uc3Qgc291cmNlPWZzLnJlYWRGaWxlU3luYyhwYXRoLmpvaW4ocm9vdCwnanMvZmx1eGlhLWVsaXRlLWJhbmstY29ubmVjdG9yLXYxLmpzJyksJ3V0ZjgnKTsKYXNzZXJ0Lm1hdGNoKGh0bWwsL0VMSVRFX1NBRkFSSV9WRVJTSU9OPScxXC45XC4oPzo4NHw4NXw4Nnw4N3w4OHw4OSknLyk7CmFzc2VydC5tYXRjaChodG1sLC9CaWVudmVuaWRvIGEgbWkgRmx1eGlhLyk7CmFzc2VydC5tYXRjaChodG1sLC9mbHV4aWEtZWxpdGUtYmFuay1jb25uZWN0b3ItdjFcLmpzLyk7CmFzc2VydC5tYXRjaChodG1sLC9Db21wcm9iYXIgY29uZXhpw7NuIGJhbmNhcmlhLyk7CmFzc2VydC5tYXRjaChodG1sLC9TaW5jcm9uaXphciBsZWN0dXJhIHNlZ3VyYS8pOwphc3NlcnQubWF0Y2goaHRtbCwvZGVzZGU6c2VsZWN0ZWRNb250aFwrJy0wMScvKTsKYXNzZXJ0Lm1hdGNoKGh0bWwsL25vIHNlIGhhIGVzY3JpdG8gY29udGFiaWxpZGFkLyk7CmFzc2VydC5tYXRjaChzb3VyY2UsL0F1dGhvcml6YXRpb246J0JlYXJlciAnXCtjb25maWdcLnRva2VuLyk7CmFzc2VydC5tYXRjaChzb3VyY2UsL2FjY2lvbjphY3Rpb24vKTsKYXNzZXJ0Lm1hdGNoKHNvdXJjZSwvb3JpZ2luYWwtYmFuay1jb25uZWN0b3IvKTsKYXNzZXJ0LmRvZXNOb3RNYXRjaChzb3VyY2UsL3NlcnZpY2Vfcm9sZXxTVVBBQkFTRV9TRVJWSUNFX1JPTEUvaSk7CmFzc2VydC5kb2VzTm90VGhyb3coKCk9Pm5ldyB2bS5TY3JpcHQoc291cmNlKSk7CmNvbnN0IHNjcmlwdHM9Wy4uLmh0bWwubWF0Y2hBbGwoLzxzY3JpcHQoPzpcc1tePl0qKT8+KFtcc1xTXSo/KTxcL3NjcmlwdD4vZ2kpXS5tYXAobT0+bVsxXSkuZmlsdGVyKEJvb2xlYW4pOwpmb3IoY29uc3Qgc2NyaXB0IG9mIHNjcmlwdHMpYXNzZXJ0LmRvZXNOb3RUaHJvdygoKT0+bmV3IHZtLlNjcmlwdChzY3JpcHQpLCdJbmxpbmUgSmF2YVNjcmlwdCBtdXN0IHBhcnNlJyk7CmNvbnNvbGUubG9nKCdQQVNTIHYxLjkuODQgc3RhcnR1cCB3ZWxjb21lIGFuZCBvcmlnaW5hbCBiYW5rIGNvbm5lY3RvciBjb250cmFjdCcpOwo=
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const vm=require('node:vm');
+const root=path.join(__dirname,'..');
+const html=fs.readFileSync(path.join(root,'fluxia-elite-safari-datos-reales.html'),'utf8');
+const source=fs.readFileSync(path.join(root,'js/fluxia-elite-bank-connector-v1.js'),'utf8');
+assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.(?:84|85|86|87|88|89)'/);
+assert.match(html,/Bienvenido a mi Fluxia/);
+assert.match(html,/fluxia-elite-bank-connector-v1\.js/);
+assert.match(html,/Comprobar conexión bancaria/);
+assert.match(html,/Sincronizar lectura segura/);
+assert.match(html,/desde:selectedMonth\+'-01'/);
+assert.match(html,/no se ha escrito contabilidad/);
+assert.match(source,/Authorization:'Bearer '\+config\.token/);
+assert.match(source,/accion:action/);
+assert.match(source,/original-bank-connector/);
+assert.doesNotMatch(source,/service_role|SUPABASE_SERVICE_ROLE/i);
+assert.doesNotThrow(()=>new vm.Script(source));
+const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(m=>m[1]).filter(Boolean);
+for(const script of scripts)assert.doesNotThrow(()=>new vm.Script(script),'Inline JavaScript must parse');
+console.log('PASS v1.9.84 startup welcome and original bank connector contract');
