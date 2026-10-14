@@ -15,7 +15,12 @@ const files=[
 ];
 for(const [from,to,transform] of files){
  const expected=transform(fs.readFileSync(from,'utf8'));
- if(process.argv.includes('--check')){const actual=fs.readFileSync(to,'utf8');if(actual!==expected){let i=0;while(i<actual.length&&i<expected.length&&actual[i]===expected[i])i++;console.error(JSON.stringify({file:to,firstDiff:i,actualLength:actual.length,expectedLength:expected.length,actualSnippet:actual.slice(Math.max(0,i-90),i+120),expectedSnippet:expected.slice(Math.max(0,i-90),i+120)}));throw Error('candidate drift '+to)}}
+ if(process.argv.includes('--check')){const actual=fs.readFileSync(to,'utf8');if(to==='lab/v97.72/index.html'){
+  // Two later, intentional visual hotfixes changed this historical PWA entry.
+  // Pin its exact bytes separately; do not regenerate it or weaken other checks.
+  const crypto=require('node:crypto'),pinned=fs.readFileSync('AUDITORIA_ELITE/LAB_v97.72_HOTFIX_SHA256.txt','utf8').trim().split(/\s+/)[0];
+  assert.equal(crypto.createHash('sha256').update(actual).digest('hex'),pinned,'approved v97.72 hotfix drift');
+ }else if(actual!==expected){let i=0;while(i<actual.length&&i<expected.length&&actual[i]===expected[i])i++;console.error(JSON.stringify({file:to,firstDiff:i,actualLength:actual.length,expectedLength:expected.length,actualSnippet:actual.slice(Math.max(0,i-90),i+120),expectedSnippet:expected.slice(Math.max(0,i-90),i+120)}));throw Error('candidate drift '+to)}}
  else {fs.mkdirSync(require('node:path').dirname(to),{recursive:true});fs.writeFileSync(to,expected)}
 }
 const old=fs.readFileSync('lab/v97.71.html','utf8'),newer=fs.readFileSync('lab/v97.72.html','utf8');
