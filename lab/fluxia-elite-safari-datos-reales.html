@@ -2134,6 +2134,15 @@ function grossHuchaContributions(rows){
  }
  return {cents,count,invalid,duplicates,details,complete:rows.length>0&&!invalid&&!duplicates}
 }
+function renderGrossHuchaContributions(rows){
+ const a=grossHuchaContributions(rows),box=el('section','eliteHuchaBalance');
+ box.append(el('strong',null,'💰 Aportaciones históricas (bruto)'),el('div','eliteHuchaTotal',a.complete?money(a.cents/100):'—'));
+ box.append(el('p','periodHint',a.count+' aportaciones · '+a.invalid+' registros incompletos · '+a.duplicates+' IDs repetidos'));
+ box.append(el('p','integrityWarning','No es el saldo acumulado neto: quedan por reconciliar usos, rescates y reposiciones.'));
+ const d=el('details','eliteHuchaBalanceDetails');d.append(el('summary',null,'Importes aportados por hucha'));
+ for(const h of a.details){const line=el('div','eliteHuchaBalanceLine');line.append(el('span',null,h.name),el('strong',null,money(h.cents/100)));d.append(line)}
+ box.append(d);return box
+}
 function renderHuchaBalances(rows,origin){
  const audit=huchaBalanceAudit(rows);
  const panel=el('section','eliteHuchaBalance');
