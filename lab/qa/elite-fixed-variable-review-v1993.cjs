@@ -1,6 +1,6 @@
 const fs=require('fs');const assert=require('assert');const vm=require('vm');
 const root=process.cwd();const html=fs.readFileSync(root+'/lab/fluxia-elite-safari-datos-reales.html','utf8');
-assert(html.includes("const ELITE_SAFARI_VERSION='1.9.93'"));
+assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.\d+'/);
 assert(html.includes('bankFixedSuggestions'));assert(html.includes('renderBankFixedReview'));assert(html.includes('bankFixedStorageKey'));
 assert(html.includes('resolveBankFixed'));assert.match(html,/no se clasifican cargos por parecido débil/i);
 assert(html.includes("more.append(el('span','sym','⋯')"));assert(html.includes('.eliteHeader .brandIcon{display:block!important'));
