@@ -6,7 +6,7 @@ const vm=require('node:vm');
 const root=path.join(__dirname,'..');
 const html=fs.readFileSync(path.join(root,'fluxia-elite-safari-datos-reales.html'),'utf8');
 const moduleSource=fs.readFileSync(path.join(root,'js/fluxia-elite-passkey-v1.js'),'utf8');
-assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.(?:83|84|85|86|87|88|89|90|91|92|93|94)'/);
+assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.(?:83|84|85|86|87|88|89|90|91|92|93|94|95)'/);
 assert.match(html,/js\/fluxia-elite-passkey-v1\.js/);
 assert.match(html,/Face ID \/ passkey en este dispositivo/);
 assert.match(html,/passkey\.register\(owner\)/);
