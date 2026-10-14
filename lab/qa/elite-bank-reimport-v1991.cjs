@@ -1,0 +1,12 @@
+const fs=require('fs');const assert=require('assert');const vm=require('vm');
+const root=process.cwd();const source=fs.readFileSync(root+'/lab/js/fluxia-elite-bank-connector-v1.js','utf8');
+const box={exports:{}};vm.runInNewContext(source,{module:box,exports:box.exports,globalThis:{}});const connector=box.exports;
+const first=connector.normalizeRows([{id:'b-1',importe:7.5,fecha:'2026-10-15',concepto:'Gasolinera'},{id:'b-2',importe:12,fecha:'2026-10-15',concepto:'Compra'}]);
+const second=connector.normalizeRows([{id:'b-1',importe:7.5,fecha:'2026-10-15',concepto:'Gasolinera'},{id:'b-3',importe:4,fecha:'2026-10-16',concepto:'Café'}]);
+const merged=connector.mergeRows(first,second);
+assert.strictEqual(merged.rows.length,3);assert.deepStrictEqual(Array.from(merged.duplicates),['b-1']);
+const noId=connector.mergeRows([{importe:1,fecha:'2026-10-15'}],[{importe:1,fecha:'2026-10-15'}]);
+assert.strictEqual(noId.rows.length,2);
+const html=fs.readFileSync(root+'/lab/fluxia-elite-safari-datos-reales.html','utf8');
+assert(html.includes("const ELITE_SAFARI_VERSION='1.9.91'"));assert(html.includes('connector.mergeRows'));assert(html.includes('bankInboxDuplicates'));
+console.log('PASS v1.9.91 repeated bank reads merge by stable bankRef without deduplicating no-ID rows');
