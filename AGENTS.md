@@ -34,3 +34,18 @@ En v97.71, el filtro de pendientes descartaba propuestas basadas en importe de u
 
 ## v97.73 — presentación y cálculo seguros
 La vista de tickets únicos de Compartidos no crea, modifica o borra registros. Total gastado mensual de Variables deriva de fx9769SpentState y no reintroduce Disponible. Validar AUDITORIA_ELITE/shared-month-v9773-regression.cjs antes de publicar; no actualizar root PWA sin «con labora».
+
+
+## NORMA IMPERIAL — HTML MADRE = COMPORTAMIENTO FINANCIERO OBLIGATORIO (14/10/2026)
+
+**Prioridad P0, aplicable a LAB Safari, SwiftUI, cualquier backend y a todas las versiones posteriores.** El HTML/PWA **operativo vigente** de Fluxia, con el perfil y periodo del usuario, es el oráculo funcional mientras no exista un motor común certificado. Una exportación histórica, una colección parcial de Supabase o un HTML archivado NO sustituyen a ese estado operativo.
+
+1. **Paridad completa:** reproducir TODOS los módulos, registros, operaciones, fechas, selector temporal, categorías, estados, archivos/papelera, conciliación bancaria, notificaciones y totales del HTML. Diseño/velocidad pueden mejorar; la semántica contable no.
+2. **Criterio cuantitativo insuficiente:** igual número de filas no basta. Comparar cada transacción por ID estable, propietario/perfil, mes contable, fecha operativa, importe exacto en céntimos, concepto, categoría, origen, vínculo fijo, estado y baja/archivo. Revisión específica de registros presentes en una fuente pero no otra.
+3. **Octubre, referencia real:** el usuario ve 51 variables en el HTML en su corte declarado; CSV del 14/10 contiene 52 filas por 811,39 €, sin el gasto de gasolinera de 7,50 € que corresponde a Tabaco. Las 6 repeticiones exactas por campos CSV NO constituyen prueba de duplicación bancaria porque carecemos de IDs. Verificar corte, filtros e IDs antes de deduplicar, añadir el de 7,50 € o declarar 51/51. Una vez localizado el cargo, conservar comercio real para logo y categoría Tabaco.
+4. **Cálculo único:** no crear fórmulas contables paralelas. Extraer y probar las políticas originales sobre Variables, Fijos, Huchas/Provisiones, Compartidos, Financiaciones, ingresos, Disponible y ejercicio histórico. Fijos vinculados visibles una vez en contabilidad; pendientes no son pagos reales.
+5. **Integración bancaria:** reutilizar identidad, permisos y conciliación originales con comprobaciones explícitas de autenticación; ningún segundo flujo que cause duplicados, cargos resucitados o avisos repetidos. Sin acceso a movimientos actuales, mostrar BLOQUEADO, nunca cifras inventadas.
+6. **Reglas de entrega:** cada versión nueva incluye versión visible, checklist “añadido/corregido/dónde probar”, fuentes de datos reales, pruebas automatizadas y manuales, diferencias abiertas, enlace/copia de rollback y valoración sincera /100. Incrementar versión solo si hubo cambio ejecutable.
+7. **Puertas de promoción:** bloquear escrituras financieras y promoción de Élite si el snapshot HTML actual y la candidata no coinciden movimiento a movimiento y al céntimo, si falta cobertura del HTML o si la regresión de seguridad/rendimiento no está aprobada. Mantener intacto el HTML ESTABLE salvo autorización de promoción y QA.
+
+Ver contrato detallado `AUDITORIA_ELITE/CONTRATO_PARIDAD_HTML_MADRE_2026-10-14.md` en rama LAB.
