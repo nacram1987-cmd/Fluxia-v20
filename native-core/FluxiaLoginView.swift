@@ -15,7 +15,7 @@ public struct FluxiaLoginView: View {
     @State private var authSession: FluxiaAuthClient.Session?
     @State private var rememberSession = false
     @State private var showEmailNumbers = false
-    @State private var showPasswordKeyboard = true
+    @State private var showPasswordKeyboard = false
     @State private var revealPassword = false
     @State private var upperCaseKeys = false
     @State private var symbolKeys = false
@@ -62,120 +62,129 @@ public struct FluxiaLoginView: View {
                 }
             } else {
                 ScrollView {
-                VStack(alignment: .leading, spacing: 14) {
-                    HStack(spacing: 12) {
-                        AsyncImage(url: URL(string: "https://nacram1987-cmd.github.io/Fluxia-v20/fluxia-icon.png")) { phase in
-                        if let image = phase.image {
-                            image.resizable().scaledToFit()
-                        } else {
-                            Image(systemName: "shield.lefthalf.filled")
-                                .resizable().scaledToFit().foregroundStyle(.secondary)
-                        }
-                    }
-                    .frame(width: 32, height: 32)
-                    .accessibilityLabel("Identidad oficial de Fluxia")
-                        Text("fluxia").font(.system(size: 38, weight: .semibold, design: .serif))
-                    }
-                    Text("ÉLITE BETA").font(.caption.bold()).foregroundStyle(.brown)
-                    Text("Accede con tu cuenta de Fluxia")
-                        .font(.headline)
-                        .lineLimit(2)
-                        .minimumScaleFactor(0.8)
-                    TextField("Correo electrónico", text: $email)
-                        .focused($emailFocused)
-                        .textContentType(.username)
-                        .keyboardType(.emailAddress)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
-                        .textFieldStyle(.roundedBorder)
-                    HStack(spacing: 8) {
-                        Button("@") { insertEmailPart("@") }
-                        Button(".") { insertEmailPart(".") }
-                        Button(".com") { insertEmailPart(".com") }
-                        Button("gmail.com") { insertEmailPart("gmail.com") }
-                    }
-                    .buttonStyle(.bordered)
-                    .font(.subheadline)
-                    .disabled(isLoading)
-                    .accessibilityLabel("Atajos para completar el correo")
-                    HStack(spacing: 8) {
-                        Button(showEmailNumbers ? "Ocultar números" : "Números para correo") {
-                            emailFocused = false
-                            showEmailNumbers.toggle()
-                        }
-                        .buttonStyle(.bordered)
-                        .font(.caption)
-                        Spacer()
-                    }
-                    if showEmailNumbers {
-                        HStack(spacing: 5) {
-                            ForEach(0..<10, id: \.self) { n in
-                                Button(String(n)) { email.append(String(n)) }
-                                    .frame(maxWidth: .infinity, minHeight: 36)
-                                    .buttonStyle(.bordered)
-                                    .font(.caption)
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack(spacing: 9) {
+                            AsyncImage(url: URL(string: "https://nacram1987-cmd.github.io/Fluxia-v20/fluxia-icon.png")) { phase in
+                                if let image = phase.image {
+                                    image.resizable().scaledToFit()
+                                } else {
+                                    Image(systemName: "shield.lefthalf.filled")
+                                        .resizable().scaledToFit().foregroundStyle(.secondary)
+                                }
                             }
+                            .frame(width: 30, height: 30)
+                            Text("fluxia")
+                                .font(.system(size: 27, weight: .semibold, design: .serif))
+                            Text("ÉLITE BETA")
+                                .font(.system(size: 10, weight: .bold))
+                                .foregroundStyle(.brown)
+                            Spacer(minLength: 0)
                         }
-                    }
-                    Text("Contraseña").font(.subheadline.bold())
-                    HStack(spacing: 8) {
-                        Text(revealPassword ? password : String(repeating: "●", count: password.count))
-                            .font(.system(size: 18, weight: .medium, design: .monospaced))
-                            .lineLimit(1)
-                            .frame(maxWidth: .infinity, minHeight: 36, alignment: .leading)
-                            .accessibilityLabel("\(password.count) caracteres de contraseña")
-                        Button {
-                            revealPassword.toggle()
-                        } label: {
-                            Image(systemName: revealPassword ? "eye.slash" : "eye")
+                        .padding(.bottom, 5)
+
+                        Text("Accede a tu cuenta")
+                            .font(.headline)
+                        TextField("Correo electrónico", text: $email)
+                            .focused($emailFocused)
+                            .textContentType(.username)
+                            .keyboardType(.emailAddress)
+                            .textInputAutocapitalization(.never)
+                            .autocorrectionDisabled()
+                            .textFieldStyle(.roundedBorder)
+                            .submitLabel(.done)
+                        HStack(spacing: 6) {
+                            ForEach(["@", ".", ".com", "gmail.com"], id: \.self) { part in
+                                Button(part) { insertEmailPart(part) }
+                                    .frame(maxWidth: .infinity, minHeight: 32)
+                                    .buttonStyle(.bordered)
+                            }
+                            Button(showEmailNumbers ? "−123" : "+123") {
+                                emailFocused = false
+                                showEmailNumbers.toggle()
+                            }
+                            .buttonStyle(.bordered)
                         }
-                        .accessibilityLabel(revealPassword ? "Ocultar contraseña" : "Mostrar contraseña")
-                        Button {
-                            showPasswordKeyboard.toggle()
-                            emailFocused = false
-                        } label: {
-                            Image(systemName: "keyboard")
+                        .font(.system(size: 11))
+                        if showEmailNumbers {
+                            HStack(spacing: 3) {
+                                ForEach(0..<10, id: \.self) { number in
+                                    Button(String(number)) { email.append(String(number)) }
+                                        .frame(maxWidth: .infinity, minHeight: 30)
+                                        .buttonStyle(.bordered)
+                                }
+                            }
+                            .font(.system(size: 11))
                         }
-                        .accessibilityLabel("Mostrar u ocultar teclado integrado")
-                    }
-                    .padding(.horizontal, 12)
-                    .background(.white, in: RoundedRectangle(cornerRadius: 8))
-                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.28)))
-                    if showPasswordKeyboard {
-                        Text("Teclado integrado: mezcla letras, números y símbolos sin perder lo escrito")
+                        HStack(spacing: 8) {
+                            Text("Contraseña").font(.subheadline.weight(.medium))
+                            Spacer()
+                            Button(showPasswordKeyboard ? "Ocultar teclado" : "Escribir contraseña") {
+                                emailFocused = false
+                                showPasswordKeyboard.toggle()
+                            }
                             .font(.caption)
-                            .foregroundStyle(.secondary)
-                        passwordKeyboard
-                    }
-                    Toggle("Recordar sesión en este dispositivo", isOn: $rememberSession)
-                        .font(.subheadline)
-                    Button {
-                        Task { await signIn() }
-                    } label: {
-                        HStack {
-                            if isLoading { ProgressView().tint(.white) }
-                            Text("Entrar")
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding(12)
+                        HStack(spacing: 7) {
+                            Text(revealPassword ? password : String(repeating: "●", count: password.count))
+                                .font(.system(size: 15, design: .monospaced))
+                                .lineLimit(1)
+                                .truncationMode(.head)
+                                .frame(maxWidth: .infinity, minHeight: 31, alignment: .leading)
+                                .accessibilityLabel("\(password.count) caracteres de contraseña")
+                            Button {
+                                revealPassword.toggle()
+                            } label: {
+                                Image(systemName: revealPassword ? "eye.slash" : "eye")
+                            }
+                            .accessibilityLabel(revealPassword ? "Ocultar contraseña" : "Mostrar contraseña")
+                            Button {
+                                if !password.isEmpty { password.removeLast() }
+                            } label: {
+                                Image(systemName: "delete.left")
+                            }
+                            .accessibilityLabel("Borrar último carácter")
+                        }
+                        .padding(.horizontal, 10)
+                        .background(.white, in: RoundedRectangle(cornerRadius: 9))
+                        .overlay(RoundedRectangle(cornerRadius: 9).stroke(.gray.opacity(0.25)))
+                        Toggle("Recordar sesión", isOn: $rememberSession)
+                            .font(.subheadline)
+                            .tint(Color(red: 0.08, green: 0.27, blue: 0.43))
+                        Button {
+                            emailFocused = false
+                            Task { await signIn() }
+                        } label: {
+                            HStack(spacing: 8) {
+                                if isLoading { ProgressView().tint(.white) }
+                                Text("Entrar")
+                            }
+                            .frame(maxWidth: .infinity, minHeight: 44)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(Color(red: 0.08, green: 0.27, blue: 0.43))
+                        .disabled(isLoading || email.trimmingCharacters(in: .whitespaces).isEmpty || password.isEmpty || cloudConfiguration == nil)
+                        if showPasswordKeyboard {
+                            passwordKeyboard
+                                .padding(.top, 3)
+                        }
+                        if cloudConfiguration == nil {
+                            Text("Conexión Supabase pendiente de configurar.")
+                                .font(.caption).foregroundStyle(.orange)
+                        }
+                        if let message {
+                            Text(message).font(.caption).foregroundStyle(.red)
+                        }
+                        Text("Datos reales · lectura segura. La contraseña no se guarda.")
+                            .font(.system(size: 11))
+                            .foregroundStyle(.secondary)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(isLoading || email.isEmpty || password.isEmpty || cloudConfiguration == nil)
-                    if cloudConfiguration == nil {
-                        Text("La compilación aún no tiene configurada la conexión pública a Supabase.")
-                            .font(.caption).foregroundStyle(.orange)
-                    }
-                    if let message {
-                        Text(message).font(.caption).foregroundStyle(.red)
-                    }
-                    Text("La contraseña no se almacena. Si activas recordar sesión, solo se guarda el token de renovación en el llavero iOS. En Appetize, el dispositivo virtual puede reiniciarse y perderlo.")
-                        .font(.caption).foregroundStyle(.secondary)
-                }
-                .padding(16)
-                .frame(maxWidth: 480)
+                    .padding(14)
+                    .frame(maxWidth: 440)
+                    .frame(maxWidth: .infinity)
                 }
                 .scrollDismissesKeyboard(.interactively)
-                .safeAreaPadding(.bottom, 20)
+                .background(Color(red: 0.97, green: 0.97, blue: 0.95))
+                .safeAreaPadding(.bottom, 8)
             }
         }
         .task {
@@ -191,20 +200,20 @@ public struct FluxiaLoginView: View {
     }
 
     private var passwordKeyboard: some View {
-        VStack(spacing: 6) {
-            HStack(spacing: 4) {
+        VStack(spacing: 3) {
+            HStack(spacing: 2) {
                 ForEach(Array("1234567890").map(String.init), id: \.self) { key in
                     passwordKey(key)
                 }
             }
             ForEach(["qwertyuiop", "asdfghjkl", "zxcvbnm"], id: \.self) { row in
-                HStack(spacing: 4) {
+                HStack(spacing: 2) {
                     ForEach(Array(row).map(String.init), id: \.self) { letter in
                         passwordKey(upperCaseKeys ? letter.uppercased() : letter)
                     }
                 }
             }
-            HStack(spacing: 6) {
+            HStack(spacing: 4) {
                 Button(upperCaseKeys ? "MAYÚS ✓" : "Mayús") { upperCaseKeys.toggle() }
                     .buttonStyle(.bordered)
                 Button(symbolKeys ? "Símbolos ✓" : "Símbolos") { symbolKeys.toggle() }
@@ -221,7 +230,7 @@ public struct FluxiaLoginView: View {
                     .buttonStyle(.borderedProminent)
             }
             if symbolKeys {
-                HStack(spacing: 4) {
+                HStack(spacing: 2) {
                     ForEach(["@", ".", "-", "_", "!", "?", "#", "$", "%", "&"], id: \.self) { key in
                         passwordKey(key)
                     }
@@ -237,8 +246,8 @@ public struct FluxiaLoginView: View {
             password.append(value)
         } label: {
             Text(value)
-                .font(.system(size: 14, weight: .medium))
-                .frame(maxWidth: .infinity, minHeight: 38)
+                .font(.system(size: 13, weight: .medium))
+                .frame(maxWidth: .infinity, minHeight: 30)
                 .contentShape(Rectangle())
         }
         .buttonStyle(.bordered)
