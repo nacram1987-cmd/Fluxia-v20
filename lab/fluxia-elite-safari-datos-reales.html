@@ -72,6 +72,19 @@ h1{color:#18364b}
 .entry:before{display:none}.verifiedDate{font-size:13px;font-weight:700;color:#2c6c59;background:#eaf2eb;padding:10px;border-radius:9px}
 @media(max-width:355px){.entry{padding:10px}.chargeEmoji{flex-basis:33px;width:33px;height:33px;font-size:18px}.amount{font-size:12px}}
 
+
+/* Sandbox editor (session-only) for parity inspection, never a write to Supabase */
+.draftTag{color:#8a6027;background:#fbefd8;padding:6px 9px;border-radius:8px;font-size:11px;font-weight:750}
+.editIntro{font-size:12px;line-height:1.5;color:#6b7c84}
+.editActions{display:flex;gap:8px;margin-top:15px}
+.editActions button{flex:1;min-height:43px;border-radius:11px;border:1px solid #d9dfde;background:white;color:#1a3a4f;font-weight:700}
+.editActions .primary{background:#193c54;color:white;border:0}
+.draftCompare{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.draftCompare div{background:#f5f5f0;border-radius:11px;padding:10px;min-width:0;overflow-wrap:anywhere}
+.draftCompare strong{display:block;font-size:11px;color:#6b7c84;margin-bottom:6px}
+.draftCompare span{display:block;font-size:12px}
+.editorError{padding:9px;background:#fff0e8;color:#9c402b;font-size:12px;border-radius:9px;margin-top:9px}
+
 #splash{position:fixed;inset:0;z-index:40;background:radial-gradient(circle at 50% 35%,#274763,#10273e 75%);color:white;display:none;align-items:center;justify-content:center;text-align:center;padding:28px}
 #splash.active{display:flex}#splash .splashLogo{width:76px;height:76px;border-radius:20px;object-fit:contain;box-shadow:0 16px 42px #07172677}
 #splash h1{font:600 41px Georgia,serif;color:#fff;margin:17px 0 0}#splash .splashBeta{display:block;color:#d1ad6a;letter-spacing:2px;font-size:11px;font-weight:750;margin:6px 0 30px}
@@ -106,6 +119,7 @@ const mods=[
 {id:'compartidos',title:'Compartidos',icon:'♧',key:'planRescate_v2_compartidos'},
 {id:'financiaciones',title:'Financiaciones',icon:'◎',key:'planRescate_v2_financiaciones'}];
 let token='',owner='',items={},page='inicio',search='',period='Todos',error='',loading=false, tutorialIndex=0,searchTimer=null;
+let draftEdits=new Map();let currentDetail=null;
 const TUTORIAL_VERSION='1';
 const steps=[['✦','Bienvenido a Fluxia Élite','Tu espacio financiero con la identidad azul y oro de Fluxia. Esta vista Safari permite navegar por registros auténticos.'],['◈','Disponible fiable','Nunca mostramos un saldo inventado. El Disponible aparecerá cuando el motor contable esté conciliado con Fluxia HTML.'],['↙','Ingresos y gastos','Entra en Ingresos, Fijos y Variables. Busca conceptos y revisa los importes originales sin alterarlos.'],['◆','Huchas y previsiones','Consulta las provisiones reales. Aportaciones, rescates y operaciones retroactivas no se recalculan hasta validar la lógica histórica.'],['♧','Compartidos y financiación','Accede a los módulos desde sus tarjetas de Inicio. Abre un registro para revisar fecha, importe y categoría originales.'],['✓','Seguridad y límites actuales','Cada cuenta consulta solo sus propias colecciones en Supabase. Esta vista no modifica bancos ni saldos; la app iOS nativa sigue desarrollándose.']];
 const $=s=>document.querySelector(s),el=(tag,cls,txt)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n};
@@ -191,7 +205,7 @@ function loginScreen(){
  const res=await fetch(BASE+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'apikey':KEY,'Content-Type':'application/json'},body:JSON.stringify({email:email.value.trim(),password:pass.value})});
  const data=await res.json();pass.value='';
  if(!res.ok||!data.access_token||!data.user?.id)throw new Error('No se ha podido iniciar sesión. Comprueba los datos de acceso.');
- token=data.access_token;owner=data.user.id;
+ draftEdits.clear();token=data.access_token;owner=data.user.id;
  const keys=mods.filter(m=>m.key).map(m=>m.key);
  const encoded=encodeURIComponent('in.('+keys.join(',')+')');
  const rows=await authRequest('/rest/v1/fluxia_datos?select=user_id,clave,v&user_id=eq.'+encodeURIComponent(owner)+'&clave='+encoded+'&limit=20',token);
@@ -235,18 +249,98 @@ function renderList(){
  const title=el('div','entryMain');title.append(el('strong',null,name),el('small',null,chargeMeta(data)));
  const emoji=el('span','chargeEmoji',chargeIcon(data,page));emoji.setAttribute('aria-hidden','true');
  const btn=el('button','entry');btn.append(emoji,title,el('span','amount',amount??'Ver detalle ›'));
- btn.onclick=()=>openDetail(data);list.append(btn)
+ btn.onclick=()=>openDetail(data,index,m.key);list.append(btn)
 }
  if(!rows.length)list.append(el('p','empty','No hay registros coincidentes.'));if(rows.length>80)list.append(el('p','muted','Mostrando 80 de '+rows.length+' registros filtrados para mantener la respuesta fluida. Utiliza la búsqueda para localizar el resto.'))};
  q.oninput=()=>{search=q.value;if(searchTimer)clearTimeout(searchTimer);searchTimer=setTimeout(draw,110)};sel.onchange=()=>{period=sel.value;draw()};draw();
 }
-function openDetail(data){const d=$('#detailContent');d.replaceChildren();d.append(el('h2',null,chargeIcon(data,page)+'  '+(field(data,['concepto','nombre','descripcion'])||'Registro original')));const verifiedDate=actualChargeDate(data);if(verifiedDate)d.append(el('p','verifiedDate','📅 Cargo registrado: '+verifiedDate.label));else d.append(el('p','muted','Fecha exacta del cargo no disponible en este registro'));const dl=el('dl');for(const [k,title] of [['importe','Importe'],['importeMensual','Importe mensual'],['cuota','Cuota'],['importe_total','Importe total'],['mes','Mes'],['fecha','Fecha'],['categoria','Categoría'],['estado','Estado'],['origen','Origen'],['id','Identificador']]){if(data[k]===undefined||data[k]===null)continue;dl.append(el('dt',null,title),el('dd',null,typeof data[k]==='number'&&/importe|cuota/.test(k)?money(data[k]):String(data[k])))}d.append(dl,el('p','notice','Registro original de nube. No se ha modificado ni contabilizado.'));$('#detail').classList.add('open')}
+function openDetail(data,index,key){
+ currentDetail={data,index,key};const d=$('#detailContent');d.replaceChildren();
+ const entry=draftEdits.get(key+':'+index)||data;
+ d.append(el('h2',null,chargeIcon(entry,page)+'  '+(field(entry,['concepto','nombre','descripcion'])||'Registro original')));
+ const verifiedDate=actualChargeDate(entry);
+ if(verifiedDate)d.append(el('p','verifiedDate','📅 Fecha registrada: '+verifiedDate.label));
+ else d.append(el('p','muted','Fecha exacta no disponible: solo se mostrará si está guardada'));
+ const dl=el('dl');
+ for(const [k,title] of [['importe','Importe'],['importeMensual','Importe mensual'],['cuota','Cuota'],['importe_total','Importe total'],['mes','Mes'],['fecha','Fecha'],['fechaCargo','Fecha cargo'],['fechaPago','Fecha pago'],['categoria','Categoría'],['estado','Estado'],['origen','Origen'],['id','Identificador']]){
+  if(entry[k]===undefined||entry[k]===null)continue;
+  dl.append(el('dt',null,title),el('dd',null,typeof entry[k]==='number'&&/importe|cuota/.test(k)?money(entry[k]):String(entry[k])))
+ }
+ d.append(dl);
+ if(draftEdits.has(key+':'+index))d.append(el('p','draftTag','BORRADOR DE PRUEBA · NO GUARDADO EN NUBE'));
+ const actions=el('div','editActions');
+ const edit=el('button','primary','✏️ Probar edición');
+ edit.onclick=()=>showDraftEditor(data,index,key);
+ actions.append(edit);
+ if(draftEdits.has(key+':'+index)){
+  const discard=el('button',null,'Descartar borrador');
+  discard.onclick=()=>{draftEdits.delete(key+':'+index);openDetail(data,index,key)};
+  actions.append(discard)
+ }
+ d.append(actions,el('p','notice','El editor de prueba no modifica Supabase, no recalcula Disponible ni cambia registros HTML. Las escrituras reales permanecen bloqueadas hasta validar las reglas contables.'));
+ $('#detail').classList.add('open')
+}
+function showDraftEditor(data,index,key){
+ const d=$('#detailContent');d.replaceChildren();
+ const original=JSON.parse(JSON.stringify(data));
+ const active=draftEdits.get(key+':'+index)||original;
+ d.append(el('span','draftTag','MODO PRUEBA · SIN GUARDAR EN LA NUBE'));
+ d.append(el('h2',null,'Editar registro'));
+ d.append(el('p','editIntro','Prueba los cambios con tus datos reales. La vista previa se mantiene solo durante esta sesión y desaparece al salir.'));
+ const form=el('form');
+ const nameKey=['concepto','nombre','descripcion'].find(k=>typeof original[k]==='string')||'concepto';
+ const amountKey=['importe','importeMensual','cuota','importe_total'].find(k=>typeof original[k]==='number');
+ const dateKey=['fechaCargo','fecha_cargo','fechaOperacion','fecha_operacion','fechaPago','fecha_pago','fecha'].find(k=>typeof original[k]==='string');
+ const controls=[];
+ function inputField(label,key,type,value,required=false){
+  const wrapper=el('label',null,label),input=el('input');input.type=type;input.value=value??'';input.required=required;if(type==='number'){input.step='0.01';input.inputMode='decimal'}wrapper.append(input);form.append(wrapper);controls.push({key,input});return input
+ }
+ inputField('Concepto',nameKey,'text',active[nameKey]||'',true);
+ if(amountKey)inputField('Importe registrado ('+amountKey+')',amountKey,'number',active[amountKey],true);
+ if(dateKey){
+  const raw=String(active[dateKey]||'');
+  const iso=/^\\d{4}-\\d{2}-\\d{2}/.test(raw)?raw.slice(0,10):'';
+  const date=inputField('Fecha real ('+dateKey+')',dateKey,iso?'date':'text',iso||raw);
+  if(date.type==='text')date.placeholder='Fecha original: mantener formato fuente'
+ }
+ if(typeof original.mes==='string')inputField('Periodo / mes', 'mes','text',active.mes);
+ if(typeof original.categoria==='string')inputField('Categoría','categoria','text',active.categoria);
+ if(typeof original.estado==='string')inputField('Estado original (no marca pagos)','estado','text',active.estado);
+ const errorBox=el('div','editorError hide');
+ form.append(errorBox);
+ const compare=el('div','draftCompare');compare.append(el('div',null),el('div',null));
+ form.append(compare);
+ const actions=el('div','editActions');
+ const cancel=el('button',null,'Cancelar');cancel.type='button';cancel.onclick=()=>openDetail(original,index,key);
+ const save=el('button','primary','Guardar prueba');save.type='submit';
+ actions.append(cancel,save);form.append(actions);
+ function refreshPreview(){
+  const changed=Object.assign({},original);
+  for(const {key,input} of controls){changed[key]=input.type==='number'?Number(input.value):input.value.trim()}
+  compare.children[0].replaceChildren(el('strong',null,'ANTES'),el('span',null,JSON.stringify(Object.fromEntries(controls.map(({key})=>[key,original[key]??null])))));
+  compare.children[1].replaceChildren(el('strong',null,'DESPUÉS'),el('span',null,JSON.stringify(Object.fromEntries(controls.map(({key})=>[key,changed[key]??null])))));
+  return changed
+ }
+ controls.forEach(({input})=>input.addEventListener('input',refreshPreview));refreshPreview();
+ form.onsubmit=e=>{
+  e.preventDefault();errorBox.classList.add('hide');
+  const changed=refreshPreview();
+  if(!changed[nameKey]||changed[nameKey].length>200){errorBox.textContent='Escribe un concepto válido de hasta 200 caracteres.';errorBox.classList.remove('hide');return}
+  if(amountKey&&(!Number.isFinite(changed[amountKey])||Math.abs(changed[amountKey])>100000000)){errorBox.textContent='Importe no válido.';errorBox.classList.remove('hide');return}
+  if(dateKey&&changed[dateKey]&&/fecha|date/i.test(dateKey)){
+   const temp={[dateKey]:changed[dateKey]};if(!actualChargeDate(temp)&&/^\\d{4}-\\d{2}-\\d{2}/.test(changed[dateKey])){errorBox.textContent='Fecha no válida.';errorBox.classList.remove('hide');return}
+  }
+  draftEdits.set(key+':'+index,changed);openDetail(original,index,key);
+ };
+ d.append(form)
+}
+
 function render(){if(!token){loginScreen();return}$('#logout').classList.remove('hide');$('#help').classList.remove('hide');renderNav();$('#content').replaceChildren();if(page==='inicio')renderHome();else renderList()}
 $('#close').onclick=()=>$('#detail').classList.remove('open');$('#detail').onclick=e=>{if(e.target.id==='detail')$('#detail').classList.remove('open')};
 $('#help').onclick=()=>openTutorial(true);
 $('#helpClose').onclick=closeTutorial;$('#skipTutorial').onclick=closeTutorial;
 $('#prevTutorial').onclick=()=>{if(tutorialIndex>0){tutorialIndex--;updateTutorial()}};
 $('#nextTutorial').onclick=()=>{if(tutorialIndex===steps.length-1)closeTutorial();else{tutorialIndex++;updateTutorial()}};
-$('#logout').onclick=()=>{token='';owner='';items={};$('#onboarding').classList.remove('active');loginScreen()};loginScreen();
+$('#logout').onclick=()=>{draftEdits.clear();token='';owner='';items={};$('#onboarding').classList.remove('active');loginScreen()};loginScreen();
 })();
 </script></body></html>
