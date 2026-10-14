@@ -1,0 +1,17 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+const a=html.indexOf('function renderLegacyPayments(){'),b=html.indexOf('function renderLegacyNotifications(){',a);
+assert(a>=0&&b>a);
+const element=(tag,cls,txt)=>({tag,cls,textContent:txt||'',children:[],value:tag==='select'?'all':'',append(...v){this.children.push(...v)},replaceChildren(){this.children=[]},setAttribute(){}});
+const root=element('root'),rows=Array.from({length:125},(_,i)=>({concepto:'Uso '+i,fecha:'2026-10-'+String((i%28)+1).padStart(2,'0'),tipo:'uso',importe:i}));
+const ctx=vm.createContext({renderMonthSelector(){},head(){},$(){return root},el:element,cashOrFinanceSource(){return {present:true,value:rows}},financeSourceNotice(){return element('p')},motherLink(){return element('a')},selectedMonth:'2026-10',monthStatus(){return 'match'},monthTitle(){return 'Octubre 2026'},actualChargeDate:r=>({sort:Number(r.fecha.replaceAll('-','')),label:r.fecha}),field:(r,keys)=>keys.map(k=>r[k]).find(Boolean)||null,recordAmount:r=>r.importe,money:n=>n+' €'});
+vm.runInContext(html.slice(a,b),ctx,{timeout:1000});ctx.renderLegacyPayments();
+const list=root.children.find(x=>x.cls==='entries'),num=()=>list.children.filter(x=>x.cls==='legacyMovementCard').length;
+assert.equal(num(),50);
+list.children.find(x=>x.tag==='button').onclick();assert.equal(num(),100);
+const input=root.children.find(x=>x.cls==='elitePaymentsFilters').children[0];
+input.value='Uso 12';input.oninput();assert.equal(num(),6);
+assert(html.includes("const ELITE_SAFARI_VERSION='1.9.52'"));
+for(const part of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(part[1])new vm.Script(part[1]);
+console.log('PASS v1.9.52: all historical pagos accessible with pagination and searching, no ledger writes');
