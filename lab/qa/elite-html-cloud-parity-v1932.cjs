@@ -1,0 +1,24 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+const a=html.indexOf('function comparePrivateModuleRows('),b=html.indexOf('function renderPrivateHTMLModule(',a);
+assert(a>=0&&b>a,'Missing per-module cloud comparison');
+const context=vm.createContext({motherRowId:r=>String(r?.id||''),motherComparisonFields:(x,y)=>['importe','estado'].filter(k=>JSON.stringify(x[k])!==JSON.stringify(y[k]))});
+vm.runInContext(html.slice(a,b),context,{timeout:1000});
+let n=0;function check(label,fn){fn();console.log('PASS',label);n++}
+const htmlRecords=[{id:'a',importe:1},{id:'b',importe:2},{id:'c',importe:3},{id:'c',importe:3},{importe:5}];
+const cloudRecords=[{id:'a',importe:1},{id:'b',importe:9},{id:'z',importe:7}];
+const result=context.comparePrivateModuleRows(htmlRecords,cloudRecords);
+check('Same row matching ID and fields',()=>assert.equal(result.counts.same,1));
+check('Only HTML record',()=>assert.equal(result.counts.missing,1));
+check('Changed row identified',()=>assert.equal(result.counts.different,1));
+check('Duplicated original ID blocked',()=>assert.equal(result.counts.duplicate,1));
+check('Missing original ID blocked',()=>assert.equal(result.counts.unidentified,1));
+check('Cloud-only record counted',()=>assert.equal(result.counts.cloudOnly,1));
+check('Cloud without rows blocks comparison',()=>assert.equal(context.comparePrivateModuleRows([],null),null));
+check('Raw cloud rows unmodified',()=>assert.equal(cloudRecords[1].importe,9));
+check('UI labels explicitly block duplicate import',()=>assert(html.includes('ID duplicado · no importar')));
+check('Correct version',()=>assert(html.includes("const ELITE_SAFARI_VERSION='1.9.32'")));
+for(const script of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(script[1])new vm.Script(script[1]);
+check('All inline JS syntax',()=>assert(true));
+console.log('RESULT',n,'HTML cloud classification regression checks passed');
