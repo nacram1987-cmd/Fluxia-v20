@@ -194,7 +194,21 @@ function monthStatus(obj,ym){
 }
 function monthRecords(mod){
  const arr=canon(mod);if(!arr)return [];
- return arr.map((data,index)=>({data,index,monthStatus:monthStatus(data,selectedMonth)})).filter(x=>x.monthStatus==='match'||x.monthStatus==='legacy')
+ const isPlan=mod.id==='huchas'||mod.id==='financiaciones';
+ return arr.map((data,index)=>{
+  let state=monthStatus(data,selectedMonth);
+  // Plans have a validity period, unlike an individual bank charge.
+  if(isPlan){
+   const start=typeof data.inicio==='string'?data.inicio:null;
+   const finish=typeof data.fin==='string'?data.fin:null;
+   const startYm=start&&/^\\d{4}-\\d{2}/.test(start)?start.slice(0,7):null;
+   const finishYm=finish&&/^\\d{4}-\\d{2}/.test(finish)?finish.slice(0,7):null;
+   if((!startYm||startYm<=selectedMonth)&&(!finishYm||finishYm>=selectedMonth))state='plan';
+   else if(startYm||finishYm)state='other';
+   else state='undated';
+  }
+  return {data,index,monthStatus:state}
+ }).filter(x=>x.monthStatus==='match'||x.monthStatus==='legacy'||(isPlan&&(x.monthStatus==='plan'||x.monthStatus==='undated')))
 }
 function moveMonth(delta){selectedMonth=monthShift(selectedMonth,delta);search='';period='Todos';render()}
 function renderMonthSelector(){
@@ -490,7 +504,7 @@ function renderHome(){
  $('#content').append(hero);
  const modArr=mods.filter(m=>m.key);
  const loaded=modArr.filter(m=>canon(m)!==null);
- const rowsCount=loaded.reduce((sum,m)=>sum+monthRecords(m).filter(r=>r.monthStatus==='match').length,0);
+ const rowsCount=loaded.reduce((sum,m)=>sum+monthRecords(m).filter(r=>r.monthStatus==='match'||r.monthStatus==='plan').length,0);
  const stats=el('div','financeStrip');
  const stat1=el('div','stat');stat1.append(el('strong',null,String(rowsCount)),el('span',null,'Registros fechados de '+monthTitle(selectedMonth)));
  const stat2=el('div','stat');stat2.append(el('strong',null,loaded.length+' / '+modArr.length),el('span',null,'Colecciones consultadas'));
@@ -502,7 +516,7 @@ function renderHome(){
  for(const id of priority){
   const m=mods.find(x=>x.id===id),arr=canon(m),btn=el('button','tile');
   btn.dataset.section=m.id;
-  btn.append(el('span','symbol',moduleEmojis[m.id]),el('strong',null,m.title),el('span',null,arr?monthRecords(m).filter(x=>x.monthStatus==='match').length+' de este periodo':'Colección no disponible'));
+  btn.append(el('span','symbol',moduleEmojis[m.id]),el('strong',null,m.title),el('span',null,arr?monthRecords(m).filter(x=>x.monthStatus==='match'||x.monthStatus==='plan').length+' de este periodo':'Colección no disponible'));
   const latest=datedRows(m).find(x=>monthStatus(x.record,selectedMonth)==='match');
   if(latest){
    const sum=recordAmount(latest.record);
@@ -550,7 +564,7 @@ function renderList(){
    const cat=field(data,['categoria','tipo'])||'';
    return (sel.value==='Todas'||cat===sel.value)&&(!query||[field(data,['concepto','nombre','descripcion'])||'',cat,field(data,['origen'])||''].some(x=>x.toLocaleLowerCase('es').includes(query)));
   });
-  const exact=matches.filter(x=>x.monthStatus==='match'),historical=matches.filter(x=>x.monthStatus==='legacy');
+  const exact=matches.filter(x=>x.monthStatus==='match'||x.monthStatus==='plan'),historical=matches.filter(x=>x.monthStatus==='legacy'||x.monthStatus==='undated');
   const dated=x=>actualChargeDate(x.data)?.sort||0;
   exact.sort((x,y)=>dated(y)-dated(x));
   count.textContent=matches.length+' registros mostrados · '+arr.length+' en nube en todos los periodos';
@@ -566,8 +580,8 @@ function renderList(){
    }
    if(rows.length>80)list.append(el('p','periodHint','Mostrando 80 de '+rows.length+'. Utiliza la búsqueda o categoría para localizar el resto.'));
   };
-  addGroup('📅 '+monthTitle(selectedMonth)+' · fecha/periodo confirmado',exact);
-  addGroup('⚠️ Históricos: mes sin año · no contabilizados',historical);
+  addGroup((page==='huchas'||page==='financiaciones'?'📂 Planes vigentes · ':'📅 Registros del periodo · ')+monthTitle(selectedMonth),exact);
+  addGroup(page==='huchas'||page==='financiaciones'?'⚠️ Planes sin vigencia fechada · revisar':'⚠️ Históricos: mes sin año · no contabilizados',historical);
   if(!matches.length)list.append(el('p','empty','No hay registros asociados a '+monthTitle(selectedMonth)+'. Cambia de mes o revisa los históricos.'));
  };
  q.oninput=()=>{search=q.value;if(searchTimer)clearTimeout(searchTimer);searchTimer=setTimeout(draw,110)};
