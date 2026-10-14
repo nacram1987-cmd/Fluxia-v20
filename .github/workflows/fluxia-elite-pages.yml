@@ -4,6 +4,9 @@ on:
     branches: [pages-v9731-real-final]
     paths:
       - '.github/workflows/fluxia-elite-pages.yml'
+      - 'lab/fluxia-elite-safari-datos-reales.html'
+      - 'lab/js/fluxia-elite-*.js'
+      - 'lab/qa/elite-*.cjs'
       - 'lab/v97.69.html'
       - 'lab/v97.70.html'
       - 'lab/v97.70/**'
@@ -30,6 +33,9 @@ jobs:
         with:
           node-version: '24'
       - run: npm ci --prefix auditorias/qa-v97.66 --no-audit --no-fund
+      - run: node lab/qa/elite-modules-smoke.cjs
+      - run: node lab/qa/elite-wallet-regression.cjs
+      - run: node lab/qa/elite-backup-regression.cjs
       - run: node auditorias/qa-v97.66/verify-baseline.cjs
       - run: sha256sum -c AUDITORIA_ELITE/PROTECTED_SHA256.txt
       - run: npm --prefix auditorias/qa-v97.66 test
