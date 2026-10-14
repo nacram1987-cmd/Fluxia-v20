@@ -352,7 +352,7 @@ function availableDatedMonths(){
   if(!rows)continue;
   for(const data of rows){
    const m=recordMonth(data);
-   if(!m?.ym||!/^20\\d{2}-(0[1-9]|1[0-2])$/.test(m.ym))continue;
+   if(!m?.ym||!/^20\d{2}-(0[1-9]|1[0-2])$/.test(m.ym))continue;
    if(mod.id==='variables'&&!originalVisibleVariable(data,MONTHS[Number(m.ym.slice(5))-1]))continue;
    counts.set(m.ym,(counts.get(m.ym)||0)+1)
   }
