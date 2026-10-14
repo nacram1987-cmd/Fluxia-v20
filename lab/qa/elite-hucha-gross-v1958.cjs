@@ -1,0 +1,17 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+const a=html.indexOf('function grossHuchaContributions('),b=html.indexOf('function renderHuchaBalances(',a);
+assert(a>=0&&b>a);
+const el=(tag,cls,txt)=>({tag,cls,txt,children:[],append(...x){this.children.push(...x)}});
+const ctx=vm.createContext({el,money:n=>n.toFixed(2)+' €',huchaMonthlyContributions:h=>({rows:Object.entries(h.aportaciones||{}).flatMap(([month,arr])=>arr.map(record=>({month,record}))),invalid:0})});
+vm.runInContext(html.slice(a,b),ctx,{timeout:1000});
+const f=ctx.grossHuchaContributions;
+const good=f([{id:'a',nombre:'Césped',aportaciones:{septiembre:[{id:'x',importe:35}],octubre:[{id:'y',importe:35}]}},{id:'b',nombre:'Boda',aportaciones:{octubre:[{id:'z',importe:50}]}}]);
+assert(good.complete);assert.equal(good.cents,12000);
+assert.equal(f([{id:'a',aportaciones:{octubre:[{id:'x',importe:25},{id:'x',importe:25}]}}]).complete,false);
+assert.equal(f([{id:'a',aportaciones:{octubre:[{id:'x'}]}}]).complete,false);
+assert(ctx.renderGrossHuchaContributions([{id:'a',aportaciones:{octubre:[{id:'x',importe:35}]}}]));
+assert(html.includes("const ELITE_SAFARI_VERSION='1.9.58'"));
+for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(m[1])new vm.Script(m[1]);
+console.log('PASS v1.9.58 gross contributions source breakdown and data quality checks');
