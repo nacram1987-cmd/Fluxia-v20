@@ -68,9 +68,9 @@ struct ContentView: View {
                 }
                 .accessibilityLabel("Mes anterior")
                 Spacer()
-                Text(month, format: .dateTime.month(.wide).year())
+                Text(month.formatted(.dateTime.month(.wide).year().locale(Locale(identifier: "es_ES"))))
                     .font(.headline)
-                    .accessibilityLabel("Mes seleccionado: \(month.formatted(.dateTime.month(.wide).year()))")
+                    .accessibilityLabel("Mes seleccionado: \(month.formatted(.dateTime.month(.wide).year().locale(Locale(identifier: "es_ES"))))")
                 Spacer()
                 Button { month = Calendar.current.date(byAdding: .month, value: 1, to: month) ?? month } label: {
                     Image(systemName: "chevron.right")
