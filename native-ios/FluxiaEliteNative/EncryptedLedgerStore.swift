@@ -16,7 +16,7 @@ final class EncryptedLedgerStore {
         let operationID: String
     }
 
-    enum AppendResult: Equatable { case inserted(revision: UInt64), duplicateOperation, rejected }
+    enum AppendResult: Equatable { case inserted(revision: UInt64), duplicateOperation, conflictingOperation, rejected }
     enum StoreError: Error { case keyUnavailable, corruptOrUnauthenticData, ioFailure }
 
     typealias KeyProvider = (String) -> SymmetricKey?
@@ -32,15 +32,25 @@ final class EncryptedLedgerStore {
         var revision: UInt64 = 0
         var entries: [Entry] = []
         var tombstones: Set<String> = []
-        var operationIDs: Set<String> = []
+        var operations: [String: String] = [:]
         var audit: [AuditEvent] = []
+    }
+    private struct CommandFingerprint: Codable {
+        let action: String
+        let recordID: String
+        let entry: Entry?
     }
 
     private let directoryURL: URL
     private let keyProvider: KeyProvider
     private static let transactionLock = NSRecursiveLock()
 
-    init(directoryURL: URL, keyProvider: @escaping KeyProvider = KeychainLedgerKey.key(for:)) {
+    init(directoryURL: URL) {
+        self.directoryURL = directoryURL
+        self.keyProvider = KeychainLedgerKey.key(for:)
+    }
+
+    init(directoryURL: URL, keyProvider: @escaping KeyProvider) {
         self.directoryURL = directoryURL
         self.keyProvider = keyProvider
     }
@@ -61,13 +71,16 @@ final class EncryptedLedgerStore {
             return .rejected
         }
         var snapshot = try readSnapshot(ownerID: entry.ownerID)
-        if snapshot.operationIDs.contains(entry.operationID) { return .duplicateOperation }
+        let fingerprint = Self.fingerprint(action: "append", recordID: entry.id, entry: entry)
+        if let previous = snapshot.operations[entry.operationID] {
+            return previous == fingerprint ? .duplicateOperation : .conflictingOperation
+        }
         guard !snapshot.tombstones.contains(entry.id), !snapshot.entries.contains(where: { $0.id == entry.id }),
               snapshot.revision < UInt64.max else { return .rejected }
 
         let next = snapshot.revision + 1
         snapshot.entries.append(entry)
-        snapshot.operationIDs.insert(entry.operationID)
+        snapshot.operations[entry.operationID] = fingerprint
         snapshot.audit.append(.init(operationID: entry.operationID, recordID: entry.id, action: "append", revision: next))
         snapshot.revision = next
         try write(snapshot)
@@ -82,13 +95,16 @@ final class EncryptedLedgerStore {
         guard Self.valid(ownerID), authenticatedOwnerID == ownerID,
               Self.valid(recordID), Self.valid(operationID) else { return .rejected }
         var snapshot = try readSnapshot(ownerID: ownerID)
-        if snapshot.operationIDs.contains(operationID) { return .duplicateOperation }
+        let fingerprint = Self.fingerprint(action: "permanent-delete", recordID: recordID, entry: nil)
+        if let previous = snapshot.operations[operationID] {
+            return previous == fingerprint ? .duplicateOperation : .conflictingOperation
+        }
         guard snapshot.entries.contains(where: { $0.id == recordID }),
               !snapshot.tombstones.contains(recordID), snapshot.revision < UInt64.max else { return .rejected }
         let next = snapshot.revision + 1
         snapshot.entries.removeAll { $0.id == recordID }
         snapshot.tombstones.insert(recordID)
-        snapshot.operationIDs.insert(operationID)
+        snapshot.operations[operationID] = fingerprint
         snapshot.audit.append(.init(operationID: operationID, recordID: recordID, action: "permanent-delete", revision: next))
         snapshot.revision = next
         try write(snapshot)
@@ -131,6 +147,14 @@ final class EncryptedLedgerStore {
     private func fileURL(ownerID: String) -> URL {
         let digest = SHA256.hash(data: Data(ownerID.utf8)).map { String(format: "%02x", $0) }.joined()
         return directoryURL.appendingPathComponent("ledger-\(digest).fluxia", isDirectory: false)
+    }
+
+    private static func fingerprint(action: String, recordID: String, entry: Entry?) -> String {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        let command = CommandFingerprint(action: action, recordID: recordID, entry: entry)
+        let data = (try? encoder.encode(command)) ?? Data()
+        return SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
     }
 
     private static func valid(_ value: String) -> Bool {

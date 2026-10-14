@@ -217,6 +217,10 @@ check(try! encryptedStore.append(localEntry, authenticatedOwnerID: "synthetic-us
       "encrypted local append persists a synthetic entry")
 check(try! encryptedStore.append(localEntry, authenticatedOwnerID: "synthetic-user") == .duplicateOperation,
       "replaying an append operation does not duplicate it")
+let conflictingReplay = EncryptedLedgerStore.Entry(id: "entry-other", ownerID: "synthetic-user", year: 2026, month: 10,
+                                                  kind: .variableExpense, amountCents: 900, operationID: "append-1")
+check(try! encryptedStore.append(conflictingReplay, authenticatedOwnerID: "synthetic-user") == .conflictingOperation,
+      "reusing an idempotency key for a different payload is surfaced as conflict")
 check(try! encryptedStore.entries(ownerID: "synthetic-user", authenticatedOwnerID: "other-user").isEmpty,
       "another authenticated user cannot read this local ledger")
 let reopenedStore = EncryptedLedgerStore(directoryURL: ledgerDirectory, keyProvider: { _ in testKey })
@@ -235,4 +239,13 @@ check(try! reopenedStore.append(attemptedResurrection, authenticatedOwnerID: "sy
       "a tombstoned record cannot be resurrected by a later append")
 check(try! reopenedStore.entries(ownerID: "synthetic-user", authenticatedOwnerID: "synthetic-user").isEmpty,
       "deleted record stays absent after reload")
-print("Encrypted local ledger: 8 synthetic ownership, persistence, encryption, idempotency and tombstone checks passed")
+var corruptedBytes = try! Data(contentsOf: ledgerFile)
+corruptedBytes[corruptedBytes.startIndex] ^= 0x01
+try! corruptedBytes.write(to: ledgerFile, options: .atomic)
+do {
+    _ = try reopenedStore.entries(ownerID: "synthetic-user", authenticatedOwnerID: "synthetic-user")
+    check(false, "tampered encrypted ledger must not be accepted")
+} catch {
+    check(true, "authenticated encryption rejects a tampered ledger")
+}
+print("Encrypted local ledger: 10 synthetic ownership, persistence, encryption, idempotency and tamper checks passed")
