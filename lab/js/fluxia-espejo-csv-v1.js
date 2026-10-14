@@ -94,7 +94,7 @@
  }
  function compare(parsed,cloudRows){
   if(!parsed||!Array.isArray(parsed.records)||!Array.isArray(cloudRows))throw Error('Fuente de comparación incorrecta');
-  const pool=new Map();let inspected=0;
+  const pool=new Map();let inspected=0;const cloudAmounts=new Map();
   for(const obj of cloudRows){
    if(!originalVariable(obj)||!applicable(obj,parsed.month))continue;
    const amount=typeof obj.importe==='number'?obj.importe:NaN;
@@ -104,12 +104,13 @@
    const cents=Math.round(amount*100);
    if(!Number.isSafeInteger(cents))continue;
    const sig=signature({fecha:d,concepto:obj.concepto||obj.nombre||'',categoria:obj.categoria||'',origen:obj.origen||'',cents});
-   pool.set(sig,(pool.get(sig)||0)+1);inspected++
+   pool.set(sig,(pool.get(sig)||0)+1);cloudAmounts.set(sig,cents);inspected++
   }
   let matching=0;const missing=[];
   for(const x of parsed.records){const sig=signature(x),qty=pool.get(sig)||0;if(qty>0){pool.set(sig,qty-1);matching++}else missing.push(x)}
   const extraCloud=[...pool.values()].reduce((s,n)=>s+n,0);
-  return {matching,missing,extraCloud,inspected,expected:parsed.records.length,covered:missing.length===0&&extraCloud===0&&parsed.invalid.length===0&&parsed.outOfMonth.length===0}
+  const extraCloudCents=[...pool.entries()].reduce((s,[sig,n])=>s+n*(cloudAmounts.get(sig)||0),0);
+  return {matching,missing,extraCloud,extraCloudCents,inspected,expected:parsed.records.length,covered:missing.length===0&&extraCloud===0&&parsed.invalid.length===0&&parsed.outOfMonth.length===0}
  }
  return Object.freeze({parse,compare,csvCategoryTotals,integerCents,validDate,signature,originalVariable,applicable})
 });
