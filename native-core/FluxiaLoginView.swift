@@ -15,7 +15,9 @@ public struct FluxiaLoginView: View {
     @State private var authSession: FluxiaAuthClient.Session?
     @State private var rememberSession = false
     @State private var showNumberPad = false
-    @State private var numericTargetPassword = true
+    @State private var numericTargetPassword = false
+    private enum LoginField: Hashable { case email, password }
+    @FocusState private var focusedField: LoginField?
     @State private var didAttemptRestore = false
 
     public init() {}
@@ -57,7 +59,8 @@ public struct FluxiaLoginView: View {
                         .tabItem { Label("Interfaz iOS", systemImage: "iphone") }
                 }
             } else {
-                VStack(alignment: .leading, spacing: 18) {
+                ScrollView {
+                VStack(alignment: .leading, spacing: 14) {
                     HStack(spacing: 12) {
                         AsyncImage(url: URL(string: "https://nacram1987-cmd.github.io/Fluxia-v20/fluxia-icon.png")) { phase in
                         if let image = phase.image {
@@ -73,29 +76,37 @@ public struct FluxiaLoginView: View {
                     }
                     Text("ÉLITE BETA").font(.caption.bold()).foregroundStyle(.brown)
                     Text("Accede con tu cuenta de Fluxia")
-                        .font(.title3)
+                        .font(.headline)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.8)
                     TextField("Correo electrónico", text: $email)
+                        .focused($focusedField, equals: .email)
+                        .onTapGesture { numericTargetPassword = false }
                         .textContentType(.username)
                         .keyboardType(.emailAddress)
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
                         .textFieldStyle(.roundedBorder)
                     SecureField("Contraseña", text: $password)
+                        .focused($focusedField, equals: .password)
+                        .onTapGesture { numericTargetPassword = true }
                         .textContentType(.password)
                         .textFieldStyle(.roundedBorder)
                     Toggle("Recordar sesión en este dispositivo", isOn: $rememberSession)
                         .font(.subheadline)
-                    Button(showNumberPad ? "Ocultar teclado numérico" : "Mostrar teclado numérico") {
-                        showNumberPad.toggle()
+                    HStack(spacing: 10) {
+                        Button("Números para correo") { showPad(forPassword: false) }
+                            .buttonStyle(.bordered)
+                            .tint(!numericTargetPassword && showNumberPad ? .blue : .secondary)
+                        Button("Números para contraseña") { showPad(forPassword: true) }
+                            .buttonStyle(.bordered)
+                            .tint(numericTargetPassword && showNumberPad ? .blue : .secondary)
                     }
-                    .font(.subheadline)
-                    .foregroundStyle(Color(red: 0.09, green: 0.21, blue: 0.34))
+                    .font(.caption)
                     if showNumberPad {
-                        Picker("Insertar números en", selection: $numericTargetPassword) {
-                            Text("Contraseña").tag(true)
-                            Text("Correo").tag(false)
-                        }
-                        .pickerStyle(.segmented)
+                        Text(numericTargetPassword ? "Los números irán a CONTRASEÑA" : "Los números irán a CORREO")
+                            .font(.caption.bold())
+                            .foregroundStyle(.blue)
                         numericPad
                     }
                     Button {
@@ -120,8 +131,11 @@ public struct FluxiaLoginView: View {
                     Text("La contraseña no se almacena. Si activas recordar sesión, solo se guarda el token de renovación en el llavero iOS. En Appetize, el dispositivo virtual puede reiniciarse y perderlo.")
                         .font(.caption).foregroundStyle(.secondary)
                 }
-                .padding(24)
+                .padding(16)
                 .frame(maxWidth: 480)
+                }
+                .scrollDismissesKeyboard(.interactively)
+                .safeAreaPadding(.bottom, 20)
             }
         }
         .task {
@@ -129,6 +143,12 @@ public struct FluxiaLoginView: View {
             didAttemptRestore = true
             await restoreSession()
         }
+    }
+
+    private func showPad(forPassword: Bool) {
+        numericTargetPassword = forPassword
+        focusedField = nil
+        showNumberPad = true
     }
 
     private var numericPad: some View {
@@ -156,7 +176,7 @@ public struct FluxiaLoginView: View {
                 Button("0") { appendDigit("0") }
                     .frame(maxWidth: .infinity, minHeight: 42)
                     .buttonStyle(.bordered)
-                Button("Listo") { showNumberPad = false }
+                Button("Listo") { showNumberPad = false; focusedField = nil }
                     .frame(maxWidth: .infinity, minHeight: 42)
                     .buttonStyle(.borderedProminent)
             }
@@ -166,6 +186,7 @@ public struct FluxiaLoginView: View {
     }
 
     private func appendDigit(_ digit: String) {
+        focusedField = nil
         if numericTargetPassword { password.append(digit) }
         else { email.append(digit) }
     }
