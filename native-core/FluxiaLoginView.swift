@@ -39,7 +39,7 @@ public struct FluxiaLoginView: View {
                                 Label("Nube real · solo lectura", systemImage: "checkmark.shield")
                                     .font(.caption)
                                 if let recordCount {
-                                    Text("\(recordCount) documentos consultados con tu usuario")
+                                    Text("\(recordCount) colecciones financieras consultadas con tu usuario")
                                         .font(.caption).foregroundStyle(.secondary)
                                 }
                                 FluxiaRealRecordsView(records: cloudRecords)
@@ -52,7 +52,7 @@ public struct FluxiaLoginView: View {
                     FluxiaEliteAppView(ownerID: identity)
                         .tabItem { Label("Interfaz iOS", systemImage: "iphone") }
                 }
-                        } else {
+            } else {
                 VStack(alignment: .leading, spacing: 18) {
                     Text("fluxia").font(.system(size: 38, weight: .semibold, design: .serif))
                     Text("ÉLITE BETA").font(.caption.bold()).foregroundStyle(.brown)
@@ -105,7 +105,7 @@ public struct FluxiaLoginView: View {
                 .signIn(email: email, password: password)
             password = ""
             let rows = try await FluxiaCloudReader(projectURL: url, publishableKey: key)
-                .fetchAll(ownerID: session.user.id, accessToken: session.access_token)
+                .fetchCanonicalFinance(ownerID: session.user.id, accessToken: session.access_token)
             guard rows.allSatisfy({ $0.user_id == session.user.id }) else {
                 message = "Error: se han recibido registros de otro usuario."
                 return
