@@ -45,3 +45,12 @@ El objetivo no es una app financiera distinta, ni una demo con datos aproximados
 Los módulos nativos deberán superar paridad en Dashboard/Disponible, Ingresos, Variables, Fijos, Huchas, Compartidos, Financiaciones, Bancos, notificaciones y archivo. Ni `MonthlyLedgerProjection` ni `BankImportSafety` por separado equivalen todavía al motor HTML: requieren adaptación comprobada contra sus reglas originales y datos actuales. Mantener lecturas seguras, sin escrituras de producción ni nueva conexión bancaria paralela hasta pruebas completas.
 
 Condiciones de publicación: 0 registros ausentes, 0 dobles contabilizaciones, 0,00 € de discrepancia contable, acceso usuario aislado, QA automatizada y Safari/iPhone real, copia reversible. Al entregar compilación, proporcionar versión, checklist de cambios y dónde comprobarlos, pruebas y limitaciones explícitas. La estable HTML continúa intacta.
+
+## Cobertura que faltaba en el contrato SwiftUI: Dinero en mano y módulos auxiliares (14/10/2026)
+
+- Dinero en mano: reproducir saldo físico histórico, movimientos de entrada/salida, salidas desde provisión, crear/editar/archivar y relación 1:1 con Variables (gastoId/efectivoId), sin segunda deducción del Disponible.
+- Presupuestos: límites reales por categoría/mes; análisis: desglose y proyecciones calculados por motor HTML; Simulador: Disponible hipotético derivado solo de saldo real reconciliado.
+- Pagos/Usos, Notificaciones y papelera: estados persistentes y de no-resurrección iguales a HTML, sin deduplicar por nombre/importe exclusivamente.
+- Ajustes/Ayuda: perfiles, exportación segura, notificaciones globales y guías; mantener navegación compacta aprobada de Élite y logo oficial.
+- Safari LAB v1.9.1 ya recupera las pantallas y lectores read-only, pero **NO equivale** a funcionalidad financiera nativa completa. El loader de cartera histórica no permite declarar saldo actual si fuente de octubre está obsoleta.
+- Jamás importar backups de otro perfil, aunque compartan dispositivo; los ficheros manuales se procesan solo en memoria. Escribir en nube requiere QA explícita y comprobar mismos 51 movimientos variables de octubre y saldos idénticos.
