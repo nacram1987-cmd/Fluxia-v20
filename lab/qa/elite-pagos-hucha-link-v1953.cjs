@@ -1,0 +1,17 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+const a=html.indexOf('function exactHuchaUsageLink('),b=html.indexOf('function renderLegacyPayments(',a);
+assert(a>=0&&b>a);
+const context=vm.createContext({});
+vm.runInContext(html.slice(a,b),context,{timeout:1000});
+const link=context.exactHuchaUsageLink,huchas=[{id:'h1',nombre:'Agua'},{id:'h2',nombre:'Tributos'}];
+assert.equal(link({provisionId:'h1'},huchas).kind,'linked');
+assert.equal(link({provisionId:'unknown'},huchas).kind,'missing_hucha');
+assert.equal(link({provisionId:'h1',huchaId:'h2'},huchas).kind,'conflicting_references');
+assert.equal(link({provisionId:'h1'},[huchas[0],huchas[0]]).kind,'duplicate_hucha_id');
+assert.equal(link({provision:'Agua'},huchas).kind,'unverified');
+assert.equal(link({provisionId:'h1'},null).kind,'unverified');
+assert(html.includes("const ELITE_SAFARI_VERSION='1.9.53'"));
+for(const match of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(match[1])new vm.Script(match[1]);
+console.log('PASS v1.9.53: exact-ID payments-hucha linking, missing/multi-ID protection, JS syntax');
