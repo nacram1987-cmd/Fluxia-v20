@@ -1,6 +1,15 @@
 # Fluxia Élite BETA · Historial Safari (independiente de PWA HTML y SwiftUI)
 Fecha: 2026-10-14
 
+## v1.3.0 · Recuperación de navegación mensual de Fluxia HTML (14/10/2026)
+- **Dónde probar:** Inicio, Ingresos, Fijos, Variables, Huchas, Compartidos y Financiaciones; selector de mes con flechas y selector de año/mes. La barra inferior ahora incluye Compartidos.
+- **Listas:** movimientos con fecha completa agrupados estrictamente por `AAAA-MM`; registros `mes: "julio"` sin año se muestran en bloque histórico, distinguidos para no inventar 2026/2027. Búsqueda y filtro por categoría mantienen un máximo inicial de 80 elementos por bloque.
+- **Dashboard:** recuentos del mes elegido, recientes fechados de ese mes, y tarjetas de módulos. No se calculan saldos Disponible ni totales financieros arbitrarios.
+- **Planes:** huchas y financiaciones con `inicio`/`fin` en formato ISO se incluyen cuando vigentes en el mes; los que carecen de fechas normalizables se muestran separados para revisión.
+- **Datos:** lectura autenticada y segmentada por perfil; ninguna operación PATCH/PUT/DELETE sobre cuentas reales. PWA HTML ESTABLE y código SwiftUI sin cambios.
+- **Pruebas en código:** análisis de sintaxis JavaScript y revisión de estructura, no equivalen a QA funcional completa. **Pendiente:** pruebas en Safari, selección histórica correcta según el motor HTML para gastos sin año, conciliación de pagos, estados y cálculos de Disponible, pruebas de velocidad reproducibles.
+- **Copia:** https://nacram1987-cmd.github.io/Fluxia-v20/lab/versions/fluxia-elite-safari-v1.3.0.html
+
 ## v1.2.0 · Logos comerciales y checklist navegable (14/10/2026)
 - Dónde comprobar: entrar en cualquier módulo, consultar cargos visibles de comercios reconocibles. Prioridad: logotipo comercial vía búsqueda pública (Wikidata, identificador P154). Si no existe o falla, icono genérico por concepto. Logos Apple/Amazon reconocidos previamente.
 - Dónde comprobar: Inicio → 📋 Checklist y versiones. Checklist con secciones, comprobaciones visuales y explicación de cada nueva función.
