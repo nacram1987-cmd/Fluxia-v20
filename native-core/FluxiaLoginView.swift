@@ -11,6 +11,7 @@ public struct FluxiaLoginView: View {
     @State private var message: String?
     @State private var identity: UUID?
     @State private var recordCount: Int?
+    @State private var cloudRecords: [FluxiaCloudReader.Record] = []
     @State private var authSession: FluxiaAuthClient.Session?
 
     public init() {}
@@ -26,22 +27,32 @@ public struct FluxiaLoginView: View {
     public var body: some View {
         Group {
             if let identity {
-                VStack(spacing: 0) {
-                    HStack {
-                        Label("Nube real · solo lectura", systemImage: "checkmark.shield")
-                            .font(.caption)
-                        Spacer()
-                        Button("Salir") { signOut() }
+                TabView {
+                    NavigationStack {
+                        ScrollView {
+                            VStack(alignment: .leading, spacing: 14) {
+                                HStack {
+                                    Text("Fluxia Élite BETA").font(.title3.bold())
+                                    Spacer()
+                                    Button("Salir") { signOut() }
+                                }
+                                Label("Nube real · solo lectura", systemImage: "checkmark.shield")
+                                    .font(.caption)
+                                if let recordCount {
+                                    Text("\(recordCount) documentos consultados con tu usuario")
+                                        .font(.caption).foregroundStyle(.secondary)
+                                }
+                                FluxiaRealRecordsView(records: cloudRecords)
+                            }
+                            .padding()
+                        }
+                        .background(Color(red: 0.97, green: 0.97, blue: 0.95))
                     }
-                    .padding()
-                    if let recordCount {
-                        Text("\(recordCount) registros de nube consultados")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
+                    .tabItem { Label("Datos reales", systemImage: "list.bullet.rectangle") }
                     FluxiaEliteAppView(ownerID: identity)
+                        .tabItem { Label("Interfaz iOS", systemImage: "iphone") }
                 }
-            } else {
+                        } else {
                 VStack(alignment: .leading, spacing: 18) {
                     Text("fluxia").font(.system(size: 38, weight: .semibold, design: .serif))
                     Text("ÉLITE BETA").font(.caption.bold()).foregroundStyle(.brown)
@@ -100,6 +111,7 @@ public struct FluxiaLoginView: View {
                 return
             }
             recordCount = rows.count
+            cloudRecords = rows
             authSession = session
             identity = session.user.id
         } catch {
@@ -111,6 +123,7 @@ public struct FluxiaLoginView: View {
         identity = nil
         authSession = nil
         recordCount = nil
+        cloudRecords = []
         password = ""
         message = nil
     }
