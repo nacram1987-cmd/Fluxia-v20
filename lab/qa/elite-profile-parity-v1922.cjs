@@ -19,4 +19,8 @@ test('matching income identified',()=>assert.equal(result[1].state,'coincidencia
 test('missing backup module never treated as zero',()=>assert.equal(result[2].state,'sin fuente HTML verificable'));
 test('unknown IDs block equivalence',()=>{const b={keys:{['fluxia_user_'+profile+'__v2_movimientos']:[{importe:5}]}};assert.equal(context.summarizeProfileBackup(b,profile)[0].state,'identidad insuficiente')});
 test('duplicate IDs block equivalence',()=>{const b={keys:{['fluxia_user_'+profile+'__v2_movimientos']:[{id:'a',importe:7.5},{id:'a',importe:7.5}]}};assert.equal(context.summarizeProfileBackup(b,profile)[0].state,'identidad insuficiente')});
+test('canonical HTML scoped v2_fijos is found',()=>{const b={keys:{['fluxia_user_'+profile+'__v2_fijos']:[]}};const got=context.summarizeProfileBackup(b,profile);assert.equal(got[2].state,'coincidencia de campos cotejados');assert.equal(got[2].sourceKey,'fluxia_user_'+profile+'__v2_fijos')});
+test('other profile keys never match',()=>{const other='usr-22222222-2222-4222-8222-222222222222';const b={keys:{['fluxia_user_'+other+'__v2_fijos']:[]}};assert.equal(context.summarizeProfileBackup(b,profile)[2].state,'sin fuente HTML verificable')});
+test('legacy global key not trusted',()=>{const b={keys:{'planRescate_v2_fijos':[]}};assert.equal(context.summarizeProfileBackup(b,profile)[2].state,'sin fuente HTML verificable')});
+test('source key is traceable',()=>assert.equal(result[0].sourceKey,'fluxia_user_'+profile+'__v2_movimientos'));
 console.log('RESULT',n,'multi-module synthetic checks passed');
