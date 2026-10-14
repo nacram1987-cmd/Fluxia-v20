@@ -1,0 +1,118 @@
+#if canImport(SwiftUI)
+import SwiftUI
+
+/// Authentication gate for the real cloud. Never maps legacy key/value blobs
+/// into ledger entries until the canonical migration contract is verified.
+@MainActor
+public struct FluxiaLoginView: View {
+    @State private var email = ""
+    @State private var password = ""
+    @State private var isLoading = false
+    @State private var message: String?
+    @State private var identity: UUID?
+    @State private var recordCount: Int?
+    @State private var authSession: FluxiaAuthClient.Session?
+
+    public init() {}
+
+    private var cloudConfiguration: (URL, String)? {
+        guard let raw = Bundle.main.object(forInfoDictionaryKey: "FLUXIA_SUPABASE_URL") as? String,
+              let url = URL(string: raw), url.scheme == "https",
+              let key = Bundle.main.object(forInfoDictionaryKey: "FLUXIA_SUPABASE_PUBLISHABLE_KEY") as? String,
+              !key.isEmpty else { return nil }
+        return (url, key)
+    }
+
+    public var body: some View {
+        Group {
+            if let identity {
+                VStack(spacing: 0) {
+                    HStack {
+                        Label("Nube real · solo lectura", systemImage: "checkmark.shield")
+                            .font(.caption)
+                        Spacer()
+                        Button("Salir") { signOut() }
+                    }
+                    .padding()
+                    if let recordCount {
+                        Text("\(recordCount) registros de nube consultados")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    FluxiaEliteAppView(ownerID: identity)
+                }
+            } else {
+                VStack(alignment: .leading, spacing: 18) {
+                    Text("fluxia").font(.system(size: 38, weight: .semibold, design: .serif))
+                    Text("ÉLITE BETA").font(.caption.bold()).foregroundStyle(.brown)
+                    Text("Accede con tu cuenta de Fluxia")
+                        .font(.title3)
+                    TextField("Correo electrónico", text: $email)
+                        .textContentType(.username)
+                        .keyboardType(.emailAddress)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                        .textFieldStyle(.roundedBorder)
+                    SecureField("Contraseña", text: $password)
+                        .textContentType(.password)
+                        .textFieldStyle(.roundedBorder)
+                    Button {
+                        Task { await signIn() }
+                    } label: {
+                        HStack {
+                            if isLoading { ProgressView().tint(.white) }
+                            Text("Entrar")
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(12)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(isLoading || email.isEmpty || password.isEmpty || cloudConfiguration == nil)
+                    if cloudConfiguration == nil {
+                        Text("La compilación aún no tiene configurada la conexión pública a Supabase.")
+                            .font(.caption).foregroundStyle(.orange)
+                    }
+                    if let message {
+                        Text(message).font(.caption).foregroundStyle(.red)
+                    }
+                    Text("La contraseña no se almacena. Esta versión consulta los registros, pero no los modifica.")
+                        .font(.caption).foregroundStyle(.secondary)
+                }
+                .padding(24)
+                .frame(maxWidth: 480)
+            }
+        }
+    }
+
+    private func signIn() async {
+        guard let (url, key) = cloudConfiguration else { return }
+        isLoading = true
+        message = nil
+        defer { isLoading = false }
+        do {
+            let session = try await FluxiaAuthClient(projectURL: url, publishableKey: key)
+                .signIn(email: email, password: password)
+            password = ""
+            let rows = try await FluxiaCloudReader(projectURL: url, publishableKey: key)
+                .fetchAll(ownerID: session.user.id, accessToken: session.access_token)
+            guard rows.allSatisfy({ $0.user_id == session.user.id }) else {
+                message = "Error: se han recibido registros de otro usuario."
+                return
+            }
+            recordCount = rows.count
+            authSession = session
+            identity = session.user.id
+        } catch {
+            message = "No se ha podido autenticar o leer la nube: \(error.localizedDescription)"
+        }
+    }
+
+    private func signOut() {
+        identity = nil
+        authSession = nil
+        recordCount = nil
+        password = ""
+        message = nil
+    }
+}
+#endif
