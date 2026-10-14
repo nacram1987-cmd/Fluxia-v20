@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#f7f7f4"><title>Fluxia Élite BETA · Contraste en Safari</title>
+<style>
+:root{--navy:#163750;--gold:#bb9859;--muted:#667889;--bg:#f7f7f4;--line:#e6e9e8}*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif;background:var(--bg);color:var(--navy)}button,input{font:inherit}button{cursor:pointer}button:disabled{opacity:.48}#app{max-width:650px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;padding-bottom:calc(68px + env(safe-area-inset-bottom))}header{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:9px;padding:12px 15px}.brandIcon{width:34px;height:34px;border-radius:9px;object-fit:cover}.brand{display:flex;flex-direction:column;line-height:1.03}.brand strong{font:600 25px Georgia,serif;letter-spacing:-.6px}.brand small{font-size:9px;letter-spacing:1.7px;color:var(--gold);font-weight:750}.grow{flex:1}.textbutton{background:none;border:0;color:var(--navy);font-size:13px;font-weight:650}.content{padding:18px 14px;flex:1}h1{font:600 25px Georgia,serif;margin:4px 0 14px}.intro{font-size:13px;color:var(--muted);line-height:1.5}.card{border:1px solid var(--line);background:white;border-radius:19px;padding:17px;margin-bottom:13px;box-shadow:0 2px 8px #1d314009}.hero{background:var(--navy);color:#fff;border:0}.hero small{color:#d6e2e5}.hero .big{font-size:37px;display:block;margin:7px 0;font-family:Georgia,serif}.muted{color:var(--muted);font-size:12px}.pill{background:#f1eee7;border-radius:8px;color:#936d36;padding:5px 7px;font-size:10px;font-weight:700}.titleRow{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;gap:7px}.titleRow h2{font-size:16px;margin:0}label{font-size:12px;display:block;margin-bottom:13px;color:var(--muted);font-weight:650}input,select{width:100%;margin-top:6px;border:1px solid #d6dede;border-radius:11px;padding:12px;background:white;min-height:42px;font-size:16px;color:var(--navy)}.primary{background:var(--navy);color:white;border:0;border-radius:12px;padding:14px 18px;font-weight:700;width:100%}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.tile{background:white;border:1px solid var(--line);border-radius:16px;padding:16px 13px;text-align:left;color:var(--navy);min-width:0}.tile .symbol{font-size:22px}.tile strong{display:block;margin:8px 0 4px}.tile span:last-child{font-size:12px;color:var(--muted)}.toolrow{display:flex;gap:9px;align-items:center;margin:8px 0 14px}.toolrow input,.toolrow select{margin-top:0}.toolrow select{width:42%;min-width:120px;font-size:13px}.entries{display:flex;flex-direction:column;gap:8px}.entry{background:white;border:1px solid var(--line);border-radius:14px;padding:12px 13px;width:100%;display:flex;align-items:center;gap:10px;text-align:left;color:inherit}.entryMain{min-width:0;flex:1}.entryMain strong{display:block;font-size:13px;overflow-wrap:anywhere}.entryMain small{display:block;color:var(--muted);font-size:11px;margin-top:5px}.amount{font-size:14px;font-weight:750;white-space:nowrap}.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:8px 6px calc(7px + env(safe-area-inset-bottom));display:flex;gap:2px;justify-content:center;z-index:12}.bottom button{border:0;background:transparent;color:#7a8793;min-width:0;flex:1;max-width:95px;display:flex;flex-direction:column;align-items:center;font-size:10px;gap:3px;padding:4px 0}.bottom button.active{color:var(--navy);font-weight:800}.bottom .sym{font-size:18px}.error{background:#fff2ed;color:#a63d20;border:1px solid #f0c9bb;padding:11px;border-radius:10px;font-size:13px;margin:12px 0}.notice{font-size:11px;color:var(--muted);line-height:1.5;margin:15px 0}.back{border:0;background:transparent;color:var(--navy);padding:3px;font-size:14px;font-weight:700}.loading{text-align:center;padding:55px 10px}.spinner{border:3px solid #dce5e8;border-top-color:var(--gold);width:36px;height:36px;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 20px}@keyframes spin{to{transform:rotate(360deg)}}#detail{position:fixed;inset:0;background:#0c203866;z-index:25;display:none;align-items:flex-end;justify-content:center}#detail.open{display:flex}.sheet{background:#fff;width:100%;max-width:650px;max-height:85dvh;overflow:auto;border-radius:22px 22px 0 0;padding:23px 18px calc(25px + env(safe-area-inset-bottom))}.sheet dl{display:grid;grid-template-columns:95px 1fr;gap:12px;font-size:13px}.sheet dt{color:var(--muted)}.sheet dd{margin:0;overflow-wrap:anywhere}.empty{text-align:center;color:var(--muted);padding:25px;font-size:13px}.hide{display:none!important}@media(min-width:680px){.bottom{max-width:650px;margin:auto}.sheet{border-radius:20px;margin-bottom:15px}#detail{align-items:center}}
+
+/* Fluxia HTML heritage: warm ivory surfaces, navy-and-gold hierarchy and compact cards. */
+:root{--navy:#142d49;--gold:#bc9859;--muted:#73818b;--bg:#f6f4ef;--line:#e8e3d9}
+body{background:linear-gradient(180deg,#f8f7f3 0%,#f1f2ef 100%);-webkit-font-smoothing:antialiased}
+header{box-shadow:0 2px 16px #18364c0a;border-bottom-color:#ede9df;padding:10px 15px}
+.brandIcon{width:32px;height:32px}.brand strong{font-size:24px}
+.content{padding:14px 13px}h1{font-family:Georgia,serif;font-size:24px}
+.card{border-radius:16px;padding:15px;box-shadow:0 4px 16px #152c4010}
+.hero{background:linear-gradient(135deg,#193b56,#0e263e);position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:150px;height:150px;border:1px solid #ffffff26;border-radius:50%;right:-55px;top:-60px;pointer-events:none}
+.tile{border-radius:15px;padding:13px 12px;box-shadow:0 1px 5px #193b5609}
+.tile .symbol{display:inline-flex;align-items:center;justify-content:center;background:#f6f0e5;color:#9d773a;width:31px;height:31px;border-radius:9px;font-size:19px}
+.tile strong{margin:7px 0 3px;font-size:13px}.tile span:last-child{font-size:11px}
+.entry{background:#fffefa;border-color:#e8e6df}.entry:active,.tile:active{background:#f4f1ea}
+.bottom{box-shadow:0 -6px 22px #152e4410}.bottom button.active{color:#173b57}.bottom button.active .sym{color:#b48b49}
+.primary{background:linear-gradient(120deg,#1d425f,#10273f);box-shadow:0 7px 18px #17354d23}
+:focus-visible{outline:3px solid #ba9759;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* ÉLITE VISUAL v2: warmth, brand identity, bespoke financial tiles. No image libraries or animations. */
+:root{--navy:#173951;--gold:#b68a4e;--muted:#747f88;--bg:#f7f6f2;--line:#ebe7df;--pearl:#fffefa;--mint:#e6f0e9}
+body{background:#f7f6f2;color:#203d4c}
+header{background:#fffefa;box-shadow:0 3px 16px #253d4910;gap:10px;padding:9px 14px}
+.brandIcon{width:37px;height:37px;border-radius:12px;box-shadow:0 3px 8px #14374c19}
+.brand strong{font:600 27px Georgia,serif;letter-spacing:-.9px;color:#1d3e52}
+.brand small{font-size:9px;letter-spacing:1.15px}
+#help{background:#f3eee4;color:#826032;border:1px solid #ece2d2;border-radius:999px;padding:7px 11px}
+.content{padding:17px 14px}
+h1{color:#18364b}
+.sectioneyebrow{display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:1.3px;color:#a27e49;font-weight:800;font-size:10px;margin:4px 0 5px}
+.sectioneyebrow:before{content:"";width:14px;height:2px;background:#b79458;border-radius:2px}
+.welcomeTitle{font:600 27px Georgia,serif;letter-spacing:-.7px;margin:0 0 4px;color:#1b3b4f}
+.welcomeDescription{font-size:12px;color:#77828a;line-height:1.5;margin:0 0 16px}
+.card.hero{background:linear-gradient(135deg,#e4efec 0%,#e7f1ea 53%,#f4f0e5 100%);color:#183e4c;border:1px solid #d2e2d8;border-radius:20px;box-shadow:0 8px 26px #2e76601a;min-height:162px;padding:20px 19px}
+.hero:after{width:175px;height:175px;border:1px solid #ffffffa8;right:-55px;top:-72px;box-shadow:0 0 0 31px #ffffff20,0 0 0 65px #ffffff1c}
+.hero .big{font-size:44px;line-height:1.1;color:#17394b;margin:14px 0 13px}
+.hero small{color:#526f69;font-size:11px;line-height:1.4;max-width:270px;display:block;position:relative;z-index:1}
+.heroHeadline{font-size:12px;letter-spacing:.4px;font-weight:750;position:relative;z-index:1}
+.heroBadge{display:inline-block;float:right;position:relative;z-index:1;background:#fff9eb;color:#916d33;border:1px solid #e3d4b3;border-radius:999px;padding:4px 9px;font-size:10px;font-weight:800}
+.moduleTitle{font:600 21px Georgia,serif;color:#24445a;margin:19px 0 12px}
+.grid{gap:11px}
+.tile{position:relative;overflow:hidden;border:1px solid #ede6dc;min-height:116px;padding:14px 13px 13px;border-radius:17px;box-shadow:0 6px 16px #24435509;transition:transform .14s ease,box-shadow .14s ease}
+.tile:active{transform:scale(.985)}
+.tile:before{content:"";height:3px;position:absolute;top:0;left:0;right:0;background:var(--tileAccent,#b68a4e);opacity:.85}
+.tile .symbol{width:37px;height:37px;font-size:20px;background:var(--tileBg,#f8eee0);color:var(--tileText,#a37537);border-radius:12px}
+.tile strong{font-size:14px;color:#203d50;margin:8px 0 5px}
+.tile span:last-child{font-size:11px;color:#7a8185}
+.tile[data-section="ingresos"]{--tileAccent:#84bca5;--tileBg:#e6f4eb;--tileText:#32755b}
+.tile[data-section="fijos"]{--tileAccent:#b9a1d9;--tileBg:#f1eafa;--tileText:#765a9d}
+.tile[data-section="variables"]{--tileAccent:#d9b286;--tileBg:#fff1df;--tileText:#ad7536}
+.tile[data-section="huchas"]{--tileAccent:#88b8c5;--tileBg:#e5f2f5;--tileText:#36778b}
+.tile[data-section="compartidos"]{--tileAccent:#daa3a3;--tileBg:#fbebec;--tileText:#ae6268}
+.tile[data-section="financiaciones"]{--tileAccent:#b6b7a0;--tileBg:#f1f2e7;--tileText:#707653}
+.entry{box-shadow:0 1px 4px #16375006;padding:13px 14px}
+.entry:before{content:"";width:3px;align-self:stretch;border-radius:5px;background:#e4d0a8;flex:0 0 3px}
+.entryMain strong{font-size:13px}.entryMain small{font-size:11px}
+.amount{color:#244f58;font-weight:800}
+.bottom{background:#fffefa;border-color:#ebe7df;box-shadow:0 -4px 18px #233c4a0c}
+.bottom button{gap:4px}.bottom button.active{color:#183e50}
+.bottom button.active .sym{color:#9d773b}
+.bottom button.active:after{content:"";height:3px;width:16px;background:#b99154;border-radius:5px;position:absolute;bottom:calc(5px + env(safe-area-inset-bottom))}
+.pill{background:#f5ebd9}
+@media(prefers-reduced-motion:reduce){.tile{transition:none}}
+
+
+/* Charge icons and actual transaction dates, without network requests. */
+.chargeEmoji{display:inline-flex;align-items:center;justify-content:center;flex:0 0 38px;width:38px;height:38px;border-radius:12px;background:#f4eee4;font-size:20px}
+.entry:before{display:none}.verifiedDate{font-size:13px;font-weight:700;color:#2c6c59;background:#eaf2eb;padding:10px;border-radius:9px}
+@media(max-width:355px){.entry{padding:10px}.chargeEmoji{flex-basis:33px;width:33px;height:33px;font-size:18px}.amount{font-size:12px}}
+
+
+/* Sandbox editor (session-only) for parity inspection, never a write to Supabase */
+.draftTag{color:#8a6027;background:#fbefd8;padding:6px 9px;border-radius:8px;font-size:11px;font-weight:750}
+.editIntro{font-size:12px;line-height:1.5;color:#6b7c84}
+.editActions{display:flex;gap:8px;margin-top:15px}
+.editActions button{flex:1;min-height:43px;border-radius:11px;border:1px solid #d9dfde;background:white;color:#1a3a4f;font-weight:700}
+.editActions .primary{background:#193c54;color:white;border:0}
+.draftCompare{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.draftCompare div{background:#f5f5f0;border-radius:11px;padding:10px;min-width:0;overflow-wrap:anywhere}
+.draftCompare strong{display:block;font-size:11px;color:#6b7c84;margin-bottom:6px}
+.draftCompare span{display:block;font-size:12px}
+.editorError{padding:9px;background:#fff0e8;color:#9c402b;font-size:12px;border-radius:9px;margin-top:9px}
+
+.previewOperation{background:#fffbf1;border:1px solid #e9dfce;border-radius:12px;padding:12px;margin:12px 0}.previewOperation h3{font-size:14px;margin:0 0 11px}
+#splash{position:fixed;inset:0;z-index:40;background:radial-gradient(circle at 50% 35%,#274763,#10273e 75%);color:white;display:none;align-items:center;justify-content:center;text-align:center;padding:28px}
+#splash.active{display:flex}#splash .splashLogo{width:76px;height:76px;border-radius:20px;object-fit:contain;box-shadow:0 16px 42px #07172677}
+#splash h1{font:600 41px Georgia,serif;color:#fff;margin:17px 0 0}#splash .splashBeta{display:block;color:#d1ad6a;letter-spacing:2px;font-size:11px;font-weight:750;margin:6px 0 30px}
+#splash .spinner{border-color:#ffffff3c;border-top-color:#d1ad6a}
+#splash .splashStatus{color:#d8e0e5;font-size:12px}
+#onboarding{position:fixed;inset:0;z-index:35;background:#152e48cf;display:none;align-items:center;justify-content:center;padding:20px}
+#onboarding.active{display:flex}
+#onboarding .welcomeCard{background:#fffdf8;border-radius:22px;width:100%;max-width:450px;padding:27px 22px;box-shadow:0 20px 80px #091b2f64}
+.welcomeCard .stepIcon{font-size:34px;background:#f6eedf;border-radius:17px;width:62px;height:62px;display:grid;place-items:center;margin-bottom:17px}
+.welcomeCard h2{font:600 25px Georgia,serif;margin:0 0 11px}.welcomeCard p{color:#667889;font-size:14px;line-height:1.55;min-height:80px}
+.welcomeActions{display:flex;gap:9px;align-items:center;margin-top:17px}.welcomeActions button{border:0;border-radius:10px;min-height:43px;padding:10px 13px}
+.welcomeActions .next{background:#142d49;color:white;flex:1;font-weight:700}.welcomeActions .skip{background:transparent;color:#677581}
+.welcomeProgress{height:4px;border-radius:10px;background:#e7e7df;overflow:hidden}.welcomeProgress i{height:100%;display:block;background:#b89352}
+</style></head><body><div id="app">
+<header><img class="brandIcon" src="../fluxia-icon.png" alt="Icono original Fluxia"><div class="brand"><strong>fluxia</strong><small>ÉLITE BETA · SAFARI</small></div><div class="grow"></div><button id="help" class="textbutton hide">Ayuda</button><button id="logout" class="textbutton hide">Salir</button></header>
+<main class="content" id="content"><div class="loading"><div class="spinner"></div>Preparando vista de contraste…</div></main>
+<nav id="bottom" class="bottom hide"></nav></div>
+<div id="splash" role="status" aria-live="polite"><div><img class="splashLogo" src="../fluxia-icon.png" alt="Logo oficial Fluxia"><h1>fluxia</h1><span class="splashBeta">ÉLITE BETA</span><div class="spinner"></div><p class="splashStatus" id="splashStatus">Conectando con tu nube…</p></div></div>
+<div id="onboarding" role="dialog" aria-modal="true" aria-label="Bienvenida a Fluxia"><div class="welcomeCard"><div class="stepIcon" id="stepIcon">✦</div><div class="titleRow"><span class="pill" id="stepCount">1 / 6</span><button class="textbutton" id="helpClose" aria-label="Cerrar tutorial">✕</button></div><h2 id="stepTitle"></h2><p id="stepText"></p><div class="welcomeProgress"><i id="stepProgress"></i></div><div class="welcomeActions"><button class="skip" id="skipTutorial">Omitir</button><button class="skip" id="prevTutorial">Anterior</button><button class="next" id="nextTutorial">Siguiente →</button></div></div></div>
+<div id="detail"><div class="sheet"><div class="titleRow"><h2>Detalle de registro real</h2><button id="close" class="textbutton">Cerrar ✕</button></div><div id="detailContent"></div></div></div>
+<script>
+(() => {
+'use strict';
+const BASE='https://kylduzmrfbubeamfrbbr.supabase.co';
+const KEY='sb_publishable_5hX9-6-J7MlJfvmeWZcz5w_U-KlTCaj';
+const mods=[
+{id:'inicio',title:'Inicio',icon:'⌂'},
+{id:'ingresos',title:'Ingresos',icon:'↙',key:'planRescate_v2_ingresos'},
+{id:'fijos',title:'Fijos',icon:'▤',key:'planRescate_v2_fijos'},
+{id:'variables',title:'Variables',icon:'▱',key:'planRescate_v2_movimientos'},
+{id:'huchas',title:'Huchas',icon:'◈',key:'planRescate_v2_provisiones'},
+{id:'compartidos',title:'Compartidos',icon:'♧',key:'planRescate_v2_compartidos'},
+{id:'financiaciones',title:'Financiaciones',icon:'◎',key:'planRescate_v2_financiaciones'}];
+let token='',owner='',items={},page='inicio',search='',period='Todos',error='',loading=false, tutorialIndex=0,searchTimer=null;
+let draftEdits=new Map();let currentDetail=null;
+const TUTORIAL_VERSION='1';
+const steps=[['✦','Bienvenido a Fluxia Élite','Tu espacio financiero con la identidad azul y oro de Fluxia. Esta vista Safari permite navegar por registros auténticos.'],['◈','Disponible fiable','Nunca mostramos un saldo inventado. El Disponible aparecerá cuando el motor contable esté conciliado con Fluxia HTML.'],['↙','Ingresos y gastos','Entra en Ingresos, Fijos y Variables. Busca conceptos y revisa los importes originales sin alterarlos.'],['◆','Huchas y previsiones','Consulta las provisiones reales. Aportaciones, rescates y operaciones retroactivas no se recalculan hasta validar la lógica histórica.'],['♧','Compartidos y financiación','Accede a los módulos desde sus tarjetas de Inicio. Abre un registro para revisar fecha, importe y categoría originales.'],['✓','Seguridad y límites actuales','Cada cuenta consulta solo sus propias colecciones en Supabase. Esta vista no modifica bancos ni saldos; la app iOS nativa sigue desarrollándose.']];
+const $=s=>document.querySelector(s),el=(tag,cls,txt)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n};
+const money=v=>typeof v==='number'&&isFinite(v)?new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(v):null;
+const field=(obj,keys)=>{for(const k of keys){let v=obj[k];if(typeof v==='string'&&v.trim())return v}return null};
+const canon=m=>{const a=items[m.key];return Array.isArray(a)?a:null};
+
+/* Icons and dates derived only from existing record fields; no fabricated charge dates. */
+const chargeIcon=(obj,module='')=>{
+ const existing=field(obj,['emoji','emoticono','icono','icon','simbolo']);
+ if(existing && /[\u{1F300}-\u{1FAFF}\u2600-\u27BF]/u.test(existing))return existing;
+ const name=[field(obj,['concepto','nombre','descripcion','comercio','beneficiario'])||'',field(obj,['categoria','tipo'])||''].join(' ').toLocaleLowerCase('es');
+ const matches=[
+ [/endesa|iberdrola|luz|electric|energia|energía|factura electric/, '💡'],
+ [/agua|emasesa|canal isabel/, '💧'],
+ [/securitas|alarma|seguridad/, '🛡️'],
+ [/gasolin|repsol|cepsa|shell|combustible|diesel|diésel/, '⛽'],
+ [/itv|seguro coche|taller|neumatic|neumátic|vehículo|vehiculo|coche|auto/, '🚗'],
+ [/mercadona|carrefour|lidl|aldi|dia |supermerc|alimentaci|compra semanal/, '🛒'],
+ [/hipoteca|alquiler|vivienda|hogar|comunidad|casa/, '🏠'],
+ [/telefon|teléfon|movistar|vodafone|orange|internet|fibra|mobile/, '📱'],
+ [/nómina|nomina|salario|sueldo|pensión|pension|ingreso laboral/, '💼'],
+ [/restaurante|bar |cafeter|comida fuera/, '🍽️'],
+ [/farmacia|salud|médic|medic/, '💊'],
+ [/boda|alianza/, '💍'],
+ [/netflix|spotify|disney|streaming|suscrip/, '🎬'],
+ [/impuesto|tributo|hacienda|ibi/, '🏛️'],
+ [/ahorro|hucha|provisi/, '🐷'],
+ [/financia|cuota|prestamo|préstamo/, '💳']
+ ];
+ for(const [pattern,emoji] of matches)if(pattern.test(name))return emoji;
+ return ({ingresos:'💼',fijos:'📋',variables:'💳',huchas:'🐷',compartidos:'👥',financiaciones:'💳'})[module]||'🧾';
+};
+const actualChargeDate=obj=>{
+ for(const key of ['fechaCargo','fecha_cargo','fechaOperacion','fecha_operacion','fechaMovimiento','fecha_movimiento','fechaPago','fecha_pago','fecha','date','created_at']){
+  const raw=obj[key];if(typeof raw!=='string'||!raw.trim())continue;
+  const value=raw.trim();
+  let y,m,d;
+  let match=value.match(/^(\d{4})-(\d{2})-(\d{2})(?:T|\s|$)/);
+  if(match){[,y,m,d]=match}else{
+   match=value.match(/^(\d{2})[\/.-](\d{2})[\/.-](\d{4})(?:\s|$)/);
+   if(match){[,d,m,y]=match}else{continue}
+  }
+  const day=Number(d),month=Number(m),year=Number(y);
+  if(year<2000||year>2100||month<1||month>12||day<1||day>31)continue;
+  const check=new Date(Date.UTC(year,month-1,day));
+  if(check.getUTCFullYear()!==year||check.getUTCMonth()!==month-1||check.getUTCDate()!==day)continue;
+  return {label:String(day).padStart(2,'0')+'/'+String(month).padStart(2,'0')+'/'+year,sort:year*10000+month*100+day,source:key};
+ }
+ return null;
+};
+const chargeMeta=obj=>{
+ const date=actualChargeDate(obj);
+ const period=field(obj,['mes','periodo','inicio']);
+ const category=field(obj,['categoria','tipo']);
+ return [date?date.label:period?('Periodo: '+period):'Fecha no disponible',category].filter(Boolean).join(' · ');
+};
+
+function status(msg){const p=el('p','error',msg);$('#content').prepend(p)}
+async function authRequest(path,accessToken,options={}){
+ const res=await fetch(BASE+path,{...options,headers:{'apikey':KEY,'Authorization':'Bearer '+accessToken,'Content-Type':'application/json',...(options.headers||{})},cache:'no-store'});
+ if(!res.ok)throw new Error('Supabase devolvió '+res.status+'. Comprueba la sesión y los permisos.');
+ return res.json();
+}
+function showLoading(label){$('#splashStatus').textContent=label;$('#splash').classList.add('active')}
+function hideLoading(){$('#splash').classList.remove('active')}
+function tutorialKey(){return 'fluxia_elite_tutorial_'+TUTORIAL_VERSION+'_'+owner}
+function closeTutorial(){if(owner){try{localStorage.setItem(tutorialKey(),'seen')}catch{}}$('#onboarding').classList.remove('active')}
+function updateTutorial(){const [icon,title,description]=steps[tutorialIndex];$('#stepIcon').textContent=icon;$('#stepTitle').textContent=title;$('#stepText').textContent=description;$('#stepCount').textContent=(tutorialIndex+1)+' / '+steps.length;$('#stepProgress').style.width=((tutorialIndex+1)*100/steps.length)+'%';$('#prevTutorial').disabled=tutorialIndex===0;$('#nextTutorial').textContent=tutorialIndex===steps.length-1?'Empezar ✓':'Siguiente →'}
+function openTutorial(force=false){if(!owner)return;let seen=false;try{seen=localStorage.getItem(tutorialKey())==='seen'}catch{}if(force||!seen){tutorialIndex=0;updateTutorial();$('#onboarding').classList.add('active')}}
+function loginScreen(){
+ $('#bottom').classList.add('hide');$('#logout').classList.add('hide');$('#help').classList.add('hide');$('#content').replaceChildren();
+ $('#content').append(el('h1',null,'Bienvenido a Fluxia'));
+ $('#content').append(el('p','intro','Accede con tu cuenta habitual. Esta vista funciona directamente en Safari y lee las colecciones reales, sin datos de demostración.'));
+ const box=el('section','card');const form=el('form');
+ const l1=el('label',null,'Correo electrónico'),email=el('input');email.type='email';email.autocomplete='username';email.required=true;email.placeholder='tu-correo@dominio.com';l1.append(email);
+ const l2=el('label',null,'Contraseña'),pass=el('input');pass.type='password';pass.autocomplete='current-password';pass.required=true;l2.append(pass);
+ const btn=el('button','primary','Acceder a mi nube');btn.type='submit';form.append(l1,l2,btn);box.append(form);$('#content').append(box);
+ $('#content').append(el('p','notice','No guarda la contraseña ni tokens en el navegador. No crea, modifica ni elimina registros financieros.'));
+ form.addEventListener('submit',async ev=>{
+ ev.preventDefault();btn.disabled=true;error='';showLoading('Comprobando credenciales y cargando datos reales…');
+ try{
+ const res=await fetch(BASE+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'apikey':KEY,'Content-Type':'application/json'},body:JSON.stringify({email:email.value.trim(),password:pass.value})});
+ const data=await res.json();pass.value='';
+ if(!res.ok||!data.access_token||!data.user?.id)throw new Error('No se ha podido iniciar sesión. Comprueba los datos de acceso.');
+ draftEdits.clear();token=data.access_token;owner=data.user.id;
+ const keys=mods.filter(m=>m.key).map(m=>m.key);
+ const encoded=encodeURIComponent('in.('+keys.join(',')+')');
+ const rows=await authRequest('/rest/v1/fluxia_datos?select=user_id,clave,v&user_id=eq.'+encodeURIComponent(owner)+'&clave='+encoded+'&limit=20',token);
+ if(!Array.isArray(rows)||rows.some(r=>r.user_id!==owner||!keys.includes(r.clave)))throw new Error('Error de separación de usuario');
+ items={};for(const row of rows){try{items[row.clave]=JSON.parse(row.v)}catch{items[row.clave]=null}}
+ page='inicio';render();hideLoading();openTutorial();
+ }catch(e){token='';owner='';items={};hideLoading();loginScreen();status(e.message||'Error de conexión');}
+ finally{btn.disabled=false}
+ });
+}
+function head(title){const h=el('h1',null,title);$('#content').append(h)}
+function renderNav(){const b=$('#bottom');b.replaceChildren();b.classList.remove('hide');for(const m of mods.slice(0,5)){const btn=el('button',(m.id===page?'active':''));btn.append(el('span','sym',m.icon),el('span',null,m.title));btn.onclick=()=>{page=m.id;search='';period='Todos';render()};b.append(btn)}}
+function renderHome(){
+ $('#content').append(el('div','sectioneyebrow','TU ESPACIO FINANCIERO'));
+ $('#content').append(el('h1','welcomeTitle','Todo bajo control.'));
+ $('#content').append(el('p','welcomeDescription','Tus finanzas, claras y a tu ritmo. ✨'));
+ const hero=el('div','card hero');
+ const heroTop=el('div');heroTop.append(el('span','heroHeadline','◈  Disponible'),el('span','heroBadge','POR VALIDAR'));
+ hero.append(heroTop,el('strong','big','—'),el('small',null,'Preparando el cálculo contable con las reglas de Fluxia. Tus registros están disponibles abajo.'));
+ $('#content').append(hero);
+ $('#content').append(el('h2','moduleTitle','Tus movimientos y planes'));
+ const group=el('div','grid');
+ const priority=['ingresos','fijos','huchas','compartidos','variables','financiaciones'];
+ const moduleEmojis={ingresos:'💼',fijos:'📋',huchas:'🐷',compartidos:'👥',variables:'💳',financiaciones:'📅'};
+ for(const id of priority){const m=mods.find(x=>x.id===id),arr=canon(m),btn=el('button','tile');
+ btn.dataset.section=m.id;btn.append(el('span','symbol',moduleEmojis[m.id]),el('strong',null,m.title),el('span',null,arr?arr.length+' registros en tu nube':'Pendiente de lectura'));
+ btn.onclick=()=>{page=m.id;search='';period='Todos';render()};group.append(btn)}$('#content').append(group);
+ $('#content').append(el('p','notice','Datos originales de tu cuenta · Vista Safari de consulta rápida · La app iOS nativa sigue en desarrollo.'));
+}
+function renderList(){
+ const m=mods.find(x=>x.id===page),arr=canon(m);head(m.title);
+ if(!arr){$('#content').append(el('p','error','Colección no disponible para esta cuenta; no significa saldo cero.'));return}
+ const tools=el('div','toolrow'),q=el('input');q.type='search';q.placeholder='Buscar registros reales';q.value=search;q.autocomplete='off';tools.append(q);
+ const periods=['Todos',...new Set(arr.map(x=>field(x,['mes','fecha','inicio'])).filter(Boolean))].sort((a,b)=>a==='Todos'?-1:b==='Todos'?1:a.localeCompare(b,'es'));
+ const sel=el('select');for(const p of periods){const op=el('option',null,p);op.value=p;sel.append(op)}sel.value=period;if(sel.value!==period)period='Todos';tools.append(sel);$('#content').append(tools);
+ const list=el('div','entries'),count=el('div','muted');$('#content').append(count,list);
+ const draw=()=>{list.replaceChildren();const rows=arr.map((data,index)=>({data,index})).filter(({data})=>{const label=field(data,['concepto','nombre','descripcion'])||'Registro sin concepto',p=field(data,['mes','fecha','inicio'])||'';return(period==='Todos'||p===period)&&(!search||[label,p,field(data,['categoria','tipo'])||''].some(s=>s.toLocaleLowerCase('es').includes(search.toLocaleLowerCase('es'))))});count.textContent=rows.length+' de '+arr.length+' registros de origen';
+ for(const {data,index} of rows.slice(0,80)){
+ const name=field(data,['concepto','nombre','descripcion'])||'Registro sin concepto';
+ const amount=money(data.importe??data.importeMensual??data.cuota??data.importe_total);
+ const title=el('div','entryMain');title.append(el('strong',null,name),el('small',null,chargeMeta(data)));
+ const emoji=el('span','chargeEmoji',chargeIcon(data,page));emoji.setAttribute('aria-hidden','true');
+ const btn=el('button','entry');btn.append(emoji,title,el('span','amount',amount??'Ver detalle ›'));
+ btn.onclick=()=>openDetail(data,index,m.key);list.append(btn)
+}
+ if(!rows.length)list.append(el('p','empty','No hay registros coincidentes.'));if(rows.length>80)list.append(el('p','muted','Mostrando 80 de '+rows.length+' registros filtrados para mantener la respuesta fluida. Utiliza la búsqueda para localizar el resto.'))};
+ q.oninput=()=>{search=q.value;if(searchTimer)clearTimeout(searchTimer);searchTimer=setTimeout(draw,110)};sel.onchange=()=>{period=sel.value;draw()};draw();
+}
+function openDetail(data,index,key){
+ currentDetail={data,index,key};const d=$('#detailContent');d.replaceChildren();
+ const preview=draftEdits.get(key+':'+index);const entry=preview?.record||data;
+ d.append(el('h2',null,chargeIcon(entry,page)+'  '+(field(entry,['concepto','nombre','descripcion'])||'Registro original')));
+ const verifiedDate=actualChargeDate(entry);
+ if(verifiedDate)d.append(el('p','verifiedDate','📅 Fecha registrada: '+verifiedDate.label));
+ else d.append(el('p','muted','Fecha exacta no disponible: solo se mostrará si está guardada'));
+ const dl=el('dl');
+ for(const [k,title] of [['importe','Importe'],['importeMensual','Importe mensual'],['cuota','Cuota'],['importe_total','Importe total'],['mes','Mes'],['fecha','Fecha'],['fechaCargo','Fecha cargo'],['fechaPago','Fecha pago'],['categoria','Categoría'],['estado','Estado'],['origen','Origen'],['id','Identificador']]){
+  if(entry[k]===undefined||entry[k]===null)continue;
+  dl.append(el('dt',null,title),el('dd',null,typeof entry[k]==='number'&&/importe|cuota/.test(k)?money(entry[k]):String(entry[k])))
+ }
+ d.append(dl);
+ if(preview)d.append(el('p','draftTag','BORRADOR DE PRUEBA · NO GUARDADO EN NUBE'));
+ if(preview?.operation)d.append(el('p','editIntro','🧪 '+preview.operation.label+' · '+money(preview.operation.amount)+' · '+preview.operation.date+' · SIN EFECTO CONTABLE'));
+ const actions=el('div','editActions');
+ const edit=el('button','primary','✏️ Probar edición');
+ edit.onclick=()=>showDraftEditor(data,index,key);
+ actions.append(edit);
+ if(draftEdits.has(key+':'+index)){
+  const discard=el('button',null,'Descartar borrador');
+  discard.onclick=()=>{draftEdits.delete(key+':'+index);openDetail(data,index,key)};
+  actions.append(discard)
+ }
+ d.append(actions,el('p','notice','El editor de prueba no modifica Supabase, no recalcula Disponible ni cambia registros HTML. Las escrituras reales permanecen bloqueadas hasta validar las reglas contables.'));
+ $('#detail').classList.add('open')
+}
+
+const moduleActions={
+ 'planRescate_v2_fijos':[['pagado','📌 Pago de fijo','Evitar duplicar cargos vinculados.'],['pendiente','⏳ Pendiente','Un fijo previsto no es un cargo ejecutado.']],
+ 'planRescate_v2_provisiones':[['aporte','🐷 Aportación','No descontar dos veces aportes previstos.'],['rescate','💶 Rescate','Imputar a su fecha histórica.'],['uso','🧾 Uso de hucha','No duplicar gasto.']],
+ 'planRescate_v2_ingresos':[['ingreso','💼 Reconocimiento de ingreso','Requiere conciliación contable.']],
+ 'planRescate_v2_movimientos':[['variable','💳 Clasificación','Los fijos vinculados no pueden duplicarse.']],
+ 'planRescate_v2_compartidos':[['liquidar','👥 Liquidación','Validar deuda y pago.']],
+ 'planRescate_v2_financiaciones':[['cuota','📅 Pago de cuota','Previsto no equivale a pagado.']]
+};
+
+function showDraftEditor(data,index,key){
+ const d=$('#detailContent');d.replaceChildren();
+ const original=JSON.parse(JSON.stringify(data));
+ const active=draftEdits.get(key+':'+index)?.record||original;
+ d.append(el('span','draftTag','MODO PRUEBA · SIN GUARDAR EN LA NUBE'));
+ d.append(el('h2',null,'Editar registro'));
+ d.append(el('p','editIntro','Prueba los cambios con tus datos reales. La vista previa se mantiene solo durante esta sesión y desaparece al salir.'));
+ const form=el('form');
+ const nameKey=['concepto','nombre','descripcion'].find(k=>typeof original[k]==='string')||'concepto';
+ const amountKey=['importe','importeMensual','cuota','importe_total'].find(k=>typeof original[k]==='number');
+ const dateKey=['fechaCargo','fecha_cargo','fechaOperacion','fecha_operacion','fechaPago','fecha_pago','fecha'].find(k=>typeof original[k]==='string');
+ const controls=[];
+ function inputField(label,key,type,value,required=false){
+  const wrapper=el('label',null,label),input=el('input');input.type=type;input.value=value??'';input.required=required;if(type==='number'){input.step='0.01';input.inputMode='decimal'}wrapper.append(input);form.append(wrapper);controls.push({key,input});return input
+ }
+ inputField('Concepto',nameKey,'text',active[nameKey]||'',true);
+ if(amountKey)inputField('Importe registrado ('+amountKey+')',amountKey,'number',active[amountKey],true);
+ if(dateKey){
+  const raw=String(active[dateKey]||'');
+  const iso=/^\d{4}-\d{2}-\d{2}/.test(raw)?raw.slice(0,10):'';
+  const date=inputField('Fecha real ('+dateKey+')',dateKey,iso?'date':'text',iso||raw);
+  if(date.type==='text')date.placeholder='Fecha original: mantener formato fuente'
+ }
+ if(typeof original.mes==='string')inputField('Periodo / mes', 'mes','text',active.mes);
+ if(typeof original.categoria==='string')inputField('Categoría','categoria','text',active.categoria);
+ if(typeof original.estado==='string')inputField('Estado original (no marca pagos)','estado','text',active.estado);
+ const choices=moduleActions[key]||[];
+ const finance=el('section','previewOperation');
+ finance.append(el('h3',null,'Operaciones del módulo · simulación'));
+ const actionLabel=el('label',null,'Tipo de operación'),action=el('select');
+ const option=el('option',null,'Solo modificar datos del registro');option.value='';action.append(option);
+ for(const [id,label] of choices){const op=el('option',null,label);op.value=id;action.append(op)}
+ actionLabel.append(action);finance.append(actionLabel);
+ const warning=el('p','editIntro','Estas operaciones NO cambian tu nube ni la contabilidad.');
+ const aLabel=el('label',null,'Importe a simular'),aInput=el('input');aInput.type='number';aInput.step='0.01';aInput.inputMode='decimal';aLabel.append(aInput);
+ const dLabel=el('label',null,'Fecha real de la operación'),dInput=el('input');dInput.type='date';dLabel.append(dInput);
+ finance.append(warning,aLabel,dLabel);form.append(finance);
+ action.onchange=()=>{const chosen=choices.find(c=>c[0]===action.value);warning.textContent=chosen?chosen[2]+' · No guardado en nube.':'No hay escritura financiera habilitada.';aLabel.classList.toggle('hide',!chosen);dLabel.classList.toggle('hide',!chosen)};
+ action.onchange();
+ const errorBox=el('div','editorError hide');
+ form.append(errorBox);
+ const compare=el('div','draftCompare');compare.append(el('div',null),el('div',null));
+ form.append(compare);
+ const actions=el('div','editActions');
+ const cancel=el('button',null,'Cancelar');cancel.type='button';cancel.onclick=()=>openDetail(original,index,key);
+ const save=el('button','primary','Guardar prueba');save.type='submit';
+ actions.append(cancel,save);form.append(actions);
+ function refreshPreview(){
+  const changed=Object.assign({},original);
+  for(const {key,input} of controls){changed[key]=input.type==='number'?Number(input.value):input.value.trim()}
+  compare.children[0].replaceChildren(el('strong',null,'ANTES'),el('span',null,JSON.stringify(Object.fromEntries(controls.map(({key})=>[key,original[key]??null])))));
+  compare.children[1].replaceChildren(el('strong',null,'DESPUÉS'),el('span',null,JSON.stringify(Object.fromEntries(controls.map(({key})=>[key,changed[key]??null])))));
+  return changed
+ }
+ controls.forEach(({input})=>input.addEventListener('input',refreshPreview));refreshPreview();
+ form.onsubmit=e=>{
+  e.preventDefault();errorBox.classList.add('hide');
+  const changed=refreshPreview();
+  if(!changed[nameKey]||changed[nameKey].length>200){errorBox.textContent='Escribe un concepto válido de hasta 200 caracteres.';errorBox.classList.remove('hide');return}
+  if(amountKey&&(!Number.isFinite(changed[amountKey])||Math.abs(changed[amountKey])>100000000)){errorBox.textContent='Importe no válido.';errorBox.classList.remove('hide');return}
+  if(dateKey&&changed[dateKey]&&/fecha|date/i.test(dateKey)){
+   const temp={[dateKey]:changed[dateKey]};if(!actualChargeDate(temp)&&/^\d{4}-\d{2}-\d{2}/.test(changed[dateKey])){errorBox.textContent='Fecha no válida.';errorBox.classList.remove('hide');return}
+  }
+  const selected=choices.find(c=>c[0]===action.value);
+  let operation=null;
+  if(selected){
+    const num=Number(aInput.value);
+    if(!aInput.value.trim()||!Number.isFinite(num)||num<=0||num>10000000){errorBox.textContent='Importe de operación no válido.';errorBox.classList.remove('hide');return}
+    if(!dInput.value||!actualChargeDate({fecha:dInput.value})){errorBox.textContent='Introduce una fecha válida de operación.';errorBox.classList.remove('hide');return}
+    if(key==='planRescate_v2_movimientos'&&(original.cuentaComoFijo||original.vinculoFijoId)){errorBox.textContent='Cargo vinculado a Fijos: se debe revisar en Fijos, sin duplicar un movimiento variable.';errorBox.classList.remove('hide');return}
+    operation={label:selected[1],amount:num,date:dInput.value};
+  }
+  draftEdits.set(key+':'+index,{record:changed,operation});openDetail(original,index,key);
+ };
+ d.append(form)
+}
+
+function render(){if(!token){loginScreen();return}$('#logout').classList.remove('hide');$('#help').classList.remove('hide');renderNav();$('#content').replaceChildren();if(page==='inicio')renderHome();else renderList()}
+$('#close').onclick=()=>$('#detail').classList.remove('open');$('#detail').onclick=e=>{if(e.target.id==='detail')$('#detail').classList.remove('open')};
+$('#help').onclick=()=>openTutorial(true);
+$('#helpClose').onclick=closeTutorial;$('#skipTutorial').onclick=closeTutorial;
+$('#prevTutorial').onclick=()=>{if(tutorialIndex>0){tutorialIndex--;updateTutorial()}};
+$('#nextTutorial').onclick=()=>{if(tutorialIndex===steps.length-1)closeTutorial();else{tutorialIndex++;updateTutorial()}};
+$('#logout').onclick=()=>{draftEdits.clear();token='';owner='';items={};$('#onboarding').classList.remove('active');loginScreen()};loginScreen();
+})();
+</script></body></html>
