@@ -2144,6 +2144,30 @@ function renderGrossHuchaContributions(rows){
  for(const h of a.details){const line=el('div','eliteHuchaBalanceLine');line.append(el('span',null,h.name),el('strong',null,money(h.cents/100)));d.append(line)}
  box.append(d);return box
 }
+function huchaUsesAudit(huchas,uses){
+ const result={sourceReady:Array.isArray(uses),count:0,linked:0,unlinked:0,duplicate:0,temporary:0,definitive:0,linkedCents:0,perHucha:{}};
+ if(!Array.isArray(huchas)||!Array.isArray(uses))return result;
+ const seen=new Set();
+ for(const use of uses){
+  if(!use||typeof use!=='object')continue;
+  result.count++;
+  const id=String(use.id??'').trim();
+  if(!id||seen.has(id)){result.duplicate++;continue}
+  seen.add(id);
+  const link=exactHuchaUsageLink(use,huchas);
+  if(link.kind!=='linked'){result.unlinked++;continue}
+  const amount=use.importe;
+  if(typeof amount!=='number'||!Number.isFinite(amount)){result.unlinked++;continue}
+  const kind=String(use.tipo||'').toLowerCase();
+  if(kind!=='temporal'&&kind!=='definitivo'){result.unlinked++;continue}
+  const key=String(link.hucha.id),cents=Math.round(Math.abs(amount)*100);
+  if(!result.perHucha[key])result.perHucha[key]={cents:0,count:0};
+  result.perHucha[key].cents+=cents;result.perHucha[key].count++;
+  result.linked++;result.linkedCents+=cents;
+  if(kind==='temporal')result.temporary++;else result.definitive++
+ }
+ return result
+}
 function renderHuchaBalances(rows,origin){
  const audit=huchaBalanceAudit(rows);
  const panel=el('section','eliteHuchaBalance');
