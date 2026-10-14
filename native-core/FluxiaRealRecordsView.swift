@@ -33,6 +33,7 @@ struct FluxiaRealRecordsView: View {
 
     @State private var selectedKey = "planRescate_v2_movimientos"
     @State private var showAll = false
+    @State private var searchTerm = ""
 
     private func items(for key: String) -> [DisplayRow]? {
         // Only read keys identified by the canonical HTML contract.
@@ -75,9 +76,14 @@ struct FluxiaRealRecordsView: View {
                 }
             }
             .pickerStyle(.menu)
-            if let rows = items(for: selectedKey) {
+            .onChange(of: selectedKey) { _, _ in showAll = false; searchTerm = "" }
+            TextField("Buscar conceptos reales", text: $searchTerm)
+                .textInputAutocapitalization(.never)
+                .textFieldStyle(.roundedBorder)
+            if let allRows = items(for: selectedKey) {
+                let rows = allRows.filter { searchTerm.isEmpty || $0.title.localizedCaseInsensitiveContains(searchTerm) || $0.period.localizedCaseInsensitiveContains(searchTerm) }
                 HStack {
-                    Text("\(rows.count) registros almacenados")
+                    Text(searchTerm.isEmpty ? "\(rows.count) registros reales" : "\(rows.count) de \(allRows.count) registros")
                         .font(.subheadline.bold())
                     Spacer()
                     Button(showAll ? "Ver menos" : "Ver más") { showAll.toggle() }
