@@ -3,9 +3,9 @@
 Fecha: 14/10/2026 (Europe/Madrid)  
 Repositorio: [nacram1987-cmd/Fluxia-v20](https://github.com/nacram1987-cmd/Fluxia-v20)  
 Rama de trabajo: [feature/fluxia-elite-ios-capacitor](https://github.com/nacram1987-cmd/Fluxia-v20/tree/feature/fluxia-elite-ios-capacitor)  
-Commit de código probado: `3656a75f3ae34022b084c0aef72bdc37ebf62e0c`  
+Commit de código probado: `41742a2d033e54b88b9b9ccedcf46673df814a0a`  
 Referencia visual aprobada: `96750a275b957ded93d08fa44b5be1f9fa6fc608`  
-Workflow macOS: [run 38515243267](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38515243267) — **success**
+Workflow macOS: [run 38515699070](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38515699070) — **success**
 
 ## Dictamen
 
@@ -33,11 +33,18 @@ El proyecto compila como aplicación SwiftUI real para simulador y conserva el m
 - Rechazo de proveedor, cuenta o referencia bancaria vacíos o compuestos solo por espacios.
 - Máquina de estados financiera con auditoría de transición, control de propietario, operación idempotente y estado terminal tras borrado; no persiste entre ejecuciones.
 - Normalización de espacios en claves bancarias antes de deduplicar; IDs en blanco rechazados por conciliación y defensa de propietario.
-- Run 38515243267: 6 checks contables, 432 combinaciones, 4 de demo, 7 conciliación, 10 decisiones de importación + lote de 400 IDs/10 pasadas, 8 de aislamiento y 10 del ciclo de vida; build de simulador y capturas de ambos temas satisfactorios.
-- Artefactos: [capturas](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38515243267/artifacts/11871243043) · [app simulador](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38515243267/artifacts/11872021454).
+- Run 38515699070: 6 checks contables, 432 combinaciones, 4 de demo, 7 conciliación, 10 decisiones de importación + lote de 400 IDs/10 pasadas, 8 de aislamiento y 10 del ciclo de vida y 7 de proyección mensual; build de simulador y capturas de ambos temas satisfactorios.
+- Artefactos: [capturas](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38515699070/artifacts/11872411018) · [app simulador](https://github.com/nacram1987-cmd/Fluxia-v20/actions/runs/38515699070/artifacts/11872455791).
 
 No se tocaron `index.html`, workers, manifiestos, PWA ESTABLE, `main` ni `pages-v9731-real-final`. La comparación GitHub de la rama de desarrollo refleja solo archivos del workflow nativo, la app nativa, pruebas, documentación y una captura histórica bajo `previews/`.
 
 ## Bloqueos concretos
 
 Conectar datos reales requiere un backend/identidad configurados y pruebas de servidor autorizadas. La integración bancaria requiere proveedor y credenciales legítimas. Para instalar/distribuir en iPhone hace falta firma y un flujo Apple Developer/TestFlight. Esos elementos no estaban disponibles y no se simularon.
+
+
+## Auditoría Supabase (metadatos; sin leer datos personales)
+
+Se confirmó que el proyecto Supabase Fluxia está activo. La app nativa todavía no integra autenticación ni sincronización. La auditoría fue de esquema, políticas RLS y avisos de seguridad; no se consultaron valores de registros financieros ni se realizaron escrituras. `fluxia_datos` tiene alcance por usuario en la clave primaria y políticas `auth.uid() = user_id`; sin embargo, no se ha validado el flujo desde un cliente iOS ni la recuperación tras reinstalación. Las tablas `movimientos` y varias tablas bancarias no tienen políticas RLS y no son aptas para consumo directo del cliente.
+
+Los asesores marcaron siete tablas RLS sin políticas (fallan cerradas para el cliente), funciones con `search_path` mutable, una función `SECURITY DEFINER` disponible a autenticados, protección de contraseñas filtradas desactivada y avisos de rendimiento en políticas/FK. No se alteró el proyecto. Antes de habilitar sincronización hace falta corregir/verificar políticas servidor y añadir un contrato de persistencia transaccional con idempotencia; no usar `fluxia_datos` como libro mayor con escrituras de snapshot.
