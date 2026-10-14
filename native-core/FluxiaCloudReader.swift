@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 /// Read-only gateway to the existing Fluxia HTML key/value cloud store.
 /// Requires a user-scoped Supabase access token. Never embeds privileged keys.
