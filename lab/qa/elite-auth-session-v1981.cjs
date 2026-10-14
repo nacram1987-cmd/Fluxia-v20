@@ -1,16 +1,1 @@
-'use strict';
-const assert=require('node:assert/strict');
-const fs=require('node:fs');const vm=require('node:vm');
-const html=fs.readFileSync(require('node:path').join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
-assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.(?:81|82|83|84|85|86|87|88)'/);
-assert.match(html,/function bootstrapAuth\(\)/);
-assert.match(html,/grant_type=refresh_token/);
-assert.match(html,/localStorage\.setItem\(ELITE_SESSION_KEY/);
-assert.match(html,/auth\/v1\/signup/);
-assert.match(html,/Face ID \/ passkey/);
-assert.match(html,/passkey\.authenticate\(owner\)/);
-assert.match(html,/fluxia_faceid_bypass/);
-assert.doesNotMatch(html,/localStorage\.setItem\([^,]*(?:password|contraseñ)/i,'Passwords must never be persisted');
-const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(match=>match[1]).filter(Boolean);
-for(const script of scripts)assert.doesNotThrow(()=>new vm.Script(script), 'Inline JavaScript must parse');
-console.log('PASS v1.9.81 auth/session and inline-script contract');
+J3VzZSBzdHJpY3QnOwpjb25zdCBhc3NlcnQ9cmVxdWlyZSgnbm9kZTphc3NlcnQvc3RyaWN0Jyk7CmNvbnN0IGZzPXJlcXVpcmUoJ25vZGU6ZnMnKTtjb25zdCB2bT1yZXF1aXJlKCdub2RlOnZtJyk7CmNvbnN0IGh0bWw9ZnMucmVhZEZpbGVTeW5jKHJlcXVpcmUoJ25vZGU6cGF0aCcpLmpvaW4oX19kaXJuYW1lLCcuLi9mbHV4aWEtZWxpdGUtc2FmYXJpLWRhdG9zLXJlYWxlcy5odG1sJyksJ3V0ZjgnKTsKYXNzZXJ0Lm1hdGNoKGh0bWwsL0VMSVRFX1NBRkFSSV9WRVJTSU9OPScxXC45XC4oPzo4MXw4Mnw4M3w4NHw4NXw4Nnw4N3w4OHw4OSknLyk7CmFzc2VydC5tYXRjaChodG1sLC9mdW5jdGlvbiBib290c3RyYXBBdXRoXChcKS8pOwphc3NlcnQubWF0Y2goaHRtbCwvZ3JhbnRfdHlwZT1yZWZyZXNoX3Rva2VuLyk7CmFzc2VydC5tYXRjaChodG1sLC9sb2NhbFN0b3JhZ2VcLnNldEl0ZW1cKEVMSVRFX1NFU1NJT05fS0VZLyk7CmFzc2VydC5tYXRjaChodG1sLC9hdXRoXC92MVwvc2lnbnVwLyk7CmFzc2VydC5tYXRjaChodG1sLC9GYWNlIElEIFwvIHBhc3NrZXkvKTsKYXNzZXJ0Lm1hdGNoKGh0bWwsL3Bhc3NrZXlcLmF1dGhlbnRpY2F0ZVwob3duZXJcKS8pOwphc3NlcnQubWF0Y2goaHRtbCwvZmx1eGlhX2ZhY2VpZF9ieXBhc3MvKTsKYXNzZXJ0LmRvZXNOb3RNYXRjaChodG1sLC9sb2NhbFN0b3JhZ2VcLnNldEl0ZW1cKFteLF0qKD86cGFzc3dvcmR8Y29udHJhc2XDsSkvaSwnUGFzc3dvcmRzIG11c3QgbmV2ZXIgYmUgcGVyc2lzdGVkJyk7CmNvbnN0IHNjcmlwdHM9Wy4uLmh0bWwubWF0Y2hBbGwoLzxzY3JpcHQoPzpcc1tePl0qKT8+KFtcc1xTXSo/KTxcL3NjcmlwdD4vZ2kpXS5tYXAobWF0Y2g9Pm1hdGNoWzFdKS5maWx0ZXIoQm9vbGVhbik7CmZvcihjb25zdCBzY3JpcHQgb2Ygc2NyaXB0cylhc3NlcnQuZG9lc05vdFRocm93KCgpPT5uZXcgdm0uU2NyaXB0KHNjcmlwdCksICdJbmxpbmUgSmF2YVNjcmlwdCBtdXN0IHBhcnNlJyk7CmNvbnNvbGUubG9nKCdQQVNTIHYxLjkuODEgYXV0aC9zZXNzaW9uIGFuZCBpbmxpbmUtc2NyaXB0IGNvbnRyYWN0Jyk7Cg==
