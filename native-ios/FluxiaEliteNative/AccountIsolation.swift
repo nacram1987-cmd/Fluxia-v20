@@ -18,8 +18,8 @@ enum AccountIsolation {
     static func authorize(record: Record, authenticatedUserID: String?) -> Decision {
         guard let user = authenticatedUserID,
               !user.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
-              !record.ownerID.isEmpty,
-              !record.id.isEmpty,
+              !record.ownerID.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+              !record.id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
               user == record.ownerID else { return .denied }
         return .allowed
     }

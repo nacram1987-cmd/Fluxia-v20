@@ -18,8 +18,12 @@ enum BankImportSafety {
 
     /// Provider transaction IDs are scoped to both provider and account.
     /// A reused ID with changed amount is a conflict, not a new expense.
+    private static func canonicalIdentity(_ value: String) -> String {
+        value.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
     private static func hasNonWhitespaceValue(_ value: String) -> Bool {
-        !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        !canonicalIdentity(value).isEmpty
     }
 
     static func classify(_ incoming: Movement, existing: [Movement]) -> Decision {
@@ -29,9 +33,9 @@ enum BankImportSafety {
               incoming.amountCents != 0 else { return .needsReview }
 
         let matches = existing.filter {
-            $0.provider == incoming.provider &&
-            $0.accountID == incoming.accountID &&
-            $0.providerTransactionID == incoming.providerTransactionID
+            canonicalIdentity($0.provider) == canonicalIdentity(incoming.provider) &&
+            canonicalIdentity($0.accountID) == canonicalIdentity(incoming.accountID) &&
+            canonicalIdentity($0.providerTransactionID) == canonicalIdentity(incoming.providerTransactionID)
         }
         if matches.isEmpty { return .new }
         // Conflicting historical amounts must never be silently deduplicated.

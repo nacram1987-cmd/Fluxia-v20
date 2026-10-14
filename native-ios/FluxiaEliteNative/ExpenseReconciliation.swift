@@ -24,11 +24,11 @@ enum ExpenseReconciliation {
     /// Conservative recommendation: never auto-pay a fixed bill on fuzzy evidence.
     /// Requires exact normalized description and exact positive amount.
     static func suggestMatch(charge: Charge, bills: [FixedBill]) -> Match {
-        guard charge.cents > 0, !charge.id.isEmpty else { return .none }
+        guard charge.cents > 0, hasNonWhitespaceValue(charge.id) else { return .none }
         let normalized = normalize(charge.description)
         guard !normalized.isEmpty else { return .none }
         let candidates = bills.filter {
-            !$0.alreadyPaid && $0.expectedCents == charge.cents &&
+            hasNonWhitespaceValue($0.id) && !$0.alreadyPaid && $0.expectedCents == charge.cents &&
             normalize($0.description) == normalized
         }
         switch candidates.count {
@@ -36,6 +36,10 @@ enum ExpenseReconciliation {
         case 1: return .unique(fixedBillID: candidates[0].id)
         default: return .ambiguous
         }
+    }
+
+    private static func hasNonWhitespaceValue(_ value: String) -> Bool {
+        !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     private static func normalize(_ value: String) -> String {

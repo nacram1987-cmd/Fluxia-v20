@@ -54,11 +54,13 @@ print("Demo safety: 4 checks passed")
 let endesa = ExpenseReconciliation.FixedBill(id: "fixed-1", description: "Endesa", expectedCents: 6_200, alreadyPaid: false)
 let charge = ExpenseReconciliation.Charge(id: "bank-1", description: " ENDESA ", cents: 6_200)
 check(ExpenseReconciliation.suggestMatch(charge: charge, bills: [endesa]) == .unique(fixedBillID: "fixed-1"), "exact name and amount can match")
+check(ExpenseReconciliation.suggestMatch(charge: .init(id: "  ", description: "Endesa", cents: 6_200), bills: [endesa]) == .none, "whitespace-only bank charge ID cannot be reconciled")
+check(ExpenseReconciliation.suggestMatch(charge: charge, bills: [.init(id: "  ", description: "Endesa", expectedCents: 6_200, alreadyPaid: false)]) == .none, "whitespace-only fixed bill ID cannot be reconciled")
 check(ExpenseReconciliation.suggestMatch(charge: .init(id: "bank-1", description: "Endesa", cents: 6_300), bills: [endesa]) == .none, "different amount must not match")
 check(ExpenseReconciliation.suggestMatch(charge: charge, bills: [.init(id: "fixed-1", description: "Endesa", expectedCents: 6_200, alreadyPaid: true)]) == .none, "paid bills cannot rematch")
 check(ExpenseReconciliation.suggestMatch(charge: charge, bills: [endesa, .init(id: "fixed-2", description: "Endesa", expectedCents: 6_200, alreadyPaid: false)]) == .ambiguous, "duplicate candidates require review")
 check(ExpenseReconciliation.suggestMatch(charge: .init(id: "bank-1", description: "Endesa", cents: 0), bills: [endesa]) == .none, "zero amount must not match")
-print("Expense reconciliation: 5 checks passed")
+print("Expense reconciliation: 7 checks passed")
 
 let movement = BankImportSafety.Movement(provider: "bank-a", accountID: "account-1", providerTransactionID: "tx-100", amountCents: -6_200)
 check(BankImportSafety.classify(movement, existing: []) == .new, "unseen movement is new")
@@ -69,6 +71,9 @@ check(BankImportSafety.classify(.init(provider: "bank-b", accountID: "account-1"
 check(BankImportSafety.classify(.init(provider: "bank-a", accountID: "account-1", providerTransactionID: "", amountCents: -6_200), existing: []) == .needsReview, "missing provider transaction ID must not be imported blindly")
 check(BankImportSafety.classify(.init(provider: "bank-a", accountID: "account-1", providerTransactionID: "tx-101", amountCents: -6_200), existing: [movement]) == .new, "same amount with a different provider transaction ID stays distinct")
 check(BankImportSafety.classify(.init(provider: "bank-a", accountID: "account-1", providerTransactionID: "   ", amountCents: -6_200), existing: []) == .needsReview, "whitespace-only bank transaction ID is rejected")
+let paddedMovement = BankImportSafety.Movement(provider: " bank-a ", accountID: " account-1", providerTransactionID: " tx-100 ", amountCents: -6_200)
+check(BankImportSafety.classify(paddedMovement, existing: [movement]) == .duplicate, "surrounding whitespace cannot bypass transaction deduplication")
+check(BankImportSafety.classify(.init(provider: " bank-a ", accountID: "account-1", providerTransactionID: "tx-100 ", amountCents: -6_300), existing: [movement]) == .conflict, "trimmed identity with changed amount remains a conflict")
 
 let syntheticBatch: [BankImportSafety.Movement] = (0..<400).map { index in
     BankImportSafety.Movement(
@@ -101,9 +106,11 @@ check(AccountIsolation.authorize(record: aliceRecord, authenticatedUserID: "alic
 check(AccountIsolation.authorize(record: aliceRecord, authenticatedUserID: "bob") == .denied, "other user cannot access record")
 check(AccountIsolation.authorize(record: aliceRecord, authenticatedUserID: nil) == .denied, "anonymous user cannot access record")
 check(AccountIsolation.authorize(record: aliceRecord, authenticatedUserID: " ") == .denied, "blank session cannot access record")
+check(AccountIsolation.authorize(record: .init(id: "r-3", ownerID: "  ", amountCents: 1), authenticatedUserID: "  ") == .denied, "whitespace-only record owner fails closed")
+check(AccountIsolation.authorize(record: .init(id: "  ", ownerID: "alice", amountCents: 1), authenticatedUserID: "alice") == .denied, "whitespace-only record ID fails closed")
 check(AccountIsolation.visibleRecords([aliceRecord, bobRecord], authenticatedUserID: "alice") == [aliceRecord], "user sees only own records")
 check(AccountIsolation.visibleRecords([aliceRecord, bobRecord], authenticatedUserID: nil).isEmpty, "signed-out user sees no records")
-print("Account isolation: 6 checks passed")
+print("Account isolation: 8 checks passed")
 
 
 var lifecycle = LedgerLifecycle.Record(id: "ledger-1", ownerID: "synthetic-user")
