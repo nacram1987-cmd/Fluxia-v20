@@ -1,6 +1,12 @@
 # 📋 PROMPT MAESTRO FLUXIA v93.8.2+
 ## Biblia de desarrollo, versionado, QA y entrega profesional
 
+## Adenda Élite v1.9.99 — cierre de sesión comprobable (15/10/2026)
+
+- Cerrar sesión elimina de inmediato el estado privado y el refresh token locales; en segundo plano solicita a Supabase revocar **solo la sesión actual** (`scope=local`), sin cerrar otros dispositivos.
+- Si la red o Auth no confirma la revocación, mostrar la incertidumbre al usuario. Un access token previamente emitido puede seguir siendo válido hasta su expiración; no afirmar revocación instantánea de JWT.
+- La QA histórica de v97.73 sigue roja por deriva posterior al snapshot original (169 scripts frente a 168); no retirar la assertion para fabricar una certificación. Élite v2.0.00 requiere evidencia de paridad, seguridad y pruebas físicas, no solo un número.
+
 ## Adenda Élite v1.9.98 — protección de estable y avisos honestos (15/10/2026)
 
 - La base histórica v97.66 y el `index.html` estable actual son artefactos distintos: verificar cada uno con su SHA sin cambiar el histórico ni alterar el HTML estable. La huella actual de la estable se fijó desde el commit previo `145560c16df8c0ce0902daacbb20ffb634a04bc7`.

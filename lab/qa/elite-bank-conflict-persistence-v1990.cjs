@@ -1,6 +1,6 @@
 const fs=require('fs');const assert=require('assert');
 const root=process.cwd();const html=fs.readFileSync(root+'/lab/fluxia-elite-safari-datos-reales.html','utf8');
-assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.(?:90|91|92|93|94|95|96|97|98)'/);
+assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.(?:90|91|92|93|94|95|96|97|98|99)'/);
 assert(html.includes('fluxia_elite_bank_conflicts_v1:'));
 assert(html.includes('function readBankConflictResolutions()'));
 assert(html.includes('function saveBankConflictResolutions(value)'));

@@ -12,6 +12,6 @@ assert.strictEqual(kept.ok,true);assert.strictEqual(kept.conflicts.length,0);ass
 const proposed=adapter.planImport(existing,incoming,{}, {'b-1':'propose-incoming'});
 assert.strictEqual(proposed.ok,true);assert.strictEqual(proposed.resolved[0].decision,'propose-incoming');
 const html=fs.readFileSync(root+'/lab/fluxia-elite-safari-datos-reales.html','utf8');
-assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.(?:89|90|91|92|93|94|95|96|97|98)'/);
+assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.(?:89|90|91|92|93|94|95|96|97|98|99)'/);
 assert(html.includes('resolveBankConflict'));assert(html.includes('bankConflictResolutions'));
 console.log('PASS v1.9.89 explicit bank conflict review remains non-writing');

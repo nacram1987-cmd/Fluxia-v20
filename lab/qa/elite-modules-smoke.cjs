@@ -24,6 +24,7 @@ class FakeNode{
   this.classList={add(){},remove(){},toggle(){}};this.onclick=null
  }
  append(...n){this.children.push(...n);return this}
+ prepend(...n){this.children.unshift(...n);return this}
  appendChild(n){this.children.push(n);return n}
  replaceChildren(...n){this.children=n;return this}
  setAttribute(){}
@@ -37,9 +38,9 @@ const document={
  querySelector(sel){if(!nodes.has(sel))nodes.set(sel,new FakeNode('div'));return nodes.get(sel)}
 };
 const window={
- FluxiaWalletAudit:wallet,localStorage:{getItem(){return null},setItem(){}},sessionStorage:{getItem(){return null}},scrollTo(){}
+ FluxiaWalletAudit:wallet,localStorage:{getItem(){return null},setItem(){},removeItem(){}},sessionStorage:{getItem(){return null},removeItem(){}},fetch:async()=>({ok:true}),scrollTo(){}
 };
-new Function('window','document','const localStorage=window.localStorage; (() => {'+js)(window,document);
+new Function('window','document','const localStorage=window.localStorage,fetch=window.fetch; (() => {'+js)(window,document);
 const pages=['inicio','ingresos','fijos','variables','huchas','compartidos','financiaciones','efectivo','presupuestos','analisis','simulador','pagos','notificaciones','ajustes','ayuda'];
 let passed=0;
 for(const id of pages){
