@@ -46,10 +46,11 @@ export function compareSnapshots(html, elite) {
     const x=html.ledger?.[key], y=elite.ledger?.[key];
     month_ledger_delta_cents[key] = Number.isSafeInteger(x)&&Number.isSafeInteger(y) ? y-x : null;
   }
-  const certified = !missing_from_elite.length && !unexpected_in_elite.length &&
+  const nonemptyOperationalEvidence = a.size > 0 && b.size > 0;
+  const certified = nonemptyOperationalEvidence && !missing_from_elite.length && !unexpected_in_elite.length &&
     !same_id_value_mismatch.length && !bank_identity_collisions.length &&
     Object.values(month_ledger_delta_cents).every(v=>v===0);
-  return {certified, missing_from_elite, unexpected_in_elite, same_id_value_mismatch,
+  return {certified, nonemptyOperationalEvidence, missing_from_elite, unexpected_in_elite, same_id_value_mismatch,
     bank_identity_collisions, month_ledger_delta_cents,
     html_count:a.size, elite_count:b.size, scope:{profile_id:html.profile_id, accounting_month:html.accounting_month, cutoff:html.cutoff}};
 }
