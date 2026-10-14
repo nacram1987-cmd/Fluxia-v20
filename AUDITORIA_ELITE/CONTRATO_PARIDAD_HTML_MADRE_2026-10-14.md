@@ -61,3 +61,14 @@ No conformidad = diferencia no explicada. Cero líneas ausentes / cero diferenci
 ## Seguimiento
 Primera acción: auditar el registro original vigente de 14/10 para reconocer los 51 gastos y el cargo de 7,50 €, obtener IDs (CSV no los contiene), y comparar resultados con el mismo perfil de Élite.
 **No sustituir ni modificar la aplicación estable durante la auditoría.**
+
+## 6. Dinero en mano, Presupuestos, Análisis y Simular (cobertura obligatoria)
+- **Dinero en mano es dinero físico, no Disponible.** En el HTML la clave principal de cartera es v2_efectivo, con saldo y movimientos. Meter dinero aumenta solo cartera; gastar disminuye cartera y crea un gasto Variable con gastoId/efectivoId, sin doble contabilización; pagar desde provisión disminuye cartera y saldo de provisión sin segundo cargo en Disponible.
+- La cartera exige edición/borrado reversible y con vínculo al Variable o al uso de provisión original; nunca deduplicar por solo concepto/fecha/importe.
+- Las vistas Élite v1.9.x leen v2_efectivo o planRescate_v2_efectivo en modo seguro, **rotulando fecha y origen**. La copia cloud del 05/10 contiene saldo 0, pero eso **NO demuestra cartera actual a 14/10**.
+- La importación opcional del backup «💾 Copia solo este perfil» verifica ID de perfil idéntico al de la cuenta Élite y acepta solo la clave exacta de cartera del perfil. Se procesa en memoria, sin nube, guardado ni mezcla de usuarios.
+- Presupuestos: límites por categoría; análisis y estadísticas deben utilizar el motor original y no dar por conciliados los importes de CSV sin IDs.
+- Simulador: no mostrar un Disponible inventado; hasta contar con Disponible validado, solo se permite un diferencial hipotético expresamente identificado como parcial.
+- Menú y Dashboard: mantener Inicio, Ingresos, Fijos, Variables, Huchas, Compartidos, Financiaciones, Dinero en mano, Pagos, Presupuestos, Simulador, Análisis, Bancos, Notificaciones, Ajustes y Ayuda, con navegación visual compacta.
+- Ninguna pantalla de lectura de estos módulos equivale a CRUD de producción. Falta QA transaccional antes de habilitar operaciones definitivas.
+
