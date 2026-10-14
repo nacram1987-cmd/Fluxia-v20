@@ -13,6 +13,7 @@ targets:
       - path: FluxiaEliteApp.swift
       - path: FluxiaEliteAppView.swift
       - path: FluxiaLoginView.swift
+      - path: FluxiaRealRecordsView.swift
       - path: FluxiaLedger.swift
       - path: FluxiaAuthClient.swift
       - path: FluxiaCloudReader.swift
