@@ -7,6 +7,15 @@ import Foundation
 @MainActor
 struct FluxiaRealRecordsView: View {
     let records: [FluxiaCloudReader.Record]
+    let initialKey: String
+    let showModulePicker: Bool
+
+    init(records: [FluxiaCloudReader.Record], initialKey: String = "planRescate_v2_movimientos", showModulePicker: Bool = true) {
+        self.records = records
+        self.initialKey = initialKey
+        self.showModulePicker = showModulePicker
+        self._selectedKey = State(initialValue: initialKey)
+    }
 
     private struct Module: Identifiable {
         let title: String
@@ -70,6 +79,7 @@ struct FluxiaRealRecordsView: View {
                 .font(.headline)
             Text("Consulta directa, sin editar, conciliar ni recalcular saldos. La app HTML continúa siendo la fuente de verdad.")
                 .font(.caption).foregroundStyle(.secondary)
+            if showModulePicker {
             Picker("Módulo", selection: $selectedKey) {
                 ForEach(modules) { module in
                     Text(module.title).tag(module.canonicalKey)
@@ -77,6 +87,7 @@ struct FluxiaRealRecordsView: View {
             }
             .pickerStyle(.menu)
             .onChange(of: selectedKey) { _, _ in showAll = false; searchTerm = "" }
+            }
             TextField("Buscar conceptos reales", text: $searchTerm)
                 .textInputAutocapitalization(.never)
                 .textFieldStyle(.roundedBorder)
@@ -112,6 +123,11 @@ struct FluxiaRealRecordsView: View {
                       systemImage: "exclamationmark.triangle")
                     .font(.subheadline).foregroundStyle(.orange)
             }
+        }
+        .onChange(of: initialKey) { _, newValue in
+            selectedKey = newValue
+            showAll = false
+            searchTerm = ""
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
