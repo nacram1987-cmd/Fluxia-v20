@@ -12,6 +12,8 @@ permissions:
 jobs:
   ios-simulator:
     runs-on: macos-15
+    env:
+      HAS_APPETIZE_TOKEN: ${{ secrets.APPETIZE_API_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v4
       - name: Install XcodeGen
@@ -45,8 +47,6 @@ jobs:
           apiToken: ${{ secrets.APPETIZE_API_TOKEN }}
           appFile: FluxiaEliteBeta-iOS-Simulator.zip
           platform: ios
-        env:
-          HAS_APPETIZE_TOKEN: ${{ secrets.APPETIZE_API_TOKEN != '' }}
       - name: Native simulator build summary
         if: always()
         run: |
