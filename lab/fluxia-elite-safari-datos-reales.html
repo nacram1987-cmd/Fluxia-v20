@@ -152,7 +152,7 @@ h1{color:#18364b}
 .welcomeActions .next{background:#142d49;color:white;flex:1;font-weight:700}.welcomeActions .skip{background:transparent;color:#677581}
 .welcomeProgress{height:4px;border-radius:10px;background:#e7e7df;overflow:hidden}.welcomeProgress i{height:100%;display:block;background:#b89352}
 </style></head><body><div id="app">
-<header><img class="brandIcon" src="../fluxia-icon.png" alt="Icono original Fluxia"><div class="brand"><strong>fluxia</strong><small>ÉLITE BETA · v1.8.0</small></div><div class="grow"></div><button id="help" class="textbutton hide">Ayuda</button><button id="logout" class="textbutton hide">Salir</button></header>
+<header><img class="brandIcon" src="../fluxia-icon.png" alt="Icono original Fluxia"><div class="brand"><strong>fluxia</strong><small>ÉLITE BETA · v1.9.0</small></div><div class="grow"></div><button id="help" class="textbutton hide">Ayuda</button><button id="logout" class="textbutton hide">Salir</button></header>
 <main class="content" id="content"><div class="loading"><div class="spinner"></div>Preparando vista de contraste…</div></main>
 <nav id="bottom" class="bottom hide"></nav></div>
 <div id="splash" role="status" aria-live="polite"><div><img class="splashLogo" src="../fluxia-icon.png" alt="Logo oficial Fluxia"><h1>fluxia</h1><span class="splashBeta">ÉLITE BETA</span><div class="spinner"></div><p class="splashStatus" id="splashStatus">Conectando con tu nube…</p></div></div>
@@ -182,7 +182,7 @@ const $=s=>document.querySelector(s),el=(tag,cls,txt)=>{const n=document.createE
 const money=v=>typeof v==='number'&&isFinite(v)?new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(v):null;
 const field=(obj,keys)=>{for(const k of keys){let v=obj[k];if(typeof v==='string'&&v.trim())return v}return null};
 const canon=m=>{const a=items[m.key];return Array.isArray(a)?a:null};
-const ELITE_SAFARI_VERSION='1.8.0';
+const ELITE_SAFARI_VERSION='1.9.0';
 const ELITE_CHANGELOG=[
  ['1.9.0','Recuperación de Dinero en mano, Presupuestos, Simular, Análisis, Ajustes y Ayuda del HTML madre con navegación compacta, fuentes originales separadas y prohibición de saldos actuales desde copias antiguas.'],
  ['1.8.0','Importación CSV local de Variables del HTML, comparación multiconjunto por campos, control de categorías, importes y diferencias sin alterar nube, y filtros de Variables alineados con motor original.'],
