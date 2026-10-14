@@ -2265,6 +2265,8 @@ function reconstructedHuchaLedger(huchas,uses){
  if(!Array.isArray(huchas)||!Array.isArray(uses))return report;
  const detail=new Map();
  for(let i=0;i<huchas.length;i++){
+  const nested=huchas[i];
+  if(['rescates','usos','movimientos','historial'].some(k=>Array.isArray(nested?.[k])&&nested[k].length))report.unresolved++;
   const h=huchas[i],id=String(h?.id??'').trim();
   if(!id||detail.has(id)){report.duplicates++;continue}
   detail.set(id,{id,name:String(h.nombre||'Hucha'),grossCents:contributions.details[i]?.cents||0,withdrawnCents:0,replacedCents:0,issues:0,count:0})
