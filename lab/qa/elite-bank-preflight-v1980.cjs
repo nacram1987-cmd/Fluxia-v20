@@ -1,1 +1,11 @@
-J3VzZSBzdHJpY3QnOwpjb25zdCBhc3NlcnQ9cmVxdWlyZSgnbm9kZTphc3NlcnQvc3RyaWN0Jyk7CmNvbnN0IGZzPXJlcXVpcmUoJ25vZGU6ZnMnKTsKY29uc3QgaHRtbD1mcy5yZWFkRmlsZVN5bmMocmVxdWlyZSgnbm9kZTpwYXRoJykuam9pbihfX2Rpcm5hbWUsJy4uL2ZsdXhpYS1lbGl0ZS1zYWZhcmktZGF0b3MtcmVhbGVzLmh0bWwnKSwndXRmOCcpOwphc3NlcnQubWF0Y2goaHRtbCwvRUxJVEVfU0FGQVJJX1ZFUlNJT049JzFcLjlcLig/OjgwfDgxfDgyfDgzfDg0fDg1fDg2fDg3fDg4fDg5KScvKTsKYXNzZXJ0Lm1hdGNoKGh0bWwsL2Z1bmN0aW9uIHJlbmRlckJhbmtBZGFwdGVyUmVhZGluZXNzXChcKS8pOwphc3NlcnQubWF0Y2goaHRtbCwvUHJldmlzdWFsaXphY2lbb8OzXW4gc2luIGVzY3JpdHVyYS8pOwphc3NlcnQubWF0Y2goaHRtbCwvZmx1eGlhLWVsaXRlLWJhbmstYWRhcHRlci12MVwuanMvKTsKYXNzZXJ0Lm1hdGNoKGh0bWwsL2ZsdXhpYS1lbGl0ZS1iYW5rLWNvbm5lY3Rvci12MVwuanMvKTsKYXNzZXJ0LmRvZXNOb3RNYXRjaChodG1sLC88c2NyaXB0W14+XStzcmM9WyInXVteIiddKnN1cGFiYXNlW14iJ10qWyInXS9pLCdFbGl0ZSBtdXN0IG5vdCBhZGQgYSBzZWNvbmQgZGlyZWN0IGJhbmtpbmcgY2xpZW50Jyk7CmNvbnNvbGUubG9nKCdQQVNTIHYxLjkuODAgYmFuayBwcmVmbGlnaHQgaW50ZWdyYXRpb24gY29udHJhY3QnKTsK
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const html=fs.readFileSync(require('node:path').join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.(?:80|81|82|83|84|85|86|87|88|89)'/);
+assert.match(html,/function renderBankAdapterReadiness\(\)/);
+assert.match(html,/Previsualizaci[oó]n sin escritura/);
+assert.match(html,/fluxia-elite-bank-adapter-v1\.js/);
+assert.match(html,/fluxia-elite-bank-connector-v1\.js/);
+assert.doesNotMatch(html,/<script[^>]+src=["'][^"']*supabase[^"']*["']/i,'Elite must not add a second direct banking client');
+console.log('PASS v1.9.80 bank preflight integration contract');
