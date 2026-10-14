@@ -2191,6 +2191,39 @@ function huchaUsesAudit(huchas,uses){
  }
  return result
 }
+function huchaReplenishmentAudit(huchas,uses){
+ const result={ready:Array.isArray(huchas)&&Array.isArray(uses),verified:0,verifiedCents:0,unknown:0,duplicates:0,summaryConflict:0,missingHistory:0,perHucha:{}};
+ if(!result.ready)return result;
+ const useIds=new Set(),repIds=new Set();
+ for(const use of uses){
+  if(!use||typeof use!=='object')continue;
+  const uid=String(use.id??'').trim();
+  if(!uid||useIds.has(uid)){result.duplicates++;continue}
+  useIds.add(uid);
+  if(String(use.tipo||'').toLowerCase()!=='temporal')continue;
+  const link=exactHuchaUsageLink(use,huchas);
+  if(link.kind!=='linked'){result.unknown++;continue}
+  const records=use.reposiciones;
+  if(!Array.isArray(records)){
+   if(typeof use.repuesto==='number'&&use.repuesto>0)result.missingHistory++;
+   continue
+  }
+  let localCents=0,allValid=true;
+  for(const rep of records){
+   const id=String(rep?.id??'').trim(),amount=rep?.importe,reference=uid+'|'+id;
+   if(!id||typeof amount!=='number'||!Number.isFinite(amount)||amount<0){result.unknown++;allValid=false;continue}
+   if(repIds.has(reference)){result.duplicates++;allValid=false;continue}
+   repIds.add(reference);
+   const cents=Math.round(amount*100);
+   localCents+=cents;result.verifiedCents+=cents;result.verified++
+   const hid=String(link.hucha.id);
+   if(!result.perHucha[hid])result.perHucha[hid]={cents:0,count:0};
+   result.perHucha[hid].cents+=cents;result.perHucha[hid].count++
+  }
+  if(typeof use.repuesto==='number'&&Number.isFinite(use.repuesto)&&allValid&&Math.round(use.repuesto*100)!==localCents)result.summaryConflict++;
+ }
+ return result
+}
 function huchaUsesFromSource(isHtml){
  if(isHtml){
   if(backupFinance?.owner!==owner||backupFinance?.profile!==activeProfile)return null;
