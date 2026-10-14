@@ -689,7 +689,7 @@ function loginScreen(){
    }
    draftEdits.clear();token=data.access_token;owner=data.user.id;
   }catch(e){
-   token='';owner='';activeProfile='';items={};hideLoading();status(e.message||'No se ha podido iniciar sesión');return
+   token='';owner='';activeProfile='';items={};hideLoading();btn.disabled=false;status(e.message||'No se ha podido iniciar sesión');return
   }finally{pass.value=''}
   try{showLoading('Sesión confirmada · recuperando tus datos de Supabase…');await discoverAndLoadProfiles()}
   catch(e){showAuthenticatedLoadError(e)}
