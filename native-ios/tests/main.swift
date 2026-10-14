@@ -104,3 +104,37 @@ check(AccountIsolation.authorize(record: aliceRecord, authenticatedUserID: " ") 
 check(AccountIsolation.visibleRecords([aliceRecord, bobRecord], authenticatedUserID: "alice") == [aliceRecord], "user sees only own records")
 check(AccountIsolation.visibleRecords([aliceRecord, bobRecord], authenticatedUserID: nil).isEmpty, "signed-out user sees no records")
 print("Account isolation: 6 checks passed")
+
+
+var lifecycle = LedgerLifecycle.Record(id: "ledger-1", ownerID: "synthetic-user")
+let archived = lifecycle.apply(.archive, operationID: "op-1", authenticatedOwnerID: "synthetic-user")
+check(archived.disposition == .applied && archived.state == .archived && archived.revision == 1,
+      "active record archives and increments revision")
+check(archived.event?.previousState == .active && archived.event?.resultingState == .archived,
+      "lifecycle mutation records an auditable before/after event")
+let replayedArchive = lifecycle.apply(.archive, operationID: "op-1", authenticatedOwnerID: "synthetic-user")
+check(replayedArchive.disposition == .duplicateOperation && lifecycle.revision == 1 && lifecycle.auditTrail.count == 1,
+      "replaying an operation is idempotent and does not append audit events")
+let crossOwnerMutation = lifecycle.apply(.moveToTrash, operationID: "op-2", authenticatedOwnerID: "other-user")
+check(crossOwnerMutation.disposition == .rejected && lifecycle.state == .archived,
+      "a different owner cannot mutate a record")
+let trashed = lifecycle.apply(.moveToTrash, operationID: "op-3", authenticatedOwnerID: "synthetic-user")
+check(trashed.disposition == .applied && trashed.state == .trashed,
+      "archived record can move to trash")
+let restored = lifecycle.apply(.restore, operationID: "op-4", authenticatedOwnerID: "synthetic-user")
+check(restored.disposition == .applied && restored.state == .active && lifecycle.auditTrail.count == 3,
+      "explicit restore recovers a trashed record with its audit history")
+let movedAgain = lifecycle.apply(.moveToTrash, operationID: "op-5", authenticatedOwnerID: "synthetic-user")
+let deleted = lifecycle.apply(.permanentlyDelete, operationID: "op-6", authenticatedOwnerID: "synthetic-user")
+check(movedAgain.state == .trashed && deleted.state == .deleted,
+      "permanent deletion leaves a terminal tombstone")
+let resurrection = lifecycle.apply(.restore, operationID: "op-7", authenticatedOwnerID: "synthetic-user")
+check(resurrection.disposition == .rejected && resurrection.state == .deleted,
+      "deleted record cannot be resurrected by restore")
+let invalidIdentity = LedgerLifecycle.Record(id: " ", ownerID: "synthetic-user")
+var invalidCopy = invalidIdentity
+check(invalidCopy.apply(.archive, operationID: "op-8", authenticatedOwnerID: "synthetic-user").disposition == .rejected,
+      "whitespace-only record identity fails closed")
+check(invalidCopy.apply(.archive, operationID: " ", authenticatedOwnerID: "synthetic-user").disposition == .rejected,
+      "whitespace-only operation key fails closed")
+print("Ledger lifecycle: 10 synthetic state, ownership, audit and replay checks passed")
