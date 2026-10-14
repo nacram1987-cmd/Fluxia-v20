@@ -37,7 +37,7 @@ const document={
 const window={
  FluxiaWalletAudit:wallet,localStorage:{getItem(){return null},setItem(){}},sessionStorage:{getItem(){return null}},scrollTo(){}
 };
-new Function('window','document','const localStorage=window.localStorage;'+js)(window,document);
+new Function('window','document','const localStorage=window.localStorage; (() => {'+js)(window,document);
 const pages=['inicio','ingresos','fijos','variables','huchas','compartidos','financiaciones','efectivo','presupuestos','analisis','simulador','pagos','notificaciones','ajustes','ayuda'];
 let passed=0;
 for(const id of pages){
