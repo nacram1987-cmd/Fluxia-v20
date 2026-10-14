@@ -6,7 +6,7 @@ const vm=require('node:vm');
 const root=path.join(__dirname,'..');
 const html=fs.readFileSync(path.join(root,'fluxia-elite-safari-datos-reales.html'),'utf8');
 const source=fs.readFileSync(path.join(root,'js/fluxia-elite-bank-connector-v1.js'),'utf8');
-assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.(?:84|85|86|87|88|89|90|91|92)'/);
+assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.(?:84|85|86|87|88|89|90|91|92|93)'/);
 assert.match(html,/Bienvenido a mi Fluxia/);
 assert.match(html,/fluxia-elite-bank-connector-v1\.js/);
 assert.match(html,/Comprobar conexión bancaria/);
