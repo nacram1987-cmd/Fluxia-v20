@@ -1,6 +1,24 @@
 # Fluxia Élite BETA · Historial Safari (independiente de PWA HTML y SwiftUI)
 Fecha: 2026-10-14
 
+## v1.8.0 · Conciliación local de CSV original y variables por política HTML (14/10/2026)
+
+**Novedades ejecutables y dónde comprobarlas**
+- **Inicio → Espejo del HTML / Variables → Espejo del HTML:** Importar localmente el CSV real del mismo periodo desde Safari/iPhone sin enviar el fichero a Supabase ni guardar la información en localStorage.
+- **Variables → Categorías del HTML:** filas completas agrupadas por categoría, subtotal exportado expresado en céntimos, fecha, concepto y coincidencia/no coincidencia por cinco campos (fecha, concepto, categoría, importe y origen).
+- **Variables → Integridad:** filas sin coincidencia con la colección de nube del perfil autenticado; repeticiones exactas del CSV señaladas solo como posibles duplicidades, nunca eliminadas. El contador de 51 del HTML y 52 filas del CSV se muestran como discrepancia sin resolver.
+- **Variables → 14/10:** alerta de cargo declarado de 7,50 € (gasolinera, categoría Tabaco) ausente del CSV, si efectivamente falta. No se crea una transacción sintética.
+- **Variables → Listado del mes:** aplicación de filtros conocidos del motor original `esMovimientoVariable` (enlaces a Fijos, traspasos, efectivo, exclusiones). Los movimientos excluidos no se eliminan de la nube.
+- **Checklist → Versiones:** solo novedades de v1.8.0 en checklist y enlaces a copias históricas; restaurada la copia v1.7.0 que faltaba.
+
+**Fuentes comprobadas:** Archivo del usuario `fluxia-variables-Octubre.csv`: 52 filas, 811,39 €, seis filas extra sobre tuplas idénticas agrupadas en cinco grupos. No están confirmados duplicados por ID; la app no deduplica al contabilizar. Los importes en CSV son de origen, no el Disponible.
+
+**QA:** 16/16 pruebas sintéticas del módulo JS `lab/qa/espejo-csv-regression.cjs` superadas, más pruebas previas 10/10 de invariantes del libro mayor. Nuevo workflow `.github/workflows/fluxia-elite-espejo-qa.yml` para ejecutar estas pruebas y verificar que el snapshot acompaña cada versión. Aún no certificada la ejecución de GitHub Actions en remoto ni Safari real.
+
+**Rollback:** https://nacram1987-cmd.github.io/Fluxia-v20/lab/versions/fluxia-elite-safari-v1.8.0.html
+
+**Pendiente P0:** igualdad 51/51 por ID/estado/importe, reconciliar exportación de 52 y movimiento de 7,50 €, integrar banco original sin segundo registro y certificar 0,00 € de diferencia. No se permiten escrituras financieras ni promoción de la HTML estable.
+
 ## v1.6.0 · Paridad bloqueada por fuente anticuada (14/10/2026)
 - **Regla imperial y referencia de aceptación del usuario:** 51 gastos variables en octubre 2026, según HTML madre. La vista Élite actual no los reproduce. No se permite declarar 51/51 hasta reconciliación por ID, fecha, importe, estado y origen.
 - **Hallazgo de raíz confirmado con SQL:** los registros de `p_usr-…__planRescate_v2_movimientos` y `p_usr-…__v2_movimientos`, y las dos familias de fijos, llevan `updated_at=2026-10-05`. Sus 11/14 cargos fechados en octubre son una instantánea anticuada. Supabase sí recibió cinco claves de actividad bancaria/identidad el 13–14 octubre, pero no son las colecciones de movimientos que usa Élite.
