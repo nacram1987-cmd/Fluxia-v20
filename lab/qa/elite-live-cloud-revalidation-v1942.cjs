@@ -1,0 +1,17 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+const a=html.indexOf('function compareRemoteFinancialSnapshot('),b=html.indexOf('async function verifyLiveFinancialSnapshot(',a);
+assert(a>=0&&b>a);
+const ctx=vm.createContext({canonicalFinancialValue:x=>x});vm.runInContext(html.slice(a,b),ctx);
+const keys=['ingresos','fijos','movimientos','provisiones','compartidos','financiaciones'].map(x=>'planRescate_v2_'+x),owner='test-owner',profile='test-profile';
+const saved={owner,profile,modules:{}},rows=keys.map(key=>{const v=[{id:key,importe:10}];saved.modules[key]={updatedAt:'2026-10-14T10:00:00Z',snapshot:JSON.stringify(v)};return {user_id:owner,clave:profile+key,updated_at:'2026-10-14T10:00:00Z',v}});
+const check=(arr)=>ctx.compareRemoteFinancialSnapshot(saved,arr,owner,profile,keys);
+assert.equal(check(rows).ok,true);
+assert.equal(check(rows.slice(0,5)).reason,'REMOTE_MODULES_MISSING');
+assert.equal(check(rows.map((x,i)=>i===0?{...x,user_id:'other'}:x)).reason,'REMOTE_IDENTITY_OR_DUPLICATES');
+assert.equal(check(rows.map((x,i)=>i===2?{...x,v:[{id:x.clave,importe:20}]}:x)).reason,'REMOTE_CLOUD_CHANGED');
+assert.equal(check(rows.map((x,i)=>i===3?{...x,updated_at:'newer'}:x)).reason,'REMOTE_CLOUD_CHANGED');
+assert(html.includes("const ELITE_SAFARI_VERSION='1.9.42'"));
+for(const part of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(part[1])new vm.Script(part[1]);
+console.log('PASS v1.9.42: remote snapshot, changed data, timestamp, owner, missing module, JS syntax');
