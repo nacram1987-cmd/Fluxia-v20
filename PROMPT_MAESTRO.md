@@ -1,6 +1,15 @@
 # 📋 PROMPT MAESTRO FLUXIA v93.8.2+
 ## Biblia de desarrollo, versionado, QA y entrega profesional
 
+## Adenda Élite v1.9.97 — evidencia antes de certificar (15/10/2026)
+
+- La cabecera de Élite agrupa icono y nombre en un único bloque central; Salir pertenece a Ajustes y no compite con la marca. Las pestañas inferiores continúan siendo la navegación principal.
+- Un error de red/servidor al renovar Auth no borra la sesión recordada. Un token inválido o de otra identidad sí bloquea el acceso; un fallo posterior de carga deja la sesión autenticada con reintento seguro.
+- La transición entre cuentas limpia primero todo estado privado en memoria. El cierre local actual **no equivale a revocación de servidor**; no afirmar lo contrario.
+- Interpretar los advisors de Supabase con el catálogo y código real: RLS activo sin políticas bloquea acceso directo; un aviso `SECURITY DEFINER` exige revisar la función, no prueba automáticamente una fuga.
+- No promover Élite, habilitar escrituras financieras ni declarar aislamiento comercial hasta comparar HTML y Élite al mismo corte, probar dos usuarios reales de QA y verificar Edge/RLS y recuperación. La estable permanece intacta sin orden de promoción.
+- Cada versión debe alinear título, metadato, runtime y marca, comprobar bytes HTTP de Pages y documentar pruebas no ejecutadas. Ver `AUDITORIA_ELITE/RECTIFICACION_Y_AVANCE_v1.9.97.md`.
+
 **Versión de este documento:** 3.0  
 **Aplicable desde:** index_fluxia_v93.8.2.html en adelante  
 **Último revisado:** 29 Septiembre 2026  
