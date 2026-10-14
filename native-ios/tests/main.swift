@@ -145,3 +145,48 @@ check(invalidCopy.apply(.archive, operationID: "op-8", authenticatedOwnerID: "sy
 check(invalidCopy.apply(.archive, operationID: " ", authenticatedOwnerID: "synthetic-user").disposition == .rejected,
       "whitespace-only operation key fails closed")
 print("Ledger lifecycle: 10 synthetic state, ownership, audit and replay checks passed")
+
+
+let september = MonthlyLedgerProjection.Period(year: 2026, month: 9)!
+let october = MonthlyLedgerProjection.Period(year: 2026, month: 10)!
+func ledgerEntry(_ id: String, _ month: MonthlyLedgerProjection.Period, _ kind: MonthlyLedgerProjection.Kind,
+                 _ cents: Int64, posting: MonthlyLedgerProjection.Posting = .included) -> MonthlyLedgerProjection.Entry {
+    .init(id: id, ownerID: "synthetic-user", period: month, kind: kind, amountCents: cents, posting: posting)
+}
+let historyEntries = [
+    ledgerEntry("sep-income", september, .income, 200_000),
+    ledgerEntry("sep-fixed", september, .fixedExpense, 50_000),
+    ledgerEntry("sep-variable", september, .variableExpense, 30_000),
+    ledgerEntry("sep-plan", september, .plannedProvision, 20_000),
+    ledgerEntry("sep-contribution", september, .provisionContribution, 25_000),
+    ledgerEntry("oct-income", october, .income, 300_000),
+    ledgerEntry("oct-fixed", october, .fixedExpense, 40_000),
+    ledgerEntry("oct-variable", october, .variableExpense, 10_000),
+    ledgerEntry("oct-plan", october, .plannedProvision, 15_000),
+    ledgerEntry("sep-excluded", september, .variableExpense, 900_000, posting: .excluded)
+]
+let septemberProjection = MonthlyLedgerProjection.project(entries: historyEntries, authenticatedOwnerID: "synthetic-user", period: september)
+let octoberProjection = MonthlyLedgerProjection.project(entries: historyEntries, authenticatedOwnerID: "synthetic-user", period: october)
+check(FinanceRules.availableCents(septemberProjection!) == 95_000,
+      "September historical entries and provision excess affect September only")
+check(FinanceRules.availableCents(octoberProjection!) == 235_000,
+      "October projection excludes September and excluded records")
+check(MonthlyLedgerProjection.project(entries: historyEntries, authenticatedOwnerID: nil, period: october) == nil,
+      "anonymous monthly projection fails closed")
+var mixedOwners = historyEntries
+mixedOwners.append(.init(id: "foreign", ownerID: "other-user", period: october, kind: .income, amountCents: 9_000, posting: .included))
+check(MonthlyLedgerProjection.project(entries: mixedOwners, authenticatedOwnerID: "synthetic-user", period: october) == nil,
+      "mixed-owner input is rejected instead of silently mixing account data")
+var duplicateLedgerIDs = historyEntries
+duplicateLedgerIDs.append(ledgerEntry("oct-income", september, .income, 1))
+check(MonthlyLedgerProjection.project(entries: duplicateLedgerIDs, authenticatedOwnerID: "synthetic-user", period: october) == nil,
+      "duplicate record ID across periods is rejected")
+var overflowLedger = [
+    ledgerEntry("large-a", october, .income, Int64.max),
+    ledgerEntry("large-b", october, .income, 1)
+]
+check(MonthlyLedgerProjection.project(entries: overflowLedger, authenticatedOwnerID: "synthetic-user", period: october) == nil,
+      "monthly aggregation rejects Int64 overflow")
+check(MonthlyLedgerProjection.Period(year: 2026, month: 13) == nil,
+      "invalid month cannot enter the projection")
+print("Monthly ledger projection: 7 historical-period, exclusion, identity and overflow checks passed")
