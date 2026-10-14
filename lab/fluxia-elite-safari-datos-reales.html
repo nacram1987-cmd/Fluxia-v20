@@ -358,11 +358,14 @@ const datedRows=m=>{
  return rows
 };
 const ELITE_CHECKLIST=[
- ['Variables · CSV del HTML','📥 Importar y comparar gastos del HTML','Selecciona el CSV de Variables del mes desde el iPhone; compara localmente los registros exportados con tu copia de nube sin guardar nada.'],
- ['Variables · Categorías','📊 Desglose de cargos por categoría','Cada categoría muestra número de movimientos e importe exportado, con correspondencia o falta de coincidencia en la nube.'],
- ['Variables · Duplicados','🔎 Detectar coincidencias repetidas','Se señalan tuplas idénticas como candidatas a revisión, nunca como duplicados bancarios demostrados ni registros que deban eliminarse.'],
- ['Fijos y Variables','🛡️ Filtro compatible con el HTML original','Variables deja fuera los fijos vinculados, traspasos, efectivo y exclusiones conocidas; no altera registros de origen.'],
- ['Seguridad · Sesión','🔒 CSV transitorio sin escritura','Al cerrar sesión o cambiar de perfil, el CSV desaparece de la app; no se envía a Supabase ni cambia Disponible.']
+ ['Inicio · accesos compactos','💵 Recuperado Dinero en mano','Nuevo acceso a la cartera física junto al resto de herramientas originales del HTML, sin saturar la barra inferior.'],
+ ['Más → Tus finanzas','📋 Todos los módulos principales','Ingresos, Compartidos, Financiaciones, Dinero en mano y Pagos/Usos organizados por grupos.'],
+ ['Dinero en mano','💶 Saldo e historial de origen','Lectura autenticada de v2_efectivo o planRescate_v2_efectivo: fecha de copia, entradas, gastos, usos de provisión e historial del mes, sin confundirlo con Disponible.'],
+ ['Dinero en mano','🛡️ Operaciones protegidas','Meter, Gastar y Provisión explican sus efectos originales y llevan al HTML operativo; no simulan escrituras en nube.'],
+ ['Más → Planificación','💰 Presupuestos y 📈 Análisis','Presupuestos históricos con límites/categorías y, si hay CSV del mismo mes, gastos observados por categoría. Análisis visual sin importes inventados.'],
+ ['Más → Planificación','🔮 Simulador local','Calcula la diferencia hipotética de ingreso, gasto y ahorro; no presenta un Disponible sin conciliar ni cambia registros.'],
+ ['Más → Control y ayuda','⚙️ Ajustes, 🔔 Notificaciones y ❓ Ayuda','Estado de fuentes, enlaces al HTML original y explicación clara de los módulos pendientes de sincronizar.'],
+ ['Seguridad · Cambio de usuario','🔒 Sin datos cruzados','Al salir se limpian fuentes adicionales, perfil, comparaciones y CSV importado. Ninguna pantalla usa saldos de otra cuenta.']
 ];
 function renderChecklist(parent){
  const box=el('section','checklistPanel');box.append(el('h3',null,'Checklist de novedades · v'+ELITE_SAFARI_VERSION));
@@ -890,7 +893,7 @@ function renderWallet(){
  for(const m of (monthly?.records||[]).slice(0,60)){
   const item=el('div','legacyMovementCard'),icon=el('span','legacyMovementIcon',m.clase==='entrada'?'💶':m.tipo==='salida_provision'?'🏺':'🛒'),body=el('div','legacyMovementBody');
   body.append(el('strong',null,m.concepto||'Movimiento de cartera'),el('small',null,(m.fecha||'Fecha no válida')+' · '+(m.tipo==='salida_provision'?'Pago desde provisión':m.tipo==='entrada'?'Entrada de efectivo':'Gasto en efectivo')));
-  item.append(icon,body,el('strong','legacyMoney',m.cents===null?'—':(m.clase==='salida'?'−':'+')+money(m.cents/100)));$('#content').append(item)
+  item.append(icon,body,el('strong','legacyMoney',m.cents===null?'—':(m.clase==='salida'?'−':m.clase==='entrada'?'+':'')+money(m.cents/100)));$('#content').append(item)
  }
  if(monthly?.records.length>60)$('#content').append(el('p','periodHint','Mostrando los primeros 60 movimientos; consulta la versión HTML completa para el histórico.'));
  $('#content').append(motherLink('Editar, borrar o registrar movimientos en el HTML ↗'))
