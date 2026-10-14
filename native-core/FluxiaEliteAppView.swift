@@ -50,7 +50,16 @@ public struct FluxiaEliteAppView: View {
         NavigationStack {
             VStack(spacing: 0) {
                 HStack {
-                    Image(systemName: "sparkle").foregroundStyle(Color(red: 0.74, green: 0.57, blue: 0.26))
+                    AsyncImage(url: URL(string: "https://nacram1987-cmd.github.io/Fluxia-v20/fluxia-icon.png")) { phase in
+                        if let image = phase.image {
+                            image.resizable().scaledToFit()
+                        } else {
+                            Image(systemName: "shield.lefthalf.filled")
+                                .resizable().scaledToFit().foregroundStyle(.secondary)
+                        }
+                    }
+                    .frame(width: 32, height: 32)
+                    .accessibilityLabel("Identidad oficial de Fluxia")
                     Text("fluxia").font(.system(size: 27, weight: .semibold, design: .serif))
                     Text("ÉLITE BETA").font(.system(size: 9, weight: .bold)).foregroundStyle(.brown)
                     Spacer()
