@@ -1,0 +1,23 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+const first=html.indexOf('function sourceMonthAudit('),last=html.indexOf('function renderSourceAudit(){',first);
+assert(first>=0&&last>first,'Missing month source reconciliation');
+const monthStatus=(r,month)=>r.fecha?.slice(0,7)===month?'match':'other';
+const motherComparisonFields=(a,b)=>Object.keys(a).filter(k=>JSON.stringify(a[k])!==JSON.stringify(b[k]));
+const recordAmount=r=>r.importe;
+const context=vm.createContext({monthStatus,motherComparisonFields,recordAmount,Map,Set,String,Math});
+vm.runInContext(html.slice(first,last),context,{timeout:1000});
+const audit=context.sourceMonthAudit;
+const r=(id,importe,date='2026-10-04')=>({id,importe,fecha:date});
+const canonical=[r('old',145.20)];
+const alternate=[...canonical,r('itv',33.28,'2026-10-05'),r('apple',22.99),r('sloppy',8.80)];
+let n=0;function check(name,fn){fn();console.log('PASS',name);n++}
+check('3 missing historic bank charges',()=>assert.equal(audit(canonical,alternate,'2026-10').missing.length,3));
+check('cents exact 6507',()=>assert.equal(audit(canonical,alternate,'2026-10').missingCents,6507));
+check('same ID never double-added',()=>assert.equal(audit(canonical,canonical,'2026-10').missing.length,0));
+check('filter excludes another accounting month',()=>assert.equal(audit(canonical,alternate,'2026-09').missing.length,0));
+check('duplicate alt ID warns',()=>assert.equal(audit(canonical,[...alternate,alternate[1]],'2026-10').duplicateAlternate.length,1));
+check('divergent amount found',()=>assert.equal(audit(canonical,[r('old',146)],'2026-10').different.length,1));
+check('alternate-only records never count as canonical',()=>assert.equal(canonical.length,1));
+console.log('RESULT',n,'synthetic source reconciler checks passed');
