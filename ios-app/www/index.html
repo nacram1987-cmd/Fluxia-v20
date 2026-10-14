@@ -2,20 +2,21 @@
 import {installCloudStatus} from './src/cloud-status-ui.mjs';
 import {createCloudSessionProvider} from './src/cloud-auth.mjs';
 const authStatus=document.getElementById('cloudAuthStatus');
-const auth=createCloudSessionProvider({
+const auth=window.FLUXIA_ELITE_PUBLIC_KEY?createCloudSessionProvider({
  supabaseUrl:'https://kylduzmrfbubeamfrbbr.supabase.co',
  publishableKey:window.FLUXIA_ELITE_PUBLIC_KEY||'',
  dispatchEvent:(name)=>document.dispatchEvent(new Event(name))
-});
-window.fluxiaEliteSessionProvider=()=>auth.getSession();
+}):null;
+window.fluxiaEliteSessionProvider=()=>auth?.getSession()??null;
+if(!auth){authStatus.textContent='Configuración pública pendiente · No se envían credenciales';document.getElementById('cloudSignInButton').disabled=true;}
 document.getElementById('cloudSignInButton').onclick=async()=>{
  const email=document.getElementById('cloudEmail');
  const password=document.getElementById('cloudPassword');
  authStatus.textContent='Verificando credenciales…';
- try{await auth.signIn({email:email.value,password:password.value});authStatus.textContent='Sesión autenticada · Lectura protegida disponible';}
+ try{if(!auth)throw Error('Not configured');await auth.signIn({email:email.value,password:password.value});authStatus.textContent='Sesión autenticada · Lectura protegida disponible';}
  catch{authStatus.textContent='No se ha podido iniciar sesión. Comprueba la configuración y las credenciales.';}
  finally{password.value='';}
 };
-document.getElementById('cloudSignOutButton').onclick=()=>{auth.signOut();document.getElementById('cloudPassword').value='';authStatus.textContent='Sesión cerrada · Datos reales ocultos';};
-installCloudStatus({sessionProvider:()=>auth.getSession()});
+document.getElementById('cloudSignOutButton').onclick=()=>{auth?.signOut();document.getElementById('cloudPassword').value='';authStatus.textContent='Sesión cerrada · Datos reales ocultos';};
+installCloudStatus({sessionProvider:()=>auth?.getSession()??null});
 </script></body></html>
