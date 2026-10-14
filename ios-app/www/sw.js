@@ -1,5 +1,5 @@
 // Only caches the isolated synthetic LAB shell. No real accounts or banking data.
-const CACHE='fluxia-elite-synthetic-lab-1.6';
-self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./index.html','./manifest.webmanifest'])));self.skipWaiting();});
+const CACHE='fluxia-elite-synthetic-lab-1.7';
+self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./index.html','./manifest.webmanifest','./src/cloud-auth.mjs','./src/cloud-status-ui.mjs','./src/supabase-cloud-reader.mjs'])));self.skipWaiting();});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('fluxia-elite-synthetic-lab-')&&k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim();});
 self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET'||u.origin!==self.location.origin||!u.pathname.startsWith(new URL('./',self.registration.scope).pathname))return;const path=u.pathname;if(!/\/(index\.html|manifest\.webmanifest)$/.test(path))return;e.respondWith(fetch(e.request).then(r=>{if(r.ok){const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));}return r;}).catch(()=>caches.match(e.request)));});
