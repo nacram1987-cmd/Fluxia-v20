@@ -311,12 +311,13 @@ const money=v=>typeof v==='number'&&isFinite(v)?new Intl.NumberFormat('es-ES',{s
 const field=(obj,keys)=>{for(const k of keys){let v=obj[k];if(typeof v==='string'&&v.trim())return v}return null};
 const displayName=user=>String(user?.user_metadata?.display_name||user?.user_metadata?.full_name||user?.user_metadata?.name||'').trim();
 const canon=m=>{const a=items[m.key];return Array.isArray(a)?a:null};
-const ELITE_SAFARI_VERSION='1.9.92';
+const ELITE_SAFARI_VERSION='1.9.93';
 if(typeof document!=='undefined')document.title='Fluxia Élite BETA v'+ELITE_SAFARI_VERSION+' · Safari';
 function setupEliteHeader(){
  const header=document.querySelector('header');if(!header||header.dataset.eliteReady)return;
  header.dataset.eliteReady='1';header.classList.add('eliteHeader');
  const style=document.createElement('style');style.textContent='.eliteHeader{position:sticky;display:flex;align-items:center;justify-content:space-between;min-height:58px;padding:8px 12px}.eliteHeader .grow{display:none}.eliteHeader .brand{position:absolute;left:50%;transform:translateX(-50%);align-items:center;text-align:center;white-space:nowrap}.eliteHeader .brand strong{font-size:23px}.eliteHeader .brand small{font-size:8px;letter-spacing:1.2px}.eliteHeaderSide{display:flex;align-items:center;gap:5px;z-index:1}.eliteHeaderAction{width:38px;height:38px;border:0;border-radius:12px;background:transparent;color:#173951;font-size:21px;display:grid;place-items:center}.eliteHeaderAction:active{background:#f3eee4}.eliteHeader #help{display:none}.eliteHeader #logout{font-size:11px}.eliteHeader #eliteNotifications{position:relative}.eliteHeader #eliteNotifications:after{content:"";position:absolute;width:6px;height:6px;border-radius:50%;background:#b68a4e;right:6px;top:6px}.eliteHeader .brandIcon{display:none}@media(max-width:360px){.eliteHeader #logout{display:none}.eliteHeader .brand strong{font-size:21px}}';document.head.append(style);
+ const brandStyle=document.createElement('style');brandStyle.textContent='.eliteHeader .brand{flex-direction:row;gap:7px}.eliteHeader .brandIcon{display:block!important;width:31px;height:31px;border-radius:10px}.eliteHeader .brand strong,.eliteHeader .brand small{display:block}.eliteHeader .brand small{position:absolute;left:38px;top:30px}';document.head.append(brandStyle);
  const left=document.createElement('div');left.className='eliteHeaderSide';const menu=document.createElement('button');menu.id='eliteMenu';menu.className='eliteHeaderAction';menu.type='button';menu.setAttribute('aria-label','Abrir menú Fluxia');menu.textContent='☰';menu.onclick=()=>showMoreModules();left.append(menu);header.insertBefore(left,header.firstChild);
  const bell=document.createElement('button');bell.id='eliteNotifications';bell.className='eliteHeaderAction';bell.type='button';bell.setAttribute('aria-label','Abrir notificaciones');bell.textContent='♧';bell.onclick=()=>navigateElite('notificaciones');header.append(bell);
  const badge=header.querySelector('.brand small');if(badge)badge.textContent='ÉLITE BETA · v'+ELITE_SAFARI_VERSION;
@@ -324,6 +325,7 @@ function setupEliteHeader(){
 function setEliteHeaderAuthenticated(visible){setupEliteHeader();const menu=document.querySelector('#eliteMenu'),bell=document.querySelector('#eliteNotifications');if(menu)menu.classList.toggle('hide',!visible);if(bell)bell.classList.toggle('hide',!visible)}
 if(typeof document!=='undefined')setupEliteHeader();
 const ELITE_CHANGELOG=[
+ ['1.9.93','Fijos frente a Variables: los cargos bancarios con coincidencia conservadora se muestran como candidatos revisables. El movimiento no desaparece ni cambia de categoría automáticamente; la decisión se memoriza aislada y no altera el Disponible.'],
  ['1.9.92','Diseño premium: logo centrado, menú y notificaciones en el encabezado, pestañas inferiores como navegación principal y jerarquía visual más propia de una app nativa.'],
  ['1.9.91','Bancos: la bandeja temporal se fusiona por bankRef en lecturas repetidas. Los duplicados ya vistos no se reintroducen; las filas sin identidad estable no se deduplican por parecido y permanecen pendientes de revisión.'],
  ['1.9.90','Bancos: las decisiones de revisión de conflictos se conservan de forma local y aislada por usuario, perfil y mes. Una recarga o segunda lectura no reabre decisiones ya tomadas; siguen sin escribir movimientos ni Disponible.'],
@@ -925,7 +927,7 @@ function renderNav(){
   b.append(btn)
  }
  const more=el('button',!choices.includes(page)?'active':'');
- more.append(el('span','sym','☷'),el('span',null,'Más'));
+ more.append(el('span','sym','⋯'),el('span',null,'Más'));
  more.onclick=showMoreModules;b.append(more);
 }
 const legacyNavGroups=[
@@ -1064,6 +1066,7 @@ function showBanksAudit(){
  actions.append(check,sync);d.append(actions,state);
  d.append(el('p','notice','La sincronización de lectura actualiza el estado de la conexión bancaria y descarga una bandeja temporal. No guarda movimientos nuevos en Supabase ni los suma al Disponible automáticamente.'));
  d.append(renderBankAdapterReadiness());
+ d.append(renderBankFixedReview());
  $('#detail').classList.add('open');
 }
 
@@ -1145,6 +1148,40 @@ function resolveBankConflict(bankRef,decision){
  saveBankConflictResolutions(next);
  extraFinance={...extraFinance,bankConflictResolutions:next,bankConflictDecisionAt:new Date().toISOString()};
  showBanksAudit();
+}
+
+function bankFixedText(value){return String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('es').replace(/[^a-z0-9]+/g,' ').trim()}
+function bankFixedRows(){return ['v2_fijos','planRescate_v2_fijos'].flatMap(key=>Array.isArray(extraFinance?.[key])?extraFinance[key]:[])}
+function bankFixedAmount(row){const value=row?.importe??row?.importeMensual??row?.amount??row?.valor;const number=Number(value);return Number.isFinite(number)&&number>0?Math.round(number*100):null}
+function bankFixedSuggestions(rows){
+ const fixed=bankFixedRows();if(!fixed.length)return [];
+ const decisions=readBankFixedDecisions(),out=[];
+ for(const row of Array.isArray(rows)?rows:[]){
+  const bankRef=String(row?.bankRef||'').trim(),concept=bankFixedText(row?.concept??row?.concepto),amount=bankFixedAmount(row);if(!bankRef||!concept||amount===null)continue;
+  const candidates=fixed.map(item=>{
+   const fixedId=String(item?.id||item?.fijoId||'').trim(),fixedConcept=bankFixedText(item?.nombre??item?.concepto??item?.descripcion),fixedAmount=bankFixedAmount(item);
+   const explicit=fixedId&&String(row?.fixedId||row?.fijoId||row?.vinculoFijoId||'')===fixedId;
+   const exactText=fixedConcept&&((concept===fixedConcept)||(concept.length>=5&&fixedConcept.length>=5&&(concept.includes(fixedConcept)||fixedConcept.includes(concept))));
+   const exactAmount=fixedAmount!==null&&Math.abs(fixedAmount-amount)<=1,score=(explicit?100:0)+(exactText?60:0)+(exactAmount?35:0);
+   return {item,fixedId,fixedConcept,fixedAmount,score};
+  }).filter(candidate=>candidate.score>=95).sort((a,b)=>b.score-a.score);
+  if(!candidates.length)continue;const best=candidates[0],ambiguous=candidates.length>1&&candidates[1].score===best.score;
+  out.push({bankRef,row,fixed:best.item,fixedId:best.fixedId,label:String(best.item?.nombre||best.item?.concepto||best.fixedId||'Fijo'),amount,score:best.score,ambiguous,alreadyPaid:!!best.item?.pagadoEl,decision:decisions[bankRef]||''});
+ }
+ return out;
+}
+function bankFixedStorageKey(){return 'fluxia_elite_bank_fixed_v1:'+encodeURIComponent(String(owner||''))+':'+encodeURIComponent(String(activeProfile||''))+':'+encodeURIComponent(String(selectedMonth||''))}
+function readBankFixedDecisions(){try{const value=JSON.parse(localStorage.getItem(bankFixedStorageKey())||'{}');return value&&typeof value==='object'&&!Array.isArray(value)?value:{}}catch(_e){return {}}}
+function saveBankFixedDecision(bankRef,decision){const current=readBankFixedDecisions();if(bankRef&&['fixed','variable'].includes(decision))current[String(bankRef)]=decision;try{localStorage.setItem(bankFixedStorageKey(),JSON.stringify(current))}catch(_e){}return current}
+function resolveBankFixed(bankRef,decision){saveBankFixedDecision(bankRef,decision);showBanksAudit()}
+function renderBankFixedReview(){
+ const panel=el('section','integrityPanel');panel.append(el('h3',null,'📌 Variables que podrían ser Fijos'));
+ const inbox=['banco_bandeja','bankInbox','bancoBandeja'].map(key=>extraFinance?.[key]).find(value=>Array.isArray(value))||[],suggestions=bankFixedSuggestions(inbox),pending=suggestions.filter(item=>!item.decision);
+ if(!suggestions.length){panel.append(el('p','periodHint','No hay coincidencias conservadoras entre la bandeja bancaria y los Fijos cargados. No se clasifican cargos por parecido débil.'));return panel}
+ panel.append(el('p','periodHint','Se conservan como Variables hasta que confirmes el enlace. Si aceptas, se prepara la vinculación con el Fijo; el movimiento original sigue visible y no se suma dos veces.'));
+ for(const item of suggestions.slice(0,50)){const row=el('div','legacySettingRow'),text=el('span',null,item.label+' · '+money(item.amount/100)+(item.ambiguous?' · coincidencia ambigua':'')+(item.alreadyPaid?' · fijo ya pagado':''));row.append(text);const yes=el('button','legacyHelpButton',item.decision==='fixed'?'✓ Fijo':'Es Fijo'),no=el('button','legacyHelpButton',item.decision==='variable'?'✓ Variable':'Es Variable');yes.type='button';no.type='button';yes.onclick=()=>resolveBankFixed(item.bankRef,'fixed');no.onclick=()=>resolveBankFixed(item.bankRef,'variable');row.append(yes,no);panel.append(row)}
+ if(suggestions.length>50)panel.append(el('p','periodHint','Se muestran los primeros 50 candidatos; el resto continúa sin clasificar.'));
+ panel.append(el('p',pending.length?'integrityWarning':'legacySuccess',pending.length?'Pendientes de decisión: '+pending.length+'.':'✓ Todos los candidatos visibles tienen una decisión memorizada.'));return panel
 }
 
 function bankConflictStorageKey(){
