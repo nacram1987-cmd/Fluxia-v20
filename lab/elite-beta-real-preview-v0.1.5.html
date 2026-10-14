@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#142d46"><title>Fluxia Élite BETA · Vista de contraste REAL</title>
+<style>
+:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#18344c;background:#e9edf0}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;}body{display:flex;flex-direction:column;align-items:center;padding:0 0 16px}
+header{width:100%;background:#142d46;color:#fff;padding:11px max(12px,env(safe-area-inset-left));display:flex;align-items:center;justify-content:space-between;gap:8px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:650}.brand img{width:32px;height:32px;object-fit:contain;border-radius:8px}.brand small{display:block;color:#ddb97a;font-size:10px;letter-spacing:1.5px}
+button,a{font:inherit}.actions{display:flex;gap:6px;align-items:center}.actions a,.actions button{background:#254963;color:#fff;border:1px solid #658096;border-radius:9px;text-decoration:none;padding:8px 10px;font-size:12px;cursor:pointer}
+.explain{background:#fff9e9;color:#6e5022;font-size:12px;line-height:1.35;width:100%;padding:9px 12px;text-align:center}
+.stage{width:min(100%,485px);height:calc(100dvh - 122px);min-height:420px;background:white;position:relative;overflow:hidden;box-shadow:0 12px 40px #142d4630;border:1px solid #a9b8c4}
+iframe{width:100%;height:100%;border:0;display:block;background:white}
+.status{font-size:11px;text-align:center;margin:8px 10px;color:#405367}
+@media(min-width:650px){body{padding-bottom:20px}.stage{border:9px solid #233748;border-radius:30px;height:min(810px,calc(100dvh - 140px))}.stage iframe{border-radius:22px}}
+</style></head><body>
+<header><div class="brand"><img src="../fluxia-icon.png" alt="Logo oficial Fluxia"><div>fluxia<small>ÉLITE BETA · CONTRASTE REAL</small></div></div><div class="actions"><button id="reload" type="button" aria-label="Recargar aplicación">↻</button><a id="direct" href="../" target="_blank" rel="noopener">Pantalla completa ↗</a></div></header>
+<div class="explain">La pantalla interior es la <strong>aplicación real de Fluxia</strong>: no hay registros ni saldos inventados. Esta es una carcasa de pruebas web; <strong>no ejecuta SwiftUI</strong>.</div>
+<main class="stage"><iframe id="real" title="Fluxia real con tus datos tras iniciar sesión" src="../" referrerpolicy="same-origin" allow="clipboard-read; clipboard-write"></iframe></main>
+<div class="status" id="status">Misma web y mismo dominio de Fluxia · sesión y almacenamiento gestionados por la aplicación original</div>
+<script>
+document.getElementById('reload').addEventListener('click',function(){const f=document.getElementById('real');try{f.contentWindow.location.reload()}catch(e){f.src='../'}});
+const f=document.getElementById('real');
+f.addEventListener('load',()=>document.getElementById('status').textContent='Pantalla cargada · puedes navegar y contrastar los datos con Fluxia');
+</script></body></html>
