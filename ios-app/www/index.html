@@ -2,11 +2,11 @@
 import {installCloudStatus} from './src/cloud-status-ui.mjs';
 import {createCloudSessionProvider} from './src/cloud-auth.mjs';
 const authStatus=document.getElementById('cloudAuthStatus');
-const auth=window.FLUXIA_ELITE_PUBLIC_KEY?createCloudSessionProvider({
+const auth=createCloudSessionProvider({
  supabaseUrl:'https://kylduzmrfbubeamfrbbr.supabase.co',
  publishableKey:"sb_publishable_5hX9-6-J7MlJfvmeWZcz5w_U-KlTCaj",
  dispatchEvent:(name)=>document.dispatchEvent(new Event(name))
-}):null;
+});
 window.fluxiaEliteSessionProvider=()=>auth?.getSession()??null;
 if(!auth){authStatus.textContent='Configuración pública pendiente · No se envían credenciales';document.getElementById('cloudSignInButton').disabled=true;}
 document.getElementById('cloudSignInButton').onclick=async()=>{
