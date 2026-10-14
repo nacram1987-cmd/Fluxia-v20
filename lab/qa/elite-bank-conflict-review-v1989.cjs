@@ -1,1 +1,17 @@
-Y29uc3QgZnM9cmVxdWlyZSgnZnMnKTtjb25zdCBhc3NlcnQ9cmVxdWlyZSgnYXNzZXJ0Jyk7Y29uc3Qgdm09cmVxdWlyZSgndm0nKTsKY29uc3Qgcm9vdD1wcm9jZXNzLmN3ZCgpOwpjb25zdCBzb3VyY2U9ZnMucmVhZEZpbGVTeW5jKHJvb3QrJy9sYWIvanMvZmx1eGlhLWVsaXRlLWJhbmstYWRhcHRlci12MS5qcycsJ3V0ZjgnKTsKY29uc3QgbW9kdWxlQm94PXtleHBvcnRzOnt9fTtjb25zdCBzYW5kYm94PXttb2R1bGU6bW9kdWxlQm94LGV4cG9ydHM6bW9kdWxlQm94LmV4cG9ydHMsZ2xvYmFsVGhpczp7fX07CnZtLnJ1bkluTmV3Q29udGV4dChzb3VyY2Usc2FuZGJveCk7Y29uc3QgYWRhcHRlcj1tb2R1bGVCb3guZXhwb3J0czsKY29uc3QgZXhpc3Rpbmc9W3tiYW5rUmVmOidiLTEnLGltcG9ydGVDZW50czo3NTAsZmVjaGE6JzIwMjYtMTAtMTUnLGNvbmNlcHRvOidHYXNvbGluZXJhJyxyb2xlOidiYW5rLW1vdmVtZW50J31dOwpjb25zdCBpbmNvbWluZz1be2JhbmtSZWY6J2ItMScsaW1wb3J0ZUNlbnRzOjgwMCxmZWNoYTonMjAyNi0xMC0xNScsY29uY2VwdG86J0dhc29saW5lcmEnLHJvbGU6J2JhbmstbW92ZW1lbnQnfV07CmNvbnN0IHVucmVzb2x2ZWQ9YWRhcHRlci5wbGFuSW1wb3J0KGV4aXN0aW5nLGluY29taW5nLHt9LHt9KTsKYXNzZXJ0LnN0cmljdEVxdWFsKHVucmVzb2x2ZWQub2ssZmFsc2UpO2Fzc2VydC5zdHJpY3RFcXVhbCh1bnJlc29sdmVkLmNvbmZsaWN0cy5sZW5ndGgsMSk7YXNzZXJ0LnN0cmljdEVxdWFsKHVucmVzb2x2ZWQucmVzb2x2ZWQubGVuZ3RoLDApOwpjb25zdCBrZXB0PWFkYXB0ZXIucGxhbkltcG9ydChleGlzdGluZyxpbmNvbWluZyx7fSwgeydiLTEnOidrZWVwLWV4aXN0aW5nJ30pOwphc3NlcnQuc3RyaWN0RXF1YWwoa2VwdC5vayx0cnVlKTthc3NlcnQuc3RyaWN0RXF1YWwoa2VwdC5jb25mbGljdHMubGVuZ3RoLDApO2Fzc2VydC5zdHJpY3RFcXVhbChrZXB0LnJlc29sdmVkWzBdLmRlY2lzaW9uLCdrZWVwLWV4aXN0aW5nJyk7CmNvbnN0IHByb3Bvc2VkPWFkYXB0ZXIucGxhbkltcG9ydChleGlzdGluZyxpbmNvbWluZyx7fSwgeydiLTEnOidwcm9wb3NlLWluY29taW5nJ30pOwphc3NlcnQuc3RyaWN0RXF1YWwocHJvcG9zZWQub2ssdHJ1ZSk7YXNzZXJ0LnN0cmljdEVxdWFsKHByb3Bvc2VkLnJlc29sdmVkWzBdLmRlY2lzaW9uLCdwcm9wb3NlLWluY29taW5nJyk7CmNvbnN0IGh0bWw9ZnMucmVhZEZpbGVTeW5jKHJvb3QrJy9sYWIvZmx1eGlhLWVsaXRlLXNhZmFyaS1kYXRvcy1yZWFsZXMuaHRtbCcsJ3V0ZjgnKTsKYXNzZXJ0KGh0bWwuaW5jbHVkZXMoImNvbnN0IEVMSVRFX1NBRkFSSV9WRVJTSU9OPScxLjkuODknIikpOwphc3NlcnQoaHRtbC5pbmNsdWRlcygncmVzb2x2ZUJhbmtDb25mbGljdCcpKTthc3NlcnQoaHRtbC5pbmNsdWRlcygnYmFua0NvbmZsaWN0UmVzb2x1dGlvbnMnKSk7CmNvbnNvbGUubG9nKCdQQVNTIHYxLjkuODkgZXhwbGljaXQgYmFuayBjb25mbGljdCByZXZpZXcgcmVtYWlucyBub24td3JpdGluZycpOwo=
+const fs=require('fs');const assert=require('assert');const vm=require('vm');
+const root=process.cwd();
+const source=fs.readFileSync(root+'/lab/js/fluxia-elite-bank-adapter-v1.js','utf8');
+const moduleBox={exports:{}};const sandbox={module:moduleBox,exports:moduleBox.exports,globalThis:{}};
+vm.runInNewContext(source,sandbox);const adapter=moduleBox.exports;
+const existing=[{bankRef:'b-1',importeCents:750,fecha:'2026-10-15',concepto:'Gasolinera',role:'bank-movement'}];
+const incoming=[{bankRef:'b-1',importeCents:800,fecha:'2026-10-15',concepto:'Gasolinera',role:'bank-movement'}];
+const unresolved=adapter.planImport(existing,incoming,{},{});
+assert.strictEqual(unresolved.ok,false);assert.strictEqual(unresolved.conflicts.length,1);assert.strictEqual(unresolved.resolved.length,0);
+const kept=adapter.planImport(existing,incoming,{}, {'b-1':'keep-existing'});
+assert.strictEqual(kept.ok,true);assert.strictEqual(kept.conflicts.length,0);assert.strictEqual(kept.resolved[0].decision,'keep-existing');
+const proposed=adapter.planImport(existing,incoming,{}, {'b-1':'propose-incoming'});
+assert.strictEqual(proposed.ok,true);assert.strictEqual(proposed.resolved[0].decision,'propose-incoming');
+const html=fs.readFileSync(root+'/lab/fluxia-elite-safari-datos-reales.html','utf8');
+assert(html.includes("const ELITE_SAFARI_VERSION='1.9.89'"));
+assert(html.includes('resolveBankConflict'));assert(html.includes('bankConflictResolutions'));
+console.log('PASS v1.9.89 explicit bank conflict review remains non-writing');
