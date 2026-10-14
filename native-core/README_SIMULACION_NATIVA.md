@@ -31,3 +31,6 @@ Referencias de Appetize: https://docs.appetize.io/platform/app-management/upload
 
 ## Tests
 El núcleo contable previo tiene 8 tests de Swift. Se probaron localmente en Linux el 14/10/2026 (8/8); **esto no equivale a una compilación iOS ni prueba de la nueva interfaz SwiftUI**.
+
+## Revisión de distribución
+Nueva ejecución solicitada para obtener build SwiftUI real en simulador remoto, sin modificar producción.
