@@ -1,0 +1,17 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+const a=html.indexOf('function temporaryUseOutstanding('),b=html.indexOf('function huchaUsesFromSource(',a);
+assert(a>=0&&b>a);const ctx=vm.createContext({});
+vm.runInContext(html.slice(a,b),ctx,{timeout:1000});const fn=ctx.temporaryUseOutstanding;
+const base={tipo:'temporal',importe:70,repuesto:35,reposiciones:[{id:'r1',importe:20},{id:'r2',importe:15}]};
+assert.equal(fn(base).cents,3500);
+assert.equal(fn({...base,repuesto:70,reposiciones:[{id:'r3',importe:70}]}).cents,0);
+assert.equal(fn({...base,repuesto:80,reposiciones:[{id:'r4',importe:80}]}).kind,'overpaid');
+assert.equal(fn({...base,reposiciones:[{id:'x',importe:20},{id:'x',importe:15}]}).kind,'history_ambiguous');
+assert.equal(fn({...base,repuesto:30}).kind,'history_mismatch');
+assert.equal(fn({...base,reposiciones:undefined}).kind,'history_unavailable');
+assert.equal(fn({...base,tipo:'definitivo'}).kind,'not_temporal');
+assert(html.includes("const ELITE_SAFARI_VERSION='1.9.62'"));
+for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(m[1])new vm.Script(m[1]);
+console.log('PASS v1.9.62 partial/full repayment, overpayment, conflicting history, duplicated IDs and JS parse');
