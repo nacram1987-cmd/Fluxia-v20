@@ -1,0 +1,18 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+const a=html.indexOf('function summarizeMigrationReadiness('),b=html.indexOf('function renderMigrationReadiness(',a);
+assert(a>=0&&b>a,'Missing six-module readiness summary');
+const ctx=vm.createContext({});vm.runInContext(html.slice(a,b),ctx,{timeout:1000});
+let n=0;const test=(label,fn)=>{fn();n++;console.log('PASS',label)};
+const six=Array.from({length:6},(_,i)=>({module:'mod'+i,state:'CANDIDATES_REQUIRE_REVIEW',candidate_ids:i===0?['one']:[]}));
+test('All six complete with candidate qualifies only for manual review',()=>{const p=ctx.summarizeMigrationReadiness({modules:six});assert.equal(p.ready,true);assert.equal(p.reason,'READY_FOR_MANUAL_VALIDATION')});
+test('One blocked module blocks entire global review',()=>assert.equal(ctx.summarizeMigrationReadiness({modules:[...six.slice(0,5),{state:'BLOCKED_SOURCE_UNAVAILABLE'}]}).ready,false));
+test('No import when all source records already match',()=>assert.equal(ctx.summarizeMigrationReadiness({modules:six.map(x=>({...x,candidate_ids:[]}))}).reason,'ALREADY_MATCHED'));
+test('Incomplete report is rejected',()=>assert.equal(ctx.summarizeMigrationReadiness({modules:six.slice(0,5)}).reason,'MISSING_MODULE_REPORTS'));
+test('Audit includes integrated preflight',()=>assert(html.includes('renderMigrationReadiness();')));
+test('No writes in preflight',()=>{const t=html.slice(a,html.indexOf('function exportPrivateMigrationReport(',a));assert(!t.includes('fetch(')&&!t.includes('authRequest('))});
+test('Correct version',()=>assert(html.includes("const ELITE_SAFARI_VERSION='1.9.38'")));
+for(const block of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(block[1])new vm.Script(block[1]);
+test('All inline scripts parse',()=>assert(true));
+console.log('RESULT',n,'integrated financial migration readiness regressions passed');
