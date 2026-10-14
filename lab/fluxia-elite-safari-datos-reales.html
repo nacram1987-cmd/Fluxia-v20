@@ -85,6 +85,7 @@ h1{color:#18364b}
 .draftCompare span{display:block;font-size:12px}
 .editorError{padding:9px;background:#fff0e8;color:#9c402b;font-size:12px;border-radius:9px;margin-top:9px}
 
+.previewOperation{background:#fffbf1;border:1px solid #e9dfce;border-radius:12px;padding:12px;margin:12px 0}.previewOperation h3{font-size:14px;margin:0 0 11px}
 #splash{position:fixed;inset:0;z-index:40;background:radial-gradient(circle at 50% 35%,#274763,#10273e 75%);color:white;display:none;align-items:center;justify-content:center;text-align:center;padding:28px}
 #splash.active{display:flex}#splash .splashLogo{width:76px;height:76px;border-radius:20px;object-fit:contain;box-shadow:0 16px 42px #07172677}
 #splash h1{font:600 41px Georgia,serif;color:#fff;margin:17px 0 0}#splash .splashBeta{display:block;color:#d1ad6a;letter-spacing:2px;font-size:11px;font-weight:750;margin:6px 0 30px}
@@ -256,7 +257,7 @@ function renderList(){
 }
 function openDetail(data,index,key){
  currentDetail={data,index,key};const d=$('#detailContent');d.replaceChildren();
- const entry=draftEdits.get(key+':'+index)||data;
+ const preview=draftEdits.get(key+':'+index);const entry=preview?.record||data;
  d.append(el('h2',null,chargeIcon(entry,page)+'  '+(field(entry,['concepto','nombre','descripcion'])||'Registro original')));
  const verifiedDate=actualChargeDate(entry);
  if(verifiedDate)d.append(el('p','verifiedDate','📅 Fecha registrada: '+verifiedDate.label));
@@ -267,7 +268,8 @@ function openDetail(data,index,key){
   dl.append(el('dt',null,title),el('dd',null,typeof entry[k]==='number'&&/importe|cuota/.test(k)?money(entry[k]):String(entry[k])))
  }
  d.append(dl);
- if(draftEdits.has(key+':'+index))d.append(el('p','draftTag','BORRADOR DE PRUEBA · NO GUARDADO EN NUBE'));
+ if(preview)d.append(el('p','draftTag','BORRADOR DE PRUEBA · NO GUARDADO EN NUBE'));
+ if(preview?.operation)d.append(el('p','editIntro','🧪 '+preview.operation.label+' · '+money(preview.operation.amount)+' · '+preview.operation.date+' · SIN EFECTO CONTABLE'));
  const actions=el('div','editActions');
  const edit=el('button','primary','✏️ Probar edición');
  edit.onclick=()=>showDraftEditor(data,index,key);
@@ -280,10 +282,20 @@ function openDetail(data,index,key){
  d.append(actions,el('p','notice','El editor de prueba no modifica Supabase, no recalcula Disponible ni cambia registros HTML. Las escrituras reales permanecen bloqueadas hasta validar las reglas contables.'));
  $('#detail').classList.add('open')
 }
+
+const moduleActions={
+ 'planRescate_v2_fijos':[['pagado','📌 Pago de fijo','Evitar duplicar cargos vinculados.'],['pendiente','⏳ Pendiente','Un fijo previsto no es un cargo ejecutado.']],
+ 'planRescate_v2_provisiones':[['aporte','🐷 Aportación','No descontar dos veces aportes previstos.'],['rescate','💶 Rescate','Imputar a su fecha histórica.'],['uso','🧾 Uso de hucha','No duplicar gasto.']],
+ 'planRescate_v2_ingresos':[['ingreso','💼 Reconocimiento de ingreso','Requiere conciliación contable.']],
+ 'planRescate_v2_movimientos':[['variable','💳 Clasificación','Los fijos vinculados no pueden duplicarse.']],
+ 'planRescate_v2_compartidos':[['liquidar','👥 Liquidación','Validar deuda y pago.']],
+ 'planRescate_v2_financiaciones':[['cuota','📅 Pago de cuota','Previsto no equivale a pagado.']]
+};
+
 function showDraftEditor(data,index,key){
  const d=$('#detailContent');d.replaceChildren();
  const original=JSON.parse(JSON.stringify(data));
- const active=draftEdits.get(key+':'+index)||original;
+ const active=draftEdits.get(key+':'+index)?.record||original;
  d.append(el('span','draftTag','MODO PRUEBA · SIN GUARDAR EN LA NUBE'));
  d.append(el('h2',null,'Editar registro'));
  d.append(el('p','editIntro','Prueba los cambios con tus datos reales. La vista previa se mantiene solo durante esta sesión y desaparece al salir.'));
@@ -306,6 +318,19 @@ function showDraftEditor(data,index,key){
  if(typeof original.mes==='string')inputField('Periodo / mes', 'mes','text',active.mes);
  if(typeof original.categoria==='string')inputField('Categoría','categoria','text',active.categoria);
  if(typeof original.estado==='string')inputField('Estado original (no marca pagos)','estado','text',active.estado);
+ const choices=moduleActions[key]||[];
+ const finance=el('section','previewOperation');
+ finance.append(el('h3',null,'Operaciones del módulo · simulación'));
+ const actionLabel=el('label',null,'Tipo de operación'),action=el('select');
+ const option=el('option',null,'Solo modificar datos del registro');option.value='';action.append(option);
+ for(const [id,label] of choices){const op=el('option',null,label);op.value=id;action.append(op)}
+ actionLabel.append(action);finance.append(actionLabel);
+ const warning=el('p','editIntro','Estas operaciones NO cambian tu nube ni la contabilidad.');
+ const aLabel=el('label',null,'Importe a simular'),aInput=el('input');aInput.type='number';aInput.step='0.01';aInput.inputMode='decimal';aLabel.append(aInput);
+ const dLabel=el('label',null,'Fecha real de la operación'),dInput=el('input');dInput.type='date';dLabel.append(dInput);
+ finance.append(warning,aLabel,dLabel);form.append(finance);
+ action.onchange=()=>{const chosen=choices.find(c=>c[0]===action.value);warning.textContent=chosen?chosen[2]+' · No guardado en nube.':'No hay escritura financiera habilitada.';aLabel.classList.toggle('hide',!chosen);dLabel.classList.toggle('hide',!chosen)};
+ action.onchange();
  const errorBox=el('div','editorError hide');
  form.append(errorBox);
  const compare=el('div','draftCompare');compare.append(el('div',null),el('div',null));
@@ -330,7 +355,16 @@ function showDraftEditor(data,index,key){
   if(dateKey&&changed[dateKey]&&/fecha|date/i.test(dateKey)){
    const temp={[dateKey]:changed[dateKey]};if(!actualChargeDate(temp)&&/^\d{4}-\d{2}-\d{2}/.test(changed[dateKey])){errorBox.textContent='Fecha no válida.';errorBox.classList.remove('hide');return}
   }
-  draftEdits.set(key+':'+index,changed);openDetail(original,index,key);
+  const selected=choices.find(c=>c[0]===action.value);
+  let operation=null;
+  if(selected){
+    const num=Number(aInput.value);
+    if(!aInput.value.trim()||!Number.isFinite(num)||num<=0||num>10000000){errorBox.textContent='Importe de operación no válido.';errorBox.classList.remove('hide');return}
+    if(!dInput.value||!actualChargeDate({fecha:dInput.value})){errorBox.textContent='Introduce una fecha válida de operación.';errorBox.classList.remove('hide');return}
+    if(key==='planRescate_v2_movimientos'&&(original.cuentaComoFijo||original.vinculoFijoId)){errorBox.textContent='Cargo vinculado a Fijos: se debe revisar en Fijos, sin duplicar un movimiento variable.';errorBox.classList.remove('hide');return}
+    operation={label:selected[1],amount:num,date:dInput.value};
+  }
+  draftEdits.set(key+':'+index,{record:changed,operation});openDetail(original,index,key);
  };
  d.append(form)
 }
