@@ -1,0 +1,11 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+assert(html.includes('function canonicalMovementId(row,moduleId,index)'));
+assert(html.includes('function unifiedHistoryRows(periodValue)'));
+assert(html.includes("function renderUnifiedHistoryPreview()"));
+assert(html.includes('Historial unificado del periodo'));
+assert(html.includes('no se suma de nuevo como Variable'));
+assert(html.includes("$('#content').append(renderUnifiedHistoryPreview());"));
+assert(html.includes("const key=canonicalMovementId(row,moduleId,index)"));
+console.log('PASS v1.9.74 unified read-only history, canonical IDs and no-double-count traceability');
