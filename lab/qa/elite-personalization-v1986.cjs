@@ -1,0 +1,18 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const vm=require('node:vm');
+const html=fs.readFileSync(require('node:path').join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.86'/);
+assert.match(html,/¿Cómo quieres que te llamemos\?/);
+assert.match(html,/display_name:name\.value\.trim\(\)/);
+assert.match(html,/Hola, '\+currentUserName/);
+assert.match(html,/function renderAlwaysVerify\(parent\)/);
+assert.match(html,/Qué verificar siempre/);
+assert.match(html,/Nube y perfil/);
+assert.match(html,/Bancos/);
+assert.match(html,/Disponible/);
+assert.match(html,/Historial/);
+const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(m=>m[1]).filter(Boolean);
+for(const script of scripts)assert.doesNotThrow(()=>new vm.Script(script),'Inline JavaScript must parse');
+console.log('PASS v1.9.86 personalized signup and permanent verification checklist');
