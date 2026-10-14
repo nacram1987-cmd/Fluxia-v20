@@ -828,7 +828,7 @@ function loginScreen(message='',initialMode='signin'){
   form.append(l1,l2);
   let confirm=null,remember=null;if(mode==='signup'){const l3=el('label',null,'Repite la contraseña');confirm=el('input');confirm.type='password';confirm.autocomplete='new-password';confirm.required=true;confirm.minLength=6;l3.append(confirm);form.append(l3)}
   if(mode==='signin'){
-   const keep=el('label',null,'');remember=el('input');remember.type='checkbox';remember.checked=!!readStoredSession();remember.style.width='auto';remember.style.minHeight='0';remember.style.margin='0 7px 0 0';keep.append(remember,document.createTextNode('Mantener sesión en este dispositivo'));form.append(keep);
+   const keep=el('label',null,'');remember=el('input');remember.type='checkbox';remember.checked=true;remember.style.width='auto';remember.style.minHeight='0';remember.style.margin='0 7px 0 0';keep.append(remember,document.createTextNode('Mantener sesión en este dispositivo'));form.append(keep);
   }
   const btn=el('button','primary',mode==='signup'?'Crear mi cuenta':'Acceder a mi nube');btn.type='submit';form.append(btn);box.append(form);$('#content').append(box);
   if(mode==='signin'){
