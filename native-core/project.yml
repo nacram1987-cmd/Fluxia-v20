@@ -18,12 +18,15 @@ targets:
       - path: FluxiaAuthClient.swift
       - path: FluxiaCloudReader.swift
       - path: FluxiaLegacyDocument.swift
+    info:
+      path: Generated/FluxiaEliteBeta-Info.plist
+      properties:
+        CFBundleDisplayName: "Fluxia Élite BETA"
+        FLUXIA_SUPABASE_URL: "https://kylduzmrfbubeamfrbbr.supabase.co"
+        FLUXIA_SUPABASE_PUBLISHABLE_KEY: "sb_publishable_5hX9-6-J7MlJfvmeWZcz5w_U-KlTCaj"
+        UILaunchScreen: {}
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.fluxia.elitebeta
-        GENERATE_INFOPLIST_FILE: YES
         TARGETED_DEVICE_FAMILY: '1,2'
         CODE_SIGN_STYLE: Automatic
-        INFOPLIST_KEY_FLUXIA_SUPABASE_URL: https://kylduzmrfbubeamfrbbr.supabase.co
-        # Public Supabase publishable key (not a service-role key); RLS and user JWT remain mandatory.
-        INFOPLIST_KEY_FLUXIA_SUPABASE_PUBLISHABLE_KEY: sb_publishable_5hX9-6-J7MlJfvmeWZcz5w_U-KlTCaj
