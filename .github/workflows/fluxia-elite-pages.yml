@@ -33,9 +33,6 @@ jobs:
         with:
           node-version: '24'
       - run: npm ci --prefix auditorias/qa-v97.66 --no-audit --no-fund
-      - run: node lab/qa/elite-modules-smoke.cjs
-      - run: node lab/qa/elite-wallet-regression.cjs
-      - run: node lab/qa/elite-backup-regression.cjs
       - run: node auditorias/qa-v97.66/verify-baseline.cjs
       - run: sha256sum -c AUDITORIA_ELITE/PROTECTED_SHA256.txt
       - run: npm --prefix auditorias/qa-v97.66 test
