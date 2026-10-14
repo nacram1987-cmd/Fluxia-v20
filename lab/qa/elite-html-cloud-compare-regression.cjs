@@ -1,0 +1,23 @@
+'use strict';
+// Offline source-level regression tests for local HTML/cloud comparison. Never accesses real user data.
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const html=fs.readFileSync(require('node:path').join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+const start=html.indexOf('function motherRowId('),end=html.indexOf('function auditMotherBrowser(){',start);
+assert(start>=0&&end>start,'Missing comparison helpers');
+const helpers=html.slice(start,end);
+const ctx=vm.createContext({});
+vm.runInContext(helpers,ctx,{timeout:1000});
+let n=0;
+const check=(name,fn)=>{fn();n++;console.log('PASS',name)};
+check('canonical ID from HTML',()=>assert.equal(ctx.motherRowId({id:' a '}),'a'));
+check('legacy ID fallback',()=>assert.equal(ctx.motherRowId({movimientoId:'m-123'}),'m-123'));
+check('empty ID is not fabricated',()=>assert.equal(ctx.motherRowId({}),''));
+check('same amount is equivalent to the cent',()=>assert.equal(ctx.motherComparisonFields({importe:7.5},{importe:7.50}).length,0));
+check('changed amount is detected',()=>assert(ctx.motherComparisonFields({importe:7.5},{importe:8}).includes('importe')));
+check('changed fixed linkage is detected',()=>assert(ctx.motherComparisonFields({vinculoFijoId:'a'},{vinculoFijoId:'b'}).includes('vinculoFijoId')));
+check('changed paid state is detected',()=>assert(ctx.motherComparisonFields({estado:'pagado'},{estado:'pendiente'}).includes('estado')));
+check('changed date is detected',()=>assert(ctx.motherComparisonFields({fecha:'2026-10-14'},{fecha:'2026-10-15'}).includes('fecha')));
+check('all months retain comparison component',()=>assert(html.includes('function renderMotherComparison(){')&&!html.includes("function renderMotherComparison(){\n if(selectedMonth!=='2026-10')return;")));
+check('reference 51 restricted to October',()=>assert(html.includes("selectedMonth!=='2026-10'||motherAudit.total===REFERENCE_VARIABLES_OCT2026")));
+check('financial writes remain blocked in editor',()=>assert(html.includes('Las escrituras reales permanecen bloqueadas')));
+console.log('RESULT',n,'offline parity regression tests passed');
