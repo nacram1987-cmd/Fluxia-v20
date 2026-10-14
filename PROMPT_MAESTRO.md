@@ -1124,3 +1124,17 @@ No basta con crear una sugerencia de vinculación bancario→fijo: debe atravesa
 
 ## Norma v97.73 — Compartidos Tricount sin doble conteo
 Presentar importe mensual de gastos compartidos agrupando por gastoId único, con grupos, personas, fecha y pagador. Excluir reembolsos, préstamos puente y compensaciones de ticket gasto. Resumen de solo lectura; no modificar Disponible, nube, banco ni registros. Variables debe enseñar variables del mes, fijos/cuotas efectivamente pagados y total realizado sin incluir pendientes. Mantener estable intacta; QA y velocidad obligatorios antes de publicar. Beta app nativa después de validar funciones.
+
+
+## LEY IMPERIAL 14/10/2026 — EL HTML ES LA BASE MADRE OBLIGATORIA DE ÉLITE
+
+Toda app Fluxia Élite (PWA LAB, app SwiftUI, futura API) es evolución del HTML operativo; **nunca un producto distinto con reglas distintas**. Especificación funcional: HTML original actual. Élite puede mejorar experiencia, estructura, seguridad y rendimiento, pero debe preservar hasta el último registro, operación, estado, cálculo y enlace bancario.
+
+- **Prohibida la migración selectiva** de 6 colecciones como si fueran el libro mayor completo. Rastrear todas las fuentes activas, almacenamiento por perfil, banco, espejo, exclusiones, papelera, provisiones, compartidos, fijos y fechas.
+- **Prohibido declarar paridad por cantidad** o por una exportación de CSV incompleta. Auditar mismo usuario/perfil/mes y misma hora de corte por ID, importe en céntimos, fecha, categoría, origen, estado, duplicados y saldos; resultado exigido: 0 ausentes, 0 extras indebidos, 0 campos divergentes y 0,00 € de desfase.
+- **Caso de aceptación de octubre del usuario:** 51 gastos variables visibles en HTML; archivo CSV exportado del mismo periodo da 52 filas / 811,39 €, y no incluye todavía un gasto de 7,50 € de gasolinera categorizado Tabaco del 14/10. Las repeticiones del CSV sin ID son sólo candidatas a revisión, jamás borrado automático. Cuadrar estas observaciones con trazabilidad.
+- **Bancos:** usar el mismo sistema existente de permisos y conciliación; nuevos cargos sin duplicar y sin resurrección de descartes. Jamás añadir un cargo manual para ocultar un fallo bancario sin comprobar su fuente.
+- **Versiones:** entregar checklist localizable con cada cambio ejecutable, QA, estado real, valoración y rollback; el diseño visual aprobado de Élite se mantiene salvo autorización expresa.
+- **Guardarraíl:** mientras HTML y Élite no cuadren a nivel contable y de registros, **Élite no es apta para operar ni sustituir la estable**. Evitar promesas de “perfecta” basadas en mocks o tests sintéticos.
+
+Véase `AUDITORIA_ELITE/CONTRATO_PARIDAD_HTML_MADRE_2026-10-14.md` para matriz de módulos, pruebas de reconciliación y política de aceptación.
