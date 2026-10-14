@@ -36,6 +36,8 @@ jobs:
           assert(s.includes('renderBudgets()'),'budgets missing');
           assert(s.includes('renderLegacyAnalysis()'),'analytics missing');
           assert(s.includes('fluxia-elite-wallet-v1.js'),'wallet pure module missing');
+          assert(s.includes('fluxia-elite-backup-v1.js'),'same-profile backup module missing');
+          assert(s.includes('walletBackup=null'),'backup state cleanup missing');
           assert(s.includes('extraFinance={}'),'financial-extra user isolation missing');
           assert(!s.includes('gvAjustadoVal'),'wrong Disponible into Variables');
           assert(fs.existsSync('lab/versions/fluxia-elite-safari-v'+version+'.html'),'version snapshot required');
@@ -49,3 +51,5 @@ jobs:
         run: node lab/qa/elite-wallet-regression.cjs
       - name: Pantallas, menú y separación de usuario (offline)
         run: node lab/qa/elite-modules-smoke.cjs
+      - name: Perfil HTML privado · dinero en mano (offline)
+        run: node lab/qa/elite-backup-regression.cjs
