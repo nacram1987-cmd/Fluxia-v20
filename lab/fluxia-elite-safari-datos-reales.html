@@ -2119,6 +2119,21 @@ function huchaBalanceAudit(rows){
  const complete=rows.length>0&&known===rows.length&&duplicates.length===0&&records.every(x=>x.id);
  return {complete,count:rows.length,known,unknown:rows.length-known,totalCents:complete?records.reduce((sum,x)=>sum+x.amountCents,0):null,duplicateIds:duplicates,records}
 }
+function grossHuchaContributions(rows){
+ let cents=0,count=0,invalid=0,duplicates=0;const seen=new Set(),ids=new Set(),details=[];
+ for(const h of rows){
+  const id=String(h?.id??'');if(!id||ids.has(id))invalid++;ids.add(id);
+  const data=huchaMonthlyContributions(h);invalid+=data.invalid;let part=0;
+  for(const item of data.rows){
+   const op=item.record,opid=String(op.id??''),amount=op.importe,ref=id+'|'+opid;
+   if(!opid||typeof amount!=='number'||!Number.isFinite(amount)){invalid++;continue}
+   if(seen.has(ref)){duplicates++;continue}
+   seen.add(ref);const value=Math.round(amount*100);cents+=value;part+=value;count++
+  }
+  details.push({name:String(h.nombre||'Hucha'),cents:part})
+ }
+ return {cents,count,invalid,duplicates,details,complete:rows.length>0&&!invalid&&!duplicates}
+}
 function renderHuchaBalances(rows,origin){
  const audit=huchaBalanceAudit(rows);
  const panel=el('section','eliteHuchaBalance');
