@@ -296,34 +296,11 @@ const datedRows=m=>{
  return rows
 };
 const ELITE_CHECKLIST=[
- ['Variables · CSV del HTML','📥 Comparación real por fichero','Importar localmente el CSV de octubre y contrastar sus importes, conceptos, fechas y categorías con el perfil conectado, sin enviar ni guardar el archivo.'],
- ['Variables · categorías','📊 Agrupación detallada','Examinar cada categoría y sus cargos exportados, sin usar el CSV para cambiar Disponible.'],
- ['Fijos / Variables','🛡️ Filtro HTML original','Excluir en Variables los cargos vinculados a Fijos, traspasos y movimientos expresamente excluidos; siguen accesibles en su módulo o fuente de origen.'],
- ['Inicio y Variables · octubre','🧬 Comparar HTML madre local','Lee solo el almacenamiento del mismo perfil en el navegador, aplica exclusiones originales y lista ausentes sin subirlos.'],
- ['Motor de gastos','🧮 Filtro exacto del HTML recuperado','Usa mes=octubre y excluye movimientos con vínculos fijos, traspasos, retiradas de efectivo y otros estados, sin alterar registros.'],
- ['Inicio y Variables · octubre','🚨 Referencia de aceptación: 51 gastos','Se muestra el recuento de movimientos alcanzados y la diferencia de cobertura, sin afirmar una conciliación inexistente.'],
- ['Integridad · lectura nube','🕒 Fecha de las fuentes','La actualización real del almacenamiento aparece en pantalla, evitando confundir respaldos antiguos con actividad bancaria reciente.'],
- ['Más → Bancos','🏦 Integración bancaria pendiente','Módulo de auditoría que enlaza el HTML, sin simular una conexión ni duplicar cuentas.'],
- ['Mes y fecha','📅 Día, mes y año visibles','El selector muestra la fecha completa y permite elegir día, mes y año sin filtros diarios accidentales.'],
- ['Octubre 2026','🔎 Segunda fuente de movimientos','Detecta diferencias entre colecciones reales del HTML; presenta cargos adicionales para conciliarlos, nunca sumarlos dos veces.'],
- ['Integridad','🛡️ Protección contable','Las diferencias de fuentes son informativas, no ediciones ni nuevos cargos.'],
- ['Selector mensual','🗓️ Selector sin control circular','Mes centrado y desplegable separado, con botones anterior/siguiente.'],
- ['Inicio y gastos','🧾 Todos los registros de octubre visibles','Se muestran tanto los registros con fecha exacta como los históricos con mes pero sin año; no se incluyen estos últimos en totales financieros.'],
- ['Navegación','☷ Barra inferior ligera','Cinco pestañas prioritarias y menú Más para Compartidos, Financiaciones y versiones.'],
- ['Instalación iPhone','📱 Acceso PWA separado','Manifiesto exclusivo de LAB; no cambia la PWA estable original.'],
- ['Inicio y módulos','🗓️ Selector de mes y año','Puedes cambiar de periodo desde todas las pantallas; los resultados se recalculan solo en la interfaz.'],
- ['Variables y Compartidos','📅 Cargos divididos por mes','Los movimientos con fecha se muestran solo en su periodo y los de mes sin año se separan sin asignarles un año.'],
- ['Navegación','👥 Compartidos visible','Seis pestañas abajo incluyendo Compartidos.'],
- ['Huchas y Financiaciones','📂 Planes por vigencia','Planes vigentes aparecen en su periodo; sin fecha clara, se señalan aparte.'],
- ['Todas las pestañas','🗓️ Selector mensual compartido','Cambio de mes y año visible en Inicio, Ingresos, Fijos, Variables, Huchas y Compartidos.'],
- ['Variables e Ingresos','📅 Registros separados por periodo','No se mezclan cargos de julio, agosto y octubre; los históricos sin año se muestran diferenciados.'],
- ['Navegación inferior','👥 Compartidos accesible','La sexta pestaña da acceso directo al módulo Compartidos.'],
- ['Movimientos y cargos','🌐 Búsqueda en internet','Para cada comercio identificable se consulta Wikidata y se busca su logotipo documentado.'],
- ['Movimientos y cargos','🏷️ Logos auténticos primero','Se intenta mostrar el logo de marca. Si no se localiza un archivo fiable, aparece el icono por concepto.'],
- ['Pantallas financieras','⚡ Protección de velocidad','Las imágenes y búsquedas se cargan al hacerse visibles; máximo dos consultas de logos simultáneas y caché de sesión.'],
- ['Dashboard','💼 Datos financieros','Continúan las seis colecciones reales recuperadas por perfil, fechas originales y movimientos fechados.'],
- ['Ayuda / Versiones','📋 Checklist por versión','Consulta cada cambio y la pestaña en la que debes revisarlo.'],
- ['Datos y seguridad','🔒 Sin modificar cargos','No se alteran fechas, importes ni bancos; las ediciones reales aún necesitan conciliación.']
+ ['Variables · CSV del HTML','📥 Importar y comparar gastos del HTML','Selecciona el CSV de Variables del mes desde el iPhone; compara localmente los registros exportados con tu copia de nube sin guardar nada.'],
+ ['Variables · Categorías','📊 Desglose de cargos por categoría','Cada categoría muestra número de movimientos e importe exportado, con correspondencia o falta de coincidencia en la nube.'],
+ ['Variables · Duplicados','🔎 Detectar coincidencias repetidas','Se señalan tuplas idénticas como candidatas a revisión, nunca como duplicados bancarios demostrados ni registros que deban eliminarse.'],
+ ['Fijos y Variables','🛡️ Filtro compatible con el HTML original','Variables deja fuera los fijos vinculados, traspasos, efectivo y exclusiones conocidas; no altera registros de origen.'],
+ ['Seguridad · Sesión','🔒 CSV transitorio sin escritura','Al cerrar sesión o cambiar de perfil, el CSV desaparece de la app; no se envía a Supabase ni cambia Disponible.']
 ];
 function renderChecklist(parent){
  const box=el('section','checklistPanel');box.append(el('h3',null,'Checklist de novedades · v'+ELITE_SAFARI_VERSION));
@@ -336,17 +313,16 @@ function renderChecklist(parent){
 
 function showVersionHistory(){
  const d=$('#detailContent');d.replaceChildren(el('h2',null,'Historial de Fluxia Élite Safari'));
- d.append(el('p','editIntro','Numeración independiente de la PWA estable HTML y de las compilaciones SwiftUI. Cada entrega conservará una copia identificada.'));
- for(const [version,notes] of ELITE_CHANGELOG){
-  const card=el('div','versionSheet');card.append(el('strong',null,version),el('div',null,notes));
-  d.append(card);
- }
+ d.append(el('p','editIntro','Checklist exclusivo de esta versión y copias históricas para comparar cada entrega. Versionado distinto del HTML estable y SwiftUI.'));
  renderChecklist(d);
- const link=el('a',null,'Abrir copia anterior archivada ↗');
- link.href='versions/fluxia-elite-safari-v1.0.0.html';
- link.target='_blank';link.rel='noopener noreferrer';
- link.style.display='block';link.style.margin='15px 0';d.append(link);
- d.append(el('p','notice','Disponible todavía sin reconciliar. Nunca confundir importes originales con totales contables.'));
+ d.append(el('h3',null,'Versiones anteriores'));
+ for(const [version,notes] of ELITE_CHANGELOG){
+  const card=el('div','versionSheet');card.append(el('strong',null,'v'+version),el('div',null,notes));
+  const href=/^\d+\.\d+\.\d+$/.test(version)?'versions/fluxia-elite-safari-v'+version+'.html':'versions/fluxia-elite-safari-pre-versionado-20261014.html';
+  const link=el('a',null,'Abrir copia v'+version+' ↗');link.href=href;link.target='_blank';link.rel='noopener noreferrer';link.style.display='block';link.style.margin='7px 0';
+  card.append(link);d.append(card)
+ }
+ d.append(el('p','notice','La comparación CSV no actualiza saldo ni modifica movimientos. No se promociona Élite hasta conciliarla con el HTML madre.'));
  $('#detail').classList.add('open');
 }
 
