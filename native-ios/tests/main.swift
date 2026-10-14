@@ -1,4 +1,5 @@
 import Foundation
+import CryptoKit
 
 func check(_ condition: @autoclosure () -> Bool, _ message: String) {
     guard condition() else {
@@ -205,3 +206,33 @@ check(MonthlyLedgerProjection.project(entries: overflowLedger, authenticatedOwne
 check(MonthlyLedgerProjection.Period(year: 2026, month: 13) == nil,
       "invalid month cannot enter the projection")
 print("Monthly ledger projection: 7 historical-period, exclusion, identity and overflow checks passed")
+
+let ledgerDirectory = FileManager.default.temporaryDirectory
+    .appendingPathComponent("fluxia-ledger-tests-\(UUID().uuidString)", isDirectory: true)
+let testKey = SymmetricKey(data: Data(repeating: 0x5a, count: 32))
+let encryptedStore = EncryptedLedgerStore(directoryURL: ledgerDirectory, keyProvider: { _ in testKey })
+let localEntry = EncryptedLedgerStore.Entry(id: "entry-1", ownerID: "synthetic-user", year: 2026, month: 10,
+                                            kind: .variableExpense, amountCents: 1250, operationID: "append-1")
+check(try! encryptedStore.append(localEntry, authenticatedOwnerID: "synthetic-user") == .inserted(revision: 1),
+      "encrypted local append persists a synthetic entry")
+check(try! encryptedStore.append(localEntry, authenticatedOwnerID: "synthetic-user") == .duplicateOperation,
+      "replaying an append operation does not duplicate it")
+check(try! encryptedStore.entries(ownerID: "synthetic-user", authenticatedOwnerID: "other-user").isEmpty,
+      "another authenticated user cannot read this local ledger")
+let reopenedStore = EncryptedLedgerStore(directoryURL: ledgerDirectory, keyProvider: { _ in testKey })
+check(try! reopenedStore.entries(ownerID: "synthetic-user", authenticatedOwnerID: "synthetic-user") == [localEntry],
+      "encrypted ledger survives reopening")
+let ledgerFile = try! FileManager.default.contentsOfDirectory(at: ledgerDirectory, includingPropertiesForKeys: nil).first!
+let encryptedBytes = try! Data(contentsOf: ledgerFile)
+check(String(data: encryptedBytes, encoding: .utf8) == nil,
+      "persisted financial snapshot is ciphertext, not plaintext JSON")
+check(try! reopenedStore.permanentlyDelete(recordID: "entry-1", ownerID: "synthetic-user", operationID: "delete-1",
+                                           authenticatedOwnerID: "synthetic-user") == .inserted(revision: 2),
+      "explicit delete writes an audited tombstone")
+let attemptedResurrection = EncryptedLedgerStore.Entry(id: "entry-1", ownerID: "synthetic-user", year: 2026, month: 10,
+                                                       kind: .variableExpense, amountCents: 1250, operationID: "append-2")
+check(try! reopenedStore.append(attemptedResurrection, authenticatedOwnerID: "synthetic-user") == .rejected,
+      "a tombstoned record cannot be resurrected by a later append")
+check(try! reopenedStore.entries(ownerID: "synthetic-user", authenticatedOwnerID: "synthetic-user").isEmpty,
+      "deleted record stays absent after reload")
+print("Encrypted local ledger: 8 synthetic ownership, persistence, encryption, idempotency and tombstone checks passed")

@@ -10,6 +10,7 @@ Estado: **NO DISTRIBUIBLE TODAVÍA**. Solo datos ficticios.
 - [x] Detección conservadora de posible coincidencia fijo/cargo bancario.
 - [x] Capturas reales del simulador: tema claro, tema oscuro y acceso sin configurar; inspeccionadas en el commit `efab495873719695d00ef0e1b687732ed1bb1f71`.
 - [x] Gate de autenticación y configuración sin clave: pruebas puras y pantalla de acceso verificados; el ledger sigue deshabilitado.
+- [ ] Almacén local AES-GCM/Keychain implementado como capa aislada; pruebas de persistencia, propietario, repetición y tombstone pendientes de CI. Aún no conectado a login ni interfaz.
 - [ ] Login nativo probado con una cuenta de prueba y configuración legítima del proyecto.
 - [ ] Restauración/cierre de sesión comprobados end-to-end en dispositivo con cuenta de prueba.
 - [ ] Persistencia en nube auditada y migraciones reversibles.
