@@ -51,9 +51,10 @@ struct FluxiaRealRecordsView: View {
             let monthly = object["importeMensual"] as? NSNumber
             let quota = object["cuota"] as? NSNumber
             let displayed = amount ?? monthly ?? quota
-            let formatted = displayed.map {
-                $0.formatted(.currency(code: "EUR").locale(Locale(identifier: "es_ES")))
-            }
+            let moneyFormatter = NumberFormatter()
+            moneyFormatter.numberStyle = .currency
+            moneyFormatter.locale = Locale(identifier: "es_ES")
+            let formatted = displayed.flatMap { moneyFormatter.string(from: $0) }
             let month = (object["mes"] as? String)
                 ?? (object["fecha"] as? String)
                 ?? (object["inicio"] as? String)
