@@ -1,10 +1,11 @@
 // Fluxia Élite: authenticated Supabase Data API read-only bridge.
 // No service-role keys, no writes, no bank sync, no persistence.
 export async function readFluxiaCloudRows({supabaseUrl,publishableKey,accessToken,expectedUserId,fetchImpl=fetch,signal}) {
-  const url=new URL(supabaseUrl);
-  if(url.protocol!=='https:'||url.username||url.password||url.search||url.hash)throw Error('Invalid Supabase URL');
+  let url;
+  try { url=new URL(supabaseUrl); } catch { throw Error('Invalid Supabase URL'); }
+  if(url.protocol!=='https:'||url.username||url.password||url.search||url.hash||url.pathname!=='/' || !url.hostname.endsWith('.supabase.co'))throw Error('Invalid Supabase URL');
   if(!/^[a-f0-9-]{36}$/i.test(expectedUserId))throw Error('Authenticated UUID required');
-  if(!publishableKey||!accessToken)throw Error('Authenticated credentials required');
+  if(typeof publishableKey!=='string'||!publishableKey.trim()||typeof accessToken!=='string'||!accessToken.trim())throw Error('Authenticated credentials required');
   const root=url.origin;
   const headers={apikey:publishableKey,Authorization:'Bearer '+accessToken,Accept:'application/json'};
   const auth=await fetchImpl(root+'/auth/v1/user',{method:'GET',headers,credentials:'omit',cache:'no-store',redirect:'error',signal});
@@ -29,7 +30,7 @@ export async function readFluxiaCloudRows({supabaseUrl,publishableKey,accessToke
       rows.push(...batch);
       if(batch.length<limit)break;
       offset+=batch.length;
-      if(offset>100000)throw Error('Cloud pagination safety limit');
+      if(offset>=100000)throw Error('Cloud pagination safety limit');
     }
     result[table]=rows;
   }
