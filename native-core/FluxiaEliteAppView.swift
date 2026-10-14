@@ -148,7 +148,6 @@ public struct FluxiaEliteAppView: View {
                 .padding(.top, 7)
                 .background(.white)
             }
-            }
             .background(Color(red: 0.97, green: 0.97, blue: 0.95))
             .toolbar(.hidden, for: .navigationBar)
         }
