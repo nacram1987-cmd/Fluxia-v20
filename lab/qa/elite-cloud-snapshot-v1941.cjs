@@ -1,0 +1,26 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const vm=require('node:vm');
+const path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+const a=html.indexOf('function financialCloudSnapshot(');
+const b=html.indexOf('async function auditMotherFile(',a);
+assert(a>=0&&b>a);
+const mods=['ingresos','fijos','movimientos','provisiones','compartidos','financiaciones'].map(id=>({id,key:'planRescate_v2_'+id}));
+const items={},sourceUpdated={};
+for(const m of mods){items[m.key]=[{id:m.id,importe:10}];sourceUpdated[m.key]='2026-10-14T10:00:00Z'}
+const context=vm.createContext({mods,items,sourceUpdated,owner:'accountA',activeProfile:'profileA',canon:m=>items[m.key],canonicalFinancialValue:v=>v});
+vm.runInContext(html.slice(a,b),context);
+const snapshot=context.financialCloudSnapshot();
+assert.equal(context.validateCloudSnapshot(snapshot).ok,true);
+items[mods[0].key][0].importe=11;
+assert.equal(context.validateCloudSnapshot(snapshot).reason,'CLOUD_CHANGED_SINCE_BACKUP');
+items[mods[0].key][0].importe=10;
+sourceUpdated[mods[1].key]='2026-10-14T11:00:00Z';
+assert.equal(context.validateCloudSnapshot(snapshot).module,'fijos');
+context.owner='accountB';
+assert.equal(context.validateCloudSnapshot(snapshot).reason,'CLOUD_SNAPSHOT_IDENTITY_CHANGED');
+assert(html.includes("const ELITE_SAFARI_VERSION='1.9.41'"));
+for(const match of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(match[1])new vm.Script(match[1]);
+console.log('PASS: Snapshot blocks drift in rows, stamps, account and parses JS');
