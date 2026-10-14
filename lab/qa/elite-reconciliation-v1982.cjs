@@ -1,0 +1,15 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');const vm=require('node:vm');
+const html=fs.readFileSync(require('node:path').join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.82'/);
+assert.match(html,/enlaces explícitos verificables/);
+assert.match(html,/Coincidencias por nombre e importe sin ID/);
+assert.match(html,/Variables reales no vinculadas explícitamente/);
+assert.match(html,/moduleId==='ingresos'/);
+assert.match(html,/Cobrados/);
+assert.match(html,/no se escribe, elimina ni transforma ningún registro/);
+assert.doesNotMatch(html,/parejas candidatas únicas ·/,'Name/amount matching must not be treated as reconciliation');
+const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(match=>match[1]).filter(Boolean);
+for(const script of scripts)assert.doesNotThrow(()=>new vm.Script(script));
+console.log('PASS v1.9.82 income/fixed/variable reconciliation contract');
