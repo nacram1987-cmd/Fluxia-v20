@@ -1129,3 +1129,13 @@ Toda app Fluxia Élite (PWA LAB, app SwiftUI, futura API) es evolución del HTML
 - **Guardarraíl:** mientras HTML y Élite no cuadren a nivel contable y de registros, **Élite no es apta para operar ni sustituir la estable**. Evitar promesas de “perfecta” basadas en mocks o tests sintéticos.
 
 Véase `AUDITORIA_ELITE/CONTRATO_PARIDAD_HTML_MADRE_2026-10-14.md` para matriz de módulos, pruebas de reconciliación y política de aceptación.
+
+
+## LEY IMPERIAL EXTENDIDA · COBERTURA TOTAL DE MÓDULOS (ÉLITE v1.9.1, 14/10/2026)
+- El HTML BETA contiene, además de Inicio/Fijos/Variables/Huchas/Ingresos/Compartidos/Financiaciones: **Dinero en mano**, **Presupuestos**, **Pagos/Usos**, **Simular**, **Análisis**, **Bancos**, **Notificaciones**, **Ajustes** y **Ayuda**. Son obligatorios en Élite y no se aceptan versiones finales con pantallas vacías disfrazadas de función.
+- **Dinero en mano** no es Disponible. Meter efectivo solo cambia cartera; gastar crea un único gasto Variable vinculado y reduce cartera; pagar desde una provisión afecta cartera y provisión sin doble reducción del Disponible. Edición y borrado deben corregir las dos entidades enlazadas de forma transaccional, con auditoría.
+- Lecturas antiguas de Supabase (incluida una cartera con saldo 0 del 5/10) NO son cifras actuales. Mostrar fecha y fuente, y usar un guion/sin conciliar cuando corresponda.
+- Élite permite comparar en memoria la cartera de un backup hecho por «Copia solo este perfil» del HTML: verificar identidad exacta y rechazar cualquier perfil distinto o clave global ambigua. Jamás enviar el archivo a servidores o usarlo para escribir movimientos en producción.
+- Mientras no supere paridad bancaria/contable (incluido 51/51 Variables de octubre), cualquier escritura nueva de efectivo, provisión o presupuesto se ejecuta exclusivamente en el HTML ESTABLE. La interfaz Élite deberá explicarlo y no fingir guardados.
+- Barra inferior compacta con Inicio/Fijos/Variables/Huchas/Más; el resto organizado en grupos de fácil acceso; mantener diseño aprobado y velocidad.
+- Releases: versión diferenciada, checklist de novedades concreto, snapshots archivados, pruebas de seguridad y regresión, valoración /100 y ZIP completo o explicación expresa del bloqueo de su generación.
