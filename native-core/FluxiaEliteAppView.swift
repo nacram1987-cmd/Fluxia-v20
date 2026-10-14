@@ -38,7 +38,7 @@ public struct FluxiaEliteAppView: View {
     }
 
     private var totals: Result<FluxiaLedger.Totals, Error>? {
-        guard let ownerID else { return nil }
+        guard let ownerID, !entries.isEmpty else { return nil }
         return Result { try FluxiaLedger.totals(entries: entries, ownerID: ownerID, month: month) }
     }
 
@@ -73,7 +73,7 @@ public struct FluxiaEliteAppView: View {
                             Label("Inicia sesión para consultar tus datos reales", systemImage: "lock.shield")
                                 .font(.subheadline).foregroundStyle(.secondary)
                                 .padding()
-                        } else if case .failure(let error) = totals {
+                        } else if let totals, case .failure(let error) = totals {
                             Label("Error de integridad: \(error.localizedDescription)", systemImage: "exclamationmark.triangle")
                                 .foregroundStyle(.red)
                                 .padding()
@@ -83,7 +83,7 @@ public struct FluxiaEliteAppView: View {
                             VStack(alignment: .leading, spacing: 12) {
                                 Text("Disponible").font(.subheadline).opacity(0.85)
                                 Text(availableText).font(.system(size: 37, weight: .semibold, design: .serif))
-                                Text("Calculado por FluxiaLedger · sin datos de prueba")
+                                Text(entries.isEmpty ? "Pendiente de importar y validar los movimientos reales" : "Calculado por FluxiaLedger · sin datos de prueba")
                                     .font(.caption).opacity(0.75)
                             }
                             .foregroundStyle(.white)
