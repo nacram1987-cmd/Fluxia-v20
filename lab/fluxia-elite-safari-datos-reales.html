@@ -311,9 +311,10 @@ const money=v=>typeof v==='number'&&isFinite(v)?new Intl.NumberFormat('es-ES',{s
 const field=(obj,keys)=>{for(const k of keys){let v=obj[k];if(typeof v==='string'&&v.trim())return v}return null};
 const displayName=user=>String(user?.user_metadata?.display_name||user?.user_metadata?.full_name||user?.user_metadata?.name||'').trim();
 const canon=m=>{const a=items[m.key];return Array.isArray(a)?a:null};
-const ELITE_SAFARI_VERSION='1.9.89';
+const ELITE_SAFARI_VERSION='1.9.90';
 if(typeof document!=='undefined')document.title='Fluxia Élite BETA v'+ELITE_SAFARI_VERSION+' · Safari';
 const ELITE_CHANGELOG=[
+ ['1.9.90','Bancos: las decisiones de revisión de conflictos se conservan de forma local y aislada por usuario, perfil y mes. Una recarga o segunda lectura no reabre decisiones ya tomadas; siguen sin escribir movimientos ni Disponible.'],
  ['1.9.89','Bancos: revisión explícita de conflictos por bankRef. Cada conflicto puede conservar el registro existente o preparar una propuesta de entrada; las decisiones quedan limitadas a la sesión y nunca escriben ni alteran el Disponible.'],
  ['1.9.88','Huchas: operaciones antiguas con vínculo inequívoco pero sin ID ya no desaparecen; se incluyen como incompletas, se aíslan por hucha y nunca certifican el saldo hasta disponer de identidad estable.'],
  ['1.9.87','El nombre también puede cambiarse desde Ajustes en la cuenta existente; se guarda en los metadatos de identidad de Supabase y no toca movimientos financieros.'],
@@ -1092,7 +1093,7 @@ function renderBankAdapterReadiness(){
  for(const [label,ok] of checks){const row=el('div','legacySettingRow');row.append(el('span',null,label),el('strong',null,ok?'✓ Disponible':'Pendiente'));list.append(row)}
  panel.append(list);
  if(!adapter){panel.append(el('p','integrityWarning','No se puede auditar el adaptador porque el módulo no se ha cargado.'));return panel}
- const resolutions=extraFinance?.bankConflictResolutions&&typeof extraFinance.bankConflictResolutions==='object'?extraFinance.bankConflictResolutions:{};
+ const resolutions=readBankConflictResolutions();
  const audit=adapter.planImport(existing,inbox,tombstones,resolutions);
  panel.append(el('p','periodHint','Registros contables leídos: '+existing.length+' · lote de bandeja: '+inbox.length+' · tombstones: '+(tombstones.deletedBankRefs.length+tombstones.excludedBankRefs.length)+'.'));
  if(inbox.length)panel.append(el('p',audit.ok?'periodHint':'integrityWarning','Previsualización sin escritura: nuevas '+audit.additions.length+' · duplicados '+audit.duplicates.length+' · bloqueados '+audit.blocked.length+' · conflictos '+audit.conflicts.length+' · inválidos '+audit.invalid.length+'.'));
@@ -1101,7 +1102,7 @@ function renderBankAdapterReadiness(){
   panel.append(el('p','integrityWarning','Hay conflictos con el mismo bankRef y datos distintos. La importación queda bloqueada hasta resolverlos de forma explícita.'));
   const conflictBox=el('div','bankConflictList');
   conflictBox.append(el('h4',null,'Revisión explícita · '+audit.conflicts.length+' conflicto(s)'));
-  conflictBox.append(el('p','periodHint','Esta revisión solo guarda tu decisión en la sesión. “Conservar existente” mantiene el registro actual; “Proponer entrada” prepara una sustitución para revisión posterior. Ninguna opción escribe en Supabase ni modifica el Disponible.'));
+  conflictBox.append(el('p','periodHint','La decisión queda guardada solo en este dispositivo, aislada por usuario, perfil y mes. “Conservar existente” mantiene el registro actual; “Proponer entrada” prepara una sustitución para revisión posterior. Ninguna opción escribe en Supabase ni modifica el Disponible.'));
   audit.conflicts.slice(0,100).forEach(conflict=>{
    const row=el('div','legacySettingRow');
    const detail=el('span',null,conflict.bankRef+' · existente '+eur(Number(conflict.existing.amountCents)/100,2)+' · bandeja '+eur(Number(conflict.incoming.amountCents)/100,2));
@@ -1122,9 +1123,29 @@ function renderBankAdapterReadiness(){
 
 function resolveBankConflict(bankRef,decision){
  const key=String(bankRef||'').trim();if(!key||!['keep-existing','propose-incoming'].includes(decision))return;
- const current=extraFinance?.bankConflictResolutions&&typeof extraFinance.bankConflictResolutions==='object'?extraFinance.bankConflictResolutions:{};
- extraFinance={...extraFinance,bankConflictResolutions:{...current,[key]:decision},bankConflictDecisionAt:new Date().toISOString()};
+ const current=readBankConflictResolutions();
+ const next={...current,[key]:decision};
+ saveBankConflictResolutions(next);
+ extraFinance={...extraFinance,bankConflictResolutions:next,bankConflictDecisionAt:new Date().toISOString()};
  showBanksAudit();
+}
+
+function bankConflictStorageKey(){
+ const safe=value=>encodeURIComponent(String(value||'').trim()).slice(0,180);
+ return 'fluxia_elite_bank_conflicts_v1:'+safe(owner)+':'+safe(activeProfile)+':'+safe(selectedMonth);
+}
+function readBankConflictResolutions(){
+ try{
+  const value=JSON.parse(localStorage.getItem(bankConflictStorageKey())||'{}');
+  if(value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).length)return value;
+ }catch(_e){}
+ const memory=extraFinance?.bankConflictResolutions;
+ return memory&&typeof memory==='object'&&!Array.isArray(memory)?memory:{};
+}
+function saveBankConflictResolutions(value){
+ const clean={};Object.entries(value||{}).forEach(([key,decision])=>{if(key&&['keep-existing','propose-incoming'].includes(decision))clean[key]=decision});
+ try{localStorage.setItem(bankConflictStorageKey(),JSON.stringify(clean))}catch(_e){}
+ return clean;
 }
 
 let motherAudit=null;let fullProfileAudit=null;
