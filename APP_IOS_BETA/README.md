@@ -1,4 +1,4 @@
-# Fluxia BETA — proyecto iOS (fase 0)
+# Fluxia BETA — proyecto iOS (fase 0 · núcleo financiero compartido)
 
 Inicio del proyecto nativo con Capacitor 7, aislado de la PWA estable. **No es una app financiera funcional todavía ni una compilación TestFlight.** El punto de entrada local es deliberadamente una pantalla segura de preparación: no copiar a ciegas el HTML monolítico, los tokens, ni el almacenamiento local de la PWA.
 
@@ -26,3 +26,7 @@ En Xcode: configurar Signing & Capabilities y un Bundle ID propio y disponible (
 6. Privacidad, credenciales, llavero, borrado de cuenta, política y revisión App Store.
 
 La PWA estable permanece intacta. La LAB v97.72 sigue disponible en https://nacram1987-cmd.github.io/Fluxia-v20/lab/v97.72/index.html
+
+## Núcleo financiero portable
+
+`Sources/FluxiaFinancialCore/FluxiaFinancialCore.swift` contiene la primera contraparte Swift del motor web `lab/js/fluxia-elite-financial-engine-v1.js`. Ambos trabajan con céntimos enteros y comparten la regla del Disponible y el libro de Huchas. Todavía no se conecta a la interfaz nativa ni a bancos: primero deben pasar las pruebas de paridad, persistencia y aislamiento.
