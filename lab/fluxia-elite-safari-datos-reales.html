@@ -620,7 +620,7 @@ function originalVisibleVariable(m,mes){
  if(m.cuentaComoFijo||m.vinculoFijoId||m.excluido||m.excluidoDisponible)return false;
  if(['reponer_hucha','traspaso','traspaso_efectivo','puente'].includes(m.tipoInterno)||m.esTraspasoPropio===true)return false;
  if(m.origen==='efectivo'||m.tipoInterno==='gasto_efectivo')return false;
- if(m.origen==='banco'&&/\\b(cajero|atm|reintegro|retirada(?: de)? efectivo|disposicion(?: de)? efectivo|cash withdrawal|withdrawal)\\b/i.test(String(m.concepto||m.descripcion||m.detalle||'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'')))return false;
+ if(m.origen==='banco'&&/\b(cajero|atm|reintegro|retirada(?: de)? efectivo|disposicion(?: de)? efectivo|cash withdrawal|withdrawal)\b/i.test(String(m.concepto||m.descripcion||m.detalle||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')))return false;
  return true;
 }
 function auditMotherBrowser(){
