@@ -54,7 +54,19 @@ public struct FluxiaLoginView: View {
                 }
             } else {
                 VStack(alignment: .leading, spacing: 18) {
-                    Text("fluxia").font(.system(size: 38, weight: .semibold, design: .serif))
+                    HStack(spacing: 12) {
+                        AsyncImage(url: URL(string: "https://nacram1987-cmd.github.io/Fluxia-v20/fluxia-icon.png")) { phase in
+                        if let image = phase.image {
+                            image.resizable().scaledToFit()
+                        } else {
+                            Image(systemName: "shield.lefthalf.filled")
+                                .resizable().scaledToFit().foregroundStyle(.secondary)
+                        }
+                    }
+                    .frame(width: 32, height: 32)
+                    .accessibilityLabel("Identidad oficial de Fluxia")
+                        Text("fluxia").font(.system(size: 38, weight: .semibold, design: .serif))
+                    }
                     Text("ÉLITE BETA").font(.caption.bold()).foregroundStyle(.brown)
                     Text("Accede con tu cuenta de Fluxia")
                         .font(.title3)
