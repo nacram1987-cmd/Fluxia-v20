@@ -1,6 +1,15 @@
 # Fluxia Élite BETA · Historial Safari (independiente de PWA HTML y SwiftUI)
 Fecha: 2026-10-14
 
+## v1.5.0 · Día visible y auditoría real de octubre frente a dos colecciones del HTML (14/10/2026)
+- **Dónde mirar:** selector en Inicio y módulos: ahora muestra día de la semana, día del mes, mes y año. Pulsar abre desplegable de día/mes/año. Elegir un día NO recorta silenciosamente el listado mensual; selecciona referencia visual mientras los cargos se siguen consultando por mes.
+- **Dónde mirar:** Inicio y Variables, «Datos adicionales del HTML pendientes de conciliación»: compara colección canónica `planRescate_v2_movimientos` con `v2_movimientos` del mismo perfil autenticado por ID, fecha e importe, y muestra registros divergentes sin sumarlos al saldo.
+- **Evidencia SQL 14/10:** colección canónica 323 movimientos (11 octubre con fecha real); segunda fuente `v2_movimientos` 323 movimientos (14 octubre); exactamente tres IDs nuevos de octubre en fuente v2, cero importe/fecha modificados para los otros 11. Segunda colección `v2_fijos` tiene 14 de octubre, todos presentes por ID e importe en canónica de fijos (15); no añadirlos de nuevo.
+- **Seguridad:** las dos nuevas fuentes se solicitan únicamente con `user_id=auth.uid()` y prefijo validado de perfil, sin exposición entre perfiles. No hay nuevos posts financieros ni actualizaciones de saldos.
+- **Limitaciones importantes:** otras claves del HTML (bancos, estados, notificaciones y espejos), reglas de historial y motor contable original todavía requieren auditoría de paridad completa. GitHub no permitió extraer el enorme `index.html` original por la herramienta de archivo; esta fase se apoya en las claves/nombres y en una comparación de datos SQL de solo lectura. No declarar que ya sea 100% igual al HTML.
+- **Copia congelada:** https://nacram1987-cmd.github.io/Fluxia-v20/lab/versions/fluxia-elite-safari-v1.5.0.html
+- **QA:** sintaxis JavaScript, lectura de solo consulta, manifiesto separado y mecanismos de diferencia de fuentes comprobados a nivel código. Pendiente: Safari real, Pages efectiva, RLS multiusuario con cuentas de ensayo, regresión contable, benchmark real.
+
 ## v1.4.0 · Octubre completo, control mensual y PWA Élite (14/10/2026)
 - **Selector mensual:** eliminado input month circular de iOS; la cabecera muestra mes/año, flechas y un selector desplegable separado. Dónde mirar: Inicio, Fijos, Variables, Huchas, Ingresos, Compartidos.
 - **Cobertura de octubre de 2026 comprobada mediante SQL de solo lectura:** movimientos 11 con fecha exacta, fijos 15 marcados `mes=octubre` sin año, ingresos 5 `mes=octubre` sin año, compartidos 1 con fecha exacta. No atribuir año inventado a fijos/ingresos históricos.
