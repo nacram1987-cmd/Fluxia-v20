@@ -138,6 +138,18 @@ h1{color:#18364b}
 .csvAuditAmount{font-size:12px;font-weight:700;white-space:nowrap}
 .csvClearButton{width:100%;margin-top:12px;border:1px solid #d6c6a8;color:#745d3b;background:#faf7f0;border-radius:9px;padding:10px;font-size:11px}
 
+
+.eliteMenuGroupTitle{font:600 15px Georgia,serif;color:#6d593c;margin:17px 0 8px}
+.eliteMenuGroup{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 7px}
+.eliteMenuItem{border:1px solid #e7dfd1;background:#fffefa;border-radius:12px;padding:11px 9px;display:flex;gap:8px;align-items:center;text-align:left;min-width:0;color:#25445a}
+.eliteMenuIcon{font-size:19px;flex:0 0 25px;text-align:center}
+.eliteMenuBody{min-width:0;flex:1}.eliteMenuBody strong{font-size:11px;display:block}.eliteMenuBody small{font-size:9px;color:#7b8891;line-height:1.35;display:block;margin-top:4px}
+.eliteMenuChevron{color:#b39562;font-size:20px}
+.eliteQuickGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:6px 0 18px}
+.eliteQuickTile{display:flex;flex-direction:column;gap:5px;align-items:start;text-align:left;background:#fffdf8;border:1px solid #e8dfd0;border-radius:14px;min-height:92px;padding:11px 10px;box-shadow:0 3px 12px #16375009}
+.eliteQuickIcon{font-size:22px}.eliteQuickTile strong{font-size:12px;color:#183a50}.eliteQuickTile small{font-size:10px;color:#86929a;line-height:1.3}
+@media(max-width:370px){.eliteMenuGroup{grid-template-columns:1fr}.eliteQuickGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 #splash{position:fixed;inset:0;z-index:40;background:radial-gradient(circle at 50% 35%,#274763,#10273e 75%);color:white;display:none;align-items:center;justify-content:center;text-align:center;padding:28px}
 #splash.active{display:flex}#splash .splashLogo{width:76px;height:76px;border-radius:20px;object-fit:contain;box-shadow:0 16px 42px #07172677}
 #splash h1{font:600 41px Georgia,serif;color:#fff;margin:17px 0 0}#splash .splashBeta{display:block;color:#d1ad6a;letter-spacing:2px;font-size:11px;font-weight:750;margin:6px 0 30px}
@@ -554,18 +566,35 @@ function renderNav(){
  more.append(el('span','sym','☷'),el('span',null,'Más'));
  more.onclick=showMoreModules;b.append(more);
 }
+const legacyNavGroups=[
+ {title:'Tus finanzas',nodes:[['ingresos','💶','Ingresos'],['compartidos','👥','Compartidos'],['financiaciones','📅','Financiaciones'],['efectivo','💵','Dinero en mano'],['pagos','🧾','Pagos y usos']]},
+ {title:'Planificación',nodes:[['presupuestos','💰','Presupuestos'],['simulador','🔮','Simular'],['analisis','📈','Análisis']]},
+ {title:'Control y ayuda',nodes:[['bancos','🏦','Bancos'],['notificaciones','🔔','Notificaciones'],['ajustes','⚙️','Ajustes'],['ayuda','❓','Ayuda'],['versiones','📋','Versiones']]}
+];
+function navigateElite(id){
+ $('#detail').classList.remove('open');search='';period='Todos';
+ if(id==='bancos'){showBanksAudit();return}
+ if(id==='versiones'){showVersionHistory();return}
+ page=id;render()
+}
 function showMoreModules(){
  const d=$('#detailContent');d.replaceChildren();
- d.append(el('h2',null,'Todos tus módulos'));
- for(const [id,emoji] of [['ingresos','💼'],['compartidos','👥'],['financiaciones','📅']]){
-  const m=mods.find(x=>x.id===id),btn=el('button','entry');
-  btn.append(el('span','chargeEmoji',emoji),el('span','entryMain',m.title),el('span','amount','Abrir ›'));
-  btn.onclick=()=>{$('#detail').classList.remove('open');page=id;search='';period='Todos';render()};d.append(btn)
+ d.append(el('h2',null,'Todo Fluxia, bien organizado'));
+ d.append(el('p','editIntro','Los mismos módulos de Fluxia BETA, reunidos en una navegación limpia.'));
+ for(const group of legacyNavGroups){
+  d.append(el('h3','eliteMenuGroupTitle',group.title));
+  const area=el('div','eliteMenuGroup');
+  for(const [id,emoji,label] of group.nodes){
+   const btn=el('button','eliteMenuItem');
+   const ico=el('span','eliteMenuIcon',emoji),body=el('span','eliteMenuBody');
+   body.append(el('strong',null,label),el('small',null,id==='efectivo'?'Cartera física · no Disponible':id==='bancos'?'Conexión del HTML · en auditoría':id==='pagos'?'Usos y movimientos fechados':'Abrir módulo'));
+   btn.append(ico,body,el('span','eliteMenuChevron','›'));
+   btn.onclick=()=>navigateElite(id);area.append(btn)
+  }
+  d.append(area)
  }
- const banks=el('button','entry','🏦 Bancos · conexión y auditoría');banks.onclick=showBanksAudit;d.append(banks);
- const mother=el('a','motherLink','↗ Abrir Fluxia HTML madre');mother.href='https://nacram1987-cmd.github.io/Fluxia-v20/';mother.target='_blank';mother.rel='noopener noreferrer';d.append(mother);
- const help=el('button','entry','📋 Checklist y versiones');help.onclick=showVersionHistory;d.append(help);
- const close=el('button','entry','Cerrar');close.onclick=()=>$('#detail').classList.remove('open');d.append(close);
+ const mother=el('a','motherLink','↗ Abrir Fluxia HTML madre');
+ mother.href='https://nacram1987-cmd.github.io/Fluxia-v20/';mother.target='_blank';mother.rel='noopener noreferrer';d.append(mother);
  $('#detail').classList.add('open');
 }
 function identifyUnmatchedOctober(canonical,alternate){
@@ -777,6 +806,20 @@ function renderHome(){
   btn.onclick=()=>{page=m.id;search='';period='Todos';render()};group.append(btn)
  }
  $('#content').append(group);
+ $('#content').append(el('h2','moduleTitle','Todo lo que tenías en Fluxia BETA'));
+ const extras=el('div','eliteQuickGrid');
+ for(const [id,emoji,label,desc] of [
+  ['efectivo','💵','Dinero en mano','Cartera física'],
+  ['presupuestos','💰','Presupuestos','Límites de categoría'],
+  ['analisis','📈','Análisis','Revisar gastos'],
+  ['simulador','🔮','Simular','Probar escenarios'],
+  ['pagos','🧾','Pagos','Historial y usos'],
+  ['bancos','🏦','Bancos','Conexiones actuales']
+ ]){
+  const btn=el('button','eliteQuickTile');btn.append(el('span','eliteQuickIcon',emoji),el('strong',null,label),el('small',null,desc));
+  btn.onclick=()=>navigateElite(id);extras.append(btn)
+ }
+ $('#content').append(extras);
  const recent=modArr.flatMap(datedRows).filter(x=>monthStatus(x.record,selectedMonth)==='match').sort((a,b)=>b.date.sort-a.date.sort).slice(0,8);
  $('#content').append(el('h2','moduleTitle','Cargos y movimientos · '+monthTitle(selectedMonth)));
  if(!recent.length){$('#content').append(el('p','notice','No se han identificado fechas exactas en las colecciones consultadas. No se inventan días de cargo.'))}
@@ -956,7 +999,7 @@ function showDraftEditor(data,index,key){
  d.append(form)
 }
 
-function render(){if(!token){loginScreen();return}$('#logout').classList.remove('hide');$('#help').classList.remove('hide');renderNav();$('#content').replaceChildren();if(page==='inicio')renderHome();else renderList()}
+function render(){if(!token){loginScreen();return}$('#logout').classList.remove('hide');$('#help').classList.remove('hide');renderNav();$('#content').replaceChildren();if(page==='inicio')renderHome();else if(mods.some(m=>m.id===page&&m.key))renderList();else renderLegacySection(page)}
 $('#close').onclick=()=>$('#detail').classList.remove('open');$('#detail').onclick=e=>{if(e.target.id==='detail')$('#detail').classList.remove('open')};
 $('#help').onclick=()=>openTutorial(true);
 $('#helpClose').onclick=closeTutorial;$('#skipTutorial').onclick=closeTutorial;
