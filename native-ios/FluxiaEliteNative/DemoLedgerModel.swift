@@ -56,7 +56,7 @@ final class DemoLedgerModel: ObservableObject {
         guard !cleanTitle.isEmpty, amountCents > 0,
               let year = components.year, let month = components.month else { return false }
         let operationID = UUID().uuidString
-        let entry = EncryptedLedgerStore.Entry(id: UUID().uuidString, ownerID: Self.ownerID,
+        let entry = EncryptedLedgerStore.Entry(id: UUID().uuidString, ownerID: Self.ownerID, title: cleanTitle,
                                                year: year, month: month, kind: kind,
                                                amountCents: amountCents, operationID: operationID)
         do {
