@@ -2127,7 +2127,7 @@ function renderList(){
   const exact=selected.filter(x=>x.monthStatus==='match'||x.monthStatus==='plan'),historical=selected.filter(x=>x.monthStatus==='legacy'||x.monthStatus==='undated');
   const dated=x=>actualChargeDate(x.data)?.sort||0;
   exact.sort((x,y)=>dated(y)-dated(x));
-  count.textContent=selected.length+' registros en este filtro · '+periodRows.length+' asociados al mes · '+arr.length+' registros en nube en todos los periodos';
+  count.textContent=selected.length+' '+(selected.length===1?'registro':'registros')+' en este filtro · '+periodRows.length+' asociados al mes · '+arr.length+' en nube en todos los periodos';
   const addGroup=(title,rows)=>{
    if(!rows.length)return;
    list.append(el('h3','recordGroup',title));
