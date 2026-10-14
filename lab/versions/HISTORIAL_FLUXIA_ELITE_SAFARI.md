@@ -1,6 +1,16 @@
 # Fluxia Élite BETA · Historial Safari (independiente de PWA HTML y SwiftUI)
 Fecha: 2026-10-14
 
+## v1.1.0 · Corrección CRÍTICA de carga real (14/10/2026)
+- Hallazgo contrastado con esquema y consulta SQL de sólo lectura: 762 filas de nube, 1 cuenta autenticada; las colecciones canónicas se almacenan con la forma `p_usr-<perfil>__planRescate_v2_<módulo>`, no con los nombres sin prefijo que usaba v1.0.0.
+- Se identificó 1 perfil canónico completo con seis colecciones: movimientos 323, ingresos 41, fijos 98, provisiones 7, financiaciones 8 y compartidos 12 en el instante del análisis. Las cantidades son instantáneas y sólo confirman forma de los datos, no balance.
+- El cliente detecta prefijos sólo entre claves pertenecientes a la cuenta autenticada, selecciona sin mezclar perfiles y lee las seis colecciones exactas. Si faltan datos, indica error; nunca sustituye por arrays vacíos.
+- Recuperación del logo Apple local cacheable y logo Amazon con carga diferida; iconografía semántica con ⚡ para luz y 💰 en lugar de animales decorativos. Si falta un logo, se usa símbolo genérico.
+- Dashboard y módulos existentes pasan a poder mostrar los registros reales de la nube: fechas, importes de origen, últimos movimientos. No hay agregados contables hasta reconciliar.
+- Copia congelada: https://nacram1987-cmd.github.io/Fluxia-v20/lab/versions/fluxia-elite-safari-v1.1.0.html
+- Comprobado: JavaScript parseable, referencia de marca, separación por prefijo, lectura en modo solo consulta, sin métodos PATCH/PUT/DELETE en cliente.
+- Sin certificar: descarga pública GitHub Pages, login de usuario y experiencia Safari real, tiempos en dispositivo, paridad contable y persistencia de edición.
+
 ## v1.0.0 · Primera versión formal
 - Dashboard con conteo de registros reales y número de colecciones obtenidas de Supabase Auth con control de usuario.
 - Tarjetas por módulo con último registro que tenga fecha exacta parseable, importe original sin sumarlo como subtotal contable.
@@ -19,6 +29,7 @@ Entradas:
 1. Todas las nuevas entregas incrementan la versión mostrada en cabecera y dashboard, e incorporan changelog propio.
 2. Guardar una copia estática identificada de cada versión antes de modificar de nuevo la LAB.
 3. Mantener la URL LAB constante para la última versión y enlazar las copias históricas.
+3a. Mostrar siempre la versión en cabecera, dashboard, historial y resumen de cambios, sin prometer que Pages ha desplegado antes de probar la URL.
 4. No mezclar numeración de Élite Safari con PWA HTML v97.x ni la de builds SwiftUI.
 5. Aceptación requiere HTML y JavaScript válidos, pruebas funcionales en Safari, publicación efectiva comprobada y no regresión de rendimiento. El commit no demuestra esas comprobaciones.
 6. No permitir escritura financiera hasta demostrar integridad, separación de usuarios, migraciones y pruebas de reversión.
