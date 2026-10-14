@@ -64,12 +64,13 @@ public struct FluxiaEliteAppView: View {
                     }
                     .frame(width: 32, height: 32)
                     .accessibilityLabel("Identidad oficial de Fluxia")
-                    Text("fluxia").font(.system(size: 27, weight: .semibold, design: .serif))
+                    Text("fluxia").font(.system(size: 24, weight: .semibold, design: .serif))
                     Text("ÉLITE BETA").font(.system(size: 9, weight: .bold)).foregroundStyle(.brown)
                     Spacer()
                     Image(systemName: "bell").accessibilityLabel("Notificaciones")
                 }
-                .padding()
+                .padding(.horizontal, 14)
+                .padding(.vertical, 10)
                 HStack {
                     Button { monthOffset -= 1 } label: { Image(systemName: "chevron.left") }
                     Spacer()
@@ -78,10 +79,10 @@ public struct FluxiaEliteAppView: View {
                     Button { monthOffset += 1 } label: { Image(systemName: "chevron.right") }
                 }
                 .padding(.horizontal, 24)
-                .padding(.bottom, 12)
+                .padding(.bottom, 8)
 
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
+                    VStack(alignment: .leading, spacing: 12) {
                         if ownerID == nil {
                             Label("Inicia sesión para consultar tus datos reales", systemImage: "lock.shield")
                                 .font(.subheadline).foregroundStyle(.secondary)
@@ -118,24 +119,35 @@ public struct FluxiaEliteAppView: View {
                                 .padding()
                         }
                     }
-                    .padding()
+                    .padding(12)
                 }
-                HStack {
+            }
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                HStack(spacing: 0) {
                     ForEach(Section.allCases) { item in
                         Button {
                             section = item
                         } label: {
-                            VStack(spacing: 4) {
+                            VStack(spacing: 3) {
                                 Image(systemName: item.icon)
-                                Text(item.rawValue).font(.system(size: 9))
+                                    .font(.system(size: 17))
+                                Text(item.rawValue)
+                                    .font(.system(size: 9, weight: section == item ? .semibold : .regular))
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.75)
                             }
-                            .frame(maxWidth: .infinity)
+                            .frame(maxWidth: .infinity, minHeight: 48)
                             .foregroundStyle(section == item ? Color(red: 0.09, green: 0.21, blue: 0.34) : .gray)
+                            .contentShape(Rectangle())
                         }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(item.rawValue)
                     }
                 }
-                .padding(.vertical, 12)
+                .padding(.horizontal, 5)
+                .padding(.top, 7)
                 .background(.white)
+            }
             }
             .background(Color(red: 0.97, green: 0.97, blue: 0.95))
             .toolbar(.hidden, for: .navigationBar)
