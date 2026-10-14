@@ -47,3 +47,5 @@ jobs:
         run: node lab/qa/fluxia-elite-paridad.test.cjs
       - name: Cartera y provisiones originales (offline)
         run: node lab/qa/elite-wallet-regression.cjs
+      - name: Pantallas, menú y separación de usuario (offline)
+        run: node lab/qa/elite-modules-smoke.cjs
