@@ -15,3 +15,5 @@ test('row from another user blocked',()=>assert.throws(()=>compareSnapshots(snap
 test('row from another month blocked',()=>assert.throws(()=>compareSnapshots(snap([{...row('a'),accounting_month:'2026-09'}]),snap([row('a')])),/ROW_SCOPE_MISMATCH/));
 test('missing field differs from null',()=>{const r=compareSnapshots(snap([row('a')]),snap([{...row('a'),fixed_link:null}]));assert.deepEqual(r.same_id_value_mismatch[0].fields,['fixed_link'])});
 test('unsafe cents rejected',()=>assert.throws(()=>compareSnapshots(snap([row('a',Number.MAX_SAFE_INTEGER+1)]),snap([])),/invalid row/));
+
+test('empty matching snapshots cannot certify production parity',()=>{const r=compareSnapshots(snap([]),snap([]));assert.equal(r.certified,false);assert.equal(r.nonemptyOperationalEvidence,false)});
