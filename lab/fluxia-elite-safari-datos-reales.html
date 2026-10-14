@@ -2224,6 +2224,20 @@ function huchaReplenishmentAudit(huchas,uses){
  }
  return result
 }
+function renderHuchaReplenishments(huchas,uses){
+ const report=huchaReplenishmentAudit(huchas,uses),card=el('section','eliteHuchaBalance');
+ card.append(el('strong',null,'↩️ Reposiciones históricas de huchas'));
+ if(!report.ready){card.append(el('p','integrityWarning','Historial de reposiciones no disponible en esta fuente.'));return card}
+ card.append(el('div','eliteHuchaTotal',report.unknown||report.duplicates||report.summaryConflict||report.missingHistory?'—':money(report.verifiedCents/100)));
+ card.append(el('p','periodHint',report.verified+' operaciones verificadas · '+report.unknown+' sin vincular o incompletas · '+report.duplicates+' IDs repetidos.'));
+ if(report.summaryConflict||report.missingHistory)card.append(el('p','integrityWarning',report.summaryConflict+' diferencias entre repuesto e historial · '+report.missingHistory+' usos con reposiciones sin historial completo.'));
+ card.append(el('p','integrityWarning','Solo se cuentan entradas de reposiciones[] una vez. El campo repuesto es un control, nunca se suma de nuevo. Aún no es saldo neto conciliado.'));
+ const detail=el('details','eliteHuchaBalanceDetails');detail.append(el('summary',null,'Ver reposiciones vinculadas por hucha'));
+ for(const h of huchas){const item=report.perHucha[String(h.id)];if(!item)continue;
+  const line=el('div','eliteHuchaBalanceLine');line.append(el('span',null,String(h.nombre||'Hucha')+' · '+item.count+' reposiciones'),el('strong',null,money(item.cents/100)));detail.append(line)
+ }
+ card.append(detail);return card
+}
 function huchaUsesFromSource(isHtml){
  if(isHtml){
   if(backupFinance?.owner!==owner||backupFinance?.profile!==activeProfile)return null;
