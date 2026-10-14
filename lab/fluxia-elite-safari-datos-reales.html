@@ -199,6 +199,12 @@ h1{color:#18364b}
 @media(max-width:365px){.legacyStatsRow{grid-template-columns:1fr 1fr}.legacyActionRow{grid-template-columns:1fr 1fr}}
 @media(prefers-reduced-motion:reduce){.legacyBudgetFill{transition:none}}
 
+
+.legacyBackupPanel{border:1px solid #e7d9bd;background:#fcf7ea;border-radius:14px;padding:12px;margin:12px 0}
+.legacyBackupPanel>strong{font:600 15px Georgia,serif;color:#36556a}
+.legacyBackupPanel .legacyPrimary{margin:8px 0 0}
+.legacySuccess{background:#ecf7f3;border:1px solid #d1eadf;border-radius:9px;color:#2a725d;padding:9px 10px;font-size:11px;line-height:1.5}
+
 #splash{position:fixed;inset:0;z-index:40;background:radial-gradient(circle at 50% 35%,#274763,#10273e 75%);color:white;display:none;align-items:center;justify-content:center;text-align:center;padding:28px}
 #splash.active{display:flex}#splash .splashLogo{width:76px;height:76px;border-radius:20px;object-fit:contain;box-shadow:0 16px 42px #07172677}
 #splash h1{font:600 41px Georgia,serif;color:#fff;margin:17px 0 0}#splash .splashBeta{display:block;color:#d1ad6a;letter-spacing:2px;font-size:11px;font-weight:750;margin:6px 0 30px}
@@ -219,7 +225,7 @@ h1{color:#18364b}
 <div id="splash" role="status" aria-live="polite"><div><img class="splashLogo" src="../fluxia-icon.png" alt="Logo oficial Fluxia"><h1>fluxia</h1><span class="splashBeta">ÉLITE BETA</span><div class="spinner"></div><p class="splashStatus" id="splashStatus">Conectando con tu nube…</p></div></div>
 <div id="onboarding" role="dialog" aria-modal="true" aria-label="Bienvenida a Fluxia"><div class="welcomeCard"><div class="stepIcon" id="stepIcon">✦</div><div class="titleRow"><span class="pill" id="stepCount">1 / 6</span><button class="textbutton" id="helpClose" aria-label="Cerrar tutorial">✕</button></div><h2 id="stepTitle"></h2><p id="stepText"></p><div class="welcomeProgress"><i id="stepProgress"></i></div><div class="welcomeActions"><button class="skip" id="skipTutorial">Omitir</button><button class="skip" id="prevTutorial">Anterior</button><button class="next" id="nextTutorial">Siguiente →</button></div></div></div>
 <div id="detail"><div class="sheet"><div class="titleRow"><h2>Detalle de registro real</h2><button id="close" class="textbutton">Cerrar ✕</button></div><div id="detailContent"></div></div></div>
-<script src="js/fluxia-espejo-csv-v1.js"></script><script src="js/fluxia-elite-wallet-v1.js"></script>
+<script src="js/fluxia-espejo-csv-v1.js"></script><script src="js/fluxia-elite-wallet-v1.js"></script><script src="js/fluxia-elite-backup-v1.js"></script>
 <script>
 (() => {
 'use strict';
@@ -236,7 +242,7 @@ const mods=[
 let token='',owner='',items={},page='inicio',search='',period='Todos',error='',loading=false, tutorialIndex=0,searchTimer=null;
 let selectedMonth=new Date().getFullYear()+'-'+String(new Date().getMonth()+1).padStart(2,'0');
 let selectedDay=new Date().getDate();let sourceDivergence=[];let rawSources={};let sourceUpdated={};let csvAudit=null;let csvAuditError='';let extraFinance={};
-let draftEdits=new Map();let currentDetail=null;let activeProfile='';
+let draftEdits=new Map();let currentDetail=null;let activeProfile='';let walletBackup=null;let walletBackupError='';
 const TUTORIAL_VERSION='1';
 const steps=[['✦','Bienvenido a Fluxia Élite','Tu espacio financiero con la identidad azul y oro de Fluxia. Esta vista Safari permite navegar por registros auténticos.'],['◈','Disponible fiable','Nunca mostramos un saldo inventado. El Disponible aparecerá cuando el motor contable esté conciliado con Fluxia HTML.'],['↙','Ingresos y gastos','Entra en Ingresos, Fijos y Variables. Busca conceptos y revisa los importes originales sin alterarlos.'],['◆','Huchas y previsiones','Consulta las provisiones reales. Aportaciones, rescates y operaciones retroactivas no se recalculan hasta validar la lógica histórica.'],['♧','Compartidos y financiación','Accede a los módulos desde sus tarjetas de Inicio. Abre un registro para revisar fecha, importe y categoría originales.'],['✓','Seguridad y límites actuales','Cada cuenta consulta solo sus propias colecciones en Supabase. Esta vista no modifica bancos ni saldos; la app iOS nativa sigue desarrollándose.']];
 const $=s=>document.querySelector(s),el=(tag,cls,txt)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n};
@@ -554,7 +560,7 @@ async function loadCanonicalProfile(prefix){
   }else if(optional.includes(key)){nextExtra[key]=parsed}
   fresh[key]=row.updated_at||null;
  }
- draftEdits.clear();csvAudit=null;csvAuditError='';motherAudit=null;extraFinance=nextExtra;
+ draftEdits.clear();csvAudit=null;csvAuditError='';walletBackup=null;walletBackupError='';motherAudit=null;extraFinance=nextExtra;
  items=next;sourceUpdated=fresh;activeProfile=prefix;rawSources={movimientos:Array.isArray(nextExtra.v2_movimientos)?nextExtra.v2_movimientos:[],fijos:Array.isArray(nextExtra.v2_fijos)?nextExtra.v2_fijos:[]};
  sourceDivergence=identifyUnmatchedOctober(next.planRescate_v2_movimientos||[],rawSources.movimientos);
  page='inicio';search='';period='Todos';
@@ -839,7 +845,7 @@ function financeSourceNotice(source,thing){
  const stale=!elDate||Number.isNaN(elDate.getTime())||Date.now()-elDate.getTime()>24*60*60*1000;
  const note=el('div',stale?'legacySourceWarning':'legacySourceInfo');
  note.append(el('strong',null,stale?'⚠️ Copia histórica: no equivale al saldo actual':'ℹ️ Última copia leída'));
- note.append(el('p',null,source.present?'Datos de '+thing+' almacenados el '+dateLabel+'. No mezclar con movimientos en tiempo real ni considerar el saldo actual confirmado.':'No se ha encontrado una copia legible de '+thing+' para este perfil. No se representa como cero.'));
+ note.append(el('p',null,source.present?(source.origin==='backup'?'Lectura privada de la copia exportada por el HTML del mismo perfil, con fecha '+dateLabel+'. No se ha guardado ni sincronizado en Élite.':'Datos de '+thing+' almacenados el '+dateLabel+'. No mezclar con movimientos en tiempo real ni considerar el saldo actual confirmado.'):'No se ha encontrado una copia legible de '+thing+' para este perfil. No se representa como cero.'));
  return note
 }
 function legacyExplanatory(title,description){
@@ -860,7 +866,33 @@ function showMotherOperation(heading){
 function renderWallet(){
  renderMonthSelector();head('💵 Dinero en mano');
  $('#content').append(el('p','welcomeDescription','Tu efectivo físico: billetes y monedas. Es distinto del Disponible del mes.'));
- const source=cashOrFinanceSource(['v2_efectivo','planRescate_v2_efectivo'],v=>v!==null&&typeof v==='object'&&!Array.isArray(v)&&Array.isArray(v.movimientos));
+ const importPanel=el('section','legacyBackupPanel'),description=el('p','csvHint','Si tu HTML dispone de movimientos más recientes, puedes leer la «Copia solo este perfil» desde Ajustes. Se procesa exclusivamente en este iPhone, sin enviarla a internet. El archivo completo puede incluir datos privados; no lo compartas.');
+ importPanel.append(el('strong',null,'🗂️ Leer cartera actual del HTML'),description);
+ const button=el('button','legacyPrimary','Seleccionar copia del perfil (.json)'),fileInput=el('input');
+ fileInput.type='file';fileInput.accept='.json,application/json';fileInput.style.display='none';fileInput.setAttribute('aria-label','Elegir copia local exportada desde Ajustes de Fluxia HTML');
+ button.onclick=()=>fileInput.click();
+ fileInput.onchange=async()=>{
+  const file=fileInput.files?.[0];if(!file)return;
+  walletBackup=null;walletBackupError='';
+  if(file.size>8*1024*1024){walletBackupError='La copia supera 8 MB. No se ha abierto.';render();return}
+  button.disabled=true;
+  try{
+   if(!window.FluxiaProfileWalletBackup)throw Error('Falta el lector local de copias.');
+   const profile=activeProfile.slice(2,-2);
+   const parsed=window.FluxiaProfileWalletBackup.inspect(await file.text(),profile);
+   if(!token||!owner||activeProfile!=='p_'+profile+'__')throw Error('La sesión ha cambiado: vuelve a iniciar la lectura.');
+   walletBackup={...parsed,owner,activeProfile};
+   const check=window.FluxiaWalletAudit?.inspect(parsed.wallet);
+   if(!check?.ok)throw Error(check?.reason||'La cartera no puede interpretarse');
+  }catch(e){walletBackup=null;walletBackupError=e?.message||String(e)}
+  finally{button.disabled=false;render()}
+ };
+ importPanel.append(button,fileInput);
+ if(walletBackupError)importPanel.append(el('p','legacyAlert','⚠️ '+walletBackupError));
+ if(walletBackup&&walletBackup.owner===owner&&walletBackup.activeProfile===activeProfile)importPanel.append(el('p','legacySuccess','✓ Copia del mismo perfil validada. Datos cargados solo en memoria. No se ha alterado ningún movimiento.'));
+ $('#content').append(importPanel);
+ const local=walletBackup&&walletBackup.owner===owner&&walletBackup.activeProfile===activeProfile?walletBackup:null;
+ const source=local?{key:'copia perfil HTML',value:local.wallet,updatedAt:local.when||null,present:true,origin:'backup'}:cashOrFinanceSource(['v2_efectivo','planRescate_v2_efectivo'],v=>v!==null&&typeof v==='object'&&!Array.isArray(v)&&Array.isArray(v.movimientos));
  $('#content').append(financeSourceNotice(source,'Dinero en mano'));
  if(!source.present||!window.FluxiaWalletAudit){
   $('#content').append(legacyExplanatory('Cartera sin datos actuales','No se puede deducir el efectivo en mano a partir de los movimientos bancarios ni de otras huchas.'));
@@ -1286,6 +1318,6 @@ $('#help').onclick=()=>openTutorial(true);
 $('#helpClose').onclick=closeTutorial;$('#skipTutorial').onclick=closeTutorial;
 $('#prevTutorial').onclick=()=>{if(tutorialIndex>0){tutorialIndex--;updateTutorial()}};
 $('#nextTutorial').onclick=()=>{if(tutorialIndex===steps.length-1)closeTutorial();else{tutorialIndex++;updateTutorial()}};
-$('#logout').onclick=()=>{draftEdits.clear();csvAudit=null;csvAuditError='';motherAudit=null;token='';owner='';activeProfile='';items={};extraFinance={};sourceUpdated={};rawSources={};sourceDivergence=[];$('#onboarding').classList.remove('active');$('#detail').classList.remove('open');loginScreen()};loginScreen();
+$('#logout').onclick=()=>{draftEdits.clear();csvAudit=null;csvAuditError='';walletBackup=null;walletBackupError='';motherAudit=null;token='';owner='';activeProfile='';items={};extraFinance={};sourceUpdated={};rawSources={};sourceDivergence=[];$('#onboarding').classList.remove('active');$('#detail').classList.remove('open');loginScreen()};loginScreen();
 })();
 </script></body></html>
