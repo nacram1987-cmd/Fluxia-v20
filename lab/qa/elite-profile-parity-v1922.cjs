@@ -1,0 +1,22 @@
+'use strict';
+// Pure offline test. No Supabase writes, no real account data.
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+const start=html.indexOf('function summarizeProfileBackup('),end=html.indexOf('async function auditMotherFile(',start);
+assert(start>=0&&end>start,'Missing profile backup comparison');
+const profile='usr-11111111-1111-4111-8111-111111111111';
+const mods=[{id:'variables',key:'planRescate_v2_movimientos'},{id:'ingresos',key:'planRescate_v2_ingresos'},{id:'fijos',key:'planRescate_v2_fijos'}];
+const cloud={planRescate_v2_movimientos:[{id:'a',importe:7.5}],planRescate_v2_ingresos:[{id:'b',importe:100}],planRescate_v2_fijos:[]};
+const context=vm.createContext({mods,canon:m=>cloud[m.key],motherRowId:r=>String(r.id||''),motherComparisonFields:(a,b)=>Object.keys(a).filter(k=>JSON.stringify(a[k])!==JSON.stringify(b[k]))});
+vm.runInContext(html.slice(start,end),context,{timeout:1000});
+const backup={keys:{['fluxia_user_'+profile+'__v2_movimientos']:JSON.stringify([{id:'a',importe:7.5},{id:'c',importe:5}]),['fluxia_user_'+profile+'__v2_ingresos']:[{id:'b',importe:100}]}};
+const result=context.summarizeProfileBackup(backup,profile);
+let n=0;
+const test=(label,fn)=>{fn();console.log('PASS',label);n++};
+test('find actual missing record by ID',()=>assert.equal(result[0].missing.length,1));
+test('preserve original reference without writing',()=>assert.equal(cloud.planRescate_v2_movimientos.length,1));
+test('matching income identified',()=>assert.equal(result[1].state,'coincidencia de campos cotejados'));
+test('missing backup module never treated as zero',()=>assert.equal(result[2].state,'sin fuente HTML verificable'));
+test('unknown IDs block equivalence',()=>{const b={keys:{['fluxia_user_'+profile+'__v2_movimientos']:[{importe:5}]}};assert.equal(context.summarizeProfileBackup(b,profile)[0].state,'identidad insuficiente')});
+test('duplicate IDs block equivalence',()=>{const b={keys:{['fluxia_user_'+profile+'__v2_movimientos']:[{id:'a',importe:7.5},{id:'a',importe:7.5}]}};assert.equal(context.summarizeProfileBackup(b,profile)[0].state,'identidad insuficiente')});
+console.log('RESULT',n,'multi-module synthetic checks passed');
