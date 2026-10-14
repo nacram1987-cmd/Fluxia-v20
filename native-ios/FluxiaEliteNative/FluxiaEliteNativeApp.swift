@@ -12,6 +12,7 @@ struct FluxiaEliteNativeApp: App {
 private struct NativeAccessRoot: View {
     @StateObject private var session = AuthSessionModel()
     @State private var isShowingDemo = ProcessInfo.processInfo.arguments.contains("-fluxia.demoMode")
+    @AppStorage("fluxia.elite.darkMode") private var darkMode = false
 
     var body: some View {
         Group {
@@ -32,6 +33,7 @@ private struct NativeAccessRoot: View {
             }
         }
         .task { session.start() }
+        .preferredColorScheme(darkMode ? .dark : .light)
     }
 }
 
@@ -107,7 +109,6 @@ private struct SignInLanding: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(ElitePalette.navy.ignoresSafeArea())
         }
-        .preferredColorScheme(UserDefaults.standard.bool(forKey: "fluxia.elite.darkMode") ? .dark : .light)
     }
 }
 
