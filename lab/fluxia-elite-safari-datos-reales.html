@@ -311,9 +311,10 @@ const money=v=>typeof v==='number'&&isFinite(v)?new Intl.NumberFormat('es-ES',{s
 const field=(obj,keys)=>{for(const k of keys){let v=obj[k];if(typeof v==='string'&&v.trim())return v}return null};
 const displayName=user=>String(user?.user_metadata?.display_name||user?.user_metadata?.full_name||user?.user_metadata?.name||'').trim();
 const canon=m=>{const a=items[m.key];return Array.isArray(a)?a:null};
-const ELITE_SAFARI_VERSION='1.9.90';
+const ELITE_SAFARI_VERSION='1.9.91';
 if(typeof document!=='undefined')document.title='Fluxia Élite BETA v'+ELITE_SAFARI_VERSION+' · Safari';
 const ELITE_CHANGELOG=[
+ ['1.9.91','Bancos: la bandeja temporal se fusiona por bankRef en lecturas repetidas. Los duplicados ya vistos no se reintroducen; las filas sin identidad estable no se deduplican por parecido y permanecen pendientes de revisión.'],
  ['1.9.90','Bancos: las decisiones de revisión de conflictos se conservan de forma local y aislada por usuario, perfil y mes. Una recarga o segunda lectura no reabre decisiones ya tomadas; siguen sin escribir movimientos ni Disponible.'],
  ['1.9.89','Bancos: revisión explícita de conflictos por bankRef. Cada conflicto puede conservar el registro existente o preparar una propuesta de entrada; las decisiones quedan limitadas a la sesión y nunca escriben ni alteran el Disponible.'],
  ['1.9.88','Huchas: operaciones antiguas con vínculo inequívoco pero sin ID ya no desaparecen; se incluyen como incompletas, se aíslan por hucha y nunca certifican el saldo hasta disponer de identidad estable.'],
@@ -1070,8 +1071,11 @@ async function runBankConnector(action,body,button,state){
    const active=(result.conexiones||[]).filter(row=>row.permiso_valido||row.operativo);
    state.textContent='✓ Conexión consultada: '+active.length+' banco(s) con permiso operativo de '+(result.nBancos||0)+'. '+(result.version||'');
   }else{
-   const rows=connector.normalizeRows(result.movimientos||[]);extraFinance={...extraFinance,banco_bandeja:rows,bankConnectorLastSync:new Date().toISOString(),bankConnectorStatus:result};
-   state.textContent='✓ Lectura recibida: '+rows.length+' movimiento(s). Bandeja temporal preparada para revisión; no se ha escrito contabilidad.';
+   const rows=connector.normalizeRows(result.movimientos||[]);
+   const previous=Array.isArray(extraFinance?.banco_bandeja)?extraFinance.banco_bandeja:[];
+   const merged=typeof connector.mergeRows==='function'?connector.mergeRows(previous,rows):{rows,duplicates:[]};
+   extraFinance={...extraFinance,banco_bandeja:merged.rows,bankInboxDuplicates:[...(extraFinance?.bankInboxDuplicates||[]),...merged.duplicates],bankConnectorLastSync:new Date().toISOString(),bankConnectorStatus:result};
+   state.textContent='✓ Lectura recibida: '+rows.length+' · bandeja consolidada: '+merged.rows.length+' · duplicados no reintroducidos: '+merged.duplicates.length+'. No se ha escrito contabilidad.';
   }
   $('#detailContent').replaceChildren();showBanksAudit();
  }catch(e){state.textContent='No se pudo consultar Bancos: '+(e?.message||e);}
