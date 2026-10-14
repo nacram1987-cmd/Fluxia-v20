@@ -25,5 +25,5 @@ assert(dryRun.includes('migrationCandidateCollisions(additions)'),'Dry-run must 
 const proposal=html.slice(html.indexOf('function buildPrivateMigrationReport('),html.indexOf('function simulateFinancialReplay('));
 assert(proposal.includes('candidateCollisions.length===0'),'Proposal must refuse repeated candidate charges');
 assert(html.includes("const ELITE_SAFARI_VERSION='1.9.44'"));
-for(const script of html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/g))if(script[1])new vm.Script(script[1]);
+for(const script of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(script[1])new vm.Script(script[1]);
 console.log('PASS: v1.9.44 duplicate charge detection with Spanish/ISO dates and separate candidate IDs');
