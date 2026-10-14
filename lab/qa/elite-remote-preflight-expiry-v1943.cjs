@@ -1,0 +1,18 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+const a=html.indexOf('function livePreflightStatus('),b=html.indexOf('function renderMigrationReadiness(',a);
+assert(a>=0&&b>a,'Missing bounded live cloud preflight');
+const c=vm.createContext({});vm.runInContext(html.slice(a,b),c,{timeout:1000});
+const backup={},other={},now=Date.parse('2026-10-14T20:00:00Z');
+const record={backup,checkedAt:'2026-10-14T19:59:00Z',result:{ok:true}};
+assert.equal(c.livePreflightStatus(record,backup,now).usable,true);
+assert.equal(c.livePreflightStatus(record,backup,now+180000).reason,'LIVE_CHECK_EXPIRED');
+assert.equal(c.livePreflightStatus(record,other,now).usable,false);
+assert.equal(c.livePreflightStatus({...record,result:{ok:false,reason:'REMOTE_CLOUD_CHANGED'}},backup,now).reason,'REMOTE_CLOUD_CHANGED');
+assert.equal(c.livePreflightStatus({...record,checkedAt:'2026-10-14T20:05:00Z'},backup,now).usable,false);
+assert.equal(c.livePreflightStatus(null,backup,now).usable,false);
+assert(html.includes("async function loadCanonicalProfile(prefix,{preserveView=false}={}){\n remotePreflightResult=null;"));
+assert(html.includes("const ELITE_SAFARI_VERSION='1.9.43'"));
+for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(m[1])new vm.Script(m[1]);
+console.log('PASS remote preflight TTL, account isolation, refresh invalidation and JS syntax');
