@@ -1,0 +1,33 @@
+name: Fluxia Elite BETA iOS simulator build
+on:
+  push:
+    branches:
+      - feature/ios-ledger-core-20261014
+    paths:
+      - 'native-core/**'
+      - '.github/workflows/fluxia-ios-simulator.yml'
+  workflow_dispatch:
+jobs:
+  ios-simulator:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate Xcode project
+        working-directory: native-core
+        run: xcodegen generate --spec project.yml
+      - name: Build iOS simulator (unsigned)
+        working-directory: native-core
+        run: |
+          xcodebuild -project FluxiaEliteBeta.xcodeproj -scheme FluxiaEliteBeta -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
+      - name: Package simulator app
+        working-directory: native-core
+        run: |
+          cd build/Build/Products/Debug-iphonesimulator
+          zip -qr "$GITHUB_WORKSPACE/FluxiaEliteBeta-iOS-Simulator.zip" FluxiaEliteBeta.app
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FluxiaEliteBeta-iOS-Simulator
+          path: FluxiaEliteBeta-iOS-Simulator.zip
+          retention-days: 14
