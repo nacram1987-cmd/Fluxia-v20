@@ -20,6 +20,52 @@ header{box-shadow:0 2px 16px #18364c0a;border-bottom-color:#ede9df;padding:10px 
 .primary{background:linear-gradient(120deg,#1d425f,#10273f);box-shadow:0 7px 18px #17354d23}
 :focus-visible{outline:3px solid #ba9759;outline-offset:3px}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* ÉLITE VISUAL v2: warmth, brand identity, bespoke financial tiles. No image libraries or animations. */
+:root{--navy:#173951;--gold:#b68a4e;--muted:#747f88;--bg:#f7f6f2;--line:#ebe7df;--pearl:#fffefa;--mint:#e6f0e9}
+body{background:#f7f6f2;color:#203d4c}
+header{background:#fffefa;box-shadow:0 3px 16px #253d4910;gap:10px;padding:9px 14px}
+.brandIcon{width:37px;height:37px;border-radius:12px;box-shadow:0 3px 8px #14374c19}
+.brand strong{font:600 27px Georgia,serif;letter-spacing:-.9px;color:#1d3e52}
+.brand small{font-size:9px;letter-spacing:1.15px}
+#help{background:#f3eee4;color:#826032;border:1px solid #ece2d2;border-radius:999px;padding:7px 11px}
+.content{padding:17px 14px}
+h1{color:#18364b}
+.sectioneyebrow{display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:1.3px;color:#a27e49;font-weight:800;font-size:10px;margin:4px 0 5px}
+.sectioneyebrow:before{content:"";width:14px;height:2px;background:#b79458;border-radius:2px}
+.welcomeTitle{font:600 27px Georgia,serif;letter-spacing:-.7px;margin:0 0 4px;color:#1b3b4f}
+.welcomeDescription{font-size:12px;color:#77828a;line-height:1.5;margin:0 0 16px}
+.card.hero{background:linear-gradient(135deg,#e4efec 0%,#e7f1ea 53%,#f4f0e5 100%);color:#183e4c;border:1px solid #d2e2d8;border-radius:20px;box-shadow:0 8px 26px #2e76601a;min-height:162px;padding:20px 19px}
+.hero:after{width:175px;height:175px;border:1px solid #ffffffa8;right:-55px;top:-72px;box-shadow:0 0 0 31px #ffffff20,0 0 0 65px #ffffff1c}
+.hero .big{font-size:44px;line-height:1.1;color:#17394b;margin:14px 0 13px}
+.hero small{color:#526f69;font-size:11px;line-height:1.4;max-width:270px;display:block;position:relative;z-index:1}
+.heroHeadline{font-size:12px;letter-spacing:.4px;font-weight:750;position:relative;z-index:1}
+.heroBadge{display:inline-block;float:right;position:relative;z-index:1;background:#fff9eb;color:#916d33;border:1px solid #e3d4b3;border-radius:999px;padding:4px 9px;font-size:10px;font-weight:800}
+.moduleTitle{font:600 21px Georgia,serif;color:#24445a;margin:19px 0 12px}
+.grid{gap:11px}
+.tile{position:relative;overflow:hidden;border:1px solid #ede6dc;min-height:116px;padding:14px 13px 13px;border-radius:17px;box-shadow:0 6px 16px #24435509;transition:transform .14s ease,box-shadow .14s ease}
+.tile:active{transform:scale(.985)}
+.tile:before{content:"";height:3px;position:absolute;top:0;left:0;right:0;background:var(--tileAccent,#b68a4e);opacity:.85}
+.tile .symbol{width:37px;height:37px;font-size:20px;background:var(--tileBg,#f8eee0);color:var(--tileText,#a37537);border-radius:12px}
+.tile strong{font-size:14px;color:#203d50;margin:8px 0 5px}
+.tile span:last-child{font-size:11px;color:#7a8185}
+.tile[data-section="ingresos"]{--tileAccent:#84bca5;--tileBg:#e6f4eb;--tileText:#32755b}
+.tile[data-section="fijos"]{--tileAccent:#b9a1d9;--tileBg:#f1eafa;--tileText:#765a9d}
+.tile[data-section="variables"]{--tileAccent:#d9b286;--tileBg:#fff1df;--tileText:#ad7536}
+.tile[data-section="huchas"]{--tileAccent:#88b8c5;--tileBg:#e5f2f5;--tileText:#36778b}
+.tile[data-section="compartidos"]{--tileAccent:#daa3a3;--tileBg:#fbebec;--tileText:#ae6268}
+.tile[data-section="financiaciones"]{--tileAccent:#b6b7a0;--tileBg:#f1f2e7;--tileText:#707653}
+.entry{box-shadow:0 1px 4px #16375006;padding:13px 14px}
+.entry:before{content:"";width:3px;align-self:stretch;border-radius:5px;background:#e4d0a8;flex:0 0 3px}
+.entryMain strong{font-size:13px}.entryMain small{font-size:11px}
+.amount{color:#244f58;font-weight:800}
+.bottom{background:#fffefa;border-color:#ebe7df;box-shadow:0 -4px 18px #233c4a0c}
+.bottom button{gap:4px}.bottom button.active{color:#183e50}
+.bottom button.active .sym{color:#9d773b}
+.bottom button.active:after{content:"";height:3px;width:16px;background:#b99154;border-radius:5px;position:absolute;bottom:calc(5px + env(safe-area-inset-bottom))}
+.pill{background:#f5ebd9}
+@media(prefers-reduced-motion:reduce){.tile{transition:none}}
+
 #splash{position:fixed;inset:0;z-index:40;background:radial-gradient(circle at 50% 35%,#274763,#10273e 75%);color:white;display:none;align-items:center;justify-content:center;text-align:center;padding:28px}
 #splash.active{display:flex}#splash .splashLogo{width:76px;height:76px;border-radius:20px;object-fit:contain;box-shadow:0 16px 42px #07172677}
 #splash h1{font:600 41px Georgia,serif;color:#fff;margin:17px 0 0}#splash .splashBeta{display:block;color:#d1ad6a;letter-spacing:2px;font-size:11px;font-weight:750;margin:6px 0 30px}
@@ -100,9 +146,17 @@ function loginScreen(){
 }
 function head(title){const h=el('h1',null,title);$('#content').append(h)}
 function renderNav(){const b=$('#bottom');b.replaceChildren();b.classList.remove('hide');for(const m of mods.slice(0,5)){const btn=el('button',(m.id===page?'active':''));btn.append(el('span','sym',m.icon),el('span',null,m.title));btn.onclick=()=>{page=m.id;search='';period='Todos';render()};b.append(btn)}}
-function renderHome(){head('Mi Fluxia');const hero=el('div','card hero');hero.append(el('span',null,'Disponible'),el('strong','big','—'),el('small',null,'Pendiente de conciliación contable · no es un saldo cero'));$('#content').append(hero);
- const group=el('div','grid');for(const m of mods.slice(1)){const arr=canon(m),btn=el('button','tile');btn.append(el('span','symbol',m.icon),el('strong',null,m.title),el('span',null,arr?arr.length+' registros originales':'Pendiente de lectura'));btn.onclick=()=>{page=m.id;search='';period='Todos';render()};group.append(btn)}$('#content').append(group);
- $('#content').append(el('p','notice','Esta es una interfaz de contraste para Safari: conserva los datos originales de Fluxia, pero no ejecuta SwiftUI. La aplicación nativa continúa en su simulador iOS.'));
+function renderHome(){
+ $('#content').append(el('div','sectioneyebrow','TU ESPACIO FINANCIERO'));
+ $('#content').append(el('h1','welcomeTitle','Todo bajo control.'));
+ $('#content').append(el('p','welcomeDescription','Tus finanzas, claras y a tu ritmo. ✨'));
+ const hero=el('div','card hero');
+ const heroTop=el('div');heroTop.append(el('span','heroHeadline','◈  Disponible'),el('span','heroBadge','POR VALIDAR'));
+ hero.append(heroTop,el('strong','big','—'),el('small',null,'Preparando el cálculo contable con las reglas de Fluxia. Tus registros están disponibles abajo.'));
+ $('#content').append(hero);
+ $('#content').append(el('h2','moduleTitle','Tus movimientos y planes'));
+ const group=el('div','grid');for(const m of mods.slice(1)){const arr=canon(m),btn=el('button','tile');btn.dataset.section=m.id;btn.append(el('span','symbol',m.icon),el('strong',null,m.title),el('span',null,arr?arr.length+' registros en tu nube':'Pendiente de lectura'));btn.onclick=()=>{page=m.id;search='';period='Todos';render()};group.append(btn)}$('#content').append(group);
+ $('#content').append(el('p','notice','Datos originales de tu cuenta · Vista Safari de consulta rápida · La app iOS nativa sigue en desarrollo.'));
 }
 function renderList(){
  const m=mods.find(x=>x.id===page),arr=canon(m);head(m.title);
