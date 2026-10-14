@@ -2258,6 +2258,46 @@ function temporaryUseOutstanding(use){
  }else if(repaid>0)return {kind:'history_unavailable'};
  return {kind:'verified_summary',cents:owed,amountCents:Math.round(amount*100),repaidCents:Math.round(repaid*100)}
 }
+function reconstructedHuchaLedger(huchas,uses){
+ const contributions=grossHuchaContributions(huchas);
+ const report={sourceReady:Array.isArray(uses),complete:false,rows:[],grossCents:contributions.cents,withdrawnCents:0,replacedCents:0,provisionalCents:null,unresolved:0,duplicates:0};
+ if(!Array.isArray(huchas)||!Array.isArray(uses))return report;
+ const detail=new Map();
+ for(let i=0;i<huchas.length;i++){
+  const h=huchas[i],id=String(h?.id??'').trim();
+  if(!id||detail.has(id)){report.duplicates++;continue}
+  detail.set(id,{id,name:String(h.nombre||'Hucha'),grossCents:contributions.details[i]?.cents||0,withdrawnCents:0,replacedCents:0,issues:0,count:0})
+ }
+ const seen=new Set();
+ for(const use of uses){
+  if(!use||typeof use!=='object'){report.unresolved++;continue}
+  const uid=String(use.id??'').trim();
+  if(!uid||seen.has(uid)){report.duplicates++;continue}
+  seen.add(uid);
+  const link=exactHuchaUsageLink(use,huchas);
+  if(link.kind!=='linked'){report.unresolved++;continue}
+  const item=detail.get(String(link.hucha.id));
+  const amount=use.importe,kind=String(use.tipo||'').toLowerCase().trim();
+  if(!item||typeof amount!=='number'||!Number.isFinite(amount)||amount<0||(kind!=='temporal'&&kind!=='definitivo')){
+   report.unresolved++;if(item)item.issues++;continue
+  }
+  let returned=0;
+  if(kind==='temporal'){
+   const status=temporaryUseOutstanding(use);
+   if(status.kind!=='verified_summary'){report.unresolved++;item.issues++;continue}
+   returned=status.repaidCents
+  }else if((Array.isArray(use.reposiciones)&&use.reposiciones.length)||typeof use.repuesto==='number'&&use.repuesto!==0){
+   report.unresolved++;item.issues++;continue
+  }
+  const spent=Math.round(amount*100);
+  item.withdrawnCents+=spent;item.replacedCents+=returned;item.count++;
+  report.withdrawnCents+=spent;report.replacedCents+=returned
+ }
+ report.rows=Array.from(detail.values()).map(item=>({...item,provisionalCents:item.grossCents-item.withdrawnCents+item.replacedCents}));
+ report.complete=contributions.complete&&report.unresolved===0&&report.duplicates===0&&detail.size===huchas.length;
+ if(report.complete)report.provisionalCents=report.grossCents-report.withdrawnCents+report.replacedCents;
+ return report
+}
 function huchaUsesFromSource(isHtml){
  if(isHtml){
   if(backupFinance?.owner!==owner||backupFinance?.profile!==activeProfile)return null;
