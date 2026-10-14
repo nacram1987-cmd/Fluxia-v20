@@ -50,7 +50,7 @@ jobs:
           xcrun simctl install "$DEVICE_ID" build/DerivedData/Build/Products/Debug-iphonesimulator/FluxiaEliteNative.app
           mkdir -p screenshots
           xcrun simctl launch --terminate-running-process "$DEVICE_ID" com.fluxia.elite.native.lab -fluxia.demoMode YES -fluxia.elite.darkMode NO
-          sleep 4
+          sleep 10
           xcrun simctl io "$DEVICE_ID" screenshot screenshots/Fluxia-Elite-SwiftUI-Inicio-Claro.png
           xcrun simctl launch --terminate-running-process "$DEVICE_ID" com.fluxia.elite.native.lab -fluxia.demoMode YES -fluxia.elite.darkMode YES
           sleep 4
@@ -61,6 +61,9 @@ jobs:
           test -s screenshots/Fluxia-Elite-SwiftUI-Inicio-Claro.png
           test -s screenshots/Fluxia-Elite-SwiftUI-Inicio-Oscuro.png
           test -s screenshots/Fluxia-Elite-SwiftUI-Acceso-Sin-Configurar.png
+          test "$(stat -f%z screenshots/Fluxia-Elite-SwiftUI-Inicio-Claro.png)" -gt 250000
+          test "$(stat -f%z screenshots/Fluxia-Elite-SwiftUI-Inicio-Oscuro.png)" -gt 250000
+          test "$(stat -f%z screenshots/Fluxia-Elite-SwiftUI-Acceso-Sin-Configurar.png)" -gt 100000
           if cmp -s screenshots/Fluxia-Elite-SwiftUI-Inicio-Claro.png screenshots/Fluxia-Elite-SwiftUI-Inicio-Oscuro.png; then
             echo "Light and dark screenshots are identical; theme selection did not take effect"
             exit 1
