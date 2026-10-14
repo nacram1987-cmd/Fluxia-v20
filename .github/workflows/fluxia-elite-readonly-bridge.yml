@@ -1,0 +1,27 @@
+name: Fluxia Elite Read-only Bridge QA
+on:
+  push:
+    branches:
+      - feature/elite-readonly-parity-bridge
+  workflow_dispatch:
+jobs:
+  finance-bridge:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ios-app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Unit and isolation tests
+        run: node --test tests/*.test.mjs
+      - name: Verify development web bundle
+        run: node scripts/verify-development-bundle.mjs
+      - name: Validate embedded imports
+        run: |
+          test -f www/src/cloud-status-ui.mjs
+          test -f www/src/supabase-cloud-reader.mjs
+          grep -q 'cloudReadButton' www/index.html
+          grep -q 'cloud-status-ui.mjs' www/index.html
