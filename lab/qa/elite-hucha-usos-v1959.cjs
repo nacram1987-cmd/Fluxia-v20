@@ -1,0 +1,15 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+const a=html.indexOf('function huchaUsesAudit('),b=html.indexOf('function renderHuchaBalances(',a);assert(a>=0&&b>a);
+const h=[{id:'h1',nombre:'Césped'}];
+const context=vm.createContext({exactHuchaUsageLink:(u,hs)=>{const found=hs.find(x=>x.id===u.huchaId);return found?{kind:'linked',hucha:found}:{kind:'unverified'}},el:(tag,cls,text)=>({tag,cls,text,children:[],append(...items){this.children.push(...items)}}),money:n=>n+' €',extraFinance:{v2_usos:[{id:'n',huchaId:'h1',importe:70,tipo:'definitivo'}]},backupFinance:{owner:'o',profile:'p',sources:{v2_usos:{value:[{id:'x',huchaId:'h1',importe:35,tipo:'temporal'}]}}},owner:'o',activeProfile:'p'});
+vm.runInContext(html.slice(a,b),context,{timeout:1000});
+const result=context.huchaUsesAudit(h,[{id:'a',huchaId:'h1',importe:70,tipo:'definitivo'},{id:'a',huchaId:'h1',importe:70,tipo:'definitivo'},{id:'b',huchaId:'h1',importe:35,tipo:'temporal'},{id:'c',huchaId:'no',importe:10,tipo:'temporal'}]);
+assert.equal(result.linked,2);assert.equal(result.duplicate,1);assert.equal(result.unlinked,1);assert.equal(result.linkedCents,10500);
+assert.equal(context.huchaUsesFromSource(true)[0].importe,35);
+assert.equal(context.huchaUsesFromSource(false)[0].importe,70);
+assert(context.renderHuchaUsesAudit(h,[], 'test'));
+assert(html.includes("const ELITE_SAFARI_VERSION='1.9.59'"));
+for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(m[1])new vm.Script(m[1]);
+console.log('PASS v1.9.59: source separation, unique IDs, categorized hucha uses, parse');
