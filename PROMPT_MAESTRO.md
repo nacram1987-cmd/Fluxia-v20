@@ -1116,3 +1116,16 @@ La ejecución detallada se encuentra en **`PROMPT_WORK_FLUXIA_ELITE_EJECUCION_IN
 - Mantener fijo pendiente, pago confirmado y cargo bancario como estados distintos. Una sugerencia no marca «pagado», no altera Disponible ni cambia la categoría contable hasta confirmar una vinculación válida.
 - Investigar supuestos duplicados con proveedor, cuenta y referencia estable; mismo nombre, fecha o importe no autoriza fusionar. No editar, eliminar ni reimportar datos reales para fabricar un cuadre.
 - Gates específicos del incidente: guardado parcial no archiva ITV; borrado manual sí puede recuperarse; carga no resucita papelera antigua; Apple.com/bill €2,99 pregunta solo con un candidato único; ambigüedad/empate no vincula. Mantener v97.68 y ESTABLE intactas.
+
+## LEY IMPERIAL 14/10/2026 — EL HTML ES LA BASE MADRE OBLIGATORIA DE ÉLITE
+
+Toda app Fluxia Élite (PWA LAB, app SwiftUI, futura API) es evolución del HTML operativo; **nunca un producto distinto con reglas distintas**. Especificación funcional: HTML original actual. Élite puede mejorar experiencia, estructura, seguridad y rendimiento, pero debe preservar hasta el último registro, operación, estado, cálculo y enlace bancario.
+
+- **Prohibida la migración selectiva** de 6 colecciones como si fueran el libro mayor completo. Rastrear todas las fuentes activas, almacenamiento por perfil, banco, espejo, exclusiones, papelera, provisiones, compartidos, fijos y fechas.
+- **Prohibido declarar paridad por cantidad** o por una exportación de CSV incompleta. Auditar mismo usuario/perfil/mes y misma hora de corte por ID, importe en céntimos, fecha, categoría, origen, estado, duplicados y saldos; resultado exigido: 0 ausentes, 0 extras indebidos, 0 campos divergentes y 0,00 € de desfase.
+- **Caso de aceptación de octubre del usuario:** 51 gastos variables visibles en HTML; archivo CSV exportado del mismo periodo da 52 filas / 811,39 €, y no incluye todavía un gasto de 7,50 € de gasolinera categorizado Tabaco del 14/10. Las repeticiones del CSV sin ID son sólo candidatas a revisión, jamás borrado automático. Cuadrar estas observaciones con trazabilidad.
+- **Bancos:** usar el mismo sistema existente de permisos y conciliación; nuevos cargos sin duplicar y sin resurrección de descartes. Jamás añadir un cargo manual para ocultar un fallo bancario sin comprobar su fuente.
+- **Versiones:** entregar checklist localizable con cada cambio ejecutable, QA, estado real, valoración y rollback; el diseño visual aprobado de Élite se mantiene salvo autorización expresa.
+- **Guardarraíl:** mientras HTML y Élite no cuadren a nivel contable y de registros, **Élite no es apta para operar ni sustituir la estable**. Evitar promesas de “perfecta” basadas en mocks o tests sintéticos.
+
+Véase `AUDITORIA_ELITE/CONTRATO_PARIDAD_HTML_MADRE_2026-10-14.md` para matriz de módulos, pruebas de reconciliación y política de aceptación.
