@@ -60,6 +60,7 @@ jobs:
           appFile: FluxiaEliteBeta-iOS-Simulator.zip
           platform: ios
           note: "Fluxia Élite BETA · rama nativa de pruebas"
+          timeout: "1800"
       - name: Native simulator build summary
         if: always()
         run: |
