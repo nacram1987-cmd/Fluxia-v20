@@ -1,7 +1,7 @@
 import Foundation
 
-/// A conservative classifier for the legacy Fluxia HTML cloud documents.
-/// Never treats backup, mirror, trash or bank staging documents as active ledger entries.
+/// No legacy key is trusted by suffix alone. The HTML resolver must first
+/// establish the canonical exact key for each module and authenticated profile.
 public enum FluxiaLegacyDocument {
     public enum Classification: Equatable {
         case candidate(String)
@@ -9,21 +9,14 @@ public enum FluxiaLegacyDocument {
         case excluded
     }
 
-    public static func classify(_ key: String) -> Classification {
-        let k = key.lowercased()
-        if k.hasPrefix("backup:") || k.contains("backup") || k.contains("espejo") ||
-            k.contains("papelera") || k.contains("borrados") || k.contains("blacklist") ||
-            k.contains("dismiss") || k.contains("rechaz") || k.contains("tombstone") {
-            return .historical
-        }
-        if k.contains("banco_") || k.contains("sync") || k.contains("cache") ||
-            k.contains("session") || k.contains("token") {
-            return .excluded
-        }
-        let modules = ["ingresos", "movimientos", "fijos", "provisiones",
-                       "usos", "rescates", "compartidos", "financiaciones",
-                       "categorias", "config_plan"]
-        for module in modules where k.hasSuffix("planrescate_v2_\(module)") {
+    public static func classify(_ key: String, canonicalKeys: [String: String] = [:]) -> Classification {
+        let lower = key.lowercased()
+        let forbidden = ["backup", "espejo", "papelera", "borrados",
+                         "blacklist", "dismiss", "rechaz", "tombstone"]
+        if forbidden.contains(where: { lower.contains($0) }) { return .historical }
+        // No default auto-import: global aliases and profile copies coexist.
+        // Caller supplies exact module -> canonical key after HTML parity audit.
+        for (module, exactKey) in canonicalKeys where key == exactKey {
             return .candidate(module)
         }
         return .excluded
