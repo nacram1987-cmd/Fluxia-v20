@@ -2,12 +2,14 @@
 const assert=require('node:assert/strict');
 const fs=require('node:fs');const vm=require('node:vm');
 const html=fs.readFileSync(require('node:path').join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
-assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.(?:81|82)'/);
+assert.match(html,/ELITE_SAFARI_VERSION='1\.9\.(?:81|82|83)'/);
 assert.match(html,/function bootstrapAuth\(\)/);
 assert.match(html,/grant_type=refresh_token/);
 assert.match(html,/localStorage\.setItem\(ELITE_SESSION_KEY/);
 assert.match(html,/auth\/v1\/signup/);
 assert.match(html,/Face ID \/ passkey/);
+assert.match(html,/passkey\.authenticate\(owner\)/);
+assert.match(html,/fluxia_faceid_bypass/);
 assert.doesNotMatch(html,/localStorage\.setItem\([^,]*(?:password|contraseñ)/i,'Passwords must never be persisted');
 const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(match=>match[1]).filter(Boolean);
 for(const script of scripts)assert.doesNotThrow(()=>new vm.Script(script), 'Inline JavaScript must parse');
