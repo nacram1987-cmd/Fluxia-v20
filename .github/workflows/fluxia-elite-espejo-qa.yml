@@ -32,6 +32,11 @@ jobs:
           assert(s.includes('js/fluxia-espejo-csv-v1.js'),'CSV module missing');
           assert(s.includes('renderCSVAudit()'),'CSV parity UI missing');
           assert(s.includes('originalVisibleVariable'),'HTML mother variable rule missing');
+          assert(s.includes('renderWallet()'),'cash-wallet missing');
+          assert(s.includes('renderBudgets()'),'budgets missing');
+          assert(s.includes('renderLegacyAnalysis()'),'analytics missing');
+          assert(s.includes('fluxia-elite-wallet-v1.js'),'wallet pure module missing');
+          assert(s.includes('extraFinance={}'),'financial-extra user isolation missing');
           assert(!s.includes('gvAjustadoVal'),'wrong Disponible into Variables');
           assert(fs.existsSync('lab/versions/fluxia-elite-safari-v'+version+'.html'),'version snapshot required');
           console.log('PASS app syntax metadata and immutable snapshot v'+version);
@@ -40,3 +45,5 @@ jobs:
         run: node lab/qa/espejo-csv-regression.cjs
       - name: Contabilidad sin duplicados (offline)
         run: node lab/qa/fluxia-elite-paridad.test.cjs
+      - name: Cartera y provisiones originales (offline)
+        run: node lab/qa/elite-wallet-regression.cjs
