@@ -43,7 +43,11 @@ public struct FluxiaEliteAppView: View {
     }
 
     private func euro(_ amount: Decimal) -> String {
-        (amount as NSDecimalNumber).formatted(.currency(code: "EUR").locale(Locale(identifier: "es_ES")))
+        let formatter = NumberFormatter()
+        formatter.locale = Locale(identifier: "es_ES")
+        formatter.numberStyle = .currency
+        formatter.currencyCode = "EUR"
+        return formatter.string(from: amount as NSDecimalNumber) ?? "—"
     }
 
     public var body: some View {
