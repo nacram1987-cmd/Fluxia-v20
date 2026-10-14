@@ -112,6 +112,21 @@ check(AccountIsolation.visibleRecords([aliceRecord, bobRecord], authenticatedUse
 check(AccountIsolation.visibleRecords([aliceRecord, bobRecord], authenticatedUserID: nil).isEmpty, "signed-out user sees no records")
 print("Account isolation: 8 checks passed")
 
+check(!AuthAccessState.mayReadPersonalData(state: .restoring, requestedOwnerID: "alice"), "session restoration cannot expose personal data")
+check(!AuthAccessState.mayReadPersonalData(state: .signedOut, requestedOwnerID: "alice"), "signed-out state cannot expose personal data")
+check(!AuthAccessState.mayReadPersonalData(state: .configurationMissing, requestedOwnerID: "alice"), "missing auth configuration fails closed")
+check(!AuthAccessState.mayReadPersonalData(state: .authenticated(ownerID: "alice"), requestedOwnerID: "bob"), "authenticated account cannot read another owner's data")
+check(AuthAccessState.mayReadPersonalData(state: .authenticated(ownerID: "alice"), requestedOwnerID: "alice"), "authenticated account can address only its own owner namespace")
+check(!AuthAccessState.mayReadPersonalData(state: .authenticated(ownerID: " "), requestedOwnerID: " "), "blank authenticated identity fails closed")
+check(!AuthAccessState.mayReadPersonalData(state: .authenticated(ownerID: "alice"), requestedOwnerID: nil), "missing requested owner fails closed")
+print("Native auth gate: 7 signed-out, missing-config, identity and owner-boundary checks passed")
+check(AuthAccessState.isValidConfiguration(url: "https://project.supabase.co", publishableKey: "sb_publishable_synthetic-test"), "synthetic publishable configuration is accepted")
+check(!AuthAccessState.isValidConfiguration(url: "http://project.supabase.co", publishableKey: "sb_publishable_synthetic-test"), "insecure HTTP configuration is rejected")
+check(!AuthAccessState.isValidConfiguration(url: "https://user:pass@project.supabase.co", publishableKey: "sb_publishable_synthetic-test"), "credential-bearing URL is rejected")
+check(!AuthAccessState.isValidConfiguration(url: "https://project.supabase.co", publishableKey: "service_role_fake"), "service-role credential is never accepted as a client key")
+check(!AuthAccessState.isValidConfiguration(url: "", publishableKey: ""), "empty auth configuration remains disabled")
+print("Native auth configuration: 5 synthetic validation checks passed")
+
 
 var lifecycle = LedgerLifecycle.Record(id: "ledger-1", ownerID: "synthetic-user")
 let archived = lifecycle.apply(.archive, operationID: "op-1", authenticatedOwnerID: "synthetic-user")

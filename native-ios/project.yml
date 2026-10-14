@@ -6,17 +6,26 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.9"
+packages:
+  Supabase:
+    url: https://github.com/supabase/supabase-swift
+    exactVersion: 2.55.4
 targets:
   FluxiaEliteNative:
     type: application
     platform: iOS
     sources:
       - path: FluxiaEliteNative
+    dependencies:
+      - package: Supabase
+        product: Supabase
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.fluxia.elite.native.lab
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_FluxiaSupabaseURL: "$(FLUXIA_SUPABASE_URL)"
+        INFOPLIST_KEY_FluxiaSupabasePublishableKey: "$(FLUXIA_SUPABASE_PUBLISHABLE_KEY)"
         TARGETED_DEVICE_FAMILY: "1"
         ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: NO

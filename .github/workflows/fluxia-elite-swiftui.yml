@@ -26,7 +26,7 @@ jobs:
       - name: Validate native financial accounting
         working-directory: native-ios
         run: |
-          swiftc FluxiaEliteNative/MonthlyLedgerProjection.swift FluxiaEliteNative/LedgerLifecycle.swift FluxiaEliteNative/FinanceRules.swift FluxiaEliteNative/DemoFinanceSnapshot.swift FluxiaEliteNative/ExpenseReconciliation.swift FluxiaEliteNative/BankImportSafety.swift FluxiaEliteNative/AccountIsolation.swift tests/main.swift -o /tmp/fluxia-finance-check
+          swiftc FluxiaEliteNative/MonthlyLedgerProjection.swift FluxiaEliteNative/LedgerLifecycle.swift FluxiaEliteNative/FinanceRules.swift FluxiaEliteNative/DemoFinanceSnapshot.swift FluxiaEliteNative/ExpenseReconciliation.swift FluxiaEliteNative/BankImportSafety.swift FluxiaEliteNative/AccountIsolation.swift FluxiaEliteNative/AuthAccessState.swift tests/main.swift -o /tmp/fluxia-finance-check
           /tmp/fluxia-finance-check
       - name: Generate native Xcode project
         working-directory: native-ios
@@ -49,10 +49,10 @@ jobs:
           xcrun simctl bootstatus "$DEVICE_ID" -b
           xcrun simctl install "$DEVICE_ID" build/DerivedData/Build/Products/Debug-iphonesimulator/FluxiaEliteNative.app
           mkdir -p screenshots
-          xcrun simctl launch --terminate-running-process "$DEVICE_ID" com.fluxia.elite.native.lab -fluxia.elite.darkMode NO
+          xcrun simctl launch --terminate-running-process "$DEVICE_ID" com.fluxia.elite.native.lab -fluxia.demoMode YES -fluxia.elite.darkMode NO
           sleep 4
           xcrun simctl io "$DEVICE_ID" screenshot screenshots/Fluxia-Elite-SwiftUI-Inicio-Claro.png
-          xcrun simctl launch --terminate-running-process "$DEVICE_ID" com.fluxia.elite.native.lab -fluxia.elite.darkMode YES
+          xcrun simctl launch --terminate-running-process "$DEVICE_ID" com.fluxia.elite.native.lab -fluxia.demoMode YES -fluxia.elite.darkMode YES
           sleep 4
           xcrun simctl io "$DEVICE_ID" screenshot screenshots/Fluxia-Elite-SwiftUI-Inicio-Oscuro.png
           test -s screenshots/Fluxia-Elite-SwiftUI-Inicio-Claro.png

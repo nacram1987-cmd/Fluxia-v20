@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    let onExitDemo: () -> Void
     @AppStorage("fluxia.elite.darkMode") private var darkMode = false
     @State private var selection: EliteTab = .home
     @State private var month = Date()
@@ -221,6 +222,9 @@ struct ContentView: View {
             }
             Text("Fluxia Élite · SwiftUI LAB 0.1")
                 .font(.caption).foregroundStyle(ElitePalette.ink.opacity(0.6))
+            Button("Volver al acceso") { onExitDemo() }
+                .buttonStyle(.bordered)
+                .tint(ElitePalette.gold)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(22)
