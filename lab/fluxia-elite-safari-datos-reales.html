@@ -1480,6 +1480,18 @@ function exactHuchaUsageLink(usage,huchas){
  if(matches.length!==1)return {kind:matches.length?'duplicate_hucha_id':'missing_hucha'};
  return {kind:'linked',hucha:matches[0]}
 }
+function candidateHuchaByName(op,huchas){
+ if(!op||!Array.isArray(huchas))return {kind:'unverified'};
+ const strict=exactHuchaUsageLink(op,huchas);
+ if(strict.kind!=='unverified')return strict;
+ const raw=typeof op.provision==='string'?op.provision.trim():'';
+ if(!raw)return {kind:'unverified'};
+ const normal=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
+ const target=normal(raw);
+ const matches=huchas.filter(h=>h&&typeof h.nombre==='string'&&normal(h.nombre)===target);
+ if(matches.length!==1)return {kind:matches.length?'ambiguous_name':'unverified'};
+ return {kind:'name_candidate',hucha:matches[0]}
+}
 function renderLegacyPayments(){
  renderMonthSelector();head('🧾 Pagos y usos');
  $('#content').append(el('p','welcomeDescription','Operaciones históricas del HTML y de la nube, sin confundir usos de hucha con nuevos gastos variables.'));
