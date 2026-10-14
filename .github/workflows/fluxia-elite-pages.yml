@@ -29,6 +29,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # v97.73 regression compares its original commit, then pins current hotfix bytes.
       - uses: actions/setup-node@v4
         with:
           node-version: '24'

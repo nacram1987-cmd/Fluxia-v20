@@ -17,6 +17,8 @@ Fuentes: [Supabase Auth · signout](https://supabase.com/docs/guides/auth/signou
 
 ## Límites y siguientes puertas
 
-El token de acceso JWT existente puede seguir funcionando hasta caducar incluso tras revocar el refresh token. La seguridad del `localStorage` ante XSS sigue pendiente. La comparación contable HTML ↔ Élite al mismo corte, RLS con dos usuarios de prueba, importación bancaria segura, Face ID de servidor y pruebas físicas iPhone no están certificadas. El workflow histórico completo continúa rojo en `shared-month-v9773-regression.cjs` por una deriva de la referencia v97.73 (169 scripts actuales frente a 168 esperados), posterior a su generación original. No se ha suprimido esa assertion. No promocionar Élite a estable ni activar escrituras bancarias por este cambio.
+El token de acceso JWT existente puede seguir funcionando hasta caducar incluso tras revocar el refresh token. La seguridad del `localStorage` ante XSS sigue pendiente. La comparación contable HTML ↔ Élite al mismo corte, RLS con dos usuarios de prueba, importación bancaria segura, Face ID de servidor y pruebas físicas iPhone no están certificadas. No promocionar Élite a estable ni activar escrituras bancarias por este cambio.
+
+La regresión histórica `shared-month-v9773-regression.cjs` se reorientó al commit de origen `8de383ae995ca4beef200cd541abacd8c7396594`, donde conserva la assertion de 168 scripts, único script modificado y invariantes financieras originales. Además, el v97.73 actual se protege con su SHA exacto; así se distingue el hotfix visual posterior de un cambio contable. El workflow hace checkout con historia para ejecutar esta comparación. Hay que ver el resultado CI completo antes de dar la puerta QA por verde.
 
 **v2.0.00 no se declara alcanzada**: sería engañoso llamar salto mayor a una app con Disponible y paridad todavía bloqueados.

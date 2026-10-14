@@ -5,7 +5,7 @@
 
 - Cerrar sesión elimina de inmediato el estado privado y el refresh token locales; en segundo plano solicita a Supabase revocar **solo la sesión actual** (`scope=local`), sin cerrar otros dispositivos.
 - Si la red o Auth no confirma la revocación, mostrar la incertidumbre al usuario. Un access token previamente emitido puede seguir siendo válido hasta su expiración; no afirmar revocación instantánea de JWT.
-- La QA histórica de v97.73 sigue roja por deriva posterior al snapshot original (169 scripts frente a 168); no retirar la assertion para fabricar una certificación. Élite v2.0.00 requiere evidencia de paridad, seguridad y pruebas físicas, no solo un número.
+- La QA histórica de v97.73 compara contra su commit de origen y protege aparte los bytes actuales: mantiene la assertion de 168 scripts y cambios financieros originales sin confundir hotfixes visuales posteriores. Élite v2.0.00 requiere evidencia de paridad, seguridad y pruebas físicas, no solo un número.
 
 ## Adenda Élite v1.9.98 — protección de estable y avisos honestos (15/10/2026)
 
