@@ -1,0 +1,18 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
+assert(html.includes("const ELITE_SAFARI_VERSION='1.9.57'"));
+assert(html.includes("card.onclick=()=>openPrivateHTMLRecord(row,mod.id)"));
+const a=html.indexOf('function openPrivateHTMLRecord('),b=html.indexOf('function renderHTMLPrimaryList(',a);
+assert(a>=0&&b>a);
+const el=(tag,cls,text)=>({tag,cls,text,children:[],classList:{add(){}},append(...items){this.children.push(...items)},replaceChildren(){this.children=[]}});
+const detail=el('div'),modal=el('div');
+const hucha={id:'a',nombre:'Césped',aportaciones:{octubre:[{id:'c',importe:35,fecha:'2026-10-01'}]}};
+const ctx=vm.createContext({el,$:key=>key==='#detailContent'?detail:modal,field:(obj,keys)=>keys.map(k=>obj[k]).find(x=>typeof x==='string')||null,renderHuchaMonthlyContributions:()=>el('section','monthly'),renderHistoricalOperations:()=>null,cashOrFinanceSource:()=>({present:true,origin:'backup',value:[{id:'uso1',provisionId:'a',importe:70,fecha:'2026-10-08'}]}),backupFinance:{owner:'owner',profile:'profile',modules:{huchas:{records:[hucha]}}},owner:'owner',activeProfile:'profile',exactHuchaUsageLink:(op,rows)=>({kind:'linked',hucha:rows[0]}),actualChargeDate:x=>x.fecha?{label:x.fecha}:null,recordAmount:x=>x.importe??null,money:n=>n+' €'});
+vm.runInContext(html.slice(a,b),ctx,{timeout:1000});ctx.openPrivateHTMLRecord(hucha,'huchas');
+assert(detail.children.some(x=>x.cls==='monthly'));
+const usage=detail.children.find(x=>x.cls==='eliteHistoryPanel');assert(usage);
+assert(usage.children[1].text.includes('1 usos'));
+assert.equal(usage.children[2].children.length,1);
+for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(m[1])new vm.Script(m[1]);
+console.log('PASS v1.9.57 interactive private HTML detail, nested aportaciones, exact ID usages, script parsing');
