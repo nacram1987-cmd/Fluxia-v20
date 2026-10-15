@@ -1,6 +1,11 @@
 'use strict';
 const assert=require('node:assert/strict');
-const adapter=require('../js/fluxia-elite-bank-adapter-v1.js');
+const fs=require('node:fs');
+const vm=require('node:vm');
+const moduleBox={exports:{}};
+const source=fs.readFileSync(require('node:path').join(__dirname,'../js/fluxia-elite-bank-adapter-v1.js'),'utf8');
+vm.runInNewContext(source,{module:moduleBox,exports:moduleBox.exports,globalThis:{}});
+const adapter=moduleBox.exports;
 const fallback={id:'CaixaBank|2026-10-15|-7.5|Gasolinera',importe:-7.5,fecha:'2026-10-15',concepto:'Gasolinera'};
 const synthetic=adapter.planImport([], [fallback], {});
 assert.equal(synthetic.ok,false);
