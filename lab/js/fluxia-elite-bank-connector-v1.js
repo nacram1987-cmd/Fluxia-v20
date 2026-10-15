@@ -10,7 +10,15 @@
   if(!res.ok||data?.success===false)throw Error(data?.error||'El conector bancario devolvió HTTP '+res.status+'.');
   return data;
  }
- function normalizeRows(rows){return (Array.isArray(rows)?rows:[]).map(row=>({...row,bankRef:String(row.bankRef||row.mov_id||row.id||row.movimientoId||'').trim(),amount:row.amount??row.importe,concept:row.concept??row.concepto,operationDate:row.operationDate??row.fecha,source:'original-bank-connector'}))}
+ function bankIdentity(row){
+  if(row?.bankRef)return String(row.bankRef).trim();
+  if(row?.idAuthority!=='provider'||!row?.stableRef)return '';
+  const bank=String(row.banco||row.bank||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');
+  const account=String(row.accountKey||row.accountId||'');
+  if(!bank||!account)return '';
+  return 'fxbank9770:'+JSON.stringify(['enablebanking',bank,account,String(row.stableRef)])
+ }
+ function normalizeRows(rows){return (Array.isArray(rows)?rows:[]).map(row=>({...row,bankRef:bankIdentity(row)||String(row.bankRef||row.mov_id||row.id||row.movimientoId||'').trim(),amount:row.amount??row.importe,concept:row.concept??row.concepto,operationDate:row.operationDate??row.fecha,source:'original-bank-connector'}))}
  function mergeRows(previous,incoming){
   const rows=[],seen=new Set(),duplicates=[];
   [...(Array.isArray(previous)?previous:[]),...(Array.isArray(incoming)?incoming:[])].forEach(row=>{
@@ -21,6 +29,9 @@
   });
   return {rows,duplicates:[...new Set(duplicates)]};
  }
- const api={version:'1.1.0',source:'Fluxia-banco',configure,call,normalizeRows,mergeRows};
+ function inboxStorageKey(owner,profile){return 'fluxia_elite_bank_inbox_v2:'+encodeURIComponent(String(owner||''))+':'+encodeURIComponent(String(profile||''))}
+ function readInbox(owner,profile,storage){try{const value=JSON.parse((storage||globalThis.localStorage).getItem(inboxStorageKey(owner,profile))||'[]');return Array.isArray(value)?value:[]}catch{return []}}
+ function saveInbox(owner,profile,rows,storage){const target=storage||globalThis.localStorage,clean=Array.isArray(rows)?rows:[];target.setItem(inboxStorageKey(owner,profile),JSON.stringify(clean));return clean}
+ const api={version:'1.2.0',source:'Fluxia-banco',configure,call,normalizeRows,mergeRows,bankIdentity,inboxStorageKey,readInbox,saveInbox};
  if(typeof module!=='undefined'&&module.exports)module.exports=api;if(root)root.FluxiaEliteBankConnector=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

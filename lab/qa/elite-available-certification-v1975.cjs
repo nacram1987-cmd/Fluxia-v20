@@ -3,8 +3,13 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
 const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
 assert(html.includes('function availableCertificationReport()'));
 assert(html.includes('function renderAvailableCertification()'));
-assert(html.includes("Motor Disponible determinista aún no certificado"));
-assert(html.includes("Disponible bloqueado: no se muestra una cifra inventada"));
-assert(html.includes("['Motor contable certificado',false]"));
+assert(html.includes('function availableCalculationReport()'));
+assert(html.includes('engine.available({incomeCents:income,realExpensesCents:expense,plannedProvisionsCents:provisions,excessContributionsCents:excess,sharedImpactCents:sharedImpact,pendingHuchaRescuesCents:pendingRescues})'));
+assert(html.includes('Impacto de Compartidos'));
+assert(html.includes('Rescates temporales pendientes'));
+assert(html.includes('Fórmula del HTML: ingresos'));
+assert(html.includes("Disponible pendiente:"));
+assert(!html.includes("cert.certified?'—':'—'"));
+assert(html.includes('Bloqueos actuales:'));
 assert(html.includes('renderAvailableCertification()'));
 console.log('PASS v1.9.75 available certification remains blocked until all accounting evidence is verified');

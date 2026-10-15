@@ -5,6 +5,7 @@ on:
     paths:
       - 'lab/fluxia-elite-safari-datos-reales.html'
       - 'lab/versions/fluxia-elite-safari-v*.html'
+      - 'CHECKLIST_ELITE_v2.0.14.md'
       - 'lab/js/**'
       - 'lab/qa/**'
       - '.github/workflows/fluxia-elite-espejo-release.yml'
@@ -34,6 +35,7 @@ jobs:
           cp -a lab/qa "$ROOT/lab/"
           cp fluxia-icon.png "$ROOT/"
           cp AGENTS.md PROMPT_MAESTRO.md "$ROOT/"
+          cp CHECKLIST_ELITE_v2.0.14.md "$ROOT/"
           cp AUDITORIA_ELITE/CONTRATO_PARIDAD_HTML_MADRE_2026-10-14.md "$ROOT/AUDITORIA/"
           cat > "$ROOT/README.txt" <<EOF
           FLUXIA ÉLITE BETA Safari v$VERSION — PAQUETE LAB DE AUDITORÍA

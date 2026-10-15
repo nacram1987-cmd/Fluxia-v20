@@ -14,6 +14,6 @@ assert.equal(fn({...base,reposiciones:[{id:'x',importe:35,fecha:'2026-02-31'}]})
 assert.equal(fn({...base,repuesto:30}).kind,'history_mismatch');
 assert.equal(fn({...base,reposiciones:undefined}).kind,'history_unavailable');
 assert.equal(fn({...base,tipo:'definitivo'}).kind,'not_temporal');
-assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.62|2\.0\.(?:00|01|02|03|04|05|06|07|08|09|10|11))'/);
+assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.62|2\.0\.(?:00|01|02|03|04|05|06|07|08|09|10|11|12|14))'/);
 for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(m[1])new vm.Script(m[1]);
 console.log('PASS v1.9.62 partial/full repayment, overpayment, conflicting history, duplicated IDs and JS parse');

@@ -27,10 +27,10 @@
   return 'unverified';
  }
  function available(input){
-  var required=['incomeCents','realExpensesCents','plannedProvisionsCents','excessContributionsCents'];
+  var required=['incomeCents','realExpensesCents','plannedProvisionsCents','excessContributionsCents','sharedImpactCents','pendingHuchaRescuesCents'];
   if(!input||required.some(function(key){return typeof input[key]!=='bigint'}))return {ok:false,reason:'INCOMPLETE_INPUT'};
-  var result=input.incomeCents-input.realExpensesCents-input.plannedProvisionsCents-input.excessContributionsCents;
-  return {ok:true,cents:result,trace:{incomeCents:input.incomeCents,realExpensesCents:input.realExpensesCents,plannedProvisionsCents:input.plannedProvisionsCents,excessContributionsCents:input.excessContributionsCents}};
+  var result=input.incomeCents-input.realExpensesCents-input.plannedProvisionsCents-input.excessContributionsCents+input.sharedImpactCents+input.pendingHuchaRescuesCents;
+  return {ok:true,cents:result,trace:{incomeCents:input.incomeCents,realExpensesCents:input.realExpensesCents,plannedProvisionsCents:input.plannedProvisionsCents,excessContributionsCents:input.excessContributionsCents,sharedImpactCents:input.sharedImpactCents,pendingHuchaRescuesCents:input.pendingHuchaRescuesCents}};
  }
  function hucha(input){
   if(!input||!Array.isArray(input.contributions)||!Array.isArray(input.uses))return {ok:false,reason:'INCOMPLETE_HUCHA_SOURCE'};

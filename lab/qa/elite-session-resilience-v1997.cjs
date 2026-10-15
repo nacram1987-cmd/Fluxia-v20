@@ -2,7 +2,7 @@ const fs=require('node:fs');
 const assert=require('node:assert/strict');
 const vm=require('node:vm');
 const html=fs.readFileSync(require('node:path').join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
-assert.match(html,/const ELITE_SAFARI_VERSION='2\.0\.(?:00|01|02|03|04|05|06|07|08|09|10|11)'/);
+assert.match(html,/const ELITE_SAFARI_VERSION='2\.0\.(?:00|01|02|03|04|05|06|07|08|09|10|11|12|14)'/);
 const start=html.indexOf('const ELITE_SESSION_KEY=');
 const end=html.indexOf('async function continueWithSession',start);
 assert(start>0&&end>start);

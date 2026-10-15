@@ -17,7 +17,7 @@
   return /^[^|]+\|\d{4}-\d{2}-\d{2}\|-?\d+(?:[.,]\d+)?\|.{0,40}$/.test(text);
  }
  function stableId(row){
-  var value=first(row,['bankRef','bancoRef','providerTransactionId','transactionId','externalId','id','movimientoId']);
+  var value=first(row,['bankRef','bancoIdentity','bancoRef','providerTransactionId','transactionId','externalId','id','movimientoId']);
   if(value===null)return '';
   var text=String(value).trim();
   return isSyntheticBankRef(text)?'':text;
