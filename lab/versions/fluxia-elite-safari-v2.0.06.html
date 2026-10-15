@@ -2819,11 +2819,8 @@ function renderHuchaUseSourceComparison(huchas){
 }
 function preferredHuchaUses(){
  // HTML operativo/copia reciente es el oráculo funcional hasta certificar paridad.
- // La comparación con Supabase sigue visible; elegir la nube solo por tener filas
- // podía ocultar rescates recién registrados en el HTML.
+ // Una lista HTML vacía es distinta de una fuente ausente; no se rellena con nube antigua.
  const html=huchaUsesFromSource(true),cloud=huchaUsesFromSource(false);
- if(Array.isArray(html)&&html.length)return {rows:html,origin:'HTML'};
- if(Array.isArray(cloud)&&cloud.length)return {rows:cloud,origin:'Supabase'};
  if(Array.isArray(html))return {rows:html,origin:'HTML'};
  if(Array.isArray(cloud))return {rows:cloud,origin:'Supabase'};
  return {rows:null,origin:'sin fuente'}
