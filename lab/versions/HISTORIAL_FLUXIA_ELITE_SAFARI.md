@@ -160,3 +160,13 @@ Entradas:
 5. Aceptación requiere HTML y JavaScript válidos, pruebas funcionales en Safari, publicación efectiva comprobada y no regresión de rendimiento. El commit no demuestra esas comprobaciones.
 6. No permitir escritura financiera hasta demostrar integridad, separación de usuarios, migraciones y pruebas de reversión.
 7. Disponible se mantiene sin importe hasta confirmar paridad contable con HTML.
+
+
+## v2.0.11 · bloqueo de referencias bancarias sintéticas (15/10/2026)
+
+- El adaptador Élite reconoce el ID de respaldo que el conector bancario fabrica como `banco|fecha|importe|concepto` cuando el proveedor no entrega identificador de transacción.
+- Esas filas quedan marcadas como `UNSTABLE_SYNTHETIC_BANK_REF` y no pueden entrar en el plan de conciliación. Se preservan para revisión; no se deduplican por similitud ni se escriben en el libro.
+- Las referencias reales del proveedor y los IDs ausentes conservan sus rutas de validación propias.
+- Regresión añadida para una referencia sintética, una real, una fila sin ID y dos movimientos ambiguos idénticos.
+- El cambio solo afecta la auditoría LAB de Élite; no modifica HTML estable/PWA ni escribe en Supabase.
+- Regresión local superada. Workflow de Pages, smoke HTTP y prueba Safari/iPhone quedan pendientes de ejecución.

@@ -12,9 +12,15 @@
   return null;
  }
  function first(row,keys){for(var i=0;i<keys.length;i++){var value=row&&row[keys[i]];if(value!==undefined&&value!==null&&String(value).trim()!=='')return value}return null}
+ function isSyntheticBankRef(value){
+  var text=String(value||'').trim();
+  return /^[^|]+\|\d{4}-\d{2}-\d{2}\|-?\d+(?:[.,]\d+)?\|.{0,40}$/.test(text);
+ }
  function stableId(row){
   var value=first(row,['bankRef','bancoRef','providerTransactionId','transactionId','externalId','id','movimientoId']);
-  return value===null?'':String(value).trim();
+  if(value===null)return '';
+  var text=String(value).trim();
+  return isSyntheticBankRef(text)?'':text;
  }
  function normalizeDate(value){
   if(value===null||value===undefined||String(value).trim()==='')return null;
@@ -28,7 +34,7 @@
   var explicitCents=first(row,['importeCents','amountCents','cents']);
   var amountCents=amount===null?null:(explicitCents!==null&&/^-?\d+$/.test(String(explicitCents).trim())?BigInt(String(explicitCents).trim()):cents(amount));
   var date=normalizeDate(first(row,['fechaOperacion','fecha','date','bookingDate','valueDate']));
-  if(!id)return {ok:false,reason:'MISSING_STABLE_BANK_REF'};
+  if(!id){var candidate=first(row,['bankRef','bancoRef','providerTransactionId','transactionId','externalId','id','movimientoId']);return {ok:false,reason:isSyntheticBankRef(candidate)?'UNSTABLE_SYNTHETIC_BANK_REF':'MISSING_STABLE_BANK_REF',bankRef:candidate===null?'':String(candidate).trim()};}
   if(amountCents===null||amountCents===0n)return {ok:false,reason:'INVALID_AMOUNT',bankRef:id};
   if(date===null)return {ok:false,reason:'INVALID_OPERATION_DATE',bankRef:id};
   var fixedId=String(first(row,['fijoId','pagoFijoId','vinculoFijoId','fixedId'])||'');
@@ -66,7 +72,7 @@
   });
   return {ok:invalid.length===0&&conflicts.length===0,additions:additions,duplicates:[...new Set(duplicates)],blocked:blocked,conflicts:conflicts,invalid:invalid,resolved:resolved,stableIds:additions.map(function(row){return row.bankRef})};
  }
- var api={version:'1.0.0',source:'original-bank-connector',cents:cents,stableId:stableId,normalize:normalize,planImport:planImport};
+ var api={version:'1.1.0',source:'original-bank-connector',cents:cents,isSyntheticBankRef:isSyntheticBankRef,stableId:stableId,normalize:normalize,planImport:planImport};
  if(typeof module!=='undefined'&&module.exports)module.exports=api;
  if(root)root.FluxiaEliteBankAdapter=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

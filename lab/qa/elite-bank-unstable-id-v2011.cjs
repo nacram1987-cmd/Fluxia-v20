@@ -1,0 +1,18 @@
+'use strict';
+const assert=require('node:assert/strict');
+const adapter=require('../js/fluxia-elite-bank-adapter-v1.js');
+const fallback={id:'CaixaBank|2026-10-15|-7.5|Gasolinera',importe:-7.5,fecha:'2026-10-15',concepto:'Gasolinera'};
+const synthetic=adapter.planImport([], [fallback], {});
+assert.equal(synthetic.ok,false);
+assert.equal(synthetic.additions.length,0);
+assert.equal(synthetic.invalid[0].reason,'UNSTABLE_SYNTHETIC_BANK_REF');
+assert.equal(synthetic.invalid[0].bankRef,fallback.id);
+const legitimate=adapter.planImport([], [{...fallback,id:'entry-0f90a1',bankRef:'entry-0f90a1'}], {});
+assert.equal(legitimate.ok,true);
+assert.equal(legitimate.additions[0].bankRef,'entry-0f90a1');
+const missing=adapter.planImport([], [{importe:2,fecha:'2026-10-15'}], {});
+assert.equal(missing.invalid[0].reason,'MISSING_STABLE_BANK_REF');
+const ambiguous=adapter.planImport([], [fallback,{...fallback}], {});
+assert.equal(ambiguous.additions.length,0);
+assert.equal(ambiguous.invalid.length,2);
+console.log('PASS v2.0.11 synthetic bank references fail closed');
