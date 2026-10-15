@@ -771,6 +771,15 @@ function closeTutorial(){if(owner){try{localStorage.setItem(tutorialKey(),'seen'
 function updateTutorial(){const [icon,title,description]=steps[tutorialIndex];$('#stepIcon').textContent=icon;$('#stepTitle').textContent=title;$('#stepText').textContent=description;$('#stepCount').textContent=(tutorialIndex+1)+' / '+steps.length;$('#stepProgress').style.width=((tutorialIndex+1)*100/steps.length)+'%';$('#prevTutorial').disabled=tutorialIndex===0;$('#nextTutorial').textContent=tutorialIndex===steps.length-1?'Empezar ✓':'Siguiente →'}
 function openTutorial(force=false){if(!owner)return;let seen=false;try{seen=localStorage.getItem(tutorialKey())==='seen'}catch{}if(force||!seen){tutorialIndex=0;updateTutorial();$('#onboarding').classList.add('active')}}
 
+function cloudProfileAliases(prefix){
+ const match=String(prefix||'').match(/^p_(usr-[a-f0-9-]{36})__$/);
+ if(!match)return {};
+ const profileId=match[1];
+ return {
+  ['profile:'+profileId+':v2_provisiones']:'planRescate_v2_provisiones',
+  ['profile:'+profileId+':v2_usos']:'planRescate_v2_usos'
+ };
+}
 async function loadCanonicalProfile(prefix,{preserveView=false}={}){
  remotePreflightResult=null;
  const previousView={page,search,period};
@@ -778,15 +787,22 @@ async function loadCanonicalProfile(prefix,{preserveView=false}={}){
  if(!token||!owner||!/^p_usr-[a-f0-9-]{36}__$/.test(prefix))throw new Error('Perfil financiero no válido');
  const required=mods.filter(x=>x.key).map(x=>x.key);
  const allowed=new Set(required.map(k=>prefix+k));
- const optional=['v2_movimientos','v2_fijos','v2_efectivo','planRescate_v2_efectivo','v2_presupuestos','planRescate_v2_presupuestos','planRescate_v2_categorias','v2_usos','planRescate_v2_usos','planRescate_v2_notificaciones','planRescate_v2_config_plan','planRescate_v2_fondo_emergencia'];for(const key of optional)allowed.add(prefix+key);
+ const optional=['v2_movimientos','v2_fijos','v2_efectivo','planRescate_v2_efectivo','v2_presupuestos','planRescate_v2_presupuestos','planRescate_v2_categorias','v2_usos','planRescate_v2_usos','planRescate_v2_notificaciones','planRescate_v2_config_plan','planRescate_v2_fondo_emergencia'];
+ for(const key of optional)allowed.add(prefix+key);
+ const cloudAliases=cloudProfileAliases(prefix),modernKeys=Object.keys(cloudAliases);
+ for(const key of modernKeys)allowed.add(key);
+ const canonicalKey=row=>cloudAliases[row.clave]||row.clave.slice(prefix.length);
  const query='/rest/v1/fluxia_datos?select=user_id,clave,v,updated_at&user_id=eq.'+encodeURIComponent(owner)+'&clave='+encodeURIComponent('in.('+[...allowed].join(',')+')')+'&limit=40';
  const rows=await authRequest(query,token);
  if(!Array.isArray(rows)||rows.some(x=>x.user_id!==owner||!allowed.has(x.clave)))throw new Error('Protección de perfil: datos inesperados');
- if(required.some(k=>!rows.some(r=>r.clave===prefix+k)))throw new Error('Faltan colecciones canónicas de este perfil');
+ const modernTargets=new Set(modernKeys.filter(key=>rows.some(r=>r.clave===key)).map(key=>cloudAliases[key]));
+ if(required.some(k=>!rows.some(r=>canonicalKey(r)===k)))throw new Error('Faltan colecciones canónicas de este perfil');
  const next={};const fresh={};for(const k of required)next[k]=null;
  const nextExtra={};
  for(const row of rows){
-  const key=row.clave.slice(prefix.length);
+  const key=canonicalKey(row);
+  // If the migrated profile collection is present, ignore its stale legacy mirror.
+  if(!cloudAliases[row.clave]&&modernTargets.has(key))continue;
   let parsed;
   try{parsed=typeof row.v==='string'?JSON.parse(row.v):row.v}
   catch{
