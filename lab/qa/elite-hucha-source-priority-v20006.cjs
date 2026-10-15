@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
-assert.match(html,/const ELITE_SAFARI_VERSION='2\.0\.07'/);
+assert.match(html,/const ELITE_SAFARI_VERSION='2\.0\.08'/);
 assert.match(html,/if\(backupReady&&listSourceMode==='html'\)\{renderHTMLPrimaryList\(m\);return\}/,'HTML mode must render the selected profile backup as its own source');
 assert.match(html,/reconstructedHuchaLedger\(arr,huchaUsesFromSource\(false\)\)/,'cloud hucha balances must use cloud withdrawals only');
 assert.match(html,/listSourceMode='html';/,'loading a private source selects the HTML comparison view');
