@@ -28,7 +28,7 @@ assert.equal(reread.duplicates.length,1);
 const unstable=connector.normalizeRows([{id:'fallback|2026-10-15|-7.5|Gasolinera',idAuthority:'fallback',stableRef:'fallback|2026-10-15|-7.5|Gasolinera',fecha:'2026-10-15',importe:-7.5}]);
 assert.equal(unstable[0].bankRef,'fallback|2026-10-15|-7.5|Gasolinera');
 const html=fs.readFileSync(path.join(root,'fluxia-elite-safari-datos-reales.html'),'utf8');
-assert.match(html,/const ELITE_SAFARI_VERSION='2\.0\.15'/);
+assert.match(html,/const ELITE_SAFARI_VERSION='2\.0\.16'/);
 assert(html.includes('<title>Fluxia Élite BETA v2.0.16 · Safari</title>'));
 assert(html.includes('name="fluxia-elite-version" content="2.0.16"'));
 assert(html.includes('lab/versions/fluxia-elite-safari-v2.0.14.html')===false);
