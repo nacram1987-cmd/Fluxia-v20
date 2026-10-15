@@ -127,4 +127,7 @@ assert(html.includes('Saldo al cierre de '+"'"+'+monthTitle(period)'));
 assert.equal(ledger.sourceUses[0].id,'n1');
 assert(html.includes('sourceUses:uses')&&html.includes('ledger.sourceUses')&&html.includes("huchaLedger.origin='HTML'"));
 assert(html.includes("for(const key of ['v2_usos','planRescate_v2_usos'])"),'Use the HTML canonical source before its legacy alias');
+assert(html.includes('function renderHuchaActions()'),'Huchas must expose management actions');
+assert(html.includes('＋ Crear nueva provisión'),'New provision action is visible');
+assert(html.includes('📚 Historial de esta provisión'),'Each provision must expose its own history');
 console.log('PASS v2.0.04 hucha name-only rescues, source comparison, timeline and isolation');

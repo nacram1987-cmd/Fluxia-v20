@@ -15,6 +15,6 @@ const a=html.indexOf('function huchaUsesAudit('),b=html.indexOf('function huchaU
 vm.runInContext(html.slice(a,b),ctx);
 const report=ctx.huchaUsesAudit(h,[{id:'1',provision:'mantenimiento cesped',importe:70,tipo:'definitivo'},{id:'2',huchaId:'a',importe:25,tipo:'temporal'}]);
 assert.equal(report.nameCandidates,1);assert.equal(report.linked,1);assert.equal(report.linkedCents,2500);
-assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.60|2\.0\.(?:00|01|02|03|04))'/);
+assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.60|2\.0\.(?:00|01|02|03|04|05))'/);
 for(const match of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(match[1])new vm.Script(match[1]);
 console.log('PASS v1.9.60: unique exact-name candidates, conflict protection, no unverified balance mutations');

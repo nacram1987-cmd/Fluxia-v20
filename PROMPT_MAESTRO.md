@@ -1,6 +1,10 @@
 # 📋 PROMPT MAESTRO FLUXIA v93.8.2+
 ## Biblia de desarrollo, versionado, QA y entrega profesional
 
+## Adenda Élite v2.0.05 — gestión visual de provisiones y trazabilidad por hucha (15/10/2026)
+
+La pantalla Huchas debe conservar la jerarquía del HTML: acción visible «Crear nueva provisión», tarjetas compactas con icono original, detalle financiero y acción «Historial de esta provisión». El historial se abre por hucha y conserva aportaciones por año/mes, rescates, reposiciones, fechas, identificadores y estado. La creación y edición real deben conservar el perfil, la sincronización y los controles de duplicados del HTML hasta que Élite tenga una escritura equivalente certificada.
+
 ## Adenda Élite v2.0.04 — rescates de huchas y cotejo de fuentes (15/10/2026)
 
 El HTML original guarda los retiros en `v2_usos` y habitualmente referencia la hucha por el campo `provision` (nombre). Élite debe reconocer un nombre normalizado exacto solo cuando identifica una única hucha. El saldo así reconstruido se presenta como provisional y conserva la trazabilidad del ID de uso, tipo, importe, fecha y reposiciones. Un nombre ambiguo, una fuente ausente, un ID repetido o un registro incompleto bloquean el agregado; nunca se deduce un rescate de una cifra aproximada.
