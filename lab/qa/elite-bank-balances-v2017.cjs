@@ -1,6 +1,11 @@
 'use strict';
 const assert=require('node:assert/strict');
-const api=require('../js/fluxia-elite-bank-connector-v1.js');
+const fs=require('node:fs');
+const vm=require('node:vm');
+const path=require('node:path');
+const sandbox={module:{exports:{}},globalThis:{}};
+vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../js/fluxia-elite-bank-connector-v1.js'),'utf8'),sandbox);
+const api=sandbox.module.exports;
 const map=new Map(),storage={getItem:key=>map.get(key)||null,setItem:(key,value)=>map.set(key,value)};
 const result=api.saveBalances('user-a','personal',{checkedAt:'2026-10-15T18:00:00.000Z',complete:false,expected:3,errors:['CaixaBank: HUB046'],saldos:[
  {banco:'Revolut',nombre:'Cuenta principal',iban:'ES75 1234 5678 9876 6227',tipo:'ITAV',importe:39.38,moneda:'EUR',fecha:'2026-10-15'},
