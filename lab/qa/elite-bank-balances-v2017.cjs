@@ -14,7 +14,7 @@ const result=api.saveBalances('user-a','personal',{checkedAt:'2026-10-15T18:00:0
 assert.equal(result.rows.length,2);
 assert.equal(result.rows[0].iban,'•••• 6227');
 assert(!JSON.stringify(result).includes('1234 5678 9876 6227'));
-assert.deepEqual(api.availableBalanceTotals(result.rows),{EUR:39.38});
+assert.deepEqual(JSON.parse(JSON.stringify(api.availableBalanceTotals(result.rows))),{EUR:39.38});
 assert.equal(api.readBalances('user-a','personal',storage).errors[0],'CaixaBank: HUB046');
 assert.equal(api.readBalances('user-a','shared',storage),null);
 assert.equal(api.readBalances('user-b','personal',storage),null);
