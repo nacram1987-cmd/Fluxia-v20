@@ -3,7 +3,7 @@
 
 ## Adenda Élite v2.0.06 — cotejo de cartera y separación de fuentes (15/10/2026)
 
-Dinero en mano debe permitir cotejar, en modo de solo lectura, una copia privada validada del HTML operativo contra la colección nube del mismo perfil. Comparar movimientos por ID, fecha, tipo, importe exacto en céntimos, concepto, categoría y vínculos a variables/provisiones. Mostrar operaciones solo HTML, solo nube, mismo ID con campos distintos, IDs repetidos/sin ID y diferencia entre saldos históricos. En cada discrepancia del mismo ID se muestran ambos lados. Una copia ausente no significa saldo cero.
+Dinero en mano debe permitir cotejar, en modo de solo lectura, una copia privada validada del HTML operativo contra la colección nube del mismo perfil. Comparar movimientos por ID, fecha, tipo, importe exacto en céntimos, concepto, categoría y vínculos a variables/provisiones. Mostrar operaciones solo HTML, solo nube, mismo ID con campos distintos, IDs repetidos/sin ID y diferencia entre saldos históricos. En cada discrepancia del mismo ID se muestran ambos lados. Una copia ausente no significa saldo cero. Si cualquiera de las dos fuentes tiene avisos por importes inválidos o tipos desconocidos, mostrar los avisos y no certificar paridad aunque los snapshots coincidan.
 
 El cotejo no fusiona, repara, importa ni escribe movimientos, y no convierte el efectivo en Disponible. El HTML madre sigue siendo el lugar operativo para meter, gastar o usar efectivo mientras Élite no tenga escritura idempotente certificada. Etiquetar saldos como instantánea histórica, nunca como confirmación de efectivo de hoy. Mantener el acceso exacto por usuario/perfil y limpiar toda copia al cambiar de sesión.
 
