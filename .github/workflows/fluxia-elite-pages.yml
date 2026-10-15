@@ -4,6 +4,12 @@ on:
     branches: [pages-v9731-real-final]
     paths:
       - '.github/workflows/fluxia-elite-pages.yml'
+      - 'lab/index.html'
+      - 'lab/manifest.webmanifest'
+      - 'lab/fluxia-sw.js'
+      - 'auditorias/qa-v97.66/**'
+      - 'PROMPT_MAESTRO.md'
+      - 'CHECKLIST_HTML_DISPONIBLE_HOTFIX_2026-10-15.md'
       - 'lab/fluxia-elite-safari-datos-reales.html'
       - 'lab/js/fluxia-elite-*.js'
       - 'lab/qa/elite-*.cjs'
