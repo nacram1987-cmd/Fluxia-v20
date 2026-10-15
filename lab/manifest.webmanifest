@@ -1,7 +1,7 @@
 {
   "name": "Fluxia BETA",
   "short_name": "Fluxia BETA",
-  "description": "Fluxia LAB · Disponible hotfix · 15-10-2026",
+  "description": "Fluxia LAB v97.66",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
