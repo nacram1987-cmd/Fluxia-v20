@@ -1272,3 +1272,21 @@ La respuesta y el error de **Bancos → Sincronizar bancos** deben mantenerse en
 - «Sincronizar bancos» consulta movimientos y saldos reales por cuenta en `Fluxia-banco`, conserva resultado por usuario/perfil y muestra un total actual por moneda separado del Disponible mensual del libro.
 - Saldos en caché cuando un proveedor bloquea por HUB046 se muestran con fecha y no se suman como actuales.
 - La Edge Function prioriza `ITAV`/`CLAV`/`FWAV` sobre balances contables para identificar los importes disponibles.
+
+
+## Fluxia Élite v2.0.25 · Conciliación real del Disponible (2026-10-16)
+- «VERIFICADO» solo si hay evidencia trazable y reproducible de TODOS los componentes: criterios [a]–[h] sobre el mismo corte (fuente canónica completa del mismo perfil; módulos conciliados contra el HTML con Δ=0,00 € y sin diferencias sin explicar; rescates/usos/reposiciones/aportaciones trazados por ID; bancos con IDs estables del proveedor o delimitación explícita; ingresos previstos/cobrados separados; cálculo en céntimos enteros con reglas conservadas; persistencia multiusuario sin resurrección; corte, origen y huella). Si falta algo: PROVISIONAL/PENDIENTE con causa y acción; jamás inventar importes.
+- Informar por separado: «datos suficientes para calcular», «datos suficientes para certificar», «sincronización bancaria al día». «Disponible verificado» ≠ «Saldo bancario verificado».
+- Toda cifra tiene libro mayor (`verifyLedger`: suma de impactos = resultado). Los importes se calculan en céntimos enteros (BigInt); una fracción de céntimo se señala, nunca se redondea en silencio. Fechas y «hoy» en Europa/Madrid desde el corte común.
+- Identidad bancaria = solo referencias del proveedor (nunca el `id` interno). Los duplicados sospechosos se señalan, no se fusionan; el usuario los marca «distintos» (guardado local por cuenta y perfil).
+- Un rescate vinculado solo por nombre único es PROVISIONAL; solo la vinculación por ID cuenta como verificada.
+- Las pruebas con fixtures sintéticas demuestran reglas, no importes reales. Prohibido hardcodear importes personales como solución. La conciliación con datos reales se hace en privado (`lab/tools/elite-reconcile-cli.cjs`) y los informes privados nunca se suben a GitHub.
+- Publicación: rama LAB primero, snapshot inmutable de versión, no tocar HTML/PWA estable, verificar Actions y URL real; solo «con labora» promueve. Sin enlace Safari si la publicación no está verificada.
+- Los informes públicos usan seudónimos/huellas SHA-256, sin IDs, nombres ni importes por registro.
+
+
+## Fluxia Élite v2.0.26 (2026-10-16)
+- Un cobro marcado con fecha posterior al corte común no se cuenta como cobrado (salvo ID bancario del proveedor) y se señala por ID; aportaciones, rescates y reposiciones posteriores al corte se señalan por ID y bloquean el criterio [f]. Nunca se corrige tocando registros: incidencia por ID y causa.
+- El certificado memoizado debe invalidarse por CONTENIDO de las fuentes (no solo por referencia/total).
+- Las pruebas de versión no fijan literales: comparan con `ELITE_SAFARI_VERSION` y exigen snapshot idéntico en `lab/versions/`.
+- Nunca declarar certificado el Disponible sin copia HTML + nube del mismo perfil/corte y banco real sincronizado; sin push verificado y despliegue confirmado, no hay enlace LAB.
