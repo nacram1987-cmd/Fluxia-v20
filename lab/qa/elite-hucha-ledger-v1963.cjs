@@ -61,6 +61,11 @@ assert.equal(aliases['profile:usr-068a982d-9638-40cc-8b8c-a595534ab36d:v2_provis
 assert.equal(aliases['profile:usr-068a982d-9638-40cc-8b8c-a595534ab36d:v2_usos'],'planRescate_v2_usos');
 assert.deepEqual({...ctx.cloudProfileAliases('invalid')},{});
 assert.equal(aliases['profile:usr-068a982d-9638-40cc-8b8c-a595534ab36d:v2_efectivo'],'v2_efectivo');
+assert.equal(aliases['profile:usr-068a982d-9638-40cc-8b8c-a595534ab36d:v2_movimientos'],'planRescate_v2_movimientos');
+assert.equal(ctx.supersededLegacyCloudKey('planRescate_v2_movimientos',new Set(['planRescate_v2_movimientos'])),true);
+assert.match(html,/rawSources=\{movimientos:Array\.isArray\(nextExtra\.v2_movimientos\).*next\.planRescate_v2_movimientos/);
+assert.match(html,/renderWalletLinkAudit\(wallet,variableRows,useRows\.present\?useRows\.value:null\)/);
+
 assert.equal(ctx.supersededLegacyCloudKey('planRescate_v2_efectivo',new Set(['v2_efectivo'])),true);
 assert.equal(ctx.supersededLegacyCloudKey('v2_efectivo',new Set(['v2_efectivo'])),true);
 assert.equal(ctx.supersededLegacyCloudKey('v2_efectivo',new Set()),false);
