@@ -1,5 +1,20 @@
 # Fluxia Élite BETA · Historial Safari (independiente de PWA HTML y SwiftUI)
-Fecha: 2026-10-14
+Fecha: 2026-10-15
+
+## v2.0.06 · prioridad de rescates del HTML frente a nube desactualizada (15/10/2026)
+
+**Cambio funcional**
+- Si la copia privada validada del HTML del mismo perfil está cargada, Huchas usa primero sus operaciones para el balance reconstruido.
+- Antes, cualquier lista Supabase no vacía prevalecía aunque fuera anterior; un rescate reciente del HTML podía quedar oculto.
+- Si no hay copia HTML en esta sesión, Supabase sigue como fuente de lectura alternativa. Una lista vacía y una fuente ausente se distinguen.
+- La comparación de discrepancias por ID/campos entre HTML y nube sigue visible. Priorizar HTML no importa ni modifica datos.
+- Crear, editar, aportar, usar y rescatar continúa en el HTML madre hasta certificar la escritura equivalente y la paridad.
+- **QA local de la lógica:** cuatro escenarios de precedencia/fallback/vacíos/ausencia y análisis sintáctico del JavaScript inline superados. La validación de Safari/iPhone físico, lectura del perfil real y publicación de Pages no se ha ejecutado.
+
+**Archivos:** `lab/fluxia-elite-safari-datos-reales.html`; snapshot versionado `lab/versions/fluxia-elite-safari-v2.0.06.html`; regresión `lab/qa/elite-hucha-source-priority-v20006.cjs`.
+**Versión anterior para rollback:** `lab/versions/fluxia-elite-safari-v2.0.05.html`.
+**PWA estable:** sin cambios.
+
 
 ## v1.9.1 · Importación privada de Dinero en mano del mismo perfil (14/10/2026)
 
