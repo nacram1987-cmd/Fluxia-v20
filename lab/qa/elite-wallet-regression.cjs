@@ -30,4 +30,14 @@ run('unknown posting type cannot be treated as entry',()=>assert.equal(wallet.in
 run('strict month requires canonical YYYY-MM',()=>assert.equal(wallet.month(a,'octubre'),null));
 run('money cents safe range',()=>assert.equal(wallet.cents(Number.POSITIVE_INFINITY),null));
 run('snapshot does not expose wallet as bank Disponible',()=>assert.equal(typeof a.disponible,'undefined'));
-console.log('RESULT',counter,'/ 20 wallet invariants');
+
+const cashHTML={saldo:60,movimientos:[...source.movimientos,
+ {id:'cash-added',fecha:'2026-10-15',importe:20,tipo:'entrada',concepto:'Dinero añadido'},
+ {id:'cash-spent',fecha:'2026-10-15',importe:30,tipo:'salida',concepto:'Gasto en mano'}]};
+const cashCompare=wallet.compareMovements(cashHTML,source);
+run('cash HTML copy surfaces added and spent movements',()=>assert.equal(cashCompare.htmlOnly.length,2));
+run('cash movement history does not invent or hide the net balance difference',()=>assert.equal(cashCompare.balanceDeltaCents,-1000));
+run('same IDs with a changed amount remain a discrepancy',()=>{const x=wallet.compareMovements(source,{...source,movimientos:source.movimientos.map(m=>m.id==='deposit'?{...m,importe:99}:m)});assert.equal(x.different[0].changed.includes('cents'),true)});
+run('an absent cloud wallet cannot be certified as parity',()=>assert.equal(wallet.compareMovements(source,null).ready,false));
+run('duplicate movement IDs block equivalence',()=>{const x=wallet.compareMovements({saldo:0,movimientos:[{id:'d',importe:1,tipo:'entrada'},{id:'d',importe:1,tipo:'entrada'}]},{saldo:0,movimientos:[{id:'d',importe:1,tipo:'entrada'}]});assert.equal(x.duplicates.length,1);assert.equal(x.equivalent,false)});
+console.log('RESULT',counter,'/ 25 wallet invariants');
