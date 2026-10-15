@@ -37,7 +37,7 @@ const cashHTML={saldo:60,movimientos:[...source.movimientos,
 const cashCompare=wallet.compareMovements(cashHTML,source);
 run('cash HTML copy surfaces added and spent movements',()=>assert.equal(cashCompare.htmlOnly.length,2));
 run('cash movement history does not invent or hide the net balance difference',()=>assert.equal(cashCompare.balanceDeltaCents,-1000));
-run('same IDs with a changed amount remain a discrepancy',()=>{const x=wallet.compareMovements(source,{...source,movimientos:source.movimientos.map(m=>m.id==='deposit'?{...m,importe:99}:m)});assert.equal(x.different[0].changed.includes('cents'),true)});
+run('same IDs with a changed amount remain a discrepancy',()=>{const x=wallet.compareMovements(source,{...source,movimientos:source.movimientos.map(m=>m.id==='deposit'?{...m,importe:99}:m)});assert.equal(x.different[0].changed.includes('cents'),true);assert.equal(x.different[0].cloudMovement.cents,9900)});
 run('an absent cloud wallet cannot be certified as parity',()=>assert.equal(wallet.compareMovements(source,null).ready,false));
 run('duplicate movement IDs block equivalence',()=>{const x=wallet.compareMovements({saldo:0,movimientos:[{id:'d',importe:1,tipo:'entrada'},{id:'d',importe:1,tipo:'entrada'}]},{saldo:0,movimientos:[{id:'d',importe:1,tipo:'entrada'}]});assert.equal(x.duplicates.length,1);assert.equal(x.equivalent,false)});
 console.log('RESULT',counter,'/ 25 wallet invariants');
