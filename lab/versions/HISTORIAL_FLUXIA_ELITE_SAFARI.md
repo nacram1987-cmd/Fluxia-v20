@@ -1,20 +1,29 @@
 # Fluxia Élite BETA · Historial Safari (independiente de PWA HTML y SwiftUI)
 Fecha: 2026-10-15
 
-## v2.0.06 · prioridad de rescates del HTML frente a nube desactualizada (15/10/2026)
+# Fluxia Élite BETA · Historial Safari (independiente de PWA HTML y SwiftUI)
+Fecha: 2026-10-15
 
-**Cambio funcional**
-- Si la copia privada validada del HTML del mismo perfil está cargada, Huchas usa primero sus operaciones para el balance reconstruido.
-- Antes, cualquier lista Supabase no vacía prevalecía aunque fuera anterior; un rescate reciente del HTML podía quedar oculto.
-- Si no hay copia HTML en esta sesión, Supabase sigue como fuente de lectura alternativa. Una lista vacía y una fuente ausente se distinguen.
-- La comparación de discrepancias por ID/campos entre HTML y nube sigue visible. Priorizar HTML no importa ni modifica datos.
-- Crear, editar, aportar, usar y rescatar continúa en el HTML madre hasta certificar la escritura equivalente y la paridad.
-- **QA local de la lógica:** cuatro escenarios de precedencia/fallback/vacíos/ausencia y análisis sintáctico del JavaScript inline superados. La validación de Safari/iPhone físico, lectura del perfil real y publicación de Pages no se ha ejecutado.
+## v2.0.06 · cotejo de Dinero en mano y aislamiento de fuentes (15/10/2026)
 
-**Archivos:** `lab/fluxia-elite-safari-datos-reales.html`; snapshot versionado `lab/versions/fluxia-elite-safari-v2.0.06.html`; regresión `lab/qa/elite-hucha-source-priority-v20006.cjs`.
-**Versión anterior para rollback:** `lab/versions/fluxia-elite-safari-v2.0.05.html`.
+**Qué cambia y dónde verlo**
+- Dinero en mano → carga una copia privada del mismo perfil desde Ajustes del HTML. Élite coteja esa instantánea con la colección de nube autenticada.
+- La tarjeta nueva muestra conteos solo HTML/solo nube, diferencias por ID/campos, IDs repetidos o ausentes y diferencia entre saldos históricos.
+- Al haber diferencias por ID, muestra los valores del HTML y de la nube para facilitar la revisión.
+- Detecta, por ejemplo, si movimientos de efectivo anotados en el HTML aún no aparecen en la copia de nube. No presupone importes ni registra los datos del usuario en el código.
+- El cotejo es de solo lectura: no fusiona, repara, importa ni duplica movimientos; el HTML madre conserva las operaciones reales.
+- Huchas: regresión añadida para demostrar que la vista HTML usa solo la copia exacta del perfil y la vista nube usa solo sus propios usos. No mezcla fuentes.
+- Versión y copia anterior: v2.0.05 se conserva para rollback. PWA estable permanece intacta.
+
+**Pruebas locales Node.js**
+- Cartera: 25/25 invariantes, incluidos +20 € de entrada y −30 € de gasto como fixture sintética, discrepancia neta −10 €, discrepancias por ID, IDs duplicados y fuente ausente.
+- Huchas: aislamiento exacto del perfil/vistas HTML-nube y reconstrucción del libro mayor: superados.
+- JavaScript inline: análisis sintáctico superado.
+- No verificado en Safari/iPhone, con el perfil real del usuario ni tras publicación de GitHub Pages. El candidato sigue en rama LAB sin URL operativa publicada.
+
+**Archivos:** `lab/fluxia-elite-safari-datos-reales.html`, `lab/js/fluxia-elite-wallet-v1.js`, `lab/qa/elite-wallet-regression.cjs`, `lab/qa/elite-hucha-source-priority-v20006.cjs`.
+**Rollback:** `lab/versions/fluxia-elite-safari-v2.0.05.html`.
 **PWA estable:** sin cambios.
-
 
 ## v1.9.1 · Importación privada de Dinero en mano del mismo perfil (14/10/2026)
 
