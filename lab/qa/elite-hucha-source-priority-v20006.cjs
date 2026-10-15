@@ -17,4 +17,4 @@ assert.equal(ctx.huchaUsesFromSource(true)[0].id,'html-use');
 assert.equal(ctx.huchaUsesFromSource(false)[0].id,'cloud-use');
 ctx.backupFinance.profile='p_B__';
 assert.equal(ctx.huchaUsesFromSource(true),null,'another profile backup must not leak into active source');
-console.log('PASS v2.0.07 hucha source isolation, HTML/cloud mode routing, exact-profile backup gate');
+console.log('PASS v2.0.08 hucha source isolation, HTML/cloud mode routing, exact-profile backup gate');
