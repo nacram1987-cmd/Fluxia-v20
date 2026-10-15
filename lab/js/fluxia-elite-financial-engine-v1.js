@@ -16,6 +16,16 @@
   if(row.origen==='efectivo'||row.tipoInterno==='gasto_efectivo')return 'cash';
   return 'variable-real';
  }
+ function incomeRole(row){
+  if(!row||typeof row!=='object')return 'unknown';
+  if(row.excluido||row.excluidoDisponible||row.eliminado||row.archivado)return 'excluded';
+  var kind=String(row.tipoInterno||row.tipo||'').toLowerCase();
+  if(row.esTraspasoPropio===true||['puente','traspaso','traspaso_efectivo','rescate_hucha','rescate_provision','reponer_hucha'].includes(kind))return 'transfer';
+  var label=String(row.concepto||row.nombre||row.descripcion||'').toLowerCase();
+  if((/pensi[oó]n/.test(label)||row.estado==='pendiente'||row.pendiente===true)&&!(row.pagadoEl||row.bancoRef||row.pagoBanco||row.cobrado===true))return 'pending';
+  if(row.pagadoEl||row.bancoRef||row.pagoBanco||row.cobrado===true||row.estado==='cobrado')return 'collected';
+  return 'unverified';
+ }
  function available(input){
   var required=['incomeCents','realExpensesCents','plannedProvisionsCents','excessContributionsCents'];
   if(!input||required.some(function(key){return typeof input[key]!=='bigint'}))return {ok:false,reason:'INCOMPLETE_INPUT'};
@@ -43,7 +53,7 @@
   var missing=keys.filter(function(key){return evidence?.[key]!==true});
   return {certified:missing.length===0,missing:missing};
  }
- var api={version:'1.0.0',cents:cents,sum:sum,role:role,available:available,hucha:hucha,certification:certification};
+ var api={version:'1.0.0',cents:cents,sum:sum,role:role,incomeRole:incomeRole,available:available,hucha:hucha,certification:certification};
  if(typeof module!=='undefined'&&module.exports)module.exports=api;
  if(root)root.FluxiaEliteFinancialEngine=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
