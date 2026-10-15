@@ -1,6 +1,10 @@
 # 📋 PROMPT MAESTRO FLUXIA v93.8.2+
 ## Biblia de desarrollo, versionado, QA y entrega profesional
 
+## Adenda Élite v2.0.19 — Disponible provisional por mes (15/10/2026)
+
+El cálculo del Disponible debe ceñir los gastos fijos al mes exacto normalizado. Los planes de huchas y financiaciones deben interpretar nombres de meses sin distinguir mayúsculas y respetar sus fechas de inicio y fin. No sumar rescates ya repuestos como pendientes ni etiquetarlos como importe que aumenta el Disponible.
+
 ## Adenda Élite v2.0.18 — Disponible visible provisional (15/10/2026)
 
 Inicio debe mostrar el importe de Disponible mensual cuando las colecciones canónicas e importes base están completos, aunque la paridad integral HTML/Supabase siga sin certificarse. Rotularlo **PROVISIONAL** y exponer con claridad qué cotejos faltan. Un rescate temporal con referencia explícita conflictiva, hucha ambigua, ID de operación duplicado, fecha/importes inválidos o reposiciones inconsistentes no se suma. Si no hay referencia ID pero el nombre de hucha coincide exactamente con una sola provisión y el uso tiene ID único, fecha válida e importe/reposiciones verificables, puede incluirse como provisional y el certificado permanece bloqueado hasta vincular por ID y cotejar el mismo perfil/corte. No hardcodear saldos ni escribir datos financieros por presentar la cifra. Disponible mensual y saldos bancarios son métricas independientes.

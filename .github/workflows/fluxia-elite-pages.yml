@@ -43,8 +43,8 @@ jobs:
           node-version: '24'
       - run: npm ci --prefix auditorias/qa-v97.66 --no-audit --no-fund
       - run: node auditorias/qa-v97.66/verify-baseline.cjs
-      - name: Verify Élite provisional Disponible in the real dashboard
-        run: node lab/qa/elite-dashboard-provisional-available-v2018.cjs
+      - name: Verify Élite provisional Available calculation and month scoping
+        run: node lab/qa/elite-dashboard-provisional-available-v2019.cjs
       - name: Verify current bank inbox and balance regressions
         run: node lab/qa/elite-banking-available-v2012.cjs
       - name: Verify Élite version header and release guards

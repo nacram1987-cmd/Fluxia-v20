@@ -5,7 +5,7 @@ const vm=require('node:vm');
 const path=require('node:path');
 const root=path.join(__dirname,'..');
 const html=fs.readFileSync(path.join(root,'fluxia-elite-safari-datos-reales.html'),'utf8');
-assert.match(html,/const ELITE_SAFARI_VERSION='2\.0\.18'/);
+assert.match(html,/const ELITE_SAFARI_VERSION='2\.0\.19'/);
 assert(html.includes("calculation?.ok?'PROVISIONAL':'PENDIENTE'"),'Dashboard labels an uncertified numeric calculation as provisional');
 assert(html.includes('else if(calculation.provisional)blockers.push(...calculation.provisionalNotes)'),'Provisional rescue never passes the certification gate');
 assert(html.includes('availableRescueHuchaLink(use,huchas,uses)'),'Available calculation allows safe name-only rescue matching');
@@ -40,11 +40,11 @@ const calcSource=between('function availableCalculationReport(){','\nfunction re
 const certSource=between('function availableCertificationReport(){','\nfunction availableCalculationReport()');
 const rows={
  ingresos:[{id:'income',fecha:'2026-10-01',importe:1000}],
- fijos:[{id:'fixed',mes:'octubre',importe:200}],
+ fijos:[{id:'fixed',mes:'octubre',importe:200},{id:'old-fixed',mes:'septiembre',importe:9000}],
  variables:[{id:'variable',mes:'2026-10',fecha:'2026-10-04',importe:300}],
  compartidos:[],
- financiaciones:[{id:'finance',mes:'octubre',cuota:100}],
- huchas:[{...hucha,mes:'octubre'}]
+ financiaciones:[{id:'finance',mes:'octubre',cuota:100},{id:'ended-finance',inicio:'enero',fin:'septiembre',cuota:5000}],
+ huchas:[{...hucha,mes:undefined,inicio:'julio'},{id:'ended-hucha',nombre:'Hucha cerrada',inicio:'enero',fin:'septiembre',importeMensual:9000,aportaciones:{octubre:[]}}]
 };
 const integration={...context,window:{FluxiaEliteFinancialEngine:{cents:moneyToCents,available(input){const cents=input.incomeCents-input.realExpensesCents-input.plannedProvisionsCents-input.excessContributionsCents+input.sharedImpactCents+input.pendingHuchaRescuesCents;return {ok:true,cents,trace:input}}}},
  mods:Object.entries(rows).map(([id,data])=>({id,rows:data})),selectedMonth:'2026-10',canon:mod=>Array.isArray(mod?.rows)?mod.rows:null,
@@ -55,9 +55,10 @@ const report=integration.availableCalculationReport();
 assert.equal(report.ok,true,'Complete numeric sources yield a provisional figure with a unique name link');
 assert.equal(report.cents,25000n);
 assert.equal(report.provisional,true);
+assert(html.includes("if(amount>repaid&&(link.provisional||snapshot.provisionalLinks))"),'Only an outstanding rescue receives the provisional-added note');
 assert.match(report.provisionalNotes[0],/Tributos.*nombre único/);
 const certification=integration.availableCertificationReport();
 assert.equal(certification.certified,false,'A provisional figure never passes the full certification gate');
 assert.equal(certification.calculation.cents,25000n);
 assert(certification.blockers.some(x=>/nombre único/.test(x)));
-console.log(JSON.stringify({version:'2.0.18',syntheticRescueCents:provisional.pendingCents,syntheticAvailableCents:Number(report.cents),certified:false,duplicateAndAmbiguousLinksBlocked:true,explicitBrokenIdsBlocked:true},null,2));
+console.log(JSON.stringify({version:'2.0.19',syntheticRescueCents:provisional.pendingCents,syntheticAvailableCents:Number(report.cents),certified:false,otherMonthFixedExcluded:true,endedPlansExcluded:true,monthNamePlanIncluded:true,duplicateAndAmbiguousLinksBlocked:true,explicitBrokenIdsBlocked:true},null,2));
