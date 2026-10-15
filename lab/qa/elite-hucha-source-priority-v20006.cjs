@@ -2,26 +2,19 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
 assert.match(html,/const ELITE_SAFARI_VERSION='2\.0\.06'/);
-const start=html.indexOf('function preferredHuchaUses(){'),end=html.indexOf('\nfunction renderHuchaUsesAudit(',start);
-assert(start>=0&&end>start,'preferredHuchaUses function must exist');
-const ctx=vm.createContext({});
-ctx.huchaUsesFromSource=isHtml=>isHtml?ctx.htmlUses:ctx.cloudUses;
+assert.match(html,/if\(backupReady&&listSourceMode==='html'\)\{renderHTMLPrimaryList\(m\);return\}/,'HTML mode must render the selected profile backup as its own source');
+assert.match(html,/reconstructedHuchaLedger\(arr,huchaUsesFromSource\(false\)\)/,'cloud hucha balances must use cloud withdrawals only');
+assert.match(html,/listSourceMode='html';/,'loading a private source selects the HTML comparison view');
+const start=html.indexOf('function huchaUsesFromSource(isHtml){'),end=html.indexOf('\nfunction compareHuchaUseSources(',start);
+assert(start>=0&&end>start,'source resolver must exist');
+const ctx=vm.createContext({
+ owner:'owner-A',activeProfile:'p_A__',
+ backupFinance:{owner:'owner-A',profile:'p_A__',sources:{v2_usos:{value:[{id:'html-use'}]}}},
+ extraFinance:{v2_usos:[{id:'cloud-use'}]}
+});
 vm.runInContext(html.slice(start,end),ctx);
-ctx.htmlUses=[{id:'html-new',importe:240,fecha:'2026-10-15'}];
-ctx.cloudUses=[{id:'cloud-old',importe:0,fecha:'2026-10-01'}];
-let result=ctx.preferredHuchaUses();
-assert.equal(result.origin,'HTML','a present same-profile HTML source is authoritative while parity is unverified');
-assert.equal(result.rows[0].id,'html-new','a recent HTML rescue must not be hidden by non-empty cloud data');
-ctx.htmlUses=null;result=ctx.preferredHuchaUses();
-assert.equal(result.origin,'Supabase','fall back to cloud when HTML source is absent');
-assert.equal(result.rows[0].id,'cloud-old');
-ctx.htmlUses=[];ctx.cloudUses=[{id:'stale-cloud'}];
-result=ctx.preferredHuchaUses();
-assert.equal(result.origin,'HTML','an explicitly empty HTML history must not be filled with stale cloud withdrawals');
-assert.equal(result.rows.length,0);
-ctx.cloudUses=[];
-assert.equal(ctx.preferredHuchaUses().origin,'HTML','keep an explicitly available empty HTML source as the authority');
-ctx.htmlUses=null;ctx.cloudUses=null;
-assert.equal(ctx.preferredHuchaUses().rows,null);
-for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(m[1])new vm.Script(m[1]);
-console.log('PASS v2.0.06 HTML-first hucha source precedence, cloud fallback, empty and missing sources, inline JS parse');
+assert.equal(ctx.huchaUsesFromSource(true)[0].id,'html-use');
+assert.equal(ctx.huchaUsesFromSource(false)[0].id,'cloud-use');
+ctx.backupFinance.profile='p_B__';
+assert.equal(ctx.huchaUsesFromSource(true),null,'another profile backup must not leak into active source');
+console.log('PASS v2.0.06 hucha source isolation, HTML/cloud mode routing, exact-profile backup gate');
