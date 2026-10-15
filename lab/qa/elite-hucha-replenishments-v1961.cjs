@@ -5,13 +5,16 @@ const a=html.indexOf('function huchaReplenishmentAudit('),b=html.indexOf('functi
 assert(a>=0&&b>a);
 const ctx=vm.createContext({exactHuchaUsageLink:(u,hs)=>{const h=hs.find(x=>x.id===u.huchaId);return h?{kind:'linked',hucha:h}:{kind:'unverified'}},el:(tag,cls,text)=>({tag,cls,text,children:[],append(...v){this.children.push(...v)}}),money:n=>n+' €'});
 vm.runInContext(html.slice(a,b),ctx,{timeout:1000});
+vm.runInContext(html.slice(html.indexOf('const actualChargeDate='),html.indexOf('const chargeMeta=')),ctx);
 const h=[{id:'h',nombre:'Césped'}],u={id:'u',huchaId:'h',tipo:'temporal',importe:70,repuesto:35,reposiciones:[{id:'a',importe:20,fecha:'2026-10-10'},{id:'b',importe:15,fecha:'2026-10-12'}]};
 const ok=ctx.huchaReplenishmentAudit(h,[u]);
 assert.equal(ok.verifiedCents,3500);assert.equal(ok.verified,2);assert.equal(ok.summaryConflict,0);
 assert.equal(ctx.huchaReplenishmentAudit(h,[{...u,reposiciones:[u.reposiciones[0],u.reposiciones[0]]}]).duplicates,1);
 assert.equal(ctx.huchaReplenishmentAudit(h,[{...u,repuesto:70}]).summaryConflict,1);
 assert.equal(ctx.huchaReplenishmentAudit(h,[{...u,reposiciones:undefined}]).missingHistory,1);
+assert.equal(ctx.huchaReplenishmentAudit(h,[u,{...u,id:'u2',reposiciones:[{...u.reposiciones[0]}],repuesto:20}]).duplicates,1);
+assert.equal(ctx.huchaReplenishmentAudit(h,[{...u,reposiciones:[{id:'bad',importe:35,fecha:'2026-02-31'}]}]).unknown,1);
 assert(ctx.renderHuchaReplenishments(h,[u]));
-assert(html.includes("const ELITE_SAFARI_VERSION='1.9.61'"));
+assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.61|2\.0\.01)'/);
 for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(m[1])new vm.Script(m[1]);
 console.log('PASS v1.9.61 replenishments, deduplication, mismatch flags, missing history, script parse');

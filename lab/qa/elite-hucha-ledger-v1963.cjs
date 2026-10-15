@@ -11,8 +11,9 @@ const ctx=vm.createContext({
  el:(tag,cls,text)=>({tag,cls,text,children:[],append(...xs){this.children.push(...xs)}}),money:n=>n+' €'
 });
 vm.runInContext(html.slice(a,b),ctx,{timeout:1000});const fn=ctx.reconstructedHuchaLedger;
+vm.runInContext(html.slice(html.indexOf('const actualChargeDate='),html.indexOf('const chargeMeta=')),ctx);
 const h=[{id:'a',nombre:'Césped',aportado:70},{id:'b',nombre:'Boda',aportado:150}];
-const uses=[{id:'u1',huchaId:'a',tipo:'definitivo',importe:70,repuesto:0},{id:'u2',huchaId:'b',tipo:'temporal',importe:80,repuesto:30}];
+const uses=[{id:'u1',huchaId:'a',tipo:'definitivo',importe:70,repuesto:0,fecha:'2026-09-20'},{id:'u2',huchaId:'b',tipo:'temporal',importe:80,repuesto:30,fecha:'2026-10-05'}];
 assert.equal(fn(h,uses).provisionalCents,10000);
 assert.equal(fn(h,uses).complete,true);
 assert.equal(fn(h,[...uses,uses[0]]).complete,false);
@@ -22,6 +23,6 @@ assert.equal(fn([{...h[0],rescates:[{importe:12}]},h[1]],uses).complete,false);
 assert.equal(fn(h,null).complete,false);
 assert.equal(fn([{...h[0],invalid:true},h[1]],uses).complete,false);
 assert(ctx.renderReconstructedHuchaLedger(h,uses,'test'));
-assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.63|2\.0\.00)'/);
+assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.63|2\.0\.(?:00|01))'/);
 for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(m[1])new vm.Script(m[1]);
 console.log('PASS v1.9.63 reconstruction, duplicate/unmatched/unknown/hidden history guards, parse');

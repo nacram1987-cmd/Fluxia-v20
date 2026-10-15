@@ -1,6 +1,13 @@
 # 📋 PROMPT MAESTRO FLUXIA v93.8.2+
 ## Biblia de desarrollo, versionado, QA y entrega profesional
 
+## Adenda Élite v2.0.01 — fechas y reposiciones bajo conflicto (15/10/2026)
+
+- No atribuir aportaciones o usos a un mes con una fecha de calendario imposible. Los importes pueden inspeccionarse, pero la hucha afectada y el agregado no se certifican.
+- Un uso archivado/anulado no cuenta como retiro vigente en el balance reconstruido mientras no se demuestre su semántica original. Conservar su incidencia visible.
+- Cada reposición debe tener ID, fecha válida e importe exacto en céntimos. Si se repite su ID en dos usos, marcar ambas huchas en conflicto y bloquear el agregado; el resumen `repuesto` sigue siendo control y nunca una segunda entrada de dinero.
+- La paridad real con el HTML operativo y las puertas de seguridad/bancos/Disponible siguen pendientes. Élite permanece separada de la estable.
+
 ## Adenda Élite v2.0.00 — conciliación individual sin mezclar fuentes (15/10/2026)
 
 - Cada tarjeta de Huchas emplea los usos de su propia fuente: copia HTML con copia HTML, Supabase con Supabase. No mezclar importes entre ellas ni entre perfiles.

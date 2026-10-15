@@ -11,6 +11,7 @@ const ctx=vm.createContext({
  temporaryUseOutstanding:u=>({kind:'verified_summary',repaidCents:Math.round((u.repuesto||0)*100),cents:Math.round((u.importe-(u.repuesto||0))*100)})
 });
 vm.runInContext(html.slice(a,b),ctx,{timeout:1000});
+vm.runInContext(html.slice(html.indexOf('const actualChargeDate='),html.indexOf('const chargeMeta=')),ctx);
 const h={id:'h1',nombre:'Césped',importeMensual:35,aportaciones:{octubre:[{id:'a1',importe:70,fecha:'2026-10-01'}]}};
 const result=ctx.huchaFinancialSnapshot(h,'2026-10',[{provisionId:'h1',tipo:'definitivo',importe:7.5,fecha:'2026-10-15'}]);
 assert.equal(result.definitiveCents,750);

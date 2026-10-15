@@ -3,6 +3,7 @@ const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),asse
 const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
 const extract=(a,b)=>{const i=html.indexOf(a),j=html.indexOf(b,i);assert(i>=0&&j>i,`Missing ${a}`);return html.slice(i,j)};
 const ctx=vm.createContext({});
+vm.runInContext(extract('const actualChargeDate=','const chargeMeta='),ctx);
 vm.runInContext(extract('function exactHuchaUsageLink(','function canonicalMovementId('),ctx);
 vm.runInContext(extract('function temporaryUseOutstanding(','function reconstructedHuchaLedger('),ctx);
 vm.runInContext(extract('function huchaMonthlyContributions(','function renderHuchaMonthlyContributions('),ctx);
@@ -42,6 +43,26 @@ vm.runInContext(extract('function grossHuchaContributions(','function renderGros
 const malformed=ctx.reconstructedHuchaLedger([invalidContribution,b],[]);
 assert(malformed.rows.find(row=>row.id==='bad').issues>0,'Malformed cents must not produce an individual balance');
 assert.equal(malformed.rows.find(row=>row.id==='b').issues,0);
+const invalidDate=h('dated','Dates',20);invalidDate.aportaciones.octubre[0].fecha='2026-02-31';
+const badDate=ctx.reconstructedHuchaLedger([invalidDate,b],[]);
+assert.equal(badDate.complete,false);
+assert(badDate.rows.find(row=>row.id==='dated').issues>0);
+assert.equal(badDate.rows.find(row=>row.id==='b').issues,0);
+assert.equal(ctx.huchaContributionSnapshot(invalidDate,'2026-02').monthCents,0);
+const archived=ctx.reconstructedHuchaLedger([a,b],[{...nameUse,huchaId:'a',archivado:true}]);
+assert.equal(archived.complete,false);
+assert(archived.rows.find(row=>row.id==='a').issues>0);
+assert.equal(archived.rows.find(row=>row.id==='b').issues,0);
+const sharedRep=[
+ {id:'ta',huchaId:'a',tipo:'temporal',importe:10,repuesto:5,fecha:'2026-10-10',reposiciones:[{id:'same-repayment',importe:5,fecha:'2026-10-11'}]},
+ {id:'tb',huchaId:'b',tipo:'temporal',importe:10,repuesto:5,fecha:'2026-10-10',reposiciones:[{id:'same-repayment',importe:5,fecha:'2026-10-11'}]}
+];
+const repLedger=ctx.reconstructedHuchaLedger([a,b],sharedRep);
+assert.equal(repLedger.complete,false);
+assert.equal(repLedger.duplicates,1);
+assert(repLedger.rows.every(row=>row.issues>0));
+assert.equal(snapshot(a,sharedRep).status,'con conflicto');
+assert.equal(snapshot(b,sharedRep).status,'con conflicto');
 assert.equal(ledger.sourceUses[0].id,'n1');
 assert(html.includes('sourceUses:uses')&&html.includes('ledger.sourceUses')&&html.includes("huchaLedger.origin='HTML'"));
-console.log('PASS v2.0.00 per-hucha source isolation, names, duplicates, dates, cents and replenishments');
+console.log('PASS v2.0.01 per-hucha source isolation, dates, archived uses and replenishment IDs');

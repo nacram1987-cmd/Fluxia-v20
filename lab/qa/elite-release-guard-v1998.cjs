@@ -18,7 +18,7 @@ const workflow=read('.github/workflows/fluxia-elite-pages.yml');
 assert(workflow.includes('sha256sum -c AUDITORIA_ELITE/STABLE_AT_v1.9.98_SHA256.txt'));
 assert(!workflow.includes('gh release upload v97.73-LAB'));
 const html=read('lab/fluxia-elite-safari-datos-reales.html');
-assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.(?:98|99)|2\.0\.00)'/);
+assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.(?:98|99)|2\.0\.(?:00|01))'/);
 assert(html.includes('aria-label\',\'Abrir notificaciones'));
 assert(html.includes('bell.innerHTML=\'<svg'));
 assert(!html.includes('.eliteHeader #eliteNotifications:after'));
