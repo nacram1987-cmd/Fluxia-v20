@@ -12,7 +12,7 @@
   if(row.papelera===true||row.eliminado===true||row.deleted===true||row.archivado===true||row.archived===true||row.excluido===true||row.excluidoDisponible===true)return 'excluded';
   if(row.cuentaComoFijo===true||row.vinculoFijoId||row.pagoFijoId||row.fijoId)return 'fixed-linked';
   // Un movimiento entre cuentas propias nunca es gasto, aunque su origen sea efectivo.
-  if(row.esTraspasoPropio===true||['reponer_hucha','traspaso','traspaso_efectivo','puente'].indexOf(row.tipoInterno)>=0)return 'transfer';
+  if(row.esTraspasoPropio===true||['reponer_hucha','traspaso','traspaso_efectivo','puente','rescate_hucha','rescate_provision'].indexOf(row.tipoInterno)>=0)return 'transfer';
   if(row.origen==='efectivo'||row.tipoInterno==='gasto_efectivo')return 'cash';
   return 'variable-real';
  }
