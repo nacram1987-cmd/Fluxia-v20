@@ -7,6 +7,7 @@ on:
       - 'lab/index.html'
       - 'lab/manifest.webmanifest'
       - 'lab/fluxia-sw.js'
+      - 'lab/fluxia-sw-html-hotfix.js'
       - 'auditorias/qa-v97.66/**'
       - 'PROMPT_MAESTRO.md'
       - 'CHECKLIST_HTML_DISPONIBLE_HOTFIX_2026-10-15.md'
