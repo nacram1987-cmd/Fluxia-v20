@@ -1,0 +1,24 @@
+'use strict';
+const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
+const html=fs.readFileSync('lab/fluxia-elite-safari-datos-reales.html','utf8');
+const a=html.indexOf('function cloudProfileAliases('),b=html.indexOf('function showProfilePicker(',a);
+assert(a>0&&b>a);
+const prefix='p_usr-11111111-1111-1111-1111-111111111111__',modern='profile:usr-11111111-1111-1111-1111-111111111111:';
+const keys=['ingresos','fijos','movimientos','provisiones','compartidos','financiaciones'];
+const records=keys.map(k=>({user_id:'owner',clave:modern+'v2_'+k,v:JSON.stringify([{id:'modern-'+k,importe:10}]),t:1792069170695,updated_at:'2026-10-05T00:00:00Z'}));
+records.push({user_id:'owner',clave:modern+'v2_usos',v:'[]',t:1792069170695});
+for(const k of keys)records.push({user_id:'owner',clave:prefix+'planRescate_v2_'+k,v:JSON.stringify([{id:'stale-'+k,importe:99999}])});
+records.push({user_id:'owner',clave:prefix+'v2_fijos',v:JSON.stringify([{id:'stale-alternate',importe:99999}])});
+const c={token:'test-token',owner:'owner',page:'inicio',search:'',period:'Todos',activeProfile:prefix,backupFinance:null,walletBackup:null,fullProfileAudit:null,motherAudit:null,csvAudit:null,mods:keys.map(k=>({key:'planRescate_v2_'+k})),draftEdits:new Map(),render(){},hideLoading(){},openTutorial(){},authRequest:async query=>{assert(query.includes('clave,v,t,updated_at'));return records}};
+vm.createContext(c);vm.runInContext(html.slice(a,b),c);
+(async()=>{
+ await c.loadCanonicalProfile(prefix);
+ for(const k of keys)assert.equal(c.items['planRescate_v2_'+k][0].id,'modern-'+k,'Every collection must use its modern counterpart');
+ assert.equal(c.extraFinance.v2_fijos,undefined,'Stale alternate fixed list must not override modern fixed list');
+ assert.equal(c.cloudFinanceSnapshot.complete,true);
+ assert.equal(c.sourceUpdated.planRescate_v2_ingresos,'2026-10-15T12:59:30.695Z','Use payload revision timestamp, not insertion date');
+ const removed=records.shift();await c.loadCanonicalProfile(prefix);assert.equal(c.cloudFinanceSnapshot.complete,false,'A mixed migration cannot silently certify a coherent snapshot');records.unshift(removed);
+ records[0].user_id='other';await assert.rejects(c.loadCanonicalProfile(prefix),/Protección de perfil/);
+ assert.equal(c.cloudFinanceSnapshot,null,'Failed reload invalidates source completeness');
+ console.log('PASS modern complete profile, stale mirror suppression, timestamps, missing sources and owner isolation');
+})().catch(e=>{console.error(e);process.exitCode=1});

@@ -14,7 +14,7 @@ assert.equal(reloaded.checkedAt,'2026-10-15T18:01:43.000Z');
 assert.equal(api.readStatus('user-a','shared',storage),null);
 assert.equal(api.readStatus('user-b','personal',storage),null);
 const html=fs.readFileSync(require('node:path').join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
-assert.match(html,/ELITE_SAFARI_VERSION='2\.0\.(?:17|20)'/);
+assert.match(html,/ELITE_SAFARI_VERSION='2\.0\.(?:17|20|21)'/);
 assert.match(html,/connector\.saveStatus\(owner,activeProfile/);
 assert.match(html,/Última consulta:/);
 console.log('PASS bank status persists by user/profile and preserves provider warning');

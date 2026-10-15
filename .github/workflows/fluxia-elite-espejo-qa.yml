@@ -62,6 +62,10 @@ jobs:
         run: node lab/qa/elite-bank-balances-v2017.cjs
       - name: Bancos persistentes y Disponible (offline)
         run: node lab/qa/elite-banking-available-v2012.cjs
+      - name: Modern profile and Available regressions
+        run: |
+          node lab/qa/elite-modern-cloud-v2021.cjs
+          node lab/qa/elite-dashboard-provisional-available-v2020.cjs
       - name: Motor Disponible HTML completo (offline)
         run: node lab/qa/elite-financial-engine-v1977.cjs
       - name: Huchas por fuente y regresiones recientes (offline)

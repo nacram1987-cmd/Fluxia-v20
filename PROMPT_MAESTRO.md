@@ -1,3 +1,13 @@
+# Corrección prioritaria · Élite v2.0.21 · 15/10/2026
+
+Sustituye el bloqueo obligatorio por copia HTML de la adenda v2.0.20. Se verificó que existen colecciones actuales en `profile:<id>:v2_*`; `updated_at` puede reflejar inserción antigua y `t` la revisión del contenido. No afirmar que faltan datos actuales por consultar solo espejos legacy.
+
+- Cargar las seis colecciones financieras y usos del mismo usuario/perfil; las modernas tienen prioridad sobre ambos espejos legacy. Un conjunto incompleto no autoriza un saldo mezclado.
+- Disponible respeta el mes contable `mes` antes de la fecha de pago, deduplicación por bancoRef antes de clasificación, exclusión de cicloDe/puentes/pensión pendiente, gasto en efectivo, reintegros, importes negativos y cargo fijo real contado una vez.
+- La copia HTML reciente queda como alternativa completa del mismo perfil, no requisito para una nube moderna completa. La certificación de paridad visual/mismo corte sigue separada del cálculo provisional.
+- No tocar ni reparar datos financieros reales para ajustar cifras. Sin importes personales en fixtures ni repositorio público.
+- Pruebas: loader moderno, aislamiento, seis colecciones/uso, timestamp t, regressión contable sintética y comparación privada en céntimos con funciones extraídas del HTML operativo. Safari físico y sesión privada no certificados.
+
 # 📋 PROMPT MAESTRO FLUXIA v93.8.2+
 ## Adenda Élite v2.0.20 — bloquear Disponible actual con nube histórica (15/10/2026)
 

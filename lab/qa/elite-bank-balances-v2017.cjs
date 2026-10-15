@@ -19,7 +19,7 @@ assert.equal(api.readBalances('user-a','personal',storage).errors[0],'CaixaBank:
 assert.equal(api.readBalances('user-a','shared',storage),null);
 assert.equal(api.readBalances('user-b','personal',storage),null);
 const html=require('node:fs').readFileSync(require('node:path').join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
-assert.match(html,/ELITE_SAFARI_VERSION='2\.0\.(?:17|20)'/);
+assert.match(html,/ELITE_SAFARI_VERSION='2\.0\.(?:17|20|21)'/);
 assert(html.includes("runBankConnector('saldos'"));
 assert(html.includes("if(action==='bandeja')"));
 assert(html.includes("connector.call('saldos'"));
