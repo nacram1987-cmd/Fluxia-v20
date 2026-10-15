@@ -1,6 +1,13 @@
 # 📋 PROMPT MAESTRO FLUXIA v93.8.2+
 ## Biblia de desarrollo, versionado, QA y entrega profesional
 
+## Adenda Élite v2.0.02 — ausencia de fuente ≠ cero (15/10/2026)
+
+- Una hucha sin objeto `aportaciones` no representa un saldo cero: mostrar fuente ausente y bloquear saldo, aportado mensual y retiros no verificables. Un objeto `aportaciones: {}` explícito sí permite un historial de aportación vacío si existe también la fuente de usos.
+- No mostrar pendiente mensual calculado con aportaciones de un mes incompleto. Si hay dos campos de provisión prevista distintos, un importe con más de dos decimales o un campo no numérico, ocultar prevista y pendiente y marcar conflicto.
+- En un desglose bruto, una hucha con aportaciones defectuosas muestra «Por conciliar», nunca 0 € inferido. Conservar la hucha verificable independiente y bloquear el agregado.
+- La copia HTML operativa continúa siendo el oráculo hasta una comparación mismo usuario/perfil/periodo/corte. No activar contabilidad bancaria ni promover a estable.
+
 ## Adenda Élite v2.0.01 — fechas y reposiciones bajo conflicto (15/10/2026)
 
 - No atribuir aportaciones o usos a un mes con una fecha de calendario imposible. Los importes pueden inspeccionarse, pero la hucha afectada y el agregado no se certifican.

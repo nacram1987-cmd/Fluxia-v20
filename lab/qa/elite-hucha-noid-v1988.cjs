@@ -4,7 +4,7 @@ const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-rea
 const a=html.indexOf('function huchaFinancialSnapshot('),b=html.indexOf('function appendHuchaFinancialSummary(',a);
 assert(a>=0&&b>a);
 const ctx=vm.createContext({
- huchaContributionSnapshot:hucha=>({lifetimeCents:7000,monthCents:7000,monthComplete:true,plannedCents:3500,pendingCents:0,invalid:0,duplicates:0}),
+ huchaContributionSnapshot:hucha=>({sourceReady:true,lifetimeCents:7000,monthCents:7000,monthComplete:true,plannedCents:3500,pendingCents:0,invalid:0,duplicates:0}),
  huchaMonthlyContributions:h=>({rows:Object.values(h.aportaciones||{}).flat().map(record=>({record})),invalid:0}),
  exactHuchaUsageLink:(u,hs)=>{const id=String(u.provisionId||u.huchaId||'');const m=hs.filter(h=>String(h.id)===id);return m.length===1?{kind:'linked',hucha:m[0]}:{kind:'unverified'}},
  candidateHuchaByName:(u,hs)=>{const id=String(u.provisionId||u.huchaId||'');const m=hs.filter(h=>String(h.id)===id);return m.length===1?{kind:'linked',hucha:m[0]}:{kind:'unverified'}},
