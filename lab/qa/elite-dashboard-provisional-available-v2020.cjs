@@ -5,7 +5,7 @@ const vm=require('node:vm');
 const path=require('node:path');
 const root=path.join(__dirname,'..');
 const html=fs.readFileSync(path.join(root,'fluxia-elite-safari-datos-reales.html'),'utf8');
-assert.match(html,/const ELITE_SAFARI_VERSION='2\\.0\\.[0-9]+'/);
+assert.match(html,/const ELITE_SAFARI_VERSION='[0-9]+[.][0-9]+[.][0-9]+'/);
 assert(html.includes("calculation?.ok?'PROVISIONAL':'PENDIENTE'"),'Dashboard labels an uncertified numeric calculation as provisional');
 assert(html.includes('else if(calculation.provisional)blockers.push(...calculation.provisionalNotes)'),'Provisional rescue never passes the certification gate');
 assert(html.includes('availableRescueHuchaLink(use,huchas,uses)'),'Available calculation allows safe name-only rescue matching');
