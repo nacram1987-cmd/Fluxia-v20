@@ -29,7 +29,7 @@ const unstable=connector.normalizeRows([{id:'fallback|2026-10-15|-7.5|Gasolinera
 assert.equal(unstable[0].bankRef,'fallback|2026-10-15|-7.5|Gasolinera');
 const html=fs.readFileSync(path.join(root,'fluxia-elite-safari-datos-reales.html'),'utf8');
 assert.match(html,/const ELITE_SAFARI_VERSION='2\.0\.15'/);
-assert(html.includes('<title>Fluxia Élite BETA v2.0.15 · Safari</title>'));
+assert(html.includes('<title>Fluxia Élite BETA v2.0.16 · Safari</title>'));
 assert(html.includes('name="fluxia-elite-version" content="2.0.15"'));
 assert(html.includes('lab/versions/fluxia-elite-safari-v2.0.14.html')===false);
 assert(html.includes('function renderBankInboxRows()'));
@@ -53,4 +53,4 @@ const engineBox={};vm.runInNewContext(engineSource,engineBox);
 const result=engineBox.FluxiaEliteFinancialEngine.available({incomeCents:250000n,realExpensesCents:100000n,plannedProvisionsCents:35000n,excessContributionsCents:500n,sharedImpactCents:-12000n,pendingHuchaRescuesCents:10000n});
 assert.equal(result.ok,true);assert.equal(result.cents,112500n);
 assert.equal(result.trace.sharedImpactCents,-12000n);assert.equal(result.trace.pendingHuchaRescuesCents,10000n);
-console.log('PASS v2.0.15 bank inbox profile isolation, stable provider identity, repeated sync idempotence, and cent-exact available engine');
+console.log('PASS v2.0.16 bank inbox profile isolation, stable provider identity, repeated sync idempotence, and cent-exact available engine');

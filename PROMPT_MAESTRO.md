@@ -1238,3 +1238,9 @@ La LAB Safari v2.0.14 persiste por propietario/perfil la bandeja de Enable Banki
 ## Élite v2.0.15 — respuesta visible de sincronización bancaria (15/10/2026)
 
 La respuesta y el error de **Bancos → Sincronizar bancos** deben mantenerse en el panel después de reconstruirlo y recuperarse al reabrir. No declarar conexión exitosa hasta mostrar la respuesta real de Enable Banking. La corrección conserva el aislamiento propietario/perfil, la bandeja de lectura y el guardarraíl sin escritura al ledger. QA de versiones, scripts, conector, preflight, idempotencia, conflictos y Disponible. No actualizar la PWA HTML estable.
+
+
+## Fluxia Élite v2.0.16 (2026-10-15)
+- Bancos guarda el último resultado y fecha/hora por usuario/perfil en localStorage aislado; al recargar se restaura el estado.
+- Los avisos del proveedor por banco siguen visibles; los movimientos recibidos se mantienen en la bandeja.
+- La importación al libro y el Disponible permanecen bajo conciliación explícita; esta versión no altera saldos ni escribe en Supabase.

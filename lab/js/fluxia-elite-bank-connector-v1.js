@@ -32,6 +32,9 @@
  function inboxStorageKey(owner,profile){return 'fluxia_elite_bank_inbox_v2:'+encodeURIComponent(String(owner||''))+':'+encodeURIComponent(String(profile||''))}
  function readInbox(owner,profile,storage){try{const value=JSON.parse((storage||globalThis.localStorage).getItem(inboxStorageKey(owner,profile))||'[]');return Array.isArray(value)?value:[]}catch{return []}}
  function saveInbox(owner,profile,rows,storage){const target=storage||globalThis.localStorage,clean=Array.isArray(rows)?rows:[];target.setItem(inboxStorageKey(owner,profile),JSON.stringify(clean));return clean}
- const api={version:'1.2.0',source:'Fluxia-banco',configure,call,normalizeRows,mergeRows,bankIdentity,inboxStorageKey,readInbox,saveInbox};
+ function statusStorageKey(owner,profile){return 'fluxia_elite_bank_status_v1:'+encodeURIComponent(String(owner||''))+':'+encodeURIComponent(String(profile||''))}
+ function readStatus(owner,profile,storage){try{const value=JSON.parse((storage||globalThis.localStorage).getItem(statusStorageKey(owner,profile))||'null');return value&&typeof value==='object'?value:null}catch{return null}}
+ function saveStatus(owner,profile,status,storage){const target=storage||globalThis.localStorage,clean={message:String(status?.message||''),action:String(status?.action||''),checkedAt:String(status?.checkedAt||''),ok:!!status?.ok};target.setItem(statusStorageKey(owner,profile),JSON.stringify(clean));return clean}
+ const api={version:'1.3.0',source:'Fluxia-banco',configure,call,normalizeRows,mergeRows,bankIdentity,inboxStorageKey,readInbox,saveInbox,statusStorageKey,readStatus,saveStatus};
  if(typeof module!=='undefined'&&module.exports)module.exports=api;if(root)root.FluxiaEliteBankConnector=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
