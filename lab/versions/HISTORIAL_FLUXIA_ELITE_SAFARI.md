@@ -16,7 +16,7 @@ Fecha: 2026-10-15
 - Versión y copia anterior: v2.0.05 se conserva para rollback. PWA estable permanece intacta.
 
 **Pruebas locales Node.js**
-- Cartera: 25/25 invariantes, incluidos +20 € de entrada y −30 € de gasto como fixture sintética, discrepancia neta −10 €, discrepancias por ID, IDs duplicados y fuente ausente.
+- Cartera: 27/27 invariantes, incluidos +20 € de entrada y −30 € de gasto como fixture sintética, discrepancia neta −10 €, discrepancias por ID, IDs duplicados y fuente ausente; snapshots idénticos con tipo o importe inválido no certifican paridad.
 - Huchas: aislamiento exacto del perfil/vistas HTML-nube y reconstrucción del libro mayor: superados.
 - JavaScript inline: análisis sintáctico superado.
 - No verificado en Safari/iPhone, con el perfil real del usuario ni tras publicación de GitHub Pages. El candidato sigue en rama LAB sin URL operativa publicada.
