@@ -1607,6 +1607,8 @@ function renderWalletSourceComparison(htmlWallet,cloudWallet){
  if(!report?.ready){card.append(el('p','integrityWarning','No se pudo comparar la copia HTML y la nube: '+(report?.reason||'lector de cartera no disponible')));return card}
  card.append(el('p','periodHint','HTML '+report.htmlCount+' movimientos · nube '+report.cloudCount+' · solo HTML '+report.htmlOnly.length+' · solo nube '+report.cloudOnly.length+' · mismo ID distinto '+report.different.length+' · IDs repetidos '+report.duplicates.length+' · sin ID '+report.withoutId+'.'));
  card.append(el('p','periodHint','Saldo de la copia HTML '+money(report.htmlBalanceCents/100)+' · saldo nube '+money(report.cloudBalanceCents/100)+' · diferencia '+(report.balanceDeltaCents<0?'−':'')+money(Math.abs(report.balanceDeltaCents)/100)+'.'));
+ const validationWarnings=[...report.htmlWarnings.map(w=>'HTML: '+w),...report.cloudWarnings.map(w=>'Nube: '+w)];
+ if(validationWarnings.length){const warning=el('p','integrityWarning','No se puede certificar la paridad: hay '+validationWarnings.length+' avisos de integridad en los historiales.');const list=el('details','eliteHuchaBalanceDetails');list.append(el('summary',null,'Ver avisos de integridad'));for(const message of validationWarnings.slice(0,30))list.append(el('div','eliteHuchaBalanceLine',message));warning.append(list);card.append(warning)}
  if(report.equivalent)card.append(el('p','legacySuccess','✓ IDs, movimientos y saldo histórico coinciden en las dos fuentes.'));
  else{
   const issues=[...report.htmlOnly.map(m=>({m,label:'Solo HTML'})),...report.cloudOnly.map(m=>({m,label:'Solo nube'})),...report.different.map(x=>({m:x.movement,cloud:x.cloudMovement,label:'Diferente: '+x.changed.join(', ')}))];
