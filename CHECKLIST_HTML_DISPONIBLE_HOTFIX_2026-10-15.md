@@ -2,7 +2,7 @@
 
 **Canal:** HTML/PWA. Este cambio no es Élite.
 
-**Base observada:** entrada LAB servida y metadatos de la raíz observados como v97.66. Hay ficheros históricos con otros números, y `lab/v97.73.html` observado localmente contiene metadatos v97.72; por eso este parche se identifica como hotfix y no se asigna una nueva numeración v97.x hasta reconciliar la secuencia.
+**Identificación:** hotfix HTML de Disponible (15/10/2026) sobre la base LAB servida v97.66, con build `hotfix-disponible-20261015`. No se anuncia como nueva versión numerada. La raíz/PWA estable v97.66 queda intacta.
 
 ## Cambios
 
@@ -12,7 +12,7 @@
 - Una reposición reduce el aumento pendiente; al quedar repuesto completamente, deja de sumar.
 - Usos definitivos y rescates de otros meses no cambian el Disponible seleccionado.
 - Recalcular la pantalla no vuelve a sumar el rescate.
-- No cambia variables, movimientos bancarios, datos guardados ni la versión raíz estable. Usa un service worker nuevo y aislado solo para esta LAB; deja intacto el worker compartido de los artefactos protegidos de Élite.
+- No cambia Variables, movimientos bancarios ni datos guardados. Usa `lab/fluxia-sw-html-hotfix.js`, aislado para LAB; el manifiesto y el worker compartido permanecen intactos. La raíz/PWA estable no cambia.
 
 ## Verificación
 
@@ -20,8 +20,11 @@
 - Verificador de base: **6 archivos inmutables v97.66 aprobados**.
 - Sintaxis del test: aprobada.
 - Suite completa `npm test --prefix auditorias/qa-v97.66`: **aprobada**. Incluye 400 movimientos sintéticos, menú/navegación, invalidación, perfil, invariantes de bancos y los diez casos de rescate. Se usaron dependencias ya instaladas en otro checkout local; no se cambió la lockfile.
-- Rendimiento físico Safari/PWA: pendiente.
-- Pages: cambio escrito por API en la rama efectiva. El workflow completo de QA y deploy está ejecutándose; enlace público y PWA LAB quedan pendientes de verificación HTTP tras el resultado. La raíz/PWA estable no se modifica.
+- Sintaxis: los 168 scripts inline del HTML candidato parsean correctamente.
+- GitHub Actions: QA completo, benchmark, deploy y smoke **aprobados** en commit `040f894ac8d62713b876625213498750f01aba46`.
+- LAB: [abrir HTML](https://nacram1987-cmd.github.io/Fluxia-v20/lab/) · HTTP 200; contiene el cálculo y el worker hotfix.
+- ESTABLE: [abrir HTML/PWA](https://nacram1987-cmd.github.io/Fluxia-v20/) · HTTP 200; verificado que no contiene el hotfix.
+- Safari/PWA físico: pendiente de prueba en el iPhone. La PWA estable no se modifica.
 
 ## Bancos
 
@@ -29,4 +32,4 @@ La conexión bancaria no se ha cambiado. Último estado revisado: Revolut sincro
 
 ## Rollback
 
-Restaurar la copia anterior de `lab/index.html`, `lab/manifest.webmanifest` y `lab/fluxia-sw.js` desde Git. La raíz/PWA estable no recibió cambios.
+Restaurar `lab/index.html` y eliminar `lab/fluxia-sw-html-hotfix.js` al commit padre del hotfix. Manifiesto, worker compartido y raíz/PWA estable no se modificaron.
