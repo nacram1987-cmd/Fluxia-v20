@@ -6,6 +6,7 @@ on:
       - 'lab/fluxia-elite-safari-datos-reales.html'
       - 'lab/versions/fluxia-elite-safari-v*.html'
       - 'lab/js/**'
+      - 'lab/qa/**'
       - '.github/workflows/fluxia-elite-espejo-release.yml'
   workflow_dispatch:
 permissions:
