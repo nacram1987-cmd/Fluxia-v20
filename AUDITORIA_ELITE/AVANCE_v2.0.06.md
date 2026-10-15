@@ -13,7 +13,7 @@
 
 ## Validación ejecutada con Node.js
 
-- Cartera: **25/25** invariantes, incluida fixture sintética con entrada 20 € + gasto 30 €, que muestra dos movimientos faltantes y delta de saldo −10 €.
+- Cartera: **27/27** invariantes, incluida fixture sintética con entrada 20 € + gasto 30 €, que muestra dos movimientos faltantes y delta de saldo −10 €, y snapshots idénticos con tipo desconocido o importe inválido que deben bloquear certificación.
 - Huchas: fuente de cada vista, respaldo exacto de perfil y reconstrucción/duplicados: pruebas superadas.
 - JavaScript inline: parseado sin errores.
 - No se verificó Safari/PWA en iPhone, datos del perfil real ni sincronización tras publicar. No se certifica paridad, Disponible ni escritura.
