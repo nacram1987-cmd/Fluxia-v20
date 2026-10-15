@@ -76,7 +76,7 @@
   for(const [id,movement] of left){
    if(!right.has(id)){result.htmlOnly.push(movement);continue}
    const other=right.get(id),changed=fields.filter(key=>movement[key]!==other[key]);
-   if(changed.length)result.different.push({id,movement,changed})
+   if(changed.length)result.different.push({id,movement,cloudMovement:other,changed})
   }
   for(const [id,movement] of right)if(!left.has(id))result.cloudOnly.push(movement);
   result.equivalent=result.htmlOnly.length===0&&result.cloudOnly.length===0&&result.different.length===0&&result.duplicates.length===0&&result.withoutId===0&&result.balanceDeltaCents===0;
