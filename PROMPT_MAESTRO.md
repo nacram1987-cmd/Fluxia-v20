@@ -1,11 +1,14 @@
 # 📋 PROMPT MAESTRO FLUXIA v93.8.2+
 ## Biblia de desarrollo, versionado, QA y entrega profesional
 
-## Adenda Élite v2.0.06 — prioridad del HTML operativo en los balances de provisiones (15/10/2026)
+## Adenda Élite v2.0.06 — cotejo de cartera y separación de fuentes (15/10/2026)
 
-Mientras la paridad de escritura entre Élite y el HTML madre no esté certificada, si existe una copia del mismo perfil validada en esta sesión, los balances reconstruidos de Huchas deben priorizar sus operaciones HTML frente a una colección Supabase no vacía que pudiera estar desactualizada. La discrepancia HTML/nube permanece visible por ID y campos; priorizar la lectura HTML no importa ni modifica registros, no certifica el saldo bancario y no autoriza escrituras en Élite. Si no hay copia HTML cargada, usar Supabase como respaldo de lectura, indicando su origen. Una copia ausente no equivale a colección vacía.
+Dinero en mano debe permitir cotejar, en modo de solo lectura, una copia privada validada del HTML operativo contra la colección nube del mismo perfil. Comparar movimientos por ID, fecha, tipo, importe exacto en céntimos, concepto, categoría y vínculos a variables/provisiones. Mostrar operaciones solo HTML, solo nube, mismo ID con campos distintos, IDs repetidos/sin ID y diferencia entre saldos históricos. En cada discrepancia del mismo ID se muestran ambos lados. Una copia ausente no significa saldo cero.
 
-La creación, edición, aportación, uso y rescate siguen realizándose en el HTML original. No promover a la PWA estable ni declarar conciliación sin comparar el mismo perfil y corte, completar las pruebas de persistencia/no duplicación y verificar publicación.
+El cotejo no fusiona, repara, importa ni escribe movimientos, y no convierte el efectivo en Disponible. El HTML madre sigue siendo el lugar operativo para meter, gastar o usar efectivo mientras Élite no tenga escritura idempotente certificada. Etiquetar saldos como instantánea histórica, nunca como confirmación de efectivo de hoy. Mantener el acceso exacto por usuario/perfil y limpiar toda copia al cambiar de sesión.
+
+Huchas mantienen sus fuentes separadas: vista «HTML original» lee la copia privada exacta del perfil; vista «Nube Supabase» calcula solo con provisiones y usos de nube. No cruzar una aportación de una fuente con un rescate de otra. Seguir mostrando discrepancias entre fuentes sin importarlas ni alterar históricos. El historial/cambios operativos continúan en el HTML hasta certificar paridad y persistencia.
+
 
 ## Adenda Élite v2.0.05 — gestión visual de provisiones y trazabilidad por hucha (15/10/2026)
 
