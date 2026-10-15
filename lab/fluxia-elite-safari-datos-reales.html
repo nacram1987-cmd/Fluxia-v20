@@ -2695,7 +2695,7 @@ function temporaryUseOutstanding(use){
 }
 function reconstructedHuchaLedger(huchas,uses){
  const contributions=grossHuchaContributions(huchas);
- const report={sourceReady:Array.isArray(uses),sourceHuchas:huchas,sourceUses:uses,complete:false,provisionalComplete:false,provisionalLinks:0,rows:[],grossCents:contributions.cents,withdrawnCents:0,replacedCents:0,provisionalCents:null,unresolved:0,duplicates:0};
+ const report={sourceReady:Array.isArray(uses),sourceHuchas:huchas,sourceUses:uses,complete:false,provisionalComplete:false,provisionalLinks:0,rows:[],grossCents:contributions.cents,withdrawnCents:0,replacedCents:0,outstandingCents:0,provisionalCents:null,unresolved:0,duplicates:0};
  if(!Array.isArray(huchas)||!Array.isArray(uses))return report;
  const detail=new Map();
  for(let i=0;i<huchas.length;i++){
@@ -2704,7 +2704,7 @@ function reconstructedHuchaLedger(huchas,uses){
   if(hidden)report.unresolved++;
   const h=huchas[i],id=String(h?.id??'').trim();
   if(!id||detail.has(id)){report.duplicates++;if(detail.has(id))detail.get(id).issues++;continue}
-  detail.set(id,{id,name:String(h.nombre||'Hucha'),grossCents:contributions.details[i]?.cents||0,withdrawnCents:0,replacedCents:0,issues:(hidden?1:0)+(contributions.details[i]?.issues||0),count:0})
+  detail.set(id,{id,name:String(h.nombre||'Hucha'),grossCents:contributions.details[i]?.cents||0,withdrawnCents:0,replacedCents:0,outstandingCents:0,issues:(hidden?1:0)+(contributions.details[i]?.issues||0),count:0})
  }
  const seen=new Map();
  for(let useIndex=0;useIndex<uses.length;useIndex++){
@@ -2749,7 +2749,7 @@ function reconstructedHuchaLedger(huchas,uses){
   if(kind==='temporal'){
    const status=temporaryUseOutstanding(use);
    if(status.kind!=='verified_summary'){report.unresolved++;item.issues++;continue}
-   returned=status.repaidCents
+   returned=status.repaidCents;item.outstandingCents+=status.cents;report.outstandingCents+=status.cents
   }else if((Array.isArray(use.reposiciones)&&use.reposiciones.length)||typeof use.repuesto==='number'&&use.repuesto!==0){
    report.unresolved++;item.issues++;continue
   }
@@ -2783,6 +2783,7 @@ function renderReconstructedHuchaLedger(huchas,uses,origin,period){
  const monthReady=monthRows.length===huchas.length&&monthRows.every(row=>row.status==='conciliada por registros verificables'||row.status==='provisional')&&monthRows.every(row=>!row.timelineIncomplete);
  card.append(el('strong',null,'🧮 Balance histórico reconstruido · '+origin));
  card.append(el('div','eliteHuchaTotal',r.provisionalComplete?money(r.provisionalCents/100)+' · provisional':'—'));
+ card.append(el('p','periodHint','Pendiente de reponer: '+(r.complete?money(r.outstandingCents/100)+' · reconstruido':r.provisionalComplete?money(r.outstandingCents/100)+' · provisional':'—')));
  if(period)card.append(el('p','periodHint','Al cierre de '+monthTitle(period)+': '+(monthReady?money(monthRows.reduce((sum,row)=>sum+row.asOfBalanceCents,0)/100)+' · provisional':'Por conciliar')));
  card.append(el('p','periodHint','Aportaciones '+money(r.grossCents/100)+' − retiros vinculados '+money(r.withdrawnCents/100)+' + reposiciones verificadas '+money(r.replacedCents/100)));
  card.append(el('p','integrityWarning',r.provisionalComplete?'CÁLCULO PROVISIONAL: '+r.provisionalLinks+' rescates vinculados por nombre único del HTML. Pendiente cotejar operación por operación con la nube y el HTML operativo.':'SIN CONCILIAR: '+r.unresolved+' usos incompletos o sin vincular, '+r.duplicates+' identificadores repetidos. No se muestra saldo neto cuando faltan operaciones.'));
