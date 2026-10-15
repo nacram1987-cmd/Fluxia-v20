@@ -33,4 +33,23 @@ const textOf=node=>[node.text||'',...(node.children||[]).map(textOf)].join(' ');
 assert.match(textOf(summary),/Pendiente de reponer: 103\.45 € · reconstruido/);
 assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.63|2\.0\.(?:00|01|02|03|04|05|06))'/);
 for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(m[1])new vm.Script(m[1]);
-console.log('PASS v1.9.63 reconstruction, duplicate/unmatched/unknown/hidden history guards, parse');
+
+// Screenshot October 2026 arithmetic reference: seven monthly plans total 918.88,
+// October contributions total 671.72, pending plan total 247.16, and visible
+// reserved balances total 2747.98. 240.48 pending repayment is separate.
+const screenshot=[
+ {name:'Seguro de coche',plan:50,balance:100,october:0},
+ {name:'Tributos',plan:130.16,balance:150,october:0},
+ {name:'Agua',plan:67,balance:1.10,october:0},
+ {name:'Boda Ana',plan:50,balance:150,october:50},
+ {name:'Amortización',plan:422.67,balance:1690.68,october:422.67},
+ {name:'Renta',plan:164.05,balance:656.20,october:164.05},
+ {name:'Mantenimiento Césped',plan:35,balance:0,october:35}
+];
+const cents=key=>screenshot.reduce((n,h)=>n+Math.round(h[key]*100),0);
+assert.equal(cents('plan'),91888);
+assert.equal(cents('balance'),274798);
+assert.equal(cents('october'),67172);
+assert.equal(cents('plan')-cents('october'),24716);
+assert.equal(Math.round((390.48-150)*100),24048,'pending Tributos repayment is displayed separately from reserved balance');
+console.log('PASS ledger safeguards, parse, and October screenshot arithmetic');
