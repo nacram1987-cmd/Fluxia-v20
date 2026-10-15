@@ -31,7 +31,7 @@ assert.equal(tempFixture.provisionalCents,19655,'withdrawal and repayment affect
 const summary=ctx.renderReconstructedHuchaLedger([{id:'t',nombre:'Tributos',aportado:300}],[{id:'temp',huchaId:'t',tipo:'temporal',importe:123.45,repuesto:20,fecha:'2026-09-01'}],'test');
 const textOf=node=>[node.text||'',...(node.children||[]).map(textOf)].join(' ');
 assert.match(textOf(summary),/Pendiente de reponer: 103\.45 € · reconstruido/);
-assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.63|2\.0\.(?:00|01|02|03|04|05|06|07))'/);
+assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.63|2\.0\.(?:00|01|02|03|04|05|06|07|08))'/);
 for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(m[1])new vm.Script(m[1]);
 
 // Screenshot October 2026 arithmetic reference: seven monthly plans total 918.88,
@@ -60,6 +60,16 @@ const aliases=ctx.cloudProfileAliases('p_usr-068a982d-9638-40cc-8b8c-a595534ab36
 assert.equal(aliases['profile:usr-068a982d-9638-40cc-8b8c-a595534ab36d:v2_provisiones'],'planRescate_v2_provisiones');
 assert.equal(aliases['profile:usr-068a982d-9638-40cc-8b8c-a595534ab36d:v2_usos'],'planRescate_v2_usos');
 assert.deepEqual({...ctx.cloudProfileAliases('invalid')},{});
+assert.equal(aliases['profile:usr-068a982d-9638-40cc-8b8c-a595534ab36d:v2_efectivo'],'v2_efectivo');
+assert.equal(ctx.supersededLegacyCloudKey('planRescate_v2_efectivo',new Set(['v2_efectivo'])),true);
+assert.equal(ctx.supersededLegacyCloudKey('v2_efectivo',new Set(['v2_efectivo'])),true);
+assert.equal(ctx.supersededLegacyCloudKey('v2_efectivo',new Set()),false);
+const activityStart=html.indexOf('function latestWalletMovementDate('),activityEnd=html.indexOf('\nfunction financeSourceNotice(',activityStart);
+assert(activityStart>=0&&activityEnd>activityStart,'wallet activity date resolver exists');
+vm.runInContext(html.slice(activityStart,activityEnd),ctx,{timeout:1000});
+assert.equal(ctx.latestWalletMovementDate({movimientos:[{fecha:'2026-10-07'},{fecha:'2026-10-15T11:27:05.196Z'}]}).raw,'2026-10-15T11:27:05.196Z');
+assert.match(html,/fecha de updated_at de la fila/);
+
 const loader=html.slice(aliasEnd,html.indexOf('\nfunction showProfilePicker(',aliasEnd));
 assert.match(loader,/modernTargets/);
 assert.match(loader,/ignore its stale legacy mirror/);
