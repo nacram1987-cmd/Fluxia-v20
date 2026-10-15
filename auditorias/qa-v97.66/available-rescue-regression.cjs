@@ -2,6 +2,7 @@ const fs=require('fs'),assert=require('assert'),vm=require('vm');
 const html=fs.readFileSync(require('path').resolve(__dirname,'../../lab/index.html'),'utf8');
 const match=html.match(/<script id="fluxia-v9554-arch-authority">([\s\S]*?)<\/script>/);
 assert(match,'authoritative Disponible script exists');
+assert.equal((html.match(/register\(\"\.\/fluxia-sw-html-hotfix\.js\"/g)||[]).length,3,'all LAB PWA registrations use isolated hotfix worker');
 const context={window:{},usosProvisiones:[],MESES:['julio','agosto','septiembre','octubre','noviembre','diciembre'],MES_INDEX:{julio:6,agosto:7,septiembre:8,octubre:9,noviembre:10,diciembre:11},anioDeMesPlan:()=>2026,pendienteDeReponer:function(u){return Math.max(0,(Number(u.importe)||0)-(Number(u.repuesto)||0))},
  ingresosDe:()=>[],fxIngresoCuentaDisponible:()=>true,gastosFijosDisponibleTotal:()=>0,gastosFijosTotal:()=>0,provisionesParaDisponible:()=>0,variablesTotal:()=>200,impactoCajaCompartidosMes:()=>0,Math};
 context.window=context;
@@ -24,4 +25,4 @@ context.usosProvisiones.push({fecha:'2026-11-01',tipo:'temporal',importe:50,repu
 assert.equal(rows.total('noviembre'),-150,'November rescue belongs to November');
 context.usosProvisiones=[{fecha:'2026-10-15',tipo:'temporal',importe:150,repuesto:0}];
 assert.equal(rows.total('octubre'),-50,'the recorded 150 euro rescue adds exactly 150');
-console.log(JSON.stringify({cases:10,baseAvailable:-200,pendingRescue:100,result:-100,recordedRescue:150,priorYearExcluded:true,repaidRescueExcluded:true,definitiveUseExcluded:true,monthScoped:true,idempotent:true},null,2));
+console.log(JSON.stringify({cases:10,baseAvailable:-200,pendingRescue:100,result:-100,recordedRescue:150,priorYearExcluded:true,repaidRescueExcluded:true,definitiveUseExcluded:true,monthScoped:true,idempotent:true,isolatedWorker:true},null,2));
