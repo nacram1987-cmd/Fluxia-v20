@@ -31,7 +31,7 @@ assert.equal(tempFixture.provisionalCents,19655,'withdrawal and repayment affect
 const summary=ctx.renderReconstructedHuchaLedger([{id:'t',nombre:'Tributos',aportado:300}],[{id:'temp',huchaId:'t',tipo:'temporal',importe:123.45,repuesto:20,fecha:'2026-09-01'}],'test');
 const textOf=node=>[node.text||'',...(node.children||[]).map(textOf)].join(' ');
 assert.match(textOf(summary),/Pendiente de reponer: 103\.45 € · reconstruido/);
-assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.63|2\.0\.(?:00|01|02|03|04|05|06))'/);
+assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.63|2\.0\.(?:00|01|02|03|04|05|06|07))'/);
 for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(m[1])new vm.Script(m[1]);
 
 // Screenshot October 2026 arithmetic reference: seven monthly plans total 918.88,
@@ -52,4 +52,15 @@ assert.equal(cents('balance'),274798);
 assert.equal(cents('october'),67172);
 assert.equal(cents('plan')-cents('october'),24716);
 assert.equal(Math.round((390.48-150)*100),24048,'pending Tributos repayment is displayed separately from reserved balance');
+
+const aliasStart=html.indexOf('function cloudProfileAliases('),aliasEnd=html.indexOf('\\nasync function loadCanonicalProfile(',aliasStart);
+assert(aliasStart>=0&&aliasEnd>aliasStart,'cloud profile alias helper exists');
+vm.runInContext(html.slice(aliasStart,aliasEnd),ctx,{timeout:1000});
+const aliases=ctx.cloudProfileAliases('p_usr-068a982d-9638-40cc-8b8c-a595534ab36d__');
+assert.equal(aliases['profile:usr-068a982d-9638-40cc-8b8c-a595534ab36d:v2_provisiones'],'planRescate_v2_provisiones');
+assert.equal(aliases['profile:usr-068a982d-9638-40cc-8b8c-a595534ab36d:v2_usos'],'planRescate_v2_usos');
+assert.deepEqual({...ctx.cloudProfileAliases('invalid')},{});
+const loader=html.slice(aliasEnd,html.indexOf('\\nfunction showProfilePicker(',aliasEnd));
+assert.match(loader,/modernTargets/);
+assert.match(loader,/ignore its stale legacy mirror/);
 console.log('PASS ledger safeguards, parse, and October screenshot arithmetic');
