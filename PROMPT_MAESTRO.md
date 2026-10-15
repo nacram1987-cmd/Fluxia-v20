@@ -1,4 +1,8 @@
 # 📋 PROMPT MAESTRO FLUXIA v93.8.2+
+## Adenda Élite v2.0.20 — bloquear Disponible actual con nube histórica (15/10/2026)
+
+Para el mes en curso, no calcular ni mostrar un importe usando colecciones Supabase antiguas sin cotejo con el HTML madre. Exigir una exportación HTML de máximo 48 horas, del mismo usuario y perfil, con Ingresos, Fijos, Variables, Compartidos, Financiaciones, Huchas y usos de huchas. Calcular desde esas colecciones en memoria; no subir el archivo, sincronizarlo ni modificar la nube. Si falta, es de otro perfil, está caducada o incompleta, mostrar PENDIENTE con causa explícita. La certificación al céntimo sigue requiriendo el cotejo completo indicado en el contrato. Para meses históricos se mantiene el comportamiento anterior. Validar en la regresión de disponible actual y no cambiar la PWA estable sin «con labora».
+
 ## Biblia de desarrollo, versionado, QA y entrega profesional
 
 ## Adenda Élite v2.0.19 — Disponible provisional por mes (15/10/2026)
