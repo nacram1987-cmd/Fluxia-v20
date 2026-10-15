@@ -1219,3 +1219,13 @@ Véase `AUDITORIA_ELITE/CONTRATO_PARIDAD_HTML_MADRE_2026-10-14.md` para matriz d
 - Mientras no supere paridad bancaria/contable (incluido 51/51 Variables de octubre), cualquier escritura nueva de efectivo, provisión o presupuesto se ejecuta exclusivamente en el HTML ESTABLE. La interfaz Élite deberá explicarlo y no fingir guardados.
 - Barra inferior compacta con Inicio/Fijos/Variables/Huchas/Más; el resto organizado en grupos de fácil acceso; mantener diseño aprobado y velocidad.
 - Releases: versión diferenciada, checklist de novedades concreto, snapshots archivados, pruebas de seguridad y regresión, valoración /100 y ZIP completo o explicación expresa del bloqueo de su generación.
+
+
+## Hotfix HTML: Disponible tras rescate temporal de hucha (15/10/2026)
+
+- Alcance: HTML/PWA operativo, no Fluxia Élite. No modificar raíz/PWA estable ni el backend bancario.
+- Regla: el rescate temporal pendiente de reponer aumenta Disponible en el mes de la fecha del rescate; se suma solo el saldo pendiente (`importe - repuesto`, mínimo cero), redondeado a céntimos. El rescate es efectivo disponible transferido desde una provisión, no ingreso bancario ordinario. La reposición reduce este efecto. El gasto definitivo de una provisión no incrementa Disponible.
+- Ejemplo obligatorio: Disponible −200 € y rescate pendiente 100 € = −100 €. Recalcular/repintar no acumula el importe. Las operaciones retroactivas afectan al mes histórico de su fecha, no al mes actual.
+- No aplicar esta regla a transferencias propias sin rescate de hucha identificado. No alterar movimientos bancarios, datos reales, importes, Variables ni la fórmula de aportaciones planificadas.
+- QA dirigida ejecutada: diez casos de Disponible, idempotencia, rescate registrado de 150 €, reposición parcial/total, uso definitivo y separación entre meses/años. Suite HTML completa ejecutada: pruebas de 400 movimientos, navegación y bancos intactos, más la regresión del rescate; todo aprobado. QA baseline: seis archivos inmutables confirmados. Rendimiento físico iPhone y publicación Pages: pendientes/no verificados; no declarar publicado hasta validar Actions y bytes servidos.
+- Referencia de trabajo: hotfix local sobre `lab/index.html` (la copia se presenta como LAB v97.66 aunque otros ficheros históricos tienen números no coincidentes). No asignar un nuevo número v97.x a este parche aislado sin reconciliar la secuencia oficial. Mantener estable/PWA raíz v97.66 intacta hasta autorización exacta «con labora» y QA completa.
