@@ -1233,3 +1233,8 @@ Véase `AUDITORIA_ELITE/CONTRATO_PARIDAD_HTML_MADRE_2026-10-14.md` para matriz d
 ## Élite v2.0.14 — cálculo de Disponible y lectura bancaria (15/10/2026)
 
 La LAB Safari v2.0.14 persiste por propietario/perfil la bandeja de Enable Banking y presenta los cargos recibidos sin importarlos automáticamente al libro. El Disponible conserva la fórmula madre: ingresos − fijos con importe real enlazado − financiación − variables reales − provisiones previstas − exceso de aportación + impacto neto de Compartidos + rescates temporales pendientes de reponer. El motor cent-exact exige todos los componentes y la UI informa pendientes; no se permite adivinar datos ni usar una colección auxiliar como asiento contable. QA offline: `elite-banking-available-v2012.cjs`, `elite-financial-engine-v1977.cjs` y las regresiones de bancos, huchas y sesión. No actualizar PWA estable sin «con labora».
+
+
+## Élite v2.0.15 — respuesta visible de sincronización bancaria (15/10/2026)
+
+La respuesta y el error de **Bancos → Sincronizar bancos** deben mantenerse en el panel después de reconstruirlo y recuperarse al reabrir. No declarar conexión exitosa hasta mostrar la respuesta real de Enable Banking. La corrección conserva el aislamiento propietario/perfil, la bandeja de lectura y el guardarraíl sin escritura al ledger. QA de versiones, scripts, conector, preflight, idempotencia, conflictos y Disponible. No actualizar la PWA HTML estable.

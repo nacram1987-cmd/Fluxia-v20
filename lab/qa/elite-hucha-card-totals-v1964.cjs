@@ -15,7 +15,7 @@ const ok=f(h,'2026-10');
 assert.equal(ok.monthCents,3500);assert.equal(ok.lifetimeCents,8000);assert.equal(ok.monthComplete,true);
 assert.equal(f({aportaciones:{octubre:[{id:'1',importe:10}]}},'2026-10').monthComplete,false);
 assert.equal(f({aportaciones:{octubre:[{id:'1',importe:10,fecha:'2026-10-01'},{id:'1',importe:10,fecha:'2026-10-02'}]}},'2026-10').lifetimeComplete,false);
-assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.64|2\.0\.(?:00|01|02|03|04|05|06|07|08|09|10|11|12|14))'/);
+assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.64|2\.0\.(?:00|01|02|03|04|05|06|07|08|09|10|11|12|14|15))'/);
 assert(html.includes('appendHuchaFinancialSummary(card,row,selectedMonth,huchaLedger)'));
 assert(html.includes('appendHuchaFinancialSummary(card,data,selectedMonth,cloudHuchaLedger)'));
 assert(html.includes("const face=mod.id==='huchas'?el('button','entry'):card"));

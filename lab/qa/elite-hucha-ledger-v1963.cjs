@@ -31,7 +31,7 @@ assert.equal(tempFixture.provisionalCents,19655,'withdrawal and repayment affect
 const summary=ctx.renderReconstructedHuchaLedger([{id:'t',nombre:'Tributos',aportado:300}],[{id:'temp',huchaId:'t',tipo:'temporal',importe:123.45,repuesto:20,fecha:'2026-09-01'}],'test');
 const textOf=node=>[node.text||'',...(node.children||[]).map(textOf)].join(' ');
 assert.match(textOf(summary),/Pendiente de reponer: 103\.45 € · reconstruido/);
-assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.63|2\.0\.(?:00|01|02|03|04|05|06|07|08|09|10|11|12|14))'/);
+assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.63|2\.0\.(?:00|01|02|03|04|05|06|07|08|09|10|11|12|14|15))'/);
 for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(m[1])new vm.Script(m[1]);
 
 // Screenshot October 2026 arithmetic reference: seven monthly plans total 918.88,
