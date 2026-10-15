@@ -4,7 +4,8 @@ const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-rea
 assert.match(html,/const ELITE_SAFARI_VERSION='2\.0\.06'/);
 const start=html.indexOf('function preferredHuchaUses(){'),end=html.indexOf('\nfunction renderHuchaUsesAudit(',start);
 assert(start>=0&&end>start,'preferredHuchaUses function must exist');
-const ctx=vm.createContext({huchaUsesFromSource:isHtml=>isHtml?ctx.htmlUses:ctx.cloudUses});
+const ctx=vm.createContext({});
+ctx.huchaUsesFromSource=isHtml=>isHtml?ctx.htmlUses:ctx.cloudUses;
 vm.runInContext(html.slice(start,end),ctx);
 ctx.htmlUses=[{id:'html-new',importe:240,fecha:'2026-10-15'}];
 ctx.cloudUses=[{id:'cloud-old',importe:0,fecha:'2026-10-01'}];
@@ -18,5 +19,5 @@ ctx.htmlUses=[];ctx.cloudUses=[];
 assert.equal(ctx.preferredHuchaUses().origin,'HTML','keep an explicitly available empty HTML source as the authority');
 ctx.htmlUses=null;ctx.cloudUses=null;
 assert.equal(ctx.preferredHuchaUses().rows,null);
-for(const m of html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/g))if(m[1])new vm.Script(m[1]);
+for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(m[1])new vm.Script(m[1]);
 console.log('PASS v2.0.06 HTML-first hucha source precedence, cloud fallback, empty and missing sources, inline JS parse');
