@@ -317,7 +317,7 @@ const money=v=>typeof v==='number'&&isFinite(v)?new Intl.NumberFormat('es-ES',{s
 const field=(obj,keys)=>{for(const k of keys){let v=obj[k];if(typeof v==='string'&&v.trim())return v}return null};
 const displayName=user=>String(user?.user_metadata?.display_name||user?.user_metadata?.full_name||user?.user_metadata?.name||'').trim();
 const canon=m=>{const a=items[m.key];return Array.isArray(a)?a:null};
-const ELITE_SAFARI_VERSION='2.0.19';
+const ELITE_SAFARI_VERSION='2.0.20';
 if(typeof document!=='undefined')document.title='Fluxia Élite BETA v'+ELITE_SAFARI_VERSION+' · Safari';
 function setupEliteHeader(){
  const header=document.querySelector('header');if(!header||header.dataset.eliteReady)return;
@@ -332,6 +332,7 @@ function setupEliteHeader(){
 function setEliteHeaderAuthenticated(visible){setupEliteHeader();const bell=document.querySelector('#eliteNotifications');if(bell)bell.classList.toggle('hide',!visible)}
 if(typeof document!=='undefined')setupEliteHeader();
 const ELITE_CHANGELOG=[
+ ['2.0.20','Disponible actual: ya no calcula con colecciones de Supabase sin cotejo reciente. Para el mes en curso requiere una copia HTML reciente del mismo perfil y calcula desde esa copia local; el archivo no se sube ni modifica la nube.'],
  ['2.0.19','Disponible: corrige el filtro de gastos fijos para usar el mes exacto y la comparación de planes por mes normalizado. Los rescates ya repuestos no aparecen como si sumaran; solo se etiqueta el importe pendiente.'],
  ['2.0.18','Disponible mensual visible en Inicio como PROVISIONAL cuando las fuentes canónicas y los importes están completos, pero un rescate temporal solo se vincula por nombre exacto único. Suma el pendiente verificable sin declararlo certificado; conserva el bloqueo hasta cotejar ID, HTML y banco.'],
  ['2.0.17','Bancos: «Sincronizar bancos» actualiza movimientos y consulta también los saldos reales por cuenta; muestra el total disponible bancario por moneda y marca el resultado como parcial cuando algún banco o cuenta no se pudo actualizar. Mantiene separado ese saldo del Disponible mensual calculado desde el libro.'],
@@ -2202,7 +2203,25 @@ function availableCertificationReport(){
 }
 function availableCalculationReport(){
  const engine=window.FluxiaEliteFinancialEngine,modsById=Object.fromEntries(mods.map(x=>[x.id,x]));
- const incomeRows=canon(modsById.ingresos),fixedRows=canon(modsById.fijos),variableRows=canon(modsById.variables),sharedRows=canon(modsById.compartidos),financeRows=canon(modsById.financiaciones),huchaMod=modsById.huchas,huchas=canon(huchaMod),uses=preferredHuchaUses().rows;
+ const currentMonth=new Date().getFullYear()+'-'+String(new Date().getMonth()+1).padStart(2,'0');
+ const isCurrentMonth=selectedMonth===currentMonth;
+ const backupMatches=backupFinance?.owner===owner&&backupFinance?.profile===activeProfile;
+ const backupStamp=Date.parse(String(backupFinance?.when||''));
+ const backupAge=Number.isFinite(backupStamp)?Date.now()-backupStamp:null;
+ const backupFresh=backupMatches&&backupAge!==null&&backupAge>=-5*60*1000&&backupAge<=48*60*60*1000;
+ const backupIds=['ingresos','fijos','variables','compartidos','financiaciones','huchas'];
+ const backupComplete=backupIds.every(id=>Array.isArray(backupFinance?.modules?.[id]?.records))&&Array.isArray(backupFinance?.sources?.v2_usos?.value);
+ const useBackup=backupFresh&&backupComplete;
+ if(isCurrentMonth&&!useBackup){
+  const ageLabel=Number.isFinite(backupAge)?'La copia tiene '+Math.max(0,Math.floor(backupAge/3600000))+' h.':'';
+  const reason=!backupMatches?'Carga una copia reciente del HTML del mismo perfil para calcular el Disponible actual.':
+   !backupFresh?'La copia HTML no es reciente (máximo 48 h). '+ageLabel+' Exporta una nueva desde el HTML y cárgala aquí.':
+   'La copia HTML no contiene todas las colecciones financieras necesarias; no se mezclará con la nube.';
+  return {ok:false,blockers:[reason],source:'blocked'}
+ }
+ const rowsFor=id=>useBackup?backupFinance.modules[id].records:canon(modsById[id]);
+ const incomeRows=rowsFor('ingresos'),fixedRows=rowsFor('fijos'),variableRows=rowsFor('variables'),sharedRows=rowsFor('compartidos'),financeRows=rowsFor('financiaciones'),huchaMod=modsById.huchas,huchas=rowsFor('huchas');
+ const uses=useBackup?backupFinance.sources.v2_usos.value:preferredHuchaUses().rows;
  const blockers=[],provisionalNotes=[],toCents=value=>engine?.cents(value);
  if(!engine)blockers.push('motor financiero no cargado');
  if(!incomeRows||!fixedRows||!variableRows||!sharedRows||!financeRows||!huchas)blockers.push('colecciones canónicas incompletas');
@@ -2303,7 +2322,7 @@ function availableCalculationReport(){
  if(blockers.length)return {ok:false,blockers};
  const result=engine.available({incomeCents:income,realExpensesCents:expense,plannedProvisionsCents:provisions,excessContributionsCents:excess,sharedImpactCents:sharedImpact,pendingHuchaRescuesCents:pendingRescues});
  if(!result.ok)return {ok:false,blockers:['motor financiero rechazó datos de entrada']};
- return {ok:true,cents:result.cents,trace:result.trace,provisional:provisionalNotes.length>0,provisionalNotes:[...new Set(provisionalNotes)]}
+ return {ok:true,cents:result.cents,trace:result.trace,provisional:provisionalNotes.length>0,provisionalNotes:[...new Set(provisionalNotes)],source:useBackup?'html_backup':'supabase',sourceWhen:useBackup?backupFinance.when:null}
 }
 function renderAvailableCertification(){
  const report=availableCertificationReport(),panel=el('section','integrityPanel');
@@ -2513,15 +2532,17 @@ function renderHome(){
  $('#content').append(el('p','welcomeDescription','Fluxia Élite · '+monthTitle(selectedMonth)+' · datos de tu cuenta 🔒'));
  const hero=el('div','card hero'),cert=availableCertificationReport(),calculation=cert.calculation;
  const heroTop=el('div');heroTop.append(el('span','heroHeadline','◈  Disponible'),el('span','heroBadge',cert.certified?'CALCULADO':calculation?.ok?'PROVISIONAL':'PENDIENTE'));
- hero.append(heroTop,el('strong','big',calculation?.ok?money(Number(calculation.cents)/100):'Pendiente'),el('small',null,calculation?.ok?(cert.certified?'Según registros y planes reales del mes seleccionado.':(calculation.provisionalNotes?.join(' ')||'Estimación con datos de Supabase; pendiente cotejo completo con HTML.')):'Falta: '+(calculation?.blockers?.slice(0,2).join(' · ')||'fuente financiera completa')));
+ hero.append(heroTop,el('strong','big',calculation?.ok?money(Number(calculation.cents)/100):'Pendiente'),el('small',null,calculation?.ok?(cert.certified?'Según registros y planes reales del mes seleccionado.':(calculation.provisionalNotes?.join(' ')||(calculation.source==='html_backup'?'Cálculo desde copia HTML reciente del mismo perfil; pendiente cotejo con nube, CSV y banco.':'Estimación con datos históricos de Supabase.'))):'Falta: '+(calculation?.blockers?.slice(0,2).join(' · ')||'fuente financiera completa')));
  $('#content').append(hero);
  const statusBar=el('div','eliteHomeSource');
  const backupAvailable=backupFinance?.owner===owner&&backupFinance?.profile===activeProfile;
+ const backupUsable=calculation?.source==='html_backup';
  const label=el('div','eliteHomeSourceText');
- label.append(el('strong',null,backupAvailable?'📂 HTML operativo · referencia cargada':'☁️ Supabase · pendiente de cotejo con HTML operativo'),
-  el('small',null,backupAvailable?'Datos del HTML disponibles para consulta; nube separada':'Para verificar el estado actual, carga la copia de este perfil'));
- const sourceAction=el('button','eliteHomeSourceButton',backupAvailable?'Consultar HTML ›':'Cargar HTML ›');
- sourceAction.onclick=()=>navigateElite(backupAvailable?'huchas':'ajustes');
+ label.append(el('strong',null,backupUsable?'📂 HTML operativo · corte reciente cargado':backupAvailable?'⚠️ Copia HTML cargada · revisar vigencia':'☁️ Supabase · pendiente de cotejo con HTML operativo'),
+  el('small',null,backupUsable?'Cálculo en memoria con la copia de este perfil; pendiente cotejo de nube, CSV y banco.':backupAvailable?(calculation?.blockers?.[0]||'La copia está disponible solo como referencia; vuelve a cargar un corte reciente.'):
+   (calculation?.blockers?.[0]||'Para verificar el estado actual, carga la copia de este perfil')));
+ const sourceAction=el('button','eliteHomeSourceButton',backupUsable?'Consultar HTML ›':'Cargar HTML ›');
+ sourceAction.onclick=()=>navigateElite(backupUsable?'huchas':'ajustes');
  statusBar.append(label,sourceAction);$('#content').append(statusBar);
  $('#content').append(el('h2','moduleTitle','Tu resumen · '+monthTitle(selectedMonth)));
  const group=el('div','grid');
