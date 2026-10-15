@@ -13,11 +13,12 @@ Fecha: 2026-10-15
 - Detecta, por ejemplo, si movimientos de efectivo anotados en el HTML aún no aparecen en la copia de nube. No presupone importes ni registra los datos del usuario en el código.
 - El cotejo es de solo lectura: no fusiona, repara, importa ni duplica movimientos; el HTML madre conserva las operaciones reales.
 - Huchas: regresión añadida para demostrar que la vista HTML usa solo la copia exacta del perfil y la vista nube usa solo sus propios usos. No mezcla fuentes.
+- El resumen reconstruido muestra «Pendiente de reponer» separado del saldo reservado; solo presenta el total cuando los retiros temporales y sus reposiciones se pueden verificar.
 - Versión y copia anterior: v2.0.05 se conserva para rollback. PWA estable permanece intacta.
 
 **Pruebas locales Node.js**
 - Cartera: 27/27 invariantes, incluidos +20 € de entrada y −30 € de gasto como fixture sintética, discrepancia neta −10 €, discrepancias por ID, IDs duplicados y fuente ausente; snapshots idénticos con tipo o importe inválido no certifican paridad.
-- Huchas: aislamiento exacto del perfil/vistas HTML-nube y reconstrucción del libro mayor: superados.
+- Huchas: aislamiento exacto del perfil/vistas HTML-nube, reconstrucción del libro mayor y prueba de pendiente de reponer separada del saldo: superados.
 - JavaScript inline: análisis sintáctico superado.
 - No verificado en Safari/iPhone, con el perfil real del usuario ni tras publicación de GitHub Pages. El candidato sigue en rama LAB sin URL operativa publicada.
 
