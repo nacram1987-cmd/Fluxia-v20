@@ -1,6 +1,12 @@
 # 📋 PROMPT MAESTRO FLUXIA v93.8.2+
 ## Biblia de desarrollo, versionado, QA y entrega profesional
 
+## Adenda Élite v2.0.06 — prioridad del HTML operativo en los balances de provisiones (15/10/2026)
+
+Mientras la paridad de escritura entre Élite y el HTML madre no esté certificada, si existe una copia del mismo perfil validada en esta sesión, los balances reconstruidos de Huchas deben priorizar sus operaciones HTML frente a una colección Supabase no vacía que pudiera estar desactualizada. La discrepancia HTML/nube permanece visible por ID y campos; priorizar la lectura HTML no importa ni modifica registros, no certifica el saldo bancario y no autoriza escrituras en Élite. Si no hay copia HTML cargada, usar Supabase como respaldo de lectura, indicando su origen. Una copia ausente no equivale a colección vacía.
+
+La creación, edición, aportación, uso y rescate siguen realizándose en el HTML original. No promover a la PWA estable ni declarar conciliación sin comparar el mismo perfil y corte, completar las pruebas de persistencia/no duplicación y verificar publicación.
+
 ## Adenda Élite v2.0.05 — gestión visual de provisiones y trazabilidad por hucha (15/10/2026)
 
 La pantalla Huchas debe conservar la jerarquía del HTML: acción visible «Crear nueva provisión», tarjetas compactas con icono original, detalle financiero y acción «Historial de esta provisión». El historial se abre por hucha y conserva aportaciones por año/mes, rescates, reposiciones, fechas, identificadores y estado. La creación y edición real deben conservar el perfil, la sincronización y los controles de duplicados del HTML hasta que Élite tenga una escritura equivalente certificada.
