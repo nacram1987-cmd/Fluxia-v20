@@ -1,6 +1,6 @@
-/* Fluxia HTML hotfix Disponible 2026-10-15: PWA aislada bajo /lab/, shell inmediata tras primera instalación.
+/* Fluxia BETA v97.66-LAB: PWA aislada bajo /lab/, shell inmediata tras primera instalación.
  * El despliegue de LAB jamás controla /Fluxia-v20/ (ESTABLE). */
-const CACHE='fluxia-lab-shell-hotfix-disponible-20261015';
+const CACHE='fluxia-lab-shell-v97.66';
 const ENTRY='./index.html';
 const ROOT=new URL('./',self.registration.scope).pathname;
 const INDEX=new URL(ENTRY,self.registration.scope).pathname;
