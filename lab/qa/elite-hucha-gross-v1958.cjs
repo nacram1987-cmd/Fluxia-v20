@@ -13,6 +13,6 @@ assert(good.complete);assert.equal(good.cents,12000);
 assert.equal(f([{id:'a',aportaciones:{octubre:[{id:'x',importe:25},{id:'x',importe:25}]}}]).complete,false);
 assert.equal(f([{id:'a',aportaciones:{octubre:[{id:'x'}]}}]).complete,false);
 assert(ctx.renderGrossHuchaContributions([{id:'a',aportaciones:{octubre:[{id:'x',importe:35}]}}]));
-assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.58|2\.0\.(?:01|02|03))'/);
+assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.58|2\.0\.(?:00|01|02|03|04|05|06|07|08|09|10|11))'/);
 for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(m[1])new vm.Script(m[1]);
 console.log('PASS v1.9.58 gross contributions source breakdown and data quality checks');
