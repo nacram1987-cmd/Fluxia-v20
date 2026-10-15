@@ -7,7 +7,7 @@ Dinero en mano debe permitir cotejar, en modo de solo lectura, una copia privada
 
 El cotejo no fusiona, repara, importa ni escribe movimientos, y no convierte el efectivo en Disponible. El HTML madre sigue siendo el lugar operativo para meter, gastar o usar efectivo mientras Élite no tenga escritura idempotente certificada. Etiquetar saldos como instantánea histórica, nunca como confirmación de efectivo de hoy. Mantener el acceso exacto por usuario/perfil y limpiar toda copia al cambiar de sesión.
 
-Huchas mantienen sus fuentes separadas: vista «HTML original» lee la copia privada exacta del perfil; vista «Nube Supabase» calcula solo con provisiones y usos de nube. No cruzar una aportación de una fuente con un rescate de otra. Seguir mostrando discrepancias entre fuentes sin importarlas ni alterar históricos. El historial/cambios operativos continúan en el HTML hasta certificar paridad y persistencia.
+Huchas mantienen sus fuentes separadas: vista «HTML original» lee la copia privada exacta del perfil; vista «Nube Supabase» calcula solo con provisiones y usos de nube. No cruzar una aportación de una fuente con un rescate de otra. Seguir mostrando discrepancias entre fuentes sin importarlas ni alterar históricos. En el resumen de Huchas, mostrar «Pendiente de reponer» separado del saldo reservado y solo sumar usos temporales con reposiciones verificadas; si falta integridad, dejar la cifra sin certificar. El historial/cambios operativos continúan en el HTML hasta certificar paridad y persistencia.
 
 
 ## Adenda Élite v2.0.05 — gestión visual de provisiones y trazabilidad por hucha (15/10/2026)
