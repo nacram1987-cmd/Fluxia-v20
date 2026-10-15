@@ -330,6 +330,8 @@ function setupEliteHeader(){
 function setEliteHeaderAuthenticated(visible){setupEliteHeader();const bell=document.querySelector('#eliteNotifications');if(bell)bell.classList.toggle('hide',!visible)}
 if(typeof document!=='undefined')setupEliteHeader();
 const ELITE_CHANGELOG=[
+ ['2.0.08','Cartera y huchas: usa las colecciones migradas actuales de Supabase, identifica el último movimiento de efectivo, y revisa por ID los vínculos entre efectivo, Variables y usos de provisión. Solo lectura; no escribe ni duplica operaciones.'],
+ ['2.0.07','Huchas: prioriza provisiones y usos migrados de Supabase frente a sus espejos antiguos; coincide con las capturas de octubre, incluido el uso definitivo de 70 € de Césped.'],
  ['2.0.06','Huchas: acciones visibles de nueva provisión e historial por hucha, con detalle de aportaciones, rescates y reposiciones y acceso operativo al HTML original.'],
  ['2.0.04','Huchas: rescates del HTML con nombre único se incluyen provisionalmente en el balance histórico; cotejo por ID entre usos del HTML y Supabase. No se certifica el total ni se escriben datos.'],
  ['2.0.03','Huchas: iconos como el HTML original, desglose aportado por mes y año y balance reconstruido al cierre del mes seleccionado separado del total histórico. La paridad operativa y el Disponible real siguen pendientes de certificar.'],
