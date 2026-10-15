@@ -1,6 +1,10 @@
 # 📋 PROMPT MAESTRO FLUXIA v93.8.2+
 ## Biblia de desarrollo, versionado, QA y entrega profesional
 
+## Adenda Élite v2.0.18 — Disponible visible provisional (15/10/2026)
+
+Inicio debe mostrar el importe de Disponible mensual cuando las colecciones canónicas e importes base están completos, aunque la paridad integral HTML/Supabase siga sin certificarse. Rotularlo **PROVISIONAL** y exponer con claridad qué cotejos faltan. Un rescate temporal con referencia explícita conflictiva, hucha ambigua, ID de operación duplicado, fecha/importes inválidos o reposiciones inconsistentes no se suma. Si no hay referencia ID pero el nombre de hucha coincide exactamente con una sola provisión y el uso tiene ID único, fecha válida e importe/reposiciones verificables, puede incluirse como provisional y el certificado permanece bloqueado hasta vincular por ID y cotejar el mismo perfil/corte. No hardcodear saldos ni escribir datos financieros por presentar la cifra. Disponible mensual y saldos bancarios son métricas independientes.
+
 ## Adenda Élite v2.0.06 — cotejo de cartera y separación de fuentes (15/10/2026)
 
 Dinero en mano debe permitir cotejar, en modo de solo lectura, una copia privada validada del HTML operativo contra la colección nube del mismo perfil. Comparar movimientos por ID, fecha, tipo, importe exacto en céntimos, concepto, categoría y vínculos a variables/provisiones. Mostrar operaciones solo HTML, solo nube, mismo ID con campos distintos, IDs repetidos/sin ID y diferencia entre saldos históricos. En cada discrepancia del mismo ID se muestran ambos lados. Una copia ausente no significa saldo cero. Si cualquiera de las dos fuentes tiene avisos por importes inválidos o tipos desconocidos, mostrar los avisos y no certificar paridad aunque los snapshots coincidan.
