@@ -1609,9 +1609,9 @@ function renderWalletSourceComparison(htmlWallet,cloudWallet){
  card.append(el('p','periodHint','Saldo de la copia HTML '+money(report.htmlBalanceCents/100)+' · saldo nube '+money(report.cloudBalanceCents/100)+' · diferencia '+(report.balanceDeltaCents<0?'−':'')+money(Math.abs(report.balanceDeltaCents)/100)+'.'));
  if(report.equivalent)card.append(el('p','legacySuccess','✓ IDs, movimientos y saldo histórico coinciden en las dos fuentes.'));
  else{
-  const issues=[...report.htmlOnly.map(m=>({m,label:'Solo HTML'})),...report.cloudOnly.map(m=>({m,label:'Solo nube'})),...report.different.map(x=>({m:x.movement,label:'Diferente: '+x.changed.join(', ')}))];
+  const issues=[...report.htmlOnly.map(m=>({m,label:'Solo HTML'})),...report.cloudOnly.map(m=>({m,label:'Solo nube'})),...report.different.map(x=>({m:x.movement,cloud:x.cloudMovement,label:'Diferente: '+x.changed.join(', ')}))];
   if(issues.length){const details=el('details','eliteHuchaBalanceDetails');details.append(el('summary',null,'Revisar diferencias · '+issues.length));
-   for(const x of issues.slice(0,60)){const m=x.m;details.append(el('div','eliteHuchaBalanceLine',x.label+' · '+(m.fecha||'Sin fecha')+' · '+m.concepto+' · '+(m.cents===null?'importe ilegible':money(m.cents/100))+' · ID '+(m.id||'sin ID')))}
+   for(const x of issues.slice(0,60)){const m=x.m;details.append(el('div','eliteHuchaBalanceLine',x.label+' · '+(m.fecha||'Sin fecha')+' · '+m.concepto+' · '+(m.cents===null?'importe ilegible':money(m.cents/100))+' · ID '+(m.id||'sin ID')+(x.cloud?' · nube '+(x.cloud.fecha||'sin fecha')+' · '+x.cloud.concepto+' · '+(x.cloud.cents===null?'importe ilegible':money(x.cloud.cents/100)):'')))}
    if(issues.length>60)details.append(el('p','periodHint','Se muestran las primeras 60 diferencias.'));
    card.append(details)
   }
