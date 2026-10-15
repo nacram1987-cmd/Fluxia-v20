@@ -15,6 +15,6 @@ assert.equal(ctx.huchaReplenishmentAudit(h,[{...u,reposiciones:undefined}]).miss
 assert.equal(ctx.huchaReplenishmentAudit(h,[u,{...u,id:'u2',reposiciones:[{...u.reposiciones[0]}],repuesto:20}]).duplicates,1);
 assert.equal(ctx.huchaReplenishmentAudit(h,[{...u,reposiciones:[{id:'bad',importe:35,fecha:'2026-02-31'}]}]).unknown,1);
 assert(ctx.renderHuchaReplenishments(h,[u]));
-assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.61|2\.0\.(?:00|01|02|03|04|05|06|07|08|09|10|11|12|14|15|16|17))'/);
+assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.61|2\.0\.(?:00|01|02|03|04|05|06|07|08|09|10|11|12|14|15|16|17|20))'/);
 for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(m[1])new vm.Script(m[1]);
 console.log('PASS v1.9.61 replenishments, deduplication, mismatch flags, missing history, script parse');
