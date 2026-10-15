@@ -36,8 +36,10 @@ assert.equal(snapshot.conflicts,0);
 assert.equal(snapshot.provisionalLinks,1);
 assert.equal(snapshot.history[0].estado,'provisional');
 const moneyToCents=value=>BigInt(Math.round(Number(value)*100));
-const calcSource=between('function availableAccountingMonth(row,ym){','\nfunction renderAvailableCertification()');
-const certSource=between('function availableCertificationReport(){','\nfunction availableCalculationReport()');
+// v2.0.25: el cálculo es una función pura (availableComputeFrom) y el certificado reúne evidencia; se extraen ambos bloques tal cual del HTML.
+const calcSource=between('function availableAccountingMonth(','\nfunction renderAvailableCertification()');
+const certSource=between('function availableCertificationReport(){','\nfunction availableAccountingMonth(');
+const Reconciliation=require('./load-umd.cjs')('../js/fluxia-elite-reconciliation-v1.js');
 const rows={
  ingresos:[{id:'income',fecha:'2026-10-01',importe:1000}],
  fijos:[{id:'fixed',mes:'octubre',importe:200},{id:'old-fixed',mes:'septiembre',importe:9000}],
@@ -46,7 +48,7 @@ const rows={
  financiaciones:[{id:'finance',mes:'octubre',cuota:100},{id:'ended-finance',inicio:'enero',fin:'septiembre',cuota:5000}],
  huchas:[{...hucha,mes:undefined,inicio:'julio'},{id:'ended-hucha',nombre:'Hucha cerrada',inicio:'enero',fin:'septiembre',importeMensual:9000,aportaciones:{octubre:[]}}]
 };
-const integration={...context,window:{FluxiaEliteFinancialEngine:{cents:moneyToCents,available(input){const cents=input.incomeCents-input.realExpensesCents-input.plannedProvisionsCents-input.excessContributionsCents+input.sharedImpactCents+input.pendingHuchaRescuesCents;return {ok:true,cents,trace:input}}}},
+const integration={...context,cloudReadAt:'',remotePreflightResult:null,items:{},extraFinance:{},cloudFinanceSnapshot:null,window:{FluxiaEliteReconciliation:Reconciliation,FluxiaEliteFinancialEngine:{cents:moneyToCents,available(input){const cents=input.incomeCents-input.realExpensesCents-input.plannedProvisionsCents-input.excessContributionsCents+input.sharedImpactCents+input.pendingHuchaRescuesCents;return {ok:true,cents,trace:input}}}},
  mods:Object.entries(rows).map(([id,data])=>({id,rows:data})),selectedMonth:'2026-10',canon:mod=>Array.isArray(mod?.rows)?mod.rows:null,
  preferredHuchaUses:()=>({rows:[rescue],origin:'Supabase'}),backupFinance:null,sourceUpdated:{},monthStatus:row=>String(row?.fecha||row?.mes||'').startsWith('2026-10')||row?.mes==='octubre'?'match':'other',
  financialRecordRole:()=> 'variable-real',backupFinance:null,owner:'owner',activeProfile:'profile',csvAudit:null};
@@ -100,6 +102,7 @@ rows.variables.push({id:'atm',mes:'octubre',origen:'banco',concepto:'ATM withdra
 rows.variables.push({id:'fixed-charge',mes:'octubre',fecha:'2026-09-30',cuentaComoFijo:true,vinculoFijoId:'fixed',importe:210});
 rows.variables.push({id:'refund',mes:'octubre',importe:-5});
 assert.equal(integration.availableCalculationReport().cents,22500n,'Cash and signed refund count, ATM does not, linked actual fixed replaces plan exactly once');
-assert.equal(integration.availableAccountingMonth({mes:'octubre',fecha:'2026-09-30'},'2026-10'),true,'Accounting month precedes payment date');
-assert.equal(integration.availableAccountingMonth({mes:'octubre'},'2025-10'),false,'Unqualified plan month does not leak into previous years');
+assert.equal(integration.availableAccountingMonth({mes:'octubre',fecha:'2026-09-30'},'2026-10',2026),true,'Accounting month precedes payment date');
+assert.equal(integration.availableAccountingMonth({mes:'octubre'},'2025-10',2026),false,'Unqualified plan month does not leak into previous years');
+assert.equal(integration.availableAccountingMonth({mes:'octubre'},'2026-10',2026),true,'Month-name-only record uses the common cut-off year, not the device clock');
 console.log(JSON.stringify({version:'2.0.21',syntheticRescueCents:provisional.pendingCents,syntheticAvailableCents:Number(report.cents),certified:false,otherMonthFixedExcluded:true,endedPlansExcluded:true,monthNamePlanIncluded:true,duplicateAndAmbiguousLinksBlocked:true,explicitBrokenIdsBlocked:true},null,2));

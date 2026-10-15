@@ -3,7 +3,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
 const html=fs.readFileSync(path.join(__dirname,'../fluxia-elite-safari-datos-reales.html'),'utf8');
 assert(html.includes('function availableCertificationReport()'));
 assert(html.includes('function renderAvailableCertification()'));
-assert(html.includes('function availableCalculationReport()'));
+assert(/function availableCalculationReport\(/.test(html));// v2.0.25: admite options={} (misma función, firma ampliada)
 assert(html.includes('engine.available({incomeCents:income,realExpensesCents:expense,plannedProvisionsCents:provisions,excessContributionsCents:excess,sharedImpactCents:sharedImpact,pendingHuchaRescuesCents:pendingRescues})'));
 assert(html.includes('Impacto de Compartidos'));
 assert(html.includes('Rescates temporales pendientes'));
