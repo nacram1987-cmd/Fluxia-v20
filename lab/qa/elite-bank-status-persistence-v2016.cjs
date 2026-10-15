@@ -4,7 +4,7 @@ const vm=require('node:vm');
 const fs=require('node:fs');
 const source=fs.readFileSync(require('node:path').join(__dirname,'../js/fluxia-elite-bank-connector-v1.js'),'utf8');
 const sandbox={globalThis:{}};vm.runInNewContext(source,sandbox);
-const api=sandbox.FluxiaEliteBankConnector;
+const api=sandbox.globalThis.FluxiaEliteBankConnector;
 const data=new Map();
 const storage={getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,v)};
 api.saveStatus('user-a','personal',{message:'CaixaBank HUB046; Revolut: 2 movimientos',action:'bandeja',checkedAt:'2026-10-15T18:01:43.000Z',ok:true},storage);
