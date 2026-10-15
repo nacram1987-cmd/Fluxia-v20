@@ -1,0 +1,27 @@
+const fs=require('fs'),assert=require('assert'),vm=require('vm');
+const html=fs.readFileSync(require('path').resolve(__dirname,'../../lab/index.html'),'utf8');
+const match=html.match(/<script id="fluxia-v9554-arch-authority">([\s\S]*?)<\/script>/);
+assert(match,'authoritative Disponible script exists');
+const context={window:{},usosProvisiones:[],MESES:['julio','agosto','septiembre','octubre','noviembre','diciembre'],MES_INDEX:{julio:6,agosto:7,septiembre:8,octubre:9,noviembre:10,diciembre:11},anioDeMesPlan:()=>2026,pendienteDeReponer:function(u){return Math.max(0,(Number(u.importe)||0)-(Number(u.repuesto)||0))},
+ ingresosDe:()=>[],fxIngresoCuentaDisponible:()=>true,gastosFijosDisponibleTotal:()=>0,gastosFijosTotal:()=>0,provisionesParaDisponible:()=>0,variablesTotal:()=>200,impactoCajaCompartidosMes:()=>0,Math};
+context.window=context;
+vm.runInNewContext(match[1],context);
+const rows=context.FluxiaDisponibleEngine;
+context.usosProvisiones.push({fecha:'2026-10-15',tipo:'temporal',importe:100,repuesto:0});
+assert.equal(rows.total('octubre'),-100,'-200 available plus 100 rescued becomes -100');
+assert.equal(rows.breakdown('octubre').rescatesHucha,100);
+assert.equal(rows.total('octubre'),-100,'recalculation does not add rescue twice');
+assert.equal(rows.total('septiembre'),-200,'rescue does not affect a different month');
+context.usosProvisiones.push({fecha:'2025-10-15',tipo:'temporal',importe:100,repuesto:0});
+assert.equal(rows.total('octubre'),-100,'prior-year rescue does not fall into current-year October');
+context.usosProvisiones[0].repuesto=50;
+assert.equal(rows.total('octubre'),-150,'repaid half leaves only 50 pending');
+context.usosProvisiones.push({fecha:'2026-10-16',tipo:'definitivo',importe:100,repuesto:0});
+assert.equal(rows.total('octubre'),-150,'definitive provision use is excluded');
+context.usosProvisiones[0].repuesto=100;
+assert.equal(rows.total('octubre'),-200,'fully repaid rescue no longer increases available');
+context.usosProvisiones.push({fecha:'2026-11-01',tipo:'temporal',importe:50,repuesto:0});
+assert.equal(rows.total('noviembre'),-150,'November rescue belongs to November');
+context.usosProvisiones=[{fecha:'2026-10-15',tipo:'temporal',importe:150,repuesto:0}];
+assert.equal(rows.total('octubre'),-50,'the recorded 150 euro rescue adds exactly 150');
+console.log(JSON.stringify({cases:10,baseAvailable:-200,pendingRescue:100,result:-100,recordedRescue:150,priorYearExcluded:true,repaidRescueExcluded:true,definitiveUseExcluded:true,monthScoped:true,idempotent:true},null,2));
