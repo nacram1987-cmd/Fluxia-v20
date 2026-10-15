@@ -1,6 +1,15 @@
 # 📋 PROMPT MAESTRO FLUXIA v93.8.2+
 ## Biblia de desarrollo, versionado, QA y entrega profesional
 
+## Adenda Élite v2.0.06 — cotejo de cartera y separación de fuentes (15/10/2026)
+
+Dinero en mano debe permitir cotejar, en modo de solo lectura, una copia privada validada del HTML operativo contra la colección nube del mismo perfil. Comparar movimientos por ID, fecha, tipo, importe exacto en céntimos, concepto, categoría y vínculos a variables/provisiones. Mostrar operaciones solo HTML, solo nube, mismo ID con campos distintos, IDs repetidos/sin ID y diferencia entre saldos históricos. En cada discrepancia del mismo ID se muestran ambos lados. Una copia ausente no significa saldo cero. Si cualquiera de las dos fuentes tiene avisos por importes inválidos o tipos desconocidos, mostrar los avisos y no certificar paridad aunque los snapshots coincidan.
+
+El cotejo no fusiona, repara, importa ni escribe movimientos, y no convierte el efectivo en Disponible. El HTML madre sigue siendo el lugar operativo para meter, gastar o usar efectivo mientras Élite no tenga escritura idempotente certificada. Etiquetar saldos como instantánea histórica, nunca como confirmación de efectivo de hoy. Mantener el acceso exacto por usuario/perfil y limpiar toda copia al cambiar de sesión.
+
+Huchas mantienen sus fuentes separadas: vista «HTML original» lee la copia privada exacta del perfil; vista «Nube Supabase» calcula solo con provisiones y usos de nube. No cruzar una aportación de una fuente con un rescate de otra. Seguir mostrando discrepancias entre fuentes sin importarlas ni alterar históricos. En el resumen de Huchas, mostrar «Pendiente de reponer» separado del saldo reservado y solo sumar usos temporales con reposiciones verificadas; si falta integridad, dejar la cifra sin certificar. El historial/cambios operativos continúan en el HTML hasta certificar paridad y persistencia.
+
+
 ## Adenda Élite v2.0.05 — gestión visual de provisiones y trazabilidad por hucha (15/10/2026)
 
 La pantalla Huchas debe conservar la jerarquía del HTML: acción visible «Crear nueva provisión», tarjetas compactas con icono original, detalle financiero y acción «Historial de esta provisión». El historial se abre por hucha y conserva aportaciones por año/mes, rescates, reposiciones, fechas, identificadores y estado. La creación y edición real deben conservar el perfil, la sincronización y los controles de duplicados del HTML hasta que Élite tenga una escritura equivalente certificada.

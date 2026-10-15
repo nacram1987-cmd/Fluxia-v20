@@ -58,6 +58,30 @@
    unknownCount:rows.filter(m=>m.clase==='desconocido'||m.cents===null).length
   }
  }
+ function compareMovements(htmlRaw,cloudRaw){
+  const html=inspect(htmlRaw),cloud=inspect(cloudRaw);
+  if(!html.ok||!cloud.ok)return {ready:false,reason:!html.ok?html.reason:cloud.reason};
+  const result={ready:true,equivalent:false,htmlCount:html.movements.length,cloudCount:cloud.movements.length,htmlOnly:[],cloudOnly:[],different:[],duplicates:[],withoutId:0,htmlWarnings:html.warnings.slice(),cloudWarnings:cloud.warnings.slice(),htmlBalanceCents:html.saldoCents,cloudBalanceCents:cloud.saldoCents,balanceDeltaCents:html.saldoCents-cloud.saldoCents};
+  const index=(snapshot,origin)=>{
+   const map=new Map();
+   for(const movement of snapshot.movements){
+    if(!movement.id){result.withoutId++;continue}
+    if(map.has(movement.id)){result.duplicates.push({id:movement.id,origin});continue}
+    map.set(movement.id,movement)
+   }
+   return map
+  };
+  const left=index(html,'HTML'),right=index(cloud,'Supabase');
+  const fields=['fecha','tipo','cents','concepto','categoria','gastoId','usoProvisionId','provision'];
+  for(const [id,movement] of left){
+   if(!right.has(id)){result.htmlOnly.push(movement);continue}
+   const other=right.get(id),changed=fields.filter(key=>movement[key]!==other[key]);
+   if(changed.length)result.different.push({id,movement,cloudMovement:other,changed})
+  }
+  for(const [id,movement] of right)if(!left.has(id))result.cloudOnly.push(movement);
+  result.equivalent=result.htmlOnly.length===0&&result.cloudOnly.length===0&&result.different.length===0&&result.duplicates.length===0&&result.withoutId===0&&result.htmlWarnings.length===0&&result.cloudWarnings.length===0&&result.balanceDeltaCents===0;
+  return result
+ }
  function linkConflicts(snapshot,variableRows,usosRows){
   if(!snapshot?.ok)return [];
   const varIds=new Set((Array.isArray(variableRows)?variableRows:[]).map(x=>String(x.id||'')).filter(Boolean));
@@ -69,5 +93,5 @@
   }
   return conflicts
  }
- return Object.freeze({inspect,month,linkConflicts,cents});
+ return Object.freeze({inspect,month,linkConflicts,compareMovements,cents});
 });
