@@ -12,7 +12,7 @@
 - Una reposición reduce el aumento pendiente; al quedar repuesto completamente, deja de sumar.
 - Usos definitivos y rescates de otros meses no cambian el Disponible seleccionado.
 - Recalcular la pantalla no vuelve a sumar el rescate.
-- No cambia variables, movimientos bancarios, datos guardados ni la versión raíz estable.
+- No cambia variables, movimientos bancarios, datos guardados ni la versión raíz estable. Usa un service worker nuevo y aislado solo para esta LAB; deja intacto el worker compartido de los artefactos protegidos de Élite.
 
 ## Verificación
 
@@ -21,7 +21,7 @@
 - Sintaxis del test: aprobada.
 - Suite completa `npm test --prefix auditorias/qa-v97.66`: **aprobada**. Incluye 400 movimientos sintéticos, menú/navegación, invalidación, perfil, invariantes de bancos y los diez casos de rescate. Se usaron dependencias ya instaladas en otro checkout local; no se cambió la lockfile.
 - Rendimiento físico Safari/PWA: pendiente.
-- Pages: **no actualizado**. El commit local no pudo enviarse porque esta sesión no tiene credenciales GitHub. El enlace público permanece en la versión anterior.
+- Pages: cambio escrito por API en la rama efectiva. El workflow completo de QA y deploy está ejecutándose; enlace público y PWA LAB quedan pendientes de verificación HTTP tras el resultado. La raíz/PWA estable no se modifica.
 
 ## Bancos
 
