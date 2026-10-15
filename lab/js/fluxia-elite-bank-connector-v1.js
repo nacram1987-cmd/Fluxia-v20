@@ -35,6 +35,27 @@
  function statusStorageKey(owner,profile){return 'fluxia_elite_bank_status_v1:'+encodeURIComponent(String(owner||''))+':'+encodeURIComponent(String(profile||''))}
  function readStatus(owner,profile,storage){try{const value=JSON.parse((storage||globalThis.localStorage).getItem(statusStorageKey(owner,profile))||'null');return value&&typeof value==='object'?value:null}catch{return null}}
  function saveStatus(owner,profile,status,storage){const target=storage||globalThis.localStorage,clean={message:String(status?.message||''),action:String(status?.action||''),checkedAt:String(status?.checkedAt||''),ok:!!status?.ok};target.setItem(statusStorageKey(owner,profile),JSON.stringify(clean));return clean}
- const api={version:'1.3.0',source:'Fluxia-banco',configure,call,normalizeRows,mergeRows,bankIdentity,inboxStorageKey,readInbox,saveInbox,statusStorageKey,readStatus,saveStatus};
+ function maskIban(value){const raw=String(value||'').replace(/\s/g,'');return raw?('•••• '+raw.slice(-4)):''}
+ function normalizeBalances(rows,checkedAt){
+  return (Array.isArray(rows)?rows:[]).map(row=>{
+   const tipo=String(row?.tipo||row?.balance_type||'').toUpperCase();
+   const importe=Number(row?.importe??row?.saldo);
+   if(!Number.isFinite(importe))return null;
+   return {banco:String(row?.banco||''),nombre:String(row?.nombre||''),iban:maskIban(row?.iban),tipo,importe:Math.round(importe*100)/100,moneda:String(row?.moneda||'EUR').toUpperCase(),fecha:String(row?.fecha||row?.reference_date||row?.dateTime||checkedAt||'').slice(0,10),desactualizado:!!(row?.desactualizado||row?.stale),disponible:row?.disponible===true||['ITAV','CLAV','FWAV'].includes(tipo)}
+  }).filter(Boolean)
+ }
+ function balancesStorageKey(owner,profile){return 'fluxia_elite_bank_balances_v1:'+encodeURIComponent(String(owner||''))+':'+encodeURIComponent(String(profile||''))}
+ function readBalances(owner,profile,storage){try{const value=JSON.parse((storage||globalThis.localStorage).getItem(balancesStorageKey(owner,profile))||'null');return value&&typeof value==='object'?value:null}catch{return null}}
+ function saveBalances(owner,profile,value,storage){
+  const target=storage||globalThis.localStorage,checkedAt=String(value?.checkedAt||new Date().toISOString());
+  const clean={rows:normalizeBalances(value?.saldos||value?.rows,checkedAt),checkedAt,complete:!!value?.complete,expected:Number.isFinite(Number(value?.expected))?Number(value.expected):0,errors:(Array.isArray(value?.errors)?value.errors:[]).map(String)};
+  target.setItem(balancesStorageKey(owner,profile),JSON.stringify(clean));return clean
+ }
+ function availableBalanceTotals(rows){
+  const totals={};
+  for(const row of normalizeBalances(rows))if(row.disponible&&!row.desactualizado){const currency=row.moneda;totals[currency]=Math.round(((totals[currency]||0)+row.importe)*100)/100}
+  return totals
+ }
+ const api={version:'1.4.0',source:'Fluxia-banco',configure,call,normalizeRows,mergeRows,bankIdentity,inboxStorageKey,readInbox,saveInbox,statusStorageKey,readStatus,saveStatus,maskIban,normalizeBalances,balancesStorageKey,readBalances,saveBalances,availableBalanceTotals};
  if(typeof module!=='undefined'&&module.exports)module.exports=api;if(root)root.FluxiaEliteBankConnector=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

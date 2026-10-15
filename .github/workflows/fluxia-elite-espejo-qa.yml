@@ -58,6 +58,8 @@ jobs:
         run: node lab/qa/elite-bank-unstable-id-v2011.cjs
       - name: Estado bancario por usuario/perfil (offline)
         run: node lab/qa/elite-bank-status-persistence-v2016.cjs
+      - name: Saldos bancarios disponibles y perfil aislado (offline)
+        run: node lab/qa/elite-bank-balances-v2017.cjs
       - name: Bancos persistentes y Disponible (offline)
         run: node lab/qa/elite-banking-available-v2012.cjs
       - name: Motor Disponible HTML completo (offline)

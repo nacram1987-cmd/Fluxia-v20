@@ -1244,3 +1244,9 @@ La respuesta y el error de **Bancos → Sincronizar bancos** deben mantenerse en
 - Bancos guarda el último resultado y fecha/hora por usuario/perfil en localStorage aislado; al recargar se restaura el estado.
 - Los avisos del proveedor por banco siguen visibles; los movimientos recibidos se mantienen en la bandeja.
 - La importación al libro y el Disponible permanecen bajo conciliación explícita; esta versión no altera saldos ni escribe en Supabase.
+
+
+## Fluxia Élite v2.0.17 (2026-10-15)
+- «Sincronizar bancos» consulta movimientos y saldos reales por cuenta en `Fluxia-banco`, conserva resultado por usuario/perfil y muestra un total actual por moneda separado del Disponible mensual del libro.
+- Saldos en caché cuando un proveedor bloquea por HUB046 se muestran con fecha y no se suman como actuales.
+- La Edge Function prioriza `ITAV`/`CLAV`/`FWAV` sobre balances contables para identificar los importes disponibles.
