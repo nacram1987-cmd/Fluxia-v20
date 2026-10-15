@@ -130,4 +130,4 @@ assert(html.includes("for(const key of ['v2_usos','planRescate_v2_usos'])"),'Use
 assert(html.includes('function renderHuchaActions()'),'Huchas must expose management actions');
 assert(html.includes('＋ Crear nueva provisión'),'New provision action is visible');
 assert(html.includes('📚 Historial de esta provisión'),'Each provision must expose its own history');
-console.log('PASS v2.0.04 hucha name-only rescues, source comparison, timeline and isolation');
+console.log('PASS v2.0.20 hucha name-only rescues, source comparison, timeline and isolation');
