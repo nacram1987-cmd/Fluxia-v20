@@ -15,7 +15,11 @@ assert.equal(result.rows[0].id,'html-new','a recent HTML rescue must not be hidd
 ctx.htmlUses=null;result=ctx.preferredHuchaUses();
 assert.equal(result.origin,'Supabase','fall back to cloud when HTML source is absent');
 assert.equal(result.rows[0].id,'cloud-old');
-ctx.htmlUses=[];ctx.cloudUses=[];
+ctx.htmlUses=[];ctx.cloudUses=[{id:'stale-cloud'}];
+result=ctx.preferredHuchaUses();
+assert.equal(result.origin,'HTML','an explicitly empty HTML history must not be filled with stale cloud withdrawals');
+assert.equal(result.rows.length,0);
+ctx.cloudUses=[];
 assert.equal(ctx.preferredHuchaUses().origin,'HTML','keep an explicitly available empty HTML source as the authority');
 ctx.htmlUses=null;ctx.cloudUses=null;
 assert.equal(ctx.preferredHuchaUses().rows,null);
