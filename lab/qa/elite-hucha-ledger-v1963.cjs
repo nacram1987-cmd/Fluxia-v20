@@ -6,6 +6,7 @@ assert(a>=0&&b>a);
 const ctx=vm.createContext({
  grossHuchaContributions:hs=>({complete:!hs.some(h=>h.invalid),cents:hs.reduce((n,h)=>n+h.aportado*100,0),details:hs.map(h=>({cents:h.aportado*100}))}),
  exactHuchaUsageLink:(u,hs)=>{const h=hs.find(x=>x.id===u.huchaId);return h?{kind:'linked',hucha:h}:{kind:'unverified'}},
+ candidateHuchaByName:(u,hs)=>{const h=hs.find(x=>x.id===u.huchaId);if(h)return {kind:'linked',hucha:h};const names=hs.filter(x=>x.nombre===u.provision);return names.length===1?{kind:'name_candidate',hucha:names[0]}:{kind:'unverified'}},
  temporaryUseOutstanding:u=>u.broken?{kind:'history_mismatch'}:{kind:'verified_summary',repaidCents:Math.round((u.repuesto||0)*100)},
  el:(tag,cls,text)=>({tag,cls,text,children:[],append(...xs){this.children.push(...xs)}}),money:n=>n+' €'
 });
@@ -21,6 +22,6 @@ assert.equal(fn([{...h[0],rescates:[{importe:12}]},h[1]],uses).complete,false);
 assert.equal(fn(h,null).complete,false);
 assert.equal(fn([{...h[0],invalid:true},h[1]],uses).complete,false);
 assert(ctx.renderReconstructedHuchaLedger(h,uses,'test'));
-assert(html.includes("const ELITE_SAFARI_VERSION='1.9.63'"));
+assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.63|2\.0\.00)'/);
 for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(m[1])new vm.Script(m[1]);
 console.log('PASS v1.9.63 reconstruction, duplicate/unmatched/unknown/hidden history guards, parse');

@@ -1,6 +1,14 @@
 # 📋 PROMPT MAESTRO FLUXIA v93.8.2+
 ## Biblia de desarrollo, versionado, QA y entrega profesional
 
+## Adenda Élite v2.0.00 — conciliación individual sin mezclar fuentes (15/10/2026)
+
+- Cada tarjeta de Huchas emplea los usos de su propia fuente: copia HTML con copia HTML, Supabase con Supabase. No mezclar importes entre ellas ni entre perfiles.
+- Un uso sin referencia original puede asociarse por nombre solo si coincide de forma exacta normalizada con una única hucha y no hay referencias contradictorias. El saldo resultante se etiqueta **provisional**; no certifica el Disponible.
+- Duplicados, importes no expresables en céntimos, historiales ocultos, usos archivados y referencias ambiguas bloquean la certificación de la hucha afectada. Una incidencia aislada no oculta las demás huchas verificables. El agregado queda bloqueado mientras haya cualquier incidencia.
+- Los importes reconstruidos por registros todavía necesitan cotejo con el HTML operativo en el mismo perfil, periodo y corte. Siguen prohibidas escrituras financieras nuevas, importación bancaria contable y promoción a la estable sin las puertas de paridad, seguridad, rendimiento y pruebas físicas.
+- La versión 2.0.00 identifica una iteración BETA, no una certificación de banca, nube ni uso comercial.
+
 ## Adenda Élite v1.9.99 — cierre de sesión comprobable (15/10/2026)
 
 - Cerrar sesión elimina de inmediato el estado privado y el refresh token locales; en segundo plano solicita a Supabase revocar **solo la sesión actual** (`scope=local`), sin cerrar otros dispositivos.

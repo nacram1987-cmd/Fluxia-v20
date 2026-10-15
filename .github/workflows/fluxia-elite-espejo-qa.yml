@@ -53,3 +53,8 @@ jobs:
         run: node lab/qa/elite-modules-smoke.cjs
       - name: Perfil HTML privado · dinero en mano (offline)
         run: node lab/qa/elite-backup-regression.cjs
+      - name: Huchas por fuente y regresiones recientes (offline)
+        run: |
+          for test in lab/qa/elite-{hucha-isolation-v20000,hucha-noid-v1988,hucha-ledger-v1963,hucha-card-totals-v1964,hucha-name-candidates-v1960,bank-reimport-v1991,bank-conflict-review-v1989,bank-conflict-persistence-v1990,auth-session-v1981,session-resilience-v1997,server-logout-v1999,release-guard-v1998,header-actions-v1994}.cjs; do
+            node "$test" || exit 1
+          done
