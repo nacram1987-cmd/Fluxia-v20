@@ -778,7 +778,8 @@ function cloudProfileAliases(prefix){
  return {
   ['profile:'+profileId+':v2_provisiones']:'planRescate_v2_provisiones',
   ['profile:'+profileId+':v2_usos']:'planRescate_v2_usos',
-  ['profile:'+profileId+':v2_efectivo']:'v2_efectivo'
+  ['profile:'+profileId+':v2_efectivo']:'v2_efectivo',
+  ['profile:'+profileId+':v2_movimientos']:'planRescate_v2_movimientos'
  };
 }
 function supersededLegacyCloudKey(key,modernTargets){
@@ -833,7 +834,7 @@ async function loadCanonicalProfile(prefix,{preserveView=false}={}){
   motherAudit=previousSources.motherAudit;
   csvAudit=previousSources.csvAudit
  }
- rawSources={movimientos:Array.isArray(nextExtra.v2_movimientos)?nextExtra.v2_movimientos:[],fijos:Array.isArray(nextExtra.v2_fijos)?nextExtra.v2_fijos:[]};
+ rawSources={movimientos:Array.isArray(nextExtra.v2_movimientos)?nextExtra.v2_movimientos:Array.isArray(next.planRescate_v2_movimientos)?next.planRescate_v2_movimientos:[],fijos:Array.isArray(nextExtra.v2_fijos)?nextExtra.v2_fijos:[]};
  // The read-only sourceMonthAudit runs during rendering, not at profile initialization.
  if(preserveView){page=previousView.page;search=previousView.search;period=previousView.period}
  else{page='inicio';search='';period='Todos'}
@@ -1665,6 +1666,26 @@ function renderWalletSourceComparison(htmlWallet,cloudWallet){
  if(report.withoutId||report.duplicates.length)card.append(el('p','integrityWarning','Los movimientos sin ID o con ID repetido impiden certificar la paridad, aunque coincidan los totales.'));
  return card
 }
+function renderWalletLinkAudit(snapshot,variableRows,uses){
+ const panel=el('section','eliteHuchaBalance');
+ panel.append(el('strong',null,'🔗 Efectivo · gastos y provisiones enlazados'));
+ if(!snapshot?.ok){panel.append(el('p','integrityWarning','Cartera ilegible: no se pueden revisar sus enlaces.'));return panel}
+ if(!Array.isArray(variableRows)||!Array.isArray(uses)){panel.append(el('p','integrityWarning','Falta Variables o el historial de usos de huchas. No se certifican los enlaces.'));return panel}
+ const conflicts=window.FluxiaWalletAudit?.linkConflicts(snapshot,variableRows,uses)||[];
+ const expenses=snapshot.movements.filter(m=>m.tipo==='salida'&&m.gastoId);
+ const provisionPayments=snapshot.movements.filter(m=>m.tipo==='salida_provision'&&m.usoProvisionId);
+ const orphanExpenses=snapshot.movements.filter(m=>m.tipo==='salida'&&!m.gastoId);
+ panel.append(el('p',conflicts.length?'integrityWarning':'periodHint',
+  expenses.length+' gastos con ID · '+provisionPayments.length+' pagos de hucha con ID · '+orphanExpenses.length+' gastos sin vínculo explícito · '+conflicts.length+' referencias rotas.'));
+ if(!conflicts.length)panel.append(el('p','legacySuccess','✓ Todas las referencias explícitas de la cartera apuntan a un movimiento o uso existente.'));
+ else{
+  const details=el('details','eliteHuchaBalanceDetails');details.append(el('summary',null,'Revisar enlaces rotos'));
+  for(const conflict of conflicts.slice(0,40))details.append(el('div','eliteHuchaBalanceLine','ID cartera '+conflict.id+' → '+conflict.kind+' no encontrado: '+conflict.linkedId));
+  panel.append(details)
+ }
+ if(orphanExpenses.length)panel.append(el('p','integrityWarning','Los gastos sin gastoId se muestran para revisión; no se emparejan automáticamente por importe o concepto.'));
+ return panel
+}
 function renderWallet(){
  renderMonthSelector();head('💵 Dinero en mano');
  $('#content').append(el('p','welcomeDescription','Tu efectivo físico: billetes y monedas. Es distinto del Disponible del mes.'));
@@ -1704,6 +1725,9 @@ function renderWallet(){
  }
  const wallet=window.FluxiaWalletAudit.inspect(source.value);
  if(!wallet.ok){$('#content').append(legacyExplanatory('Cartera pendiente de revisar',wallet.reason));$('#content').append(motherLink());return}
+ const variableRows=canon(mods.find(m=>m.id==='variables'));
+ const useRows=cashOrFinanceSource(['v2_usos','planRescate_v2_usos'],Array.isArray);
+ $('#content').append(renderWalletLinkAudit(wallet,variableRows,useRows.present?useRows.value:null));
  const hero=el('section','legacyWalletHero');
  hero.append(el('small',null,source.origin==='backup'?'En el bolsillo · según copia privada del HTML':'En el bolsillo · según última copia de nube'),el('strong',null,money(wallet.saldoCents/100)),el('small',null,'Saldo histórico consultado · NO confirmado para hoy'));
  $('#content').append(hero);
