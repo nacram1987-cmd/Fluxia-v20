@@ -68,7 +68,7 @@ const activityStart=html.indexOf('function latestWalletMovementDate('),activityE
 assert(activityStart>=0&&activityEnd>activityStart,'wallet activity date resolver exists');
 vm.runInContext(html.slice(activityStart,activityEnd),ctx,{timeout:1000});
 assert.equal(ctx.latestWalletMovementDate({movimientos:[{fecha:'2026-10-07'},{fecha:'2026-10-15T11:27:05.196Z'}]}).raw,'2026-10-15T11:27:05.196Z');
-assert.match(html,/fecha de updated_at de la fila/);
+assert.match(html,/más reciente que updated_at de la fila/);
 
 const loader=html.slice(aliasEnd,html.indexOf('\nfunction showProfilePicker(',aliasEnd));
 assert.match(loader,/modernTargets/);
