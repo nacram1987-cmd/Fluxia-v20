@@ -61,7 +61,7 @@
  function compareMovements(htmlRaw,cloudRaw){
   const html=inspect(htmlRaw),cloud=inspect(cloudRaw);
   if(!html.ok||!cloud.ok)return {ready:false,reason:!html.ok?html.reason:cloud.reason};
-  const result={ready:true,equivalent:false,htmlCount:html.movements.length,cloudCount:cloud.movements.length,htmlOnly:[],cloudOnly:[],different:[],duplicates:[],withoutId:0,htmlBalanceCents:html.saldoCents,cloudBalanceCents:cloud.saldoCents,balanceDeltaCents:html.saldoCents-cloud.saldoCents};
+  const result={ready:true,equivalent:false,htmlCount:html.movements.length,cloudCount:cloud.movements.length,htmlOnly:[],cloudOnly:[],different:[],duplicates:[],withoutId:0,htmlWarnings:html.warnings.slice(),cloudWarnings:cloud.warnings.slice(),htmlBalanceCents:html.saldoCents,cloudBalanceCents:cloud.saldoCents,balanceDeltaCents:html.saldoCents-cloud.saldoCents};
   const index=(snapshot,origin)=>{
    const map=new Map();
    for(const movement of snapshot.movements){
@@ -79,7 +79,7 @@
    if(changed.length)result.different.push({id,movement,cloudMovement:other,changed})
   }
   for(const [id,movement] of right)if(!left.has(id))result.cloudOnly.push(movement);
-  result.equivalent=result.htmlOnly.length===0&&result.cloudOnly.length===0&&result.different.length===0&&result.duplicates.length===0&&result.withoutId===0&&result.balanceDeltaCents===0;
+  result.equivalent=result.htmlOnly.length===0&&result.cloudOnly.length===0&&result.different.length===0&&result.duplicates.length===0&&result.withoutId===0&&result.htmlWarnings.length===0&&result.cloudWarnings.length===0&&result.balanceDeltaCents===0;
   return result
  }
  function linkConflicts(snapshot,variableRows,usosRows){
