@@ -29,8 +29,10 @@ const unstable=connector.normalizeRows([{id:'fallback|2026-10-15|-7.5|Gasolinera
 assert.equal(unstable[0].bankRef,'fallback|2026-10-15|-7.5|Gasolinera');
 const html=fs.readFileSync(path.join(root,'fluxia-elite-safari-datos-reales.html'),'utf8');
 assert.match(html,/ELITE_SAFARI_VERSION='[0-9]+[.][0-9]+[.][0-9]+'/);
-assert(html.includes('<title>Fluxia Élite BETA v2.0.21 · Safari</title>'));
-assert(html.includes('name="fluxia-elite-version" content="2.0.21"'));
+const actualVersion=html.match(/ELITE_SAFARI_VERSION='([0-9.]+)'/)?.[1];
+assert(actualVersion,'Version must be declared');
+assert(html.includes('<title>Fluxia Élite BETA v'+actualVersion+' · Safari</title>'));
+assert(html.includes('name="fluxia-elite-version" content="'+actualVersion+'"'));
 assert(html.includes('lab/versions/fluxia-elite-safari-v2.0.14.html')===false);
 assert(html.includes('function renderBankInboxRows()'));
 assert(html.includes("const rows=canon(mods.find(module=>module.id==='variables'))||[];"));
