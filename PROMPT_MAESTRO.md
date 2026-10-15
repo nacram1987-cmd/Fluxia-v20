@@ -1,6 +1,12 @@
 # 📋 PROMPT MAESTRO FLUXIA v93.8.2+
 ## Biblia de desarrollo, versionado, QA y entrega profesional
 
+## Adenda Élite v2.0.04 — rescates de huchas y cotejo de fuentes (15/10/2026)
+
+El HTML original guarda los retiros en `v2_usos` y habitualmente referencia la hucha por el campo `provision` (nombre). Élite debe reconocer un nombre normalizado exacto solo cuando identifica una única hucha. El saldo así reconstruido se presenta como provisional y conserva la trazabilidad del ID de uso, tipo, importe, fecha y reposiciones. Un nombre ambiguo, una fuente ausente, un ID repetido o un registro incompleto bloquean el agregado; nunca se deduce un rescate de una cifra aproximada.
+
+En Huchas, cotejar `v2_usos` de la copia «Copia solo este perfil» del HTML y de Supabase por ID y campos financieros. Mostrar las operaciones ausentes y diferentes sin importarlas ni escribir en ninguna fuente. La copia debe proceder del mismo perfil y momento de corte para aspirar a certificar los saldos. Mantener bloqueada la creación de rescates en Élite mientras no se certifiquen persistencia, no duplicación, Disponible y paridad con el HTML operativo. El HTML estable permanece intacto.
+
 ## Adenda Élite v2.0.03 — Huchas por periodo y símbolo original (15/10/2026)
 
 - Mostrar separado: aportado en el mes seleccionado, aportado hasta ese mes, aportado de todo el histórico, saldo reconstruido al cierre del mes y saldo reconstruido de toda la vida. Las reposiciones se atribuyen por su propia fecha, no por la fecha del retiro.

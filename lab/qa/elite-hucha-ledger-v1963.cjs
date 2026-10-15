@@ -24,6 +24,6 @@ assert.equal(fn([{...h[0],rescates:[{importe:12}]},h[1]],uses).complete,false);
 assert.equal(fn(h,null).complete,false);
 assert.equal(fn([{...h[0],invalid:true},h[1]],uses).complete,false);
 assert(ctx.renderReconstructedHuchaLedger(h,uses,'test'));
-assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.63|2\.0\.(?:00|01|02|03))'/);
+assert.match(html,/const ELITE_SAFARI_VERSION='(?:1\.9\.63|2\.0\.(?:00|01|02|03|04))'/);
 for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(m[1])new vm.Script(m[1]);
 console.log('PASS v1.9.63 reconstruction, duplicate/unmatched/unknown/hidden history guards, parse');

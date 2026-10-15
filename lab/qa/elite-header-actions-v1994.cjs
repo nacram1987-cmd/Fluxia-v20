@@ -1,8 +1,8 @@
 const fs=require('fs');const assert=require('assert');const vm=require('vm');
 const root=process.cwd();const html=fs.readFileSync(root+'/lab/fluxia-elite-safari-datos-reales.html','utf8');
-assert.match(html,/ELITE_SAFARI_VERSION='(?:1\.9\.\d+|2\.0\.(?:00|01|02|03))'/);
-assert(html.includes('<title>Fluxia Élite BETA v2.0.03 · Safari</title>'));
-assert(html.includes('name="fluxia-elite-version" content="2.0.03"'));
+assert.match(html,/ELITE_SAFARI_VERSION='(?:1\.9\.\d+|2\.0\.(?:00|01|02|03|04))'/);
+assert(html.includes('<title>Fluxia Élite BETA v2.0.04 · Safari</title>'));
+assert(html.includes('name="fluxia-elite-version" content="2.0.04"'));
 assert(html.includes('eliteBrandCluster'));
 assert(html.includes("cluster.append(icon)"));
 assert(html.includes("cluster.append(brand)"));

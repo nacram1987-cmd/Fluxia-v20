@@ -50,7 +50,10 @@ ctx.grossHuchaContributions=rows=>({complete:true,cents:rows.reduce((sum,row)=>s
 vm.runInContext(extract('function reconstructedHuchaLedger(','function huchaUsesFromSource('),ctx);
 const ledger=ctx.reconstructedHuchaLedger([a,b],[nameUse]);
 assert.equal(ledger.complete,false);
-assert(ledger.rows.find(row=>row.id==='a').issues>0);
+assert.equal(ledger.provisionalComplete,true);
+assert.equal(ledger.provisionalLinks,1);
+assert.equal(ledger.provisionalCents,16250);
+assert.equal(ledger.rows.find(row=>row.id==='a').provisionalCents,6250);
 assert.equal(ledger.rows.find(row=>row.id==='b').issues,0,'An unrelated pot remains individually inspectable');
 const duplicates=ctx.reconstructedHuchaLedger([a,b],[{...nameUse,id:'shared',huchaId:'a'},{...nameUse,id:'shared',huchaId:'b'}]);
 assert.equal(duplicates.complete,false);
@@ -88,6 +91,9 @@ assert.equal(ctx.huchaFinancialSnapshot(missingSource,'2026-10',[],[missingSourc
 assert.equal(ctx.huchaFinancialSnapshot(missingSource,'2026-10',[],[missingSource]).pendingCents,null);
 assert.equal(ctx.huchaFinancialSnapshot(confirmedEmpty,'2026-10',[],[confirmedEmpty]).availableCents,0);
 assert.equal(ctx.huchaFinancialSnapshot(confirmedEmpty,'2026-10',null,[confirmedEmpty]).status,'sin fuente disponible');
+const ambiguous=ctx.reconstructedHuchaLedger([a,b,c],[nameUse]);
+assert.equal(ambiguous.provisionalComplete,false);
+assert.equal(ambiguous.provisionalCents,null);
 const missingLedger=ctx.reconstructedHuchaLedger([missingSource,confirmedEmpty],[]);
 assert.equal(missingLedger.complete,false);
 assert(missingLedger.rows.find(row=>row.id==='missing').issues>0);
@@ -104,6 +110,15 @@ const septemberLedger=ctx.renderReconstructedHuchaLedger([a,b],[acrossMonths],'f
 assert(septemberLedger.children.some(node=>String(node.label).includes('65.00 € · provisional')));
 const octoberLedger=ctx.renderReconstructedHuchaLedger([a,b],[acrossMonths],'fixture','2026-10');
 assert(octoberLedger.children.some(node=>String(node.label).includes('155.00 € · provisional')));
+const namedLedger=ctx.renderReconstructedHuchaLedger([a,b],[nameUse],'fixture','2026-10');
+assert(namedLedger.children.some(node=>String(node.label).includes('162.50 € · provisional')));
+vm.runInContext(extract('function compareHuchaUseSources(','function preferredHuchaUses('),ctx);
+const cloudUse={...nameUse,importe:8};
+let comparison=ctx.compareHuchaUseSources([nameUse],[cloudUse]);
+assert.equal(comparison.different.length,1);assert.equal(comparison.different[0].changed[0],'importe');
+comparison=ctx.compareHuchaUseSources([nameUse],[]);
+assert.equal(comparison.missing.length,1);
+assert.equal(ctx.compareHuchaUseSources([nameUse],null).ready,false);
 assert(html.includes("useBreakdownReady?money(snapshot.temporaryCents/100):'—'"));
 assert(html.includes('Historial de aportaciones ausente en esta fuente'));
 assert(html.includes('Aportaciones por mes y año'));
@@ -111,4 +126,5 @@ assert(html.includes('const asOfReady=(netReady||provisionalReady)&&!snapshot.ti
 assert(html.includes('Saldo al cierre de '+"'"+'+monthTitle(period)'));
 assert.equal(ledger.sourceUses[0].id,'n1');
 assert(html.includes('sourceUses:uses')&&html.includes('ledger.sourceUses')&&html.includes("huchaLedger.origin='HTML'"));
-console.log('PASS v2.0.03 per-hucha timeline, original icons, source absence and plan guards');
+assert(html.includes("for(const key of ['v2_usos','planRescate_v2_usos'])"),'Use the HTML canonical source before its legacy alias');
+console.log('PASS v2.0.04 hucha name-only rescues, source comparison, timeline and isolation');
