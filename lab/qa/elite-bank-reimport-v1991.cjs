@@ -8,5 +8,5 @@ assert.strictEqual(merged.rows.length,3);assert.deepStrictEqual(Array.from(merge
 const noId=connector.mergeRows([{importe:1,fecha:'2026-10-15'}],[{importe:1,fecha:'2026-10-15'}]);
 assert.strictEqual(noId.rows.length,2);
 const html=fs.readFileSync(root+'/lab/fluxia-elite-safari-datos-reales.html','utf8');
-assert.match(html,/ELITE_SAFARI_VERSION='(?:1\.9\.\d+|2\.0\.(?:00|01|02))'/);assert(html.includes('connector.mergeRows'));assert(html.includes('bankInboxDuplicates'));
+assert.match(html,/ELITE_SAFARI_VERSION='(?:1\.9\.\d+|2\.0\.(?:00|01|02|03))'/);assert(html.includes('connector.mergeRows'));assert(html.includes('bankInboxDuplicates'));
 console.log('PASS v1.9.91 repeated bank reads merge by stable bankRef without deduplicating no-ID rows');

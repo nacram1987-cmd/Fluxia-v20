@@ -1,6 +1,14 @@
 # 📋 PROMPT MAESTRO FLUXIA v93.8.2+
 ## Biblia de desarrollo, versionado, QA y entrega profesional
 
+## Adenda Élite v2.0.03 — Huchas por periodo y símbolo original (15/10/2026)
+
+- Mostrar separado: aportado en el mes seleccionado, aportado hasta ese mes, aportado de todo el histórico, saldo reconstruido al cierre del mes y saldo reconstruido de toda la vida. Las reposiciones se atribuyen por su propia fecha, no por la fecha del retiro.
+- Agrupar aportaciones verificables por `YYYY-MM` derivado de la fecha real. Un mismo nombre de mes de años distintos no se fusiona. Si el contenedor mensual original discrepa de la fecha, bloquear la certificación de esa hucha.
+- Reutilizar la precedencia de `PV_ICONOS`/`iconoProvision` del HTML madre para el símbolo de cada hucha; no lanzar búsqueda externa de logotipo comercial en esas tarjetas.
+- Mantener la vista mensual dentro de un desplegable separado del botón Detalle. El total reconstruido se rotula provisional mientras falte cotejo con el HTML operativo; el Disponible real certificado permanece sin cifra.
+- La funcionalidad original de aportar, usar, rescatar, editar y recuperar continúa pendiente de portabilidad segura a Élite. Ninguna presentación de este release autoriza escrituras bancarias o promoción a estable.
+
 ## Adenda Élite v2.0.02 — ausencia de fuente ≠ cero (15/10/2026)
 
 - Una hucha sin objeto `aportaciones` no representa un saldo cero: mostrar fuente ausente y bloquear saldo, aportado mensual y retiros no verificables. Un objeto `aportaciones: {}` explícito sí permite un historial de aportación vacío si existe también la fuente de usos.
