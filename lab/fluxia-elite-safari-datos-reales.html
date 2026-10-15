@@ -1600,6 +1600,26 @@ function showMotherOperation(heading){
  d.append(el('p','notice','Tu cartera y tu Disponible deben actualizarse una sola vez, con fecha, categoría e identificadores originales.'));
  $('#detail').classList.add('open')
 }
+function renderWalletSourceComparison(htmlWallet,cloudWallet){
+ const card=el('section','eliteHuchaBalance');card.append(el('strong',null,'🔎 Dinero en mano · HTML frente a nube'));
+ if(!cloudWallet){card.append(el('p','integrityWarning','No hay una cartera de nube disponible para este perfil. La copia HTML se conserva solo en memoria; no se ha importado ni escrito ningún movimiento.'));return card}
+ const report=window.FluxiaWalletAudit?.compareMovements(htmlWallet,cloudWallet);
+ if(!report?.ready){card.append(el('p','integrityWarning','No se pudo comparar la copia HTML y la nube: '+(report?.reason||'lector de cartera no disponible')));return card}
+ card.append(el('p','periodHint','HTML '+report.htmlCount+' movimientos · nube '+report.cloudCount+' · solo HTML '+report.htmlOnly.length+' · solo nube '+report.cloudOnly.length+' · mismo ID distinto '+report.different.length+' · IDs repetidos '+report.duplicates.length+' · sin ID '+report.withoutId+'.'));
+ card.append(el('p','periodHint','Saldo de la copia HTML '+money(report.htmlBalanceCents/100)+' · saldo nube '+money(report.cloudBalanceCents/100)+' · diferencia '+(report.balanceDeltaCents<0?'−':'')+money(Math.abs(report.balanceDeltaCents)/100)+'.'));
+ if(report.equivalent)card.append(el('p','legacySuccess','✓ IDs, movimientos y saldo histórico coinciden en las dos fuentes.'));
+ else{
+  const issues=[...report.htmlOnly.map(m=>({m,label:'Solo HTML'})),...report.cloudOnly.map(m=>({m,label:'Solo nube'})),...report.different.map(x=>({m:x.movement,label:'Diferente: '+x.changed.join(', ')}))];
+  if(issues.length){const details=el('details','eliteHuchaBalanceDetails');details.append(el('summary',null,'Revisar diferencias · '+issues.length));
+   for(const x of issues.slice(0,60)){const m=x.m;details.append(el('div','eliteHuchaBalanceLine',x.label+' · '+(m.fecha||'Sin fecha')+' · '+m.concepto+' · '+(m.cents===null?'importe ilegible':money(m.cents/100))+' · ID '+(m.id||'sin ID')))}
+   if(issues.length>60)details.append(el('p','periodHint','Se muestran las primeras 60 diferencias.'));
+   card.append(details)
+  }
+  card.append(el('p','integrityWarning','La comparación es de solo lectura. No se fusionan, corrigen ni duplican movimientos; las diferencias deben revisarse en el HTML original antes de cualquier sincronización.'));
+ }
+ if(report.withoutId||report.duplicates.length)card.append(el('p','integrityWarning','Los movimientos sin ID o con ID repetido impiden certificar la paridad, aunque coincidan los totales.'));
+ return card
+}
 function renderWallet(){
  renderMonthSelector();head('💵 Dinero en mano');
  $('#content').append(el('p','welcomeDescription','Tu efectivo físico: billetes y monedas. Es distinto del Disponible del mes.'));
@@ -1629,8 +1649,10 @@ function renderWallet(){
  if(walletBackup&&walletBackup.owner===owner&&walletBackup.activeProfile===activeProfile)importPanel.append(el('p','legacySuccess','✓ Copia del mismo perfil validada. Datos cargados solo en memoria. No se ha alterado ningún movimiento.'));
  $('#content').append(importPanel);
  const local=walletBackup&&walletBackup.owner===owner&&walletBackup.activeProfile===activeProfile?walletBackup:null;
- const source=local?{key:'copia perfil HTML',value:local.wallet,updatedAt:local.when||null,present:true,origin:'backup'}:cashOrFinanceSource(['v2_efectivo','planRescate_v2_efectivo'],v=>v!==null&&typeof v==='object'&&!Array.isArray(v)&&Array.isArray(v.movimientos));
+ const cloudSource=cashOrFinanceSource(['v2_efectivo','planRescate_v2_efectivo'],v=>v!==null&&typeof v==='object'&&!Array.isArray(v)&&Array.isArray(v.movimientos));
+ const source=local?{key:'copia perfil HTML',value:local.wallet,updatedAt:local.when||null,present:true,origin:'backup'}:cloudSource;
  $('#content').append(financeSourceNotice(source,'Dinero en mano'));
+ if(local)$('#content').append(renderWalletSourceComparison(local.wallet,cloudSource.present?cloudSource.value:null));
  if(!source.present||!window.FluxiaWalletAudit){
   $('#content').append(legacyExplanatory('Cartera sin datos actuales','No se puede deducir el efectivo en mano a partir de los movimientos bancarios ni de otras huchas.'));
   $('#content').append(motherLink());return
@@ -2818,11 +2840,11 @@ function renderHuchaUseSourceComparison(huchas){
  return card
 }
 function preferredHuchaUses(){
- // HTML operativo/copia reciente es el oráculo funcional hasta certificar paridad.
- // Una lista HTML vacía es distinta de una fuente ausente; no se rellena con nube antigua.
- const html=huchaUsesFromSource(true),cloud=huchaUsesFromSource(false);
- if(Array.isArray(html))return {rows:html,origin:'HTML'};
+ const cloud=huchaUsesFromSource(false),html=huchaUsesFromSource(true);
+ if(Array.isArray(cloud)&&cloud.length)return {rows:cloud,origin:'Supabase'};
+ if(Array.isArray(html)&&html.length)return {rows:html,origin:'HTML'};
  if(Array.isArray(cloud))return {rows:cloud,origin:'Supabase'};
+ if(Array.isArray(html))return {rows:html,origin:'HTML'};
  return {rows:null,origin:'sin fuente'}
 }
 function renderHuchaUsesAudit(huchas,uses,label){
