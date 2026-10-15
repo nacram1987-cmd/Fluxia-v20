@@ -5,6 +5,8 @@ const engine=require('../js/fluxia-elite-financial-engine-v1.js');
 assert.equal(engine.role({origen:'efectivo',tipoInterno:'traspaso_efectivo'}),'transfer');
 assert.equal(engine.role({origen:'efectivo',esTraspasoPropio:true}),'transfer');
 assert.equal(engine.role({tipoInterno:'reponer_hucha'}),'transfer');
+assert.equal(engine.role({tipoInterno:'rescate_hucha',importe:150,cuentaDestino:'Revolut'}),'transfer');
+assert.equal(engine.role({tipoInterno:'rescate_provision',importe:150}),'transfer');
 assert.equal(engine.role({origen:'efectivo',tipoInterno:'gasto_efectivo'}),'cash');
 assert.equal(engine.role({vinculoFijoId:'fix-1',origen:'banco'}),'fixed-linked');
 assert.equal(engine.role({archivado:true,origen:'efectivo'}),'excluded');
