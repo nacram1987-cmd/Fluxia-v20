@@ -42,4 +42,23 @@ run('an absent cloud wallet cannot be certified as parity',()=>assert.equal(wall
 run('duplicate movement IDs block equivalence',()=>{const x=wallet.compareMovements({saldo:0,movimientos:[{id:'d',importe:1,tipo:'entrada'},{id:'d',importe:1,tipo:'entrada'}]},{saldo:0,movimientos:[{id:'d',importe:1,tipo:'entrada'}]});assert.equal(x.duplicates.length,1);assert.equal(x.equivalent,false)});
 run('matching snapshots with an unknown movement type cannot certify parity',()=>{const x=wallet.compareMovements({saldo:4,movimientos:[{id:'x',importe:1,tipo:'misterio'}]},{saldo:4,movimientos:[{id:'x',importe:1,tipo:'misterio'}]});assert.equal(x.htmlWarnings.length,1);assert.equal(x.cloudWarnings.length,1);assert.equal(x.equivalent,false)});
 run('matching snapshots with an invalid amount cannot certify parity',()=>{const x=wallet.compareMovements({saldo:4,movimientos:[{id:'x',importe:0,tipo:'entrada'}]},{saldo:4,movimientos:[{id:'x',importe:0,tipo:'entrada'}]});assert.equal(x.htmlWarnings.length,1);assert.equal(x.cloudWarnings.length,1);assert.equal(x.equivalent,false)});
-console.log('RESULT',counter,'/ 27 wallet invariants');
+
+const supabaseCash={saldo:8,movimientos:[
+ {id:'atm-100',fecha:'2026-10-07',importe:100,tipo:'entrada',concepto:'Retirada de cajero'},
+ {id:'hair-8',fecha:'2026-10-07',importe:8,tipo:'salida',concepto:'Peluquero',gastoId:'hair'},
+ {id:'jamon-1',fecha:'2026-10-07',importe:1,tipo:'salida',concepto:'El jamón',gastoId:'jamon'},
+ {id:'wallet-grass-use',fecha:'2026-10-08',importe:70,tipo:'salida_provision',concepto:'Mantenimiento césped',usoProvisionId:'grass-use'},
+ {id:'cash-plus-20',fecha:'2026-10-15T11:25:00Z',importe:20,tipo:'entrada',concepto:'Cajero'},
+ {id:'cash-minus-30',fecha:'2026-10-15T11:26:00Z',importe:30,tipo:'salida',concepto:'Pulido faros',gastoId:'polish'},
+ {id:'air-1',fecha:'2026-10-15T11:27:00Z',importe:1,tipo:'salida',concepto:'Aire ruedas',gastoId:'air'},
+ {id:'lights-2',fecha:'2026-10-15T11:28:00Z',importe:2,tipo:'salida',concepto:'Luces freno',gastoId:'lights'}
+]};
+const supabaseSnapshot=wallet.inspect(supabaseCash),supabaseOctober=wallet.month(supabaseSnapshot,'2026-10');
+run('current Supabase cash snapshot contains 8 operations',()=>assert.equal(supabaseSnapshot.movements.length,8));
+run('current cash snapshot includes the reported +20 euro entry',()=>assert.equal(supabaseOctober.entradasCents,12000));
+run('current cash snapshot includes the reported 30 euro expense',()=>assert.equal(supabaseOctober.gastosCents,4200));
+run('70 euro lawn payment is separated from cash expenses',()=>assert.equal(supabaseOctober.usosProvisionCents,7000));
+run('cash ledger movement net matches its stored balance of 8 euros',()=>assert.equal(supabaseOctober.entradasCents-supabaseOctober.gastosCents-supabaseOctober.usosProvisionCents,supabaseSnapshot.saldoCents));
+run('lawn cash movement resolves to its exact Supabase use ID',()=>assert.equal(wallet.linkConflicts(supabaseSnapshot,[{id:'hair'},{id:'jamon'},{id:'polish'},{id:'air'},{id:'lights'}],[{id:'grass-use'}]).length,0));
+
+console.log('RESULT',counter,'/ 33 wallet invariants');
