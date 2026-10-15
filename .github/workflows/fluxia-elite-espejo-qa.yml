@@ -7,6 +7,8 @@ on:
       - 'lab/fluxia-elite-safari-datos-reales.html'
       - 'lab/js/fluxia-espejo-csv-v1.js'
       - 'lab/js/fluxia-elite-bank-connector-v1.js'
+      - 'lab/js/fluxia-elite-*.js'
+      - 'lab/tools/**'
       - 'lab/qa/**'
       - '.github/workflows/fluxia-elite-espejo-qa.yml'
   workflow_dispatch:
@@ -66,6 +68,10 @@ jobs:
         run: |
           node lab/qa/elite-modern-cloud-v2021.cjs
           node lab/qa/elite-dashboard-provisional-available-v2020.cjs
+      - name: Conciliación integral del Disponible v2.0.25 (offline, fixtures sintéticas)
+        run: node lab/qa/elite-reconciliation-v2025.cjs
+      - name: Integración v2.0.26 y huecos de corte (offline, fixtures sintéticas)
+        run: node lab/qa/elite-integration-v2026.cjs
       - name: Motor Disponible HTML completo (offline)
         run: node lab/qa/elite-financial-engine-v1977.cjs
       - name: Huchas por fuente y regresiones recientes (offline)

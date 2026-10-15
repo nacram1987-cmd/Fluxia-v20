@@ -14,6 +14,8 @@ on:
       - 'lab/fluxia-elite-safari-datos-reales.html'
       - 'lab/js/fluxia-elite-*.js'
       - 'lab/qa/elite-*.cjs'
+      - 'lab/qa/lib/**'
+      - 'lab/tools/**'
       - 'lab/v97.69.html'
       - 'lab/v97.70.html'
       - 'lab/v97.70/**'
@@ -47,6 +49,10 @@ jobs:
         run: |
           node lab/qa/elite-dashboard-provisional-available-v2020.cjs
           node lab/qa/elite-modern-cloud-v2021.cjs
+      - name: Verify v2.0.25 integral Available reconciliation (synthetic fixtures)
+        run: node lab/qa/elite-reconciliation-v2025.cjs
+      - name: Integración v2.0.26 y huecos de corte (offline, fixtures sintéticas)
+        run: node lab/qa/elite-integration-v2026.cjs
       - name: Verify current bank inbox and balance regressions
         run: node lab/qa/elite-banking-available-v2012.cjs
       - name: Verify Élite version header and release guards
