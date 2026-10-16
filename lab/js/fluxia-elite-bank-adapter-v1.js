@@ -48,7 +48,10 @@
   (Array.isArray(values)?values:[]).forEach(function(value){var id=typeof value==='object'?stableId(value):String(value||'').trim();if(id)set.add(id)});
   return set;
  }
- function same(a,b){return a&&b&&a.amountCents===b.amountCents&&a.date===b.date&&a.role===b.role&&a.fixedId===b.fixedId&&a.concept===b.concept}
+ function abs(value){return value<0n?-value:value}
+ // Identidad = referencia bancaria estable + fecha + importe en valor absoluto. El libro guarda los gastos en positivo y el banco
+ // los envía en negativo; el concepto, el rol y el vínculo a fijo son clasificación del usuario y no son un conflicto contable.
+ function same(a,b){return !!(a&&b&&abs(a.amountCents)===abs(b.amountCents)&&a.date===b.date)}
  function planImport(existing,incoming,tombstones,resolutions){
   var existingRows=Array.isArray(existing)?existing:[], incomingRows=Array.isArray(incoming)?incoming:[], choices=resolutions&&typeof resolutions==='object'?resolutions:{};
   var existingMap=new Map(), additions=[], duplicates=[], blocked=[], conflicts=[], invalid=[], resolved=[];
