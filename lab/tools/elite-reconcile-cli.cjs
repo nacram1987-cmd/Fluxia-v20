@@ -82,4 +82,10 @@ const priv = {
 };
 fs.mkdirSync(outDir, { recursive: true });
 fs.writeFileSync(path.join(outDir, 'informe-privado.json'), JSON.stringify(priv, replacer, 1));
-const pub = Rec.publicRepo
+const pub = Rec.publicReport({ generatedAt: priv.generatedAt, period: month, cutoff, ownerId: cloud.user_id, profileId: cloud.profile_key, status: cert.status, availableCents: cert.calculation && cert.calculation.ok ? cert.calculation.cents : null,
+  flags: priv.flags, gates: priv.gates, checksums: priv.checksums, certificateHash: priv.certificateHash, diffCount: ev.comparison && ev.comparison.diffs ? ev.comparison.diffs.length : 0, modules: ev.comparison && ev.comparison.modules ? ev.comparison.modules : {} });
+fs.writeFileSync(path.join(outDir, 'informe-publico.json'), JSON.stringify(pub, replacer, 1));
+console.log('Estado: ' + priv.status + (priv.availableFormatted ? ' · Disponible ' + priv.availableFormatted : '') + ' · bloqueos: ' + priv.blockers.length);
+for (const b of priv.blockers.slice(0, 12)) console.log(' - ' + b);
+console.log('Informes escritos en ' + path.resolve(outDir));
+process.exit(cert.certified ? 0 : 1);
