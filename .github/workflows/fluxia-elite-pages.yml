@@ -121,3 +121,5 @@ jobs:
 # Validate v2.0.43 parity fix after its immutable HTML snapshot was committed.
 
 # Revalidate v2.0.44 after immutable snapshot and bank alias matching were committed.
+
+# Verify v2.0.45 HTML-first financial calculation after immutable snapshot commit.
