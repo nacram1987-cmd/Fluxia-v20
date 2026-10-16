@@ -6,10 +6,9 @@ const vm = require('node:vm');
 const assert = require('node:assert/strict');
 const html = fs.readFileSync(path.join(__dirname, '../fluxia-elite-safari-datos-reales.html'), 'utf8');
 
-assert(html.includes('ÉLITE BETA · v2.0.53') && html.includes("const ELITE_SAFARI_VERSION='2.0.53';"));
-assert(html.includes("<title>Fluxia Élite BETA v2.0.53 · Safari</title>") && html.includes('<meta name="fluxia-elite-version" content="2.0.53">'));
+// la novedad 2.0.53 sigue en el historial; la versión visible la fija cada release
 assert(html.includes(" ['2.0.53','Huchas: cada hucha vigente se muestra como en el HTML original"));
-assert(html.includes("list.append(huchaMadreCard(hucha,name,snap,ok))"));
+assert(html.includes("list.append(huchaMadreCard(hucha,name,snap,ok,"));
 
 const cut = (from, to) => { const a = html.indexOf(from), b = html.indexOf(to, a); assert(a > 0 && b > a, from); return html.slice(a, b); };
 const src = cut('const ELITE_HUCHA_ICONS=', 'function huchaContributionSnapshot') + cut('function huchaMadreCard(', 'function huchaMonthProvisionSummary(');
