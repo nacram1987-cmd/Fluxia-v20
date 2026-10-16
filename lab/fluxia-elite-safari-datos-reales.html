@@ -326,7 +326,13 @@ const $=s=>document.querySelector(s),el=(tag,cls,txt)=>{const n=document.createE
 const money=v=>typeof v==='number'&&isFinite(v)?new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(v):null;
 const field=(obj,keys)=>{for(const k of keys){let v=obj[k];if(typeof v==='string'&&v.trim())return v}return null};
 const displayName=user=>String(user?.user_metadata?.display_name||user?.user_metadata?.full_name||user?.user_metadata?.name||'').trim();
-const canon=m=>{const a=items[m.key];return Array.isArray(a)?a:null};
+const canon=m=>{
+ if(!m)return null;
+ const html=backupFinance?.owner===owner&&backupFinance?.profile===activeProfile&&
+  htmlSnapshotState().complete?backupFinance.modules?.[m.id]?.records:null;
+ if(Array.isArray(html))return html;
+ const a=items[m.key];return Array.isArray(a)?a:null
+};
 const ELITE_SAFARI_VERSION='2.0.46';
 if(typeof document!=='undefined')document.title='Fluxia Élite BETA v'+ELITE_SAFARI_VERSION+' · Safari';
 function setupEliteHeader(){
@@ -934,6 +940,7 @@ async function loadCanonicalProfile(prefix,{preserveView=false}={}){
  if(!preserveView||previousSources.profile!==prefix)listSourceMode='cloud';
  draftEdits.clear();csvAudit=null;csvAuditError='';walletBackup=null;walletBackupError='';motherAudit=null;fullProfileAudit=null;backupFinance=null;extraFinance=nextExtra;
  rescueIdentityLinks=nextRescueLinks; items=next;sourceUpdated=fresh;activeProfile=prefix;cloudReadAt=new Date().toISOString();certificationMemo=null;
+ // Select the same-origin HTML mother for the UI and calculation when complete.
  cloudFinanceSnapshot={owner,profile:prefix,complete:[...required,'planRescate_v2_usos'].every(key=>modernTargets.has(key)&&Array.isArray(next[key]??nextExtra[key]))};
  if(preserveView&&previousSources.owner===owner&&previousSources.profile===prefix){
   // A cloud refresh must not silently discard a validated local HTML backup.
@@ -971,6 +978,7 @@ async function loadCanonicalProfile(prefix,{preserveView=false}={}){
   listSourceMode='html';
  }catch(_htmlUnavailable){/* Continue with cloud if HTML not present or incomplete. */}
 
+ useHtmlMotherIfAvailable();
  // The read-only sourceMonthAudit runs during rendering, not at profile initialization.
  if(preserveView){page=previousView.page;search=previousView.search;period=previousView.period}
  else{page='inicio';search='';period='Todos'}
@@ -1566,6 +1574,40 @@ function compareMotherRows(rows,sourceType){
  const extra=candidate.filter(row=>{const id=motherRowId(row);return id&&!sourceIds.has(id)});
  motherAudit={total:filtered.length,candidateTotal:candidate.length,month:selectedMonth,missing,extra,different,duplicateSource,duplicateCloud,unknownSource:unknownSource.length,unknownCloud:unknownCloud.length,sourceRows:rows.length,ranAt:new Date().toISOString(),ownerId:owner,profile:activeProfile,sourceType};
  render()
+}
+function loadHtmlMotherSameOrigin(profile){
+ // HTML mother is authoritative only when all seven canonical collections exist
+ // under this exact profile. No cloud writes and no legacy-global fallback.
+ if(!/^usr-[a-f0-9-]{36}$/.test(profile)||!owner||!activeProfile||
+    activeProfile!=='p_'+profile+'__')return null;
+ const stem='fluxia_user_'+profile+'__',keys={},modulesFound={},sources={};
+ for(const mod of mods.filter(m=>m.key)){
+  const short=mod.key.replace(/^planRescate_v2_/,'');
+  const name=stem+'v2_'+short;
+  const raw=localStorage.getItem(name);
+  if(raw===null)return null;
+  let rows;try{rows=JSON.parse(raw)}catch{return null}
+  if(!Array.isArray(rows)||rows.length>100000||rows.some(r=>!r||typeof r!=='object'||Array.isArray(r)))return null;
+  keys[name]=raw;modulesFound[mod.id]={sourceKey:name,records:rows};
+ }
+ const usageKey=stem+'v2_usos',usageRaw=localStorage.getItem(usageKey);
+ if(usageRaw===null)return null;
+ let uses;try{uses=JSON.parse(usageRaw)}catch{return null}
+ if(!Array.isArray(uses)||uses.length>100000||uses.some(r=>!r||typeof r!=='object'||Array.isArray(r)))return null;
+ keys[usageKey]=usageRaw;sources.v2_usos={value:uses,sourceKey:usageKey};
+ const stamp=new Date().toISOString();
+ return {owner,profile:activeProfile,when:stamp,sources,modules:modulesFound,
+  cloudSnapshot:financialCloudSnapshot(),motherOrigin:'same_origin_local_storage',localOnly:true};
+}
+function useHtmlMotherIfAvailable(){
+ if(!activeProfile||!owner)return false;
+ let candidate=null;
+ try{candidate=loadHtmlMotherSameOrigin(activeProfile.slice(2,-2))}catch(_e){return false}
+ if(!candidate)return false;
+ backupFinance=candidate;
+ listSourceMode='html';
+ certificationMemo=null;
+ return true;
 }
 function auditMotherBrowser(){
  if(!activeProfile||!owner){motherAudit={error:'Inicia sesión antes de comparar.'};render();return}
