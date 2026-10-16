@@ -115,3 +115,5 @@ jobs:
 # QA rerun on v2.0.38 with identical immutable snapshot; financial records unchanged.
 
 # Run v2.0.41 QA after immutable snapshot commit; release is verified only after full suite passes.
+
+# Post-snapshot QA verification for v2.0.42 parity audit; no financial data changes.
