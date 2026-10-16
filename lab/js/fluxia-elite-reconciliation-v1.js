@@ -254,6 +254,8 @@
    var stables=g.map(function(x){return x.stable});
    var allStable=stables.every(Boolean)&&new Set(stables).size===stables.length;
    if(allStable)return;
+   // Mismo identificador bancario estable en todas las filas: lo clasifica classifyBankRefGroups (no admite «son distintas»).
+   if(o.excludeSameBankRef===true&&stables.every(Boolean)&&new Set(stables).size===1)return;
    var key=g.map(function(x){return x.id||('#'+x.index)}).sort().join('+');
    out.push({key:key,fingerprint:sha256Hex(fp).slice(0,10),count:g.length,ids:g.map(function(x){return o.raw?(x.id||('#'+x.index)):pseudonym(ownerId,x.id||('#'+x.index))}),
     rawKey:o.raw?key:undefined,centsEach:amountOfRow(g[0].row).cents,date:madridDate(String(g[0].row.fechaOperacion||g[0].row.fecha||'')),bothCounted:true,
@@ -275,6 +277,91 @@
    });
   });
   return collisions;
+ }
+
+ /* ───────── bancoRef repetido: clasificación con evidencia (jamás se fusiona ni se borra) ───────── */
+ // Regla del HTML estable: bancoRef es la identidad del cargo bancario. ingresosDe() cuenta una sola vez
+ // por bancoRef; FluxiaSalud.reportDuplicados lista los repetidos y limpiarDuplicadosBancoRef solo se ejecuta a mano
+ // (la llamada tras sincronizar está neutralizada). Los gastos con el mismo bancoRef se CUENTAN todos en el HTML.
+ // Por eso aquí se cuentan igual, se señalan y bloquean «VERIFICADO» hasta que la fuente deje de repetirlos.
+ var HTML_CREATED_ID=/^(1[5-9]\d{11})_\d+$/; // uid() del HTML = Date.now()+'_'+contador
+ function recordCreatedMs(row){var m=HTML_CREATED_ID.exec(String(row&&row.id==null?'':row.id));return m?Number(m[1]):null}
+ function economicKey(row){
+  var c=amountOfRow(row).cents;
+  return {date:madridDate(String(row.fecha||row.fechaOperacion||row.date||'')),cents:c===null?null:c.toString(),concept:normalizeText(row.concepto||row.descripcion||row.detalle||''),bank:normalizeText(row.banco||''),origin:normalizeText(row.origen||'')};
+ }
+ function classifyBankRefGroups(rows,o){
+  o=o||{};var stable=o.stableId||function(r){return r&&r.bancoRef!=null?String(r.bancoRef).trim():''},ownerId=o.ownerId||'';
+  var history=Array.isArray(o.history)?o.history:[],inbox=Array.isArray(o.inbox)?o.inbox:null;
+  var skip=o.skip||function(){return false},ref=function(v){return o.raw?String(v):pseudonym(ownerId,v)};
+  var byRef={};
+  (rows||[]).forEach(function(row,index){
+   if(!isObject(row)||skip(row))return;
+   var key=String(row.bancoRef==null?'':row.bancoRef).trim();if(!key)return;
+   (byRef[key]||(byRef[key]=[])).push({row:row,index:index,id:rowId(row),stable:stable(row)});
+  });
+  var groups=[];
+  Object.keys(byRef).sort().forEach(function(key){
+   var g=byRef[key];if(g.length<2)return;
+   var evidence=[],reasons=[],eco=g.map(function(x){return economicKey(x.row)}),base=eco[0];
+   var differing=['date','cents','concept','bank','origin'].filter(function(f){return eco.some(function(e){return e[f]!==base[f]})});
+   var ids=g.map(function(x){return x.id});
+   var sameInternalId=ids.some(function(id,i){return !!id&&ids.indexOf(id)!==i});
+   var stableEverywhere=g.every(function(x){return !!x.stable})&&new Set(g.map(function(x){return x.stable})).size===1;
+   var klass,confidence=null;
+   if(!stableEverywhere){klass='IDENTIDAD_INSUFICIENTE';reasons.push('REFERENCIA_NO_ESTABLE');evidence.push('La referencia repetida no es una identidad bancaria estable del proveedor (sintética o derivada): no prueba que sea el mismo cargo.')}
+   else if(differing.length){klass='IDENTIDAD_INSUFICIENTE';reasons.push('CAMPOS_DISTINTOS:'+differing.join(','));evidence.push('Mismo identificador bancario pero difieren '+differing.join(', ')+': conflicto de identidad, no se puede decidir por importe o concepto.')}
+   else if(sameInternalId){klass='IDENTIDAD_INSUFICIENTE';reasons.push('ID_DE_REGISTRO_REPETIDO');evidence.push('El propio identificador interno del registro está repetido: la fuente es incoherente.')}
+   else{
+    klass='REIMPORTACION';
+    evidence.push('Misma referencia bancaria estable, fecha, importe, concepto, banco y origen con identificadores de registro distintos: por la regla del HTML (bancoRef = identidad del cargo) es el mismo cargo bancario registrado '+g.length+' veces.');
+    var strong=false;
+    if(inbox){
+     var inInbox=inbox.filter(function(r){var id=r&&(r.bankRef!=null?r.bankRef:stable(r));return String(id==null?'':id).trim()===(g[0].stable||key)}).length;
+     if(inInbox===1){strong=true;evidence.push('La bandeja del proveedor lista este identificador una sola vez: el banco informa de un único cargo.')}
+     else if(inInbox>1)evidence.push('La bandeja del proveedor lista este identificador '+inInbox+' veces: sin prueba de reimportación por esta vía.');
+     else evidence.push('La bandeja del proveedor no contiene este identificador (ventana de consulta anterior): sin prueba por esta vía.');
+    }
+    history.forEach(function(snap){
+     if(!snap||!Array.isArray(snap.rows))return;
+     var label=String(snap.label||'copia'),taken=Date.parse(snap.takenAt);
+     var inSnap=snap.rows.filter(function(r){return isObject(r)&&String(r.bancoRef==null?'':r.bancoRef).trim()===key});
+     var snapIds=new Set(inSnap.map(rowId));
+     var absent=g.filter(function(x){return !snapIds.has(x.id)});
+     if(inSnap.length===1&&absent.length){
+      var later=absent.filter(function(x){var c=recordCreatedMs(x.row);return c!==null&&isFinite(taken)&&c>taken});
+      if(later.length){strong=true;evidence.push('En «'+label+'» solo había 1 fila con esta referencia; '+later.length+' fila(s) actual(es) se crearon después de esa copia (identificador con marca de tiempo posterior): apareció tras una nueva importación.')}
+      else evidence.push('En «'+label+'» solo había 1 fila con esta referencia y '+absent.length+' fila(s) actual(es) no figuran en ella (sin marca de tiempo que fije cuándo se crearon).');
+     }else if(inSnap.length>=2)evidence.push('«'+label+'» ya contenía '+inSnap.length+' filas con esta referencia: la repetición no es posterior a esa copia.');
+     else if(!inSnap.length)evidence.push('«'+label+'» no contiene esta referencia.');
+    });
+    confidence=strong?'CONFIRMADA_CON_EVIDENCIA_INDEPENDIENTE':'POR_REGLA_DEL_HTML';
+   }
+   var cEach=eco[0].cents===null?null:BigInt(eco[0].cents);
+   groups.push({key:o.raw?key:undefined,ref:ref(key),count:g.length,ids:ids.map(function(id,i){return o.raw?(id||('#'+g[i].index)):pseudonym(ownerId,id||('#'+g[i].index))}),
+    class:klass,confidence:confidence,reasons:reasons,evidence:evidence,date:base.date,centsEach:cEach,
+    surplusCents:klass==='REIMPORTACION'&&cEach!==null?cEach*BigInt(g.length-1):null,
+    bothCounted:true,canMarkDistinct:false,
+    cause:klass==='REIMPORTACION'?'MISMO_BANCOREF_REGISTRADO_VARIAS_VECES':'IDENTIDAD_BANCARIA_INSUFICIENTE_PARA_DECIDIR',
+    action:'No se fusiona ni se borra aquí. Resuélvelo en el HTML estable (herramienta manual FluxiaSalud.limpiarDuplicadosBancoRef, tras comprobar el banco) o aclara la identidad; Élite releerá la nube. Un mismo identificador bancario no puede marcarse como «transacciones distintas».'});
+  });
+  // Cargos idénticos con identificadores bancarios estables DISTINTOS: transacciones legítimas distintas (informativo).
+  var legit=[],fps={};
+  (rows||[]).forEach(function(row,index){
+   if(!isObject(row)||skip(row))return;var fp=fingerprint(row),s=stable(row);if(!fp||!s)return;
+   (fps[fp]||(fps[fp]=[])).push({row:row,index:index,id:rowId(row),stable:s});
+  });
+  Object.keys(fps).sort().forEach(function(fp){
+   var g=fps[fp];if(g.length<2)return;
+   var distinct=Array.from(new Set(g.map(function(x){return x.stable})));if(distinct.length<2)return;
+   legit.push({class:'DOS_CARGOS_LEGITIMOS',count:distinct.length,refs:distinct.map(ref),centsEach:amountOfRow(g[0].row).cents,date:madridDate(String(g[0].row.fechaOperacion||g[0].row.fecha||'')),
+    evidence:['Mismo día, importe y concepto pero '+distinct.length+' identificadores bancarios estables distintos: transacciones distintas del proveedor.'],bothCounted:true,blocking:false});
+  });
+  var surplus=groups.reduce(function(t,x){return t+(x.surplusCents||0n)},0n);
+  return {groups:groups,legit:legit,summary:{groups:groups.length,reimportacion:groups.filter(function(x){return x.class==='REIMPORTACION'}).length,
+   reimportacionConfirmada:groups.filter(function(x){return x.confidence==='CONFIRMADA_CON_EVIDENCIA_INDEPENDIENTE'}).length,
+   identidadInsuficiente:groups.filter(function(x){return x.class==='IDENTIDAD_INSUFICIENTE'}).length,dosCargosLegitimos:legit.length,
+   surplusCents:surplus,blocking:groups.length}};
  }
 
  /* ───────── conciliación bancaria ───────── */
@@ -371,10 +458,13 @@
    }
   }
   gates.push(gate('b','Módulos reconciliados con el HTML (Δ = 0,00 € y sin diferencias sin explicar)',bPass,bDetail,'load-html-backup'));
-  // [c]
-  var cPass=hu.known===false?null:(hu.provisionalLinks===0&&hu.unresolvedRescues===0&&hu.issues===0&&hu.conflicts===0&&hu.usesEqual!==false&&hu.usesEqual!==null&&hu.usesEqual!==undefined);
+  // [c] Los usos del HTML estable NO guardan ID de hucha: provisionUsadoTotal los atribuye por igualdad EXACTA de nombre (u.provision===p.nombre).
+  // Sin un ID verificable no hay vínculo que certificar: se distingue (a) nombre exacto = misma atribución que haría el HTML, pero sin ID,
+  // de (b) nombre que solo coincide tras normalizar = el HTML NO lo atribuiría a esa hucha (discrepancia real). Ninguno se certifica.
+  var nonHtml=hu.nonHtmlLinks||0,provisional=hu.provisionalLinks||0,exactLinks=Math.max(0,provisional-nonHtml);
+  var cPass=hu.known===false?null:(provisional===0&&hu.unresolvedRescues===0&&hu.issues===0&&hu.conflicts===0&&hu.usesEqual!==false&&hu.usesEqual!==null&&hu.usesEqual!==undefined);
   var cDetail=cPass===true?'Rescates, usos, reposiciones y aportaciones enlazados por ID y coincidentes con el HTML':
-   (hu.provisionalLinks?hu.provisionalLinks+' rescate(s) vinculados solo por nombre único (no por ID). ':'')+(hu.unresolvedRescues?hu.unresolvedRescues+' rescate(s) sin hucha verificable. ':'')+((hu.issues||hu.conflicts)?'Incidencias/conflictos en historial de huchas. ':'')+(hu.usesEqual==null?'Usos de huchas sin cotejar con el HTML.':hu.usesEqual===false?'Los usos de huchas difieren del HTML.':'');
+   (nonHtml?nonHtml+' rescate(s) cuyo nombre solo coincide tras normalizar tildes/mayúsculas: el HTML no los atribuiría a esa hucha (discrepancia). ':'')+(exactLinks?exactLinks+' rescate(s) vinculados solo por nombre único (el HTML tampoco guarda ID en los usos): sin ID verificable no se certifican. ':'')+(hu.unresolvedRescues?hu.unresolvedRescues+' rescate(s) sin hucha verificable. ':'')+((hu.issues||hu.conflicts)?'Incidencias/conflictos en historial de huchas. ':'')+(hu.usesEqual==null?'Usos de huchas sin cotejar con el HTML.':hu.usesEqual===false?'Los usos de huchas difieren del HTML.':'');
   gates.push(gate('c','Rescates, usos, reposiciones y aportaciones trazados sin ambigüedad',cPass,cDetail.trim(),'review-huchas'));
   // [d]
   var dPass=null,dDetail='Sin conciliación bancaria: no consta sincronización ni delimitación explícita';
@@ -419,14 +509,14 @@
   return JSON.parse(JSON.stringify({format:'fluxia-elite-reconciliation-public-v1',version:VERSION,generatedAt:r.generatedAt,period:r.period,cutoff:r.cutoff,timezone:TZ,
    owner:pseudonym('owner',r.ownerId),profile:pseudonym('profile',r.profileId),status:r.status,flags:r.flags,availableCents:r.availableCents,
    modules:r.modules,gates:r.gates&&r.gates.map(function(g){return {id:g.id,state:g.state,detail:g.detail.replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f-]{23}/gi,'«id»')}}),
-   checksums:r.checksums,certificateHash:r.certificateHash,diffCount:r.diffCount,notice:'Sin importes por registro ni identificadores reales. No sustituye al informe privado.'},function(k,v){return typeof v==='bigint'?v.toString():v}));
+   checksums:r.checksums,certificateHash:r.certificateHash,diffCount:r.diffCount,bankRefGroups:r.bankRefSummary||null,notice:'Sin importes por registro ni identificadores reales. No sustituye al informe privado.'},function(k,v){return typeof v==='bigint'?v.toString():v}));
  }
  function certificateHash(parts){return sha256Hex(canonicalJson(parts))}
 
  var api={version:VERSION,timezone:TZ,canonicalJson:canonicalJson,sha256Hex:sha256Hex,checksum:checksum,pseudonym:pseudonym,normalizeText:normalizeText,
   centsDetail:centsDetail,formatCents:formatCents,amountOfRow:amountOfRow,madridParts:madridParts,madridDate:madridDate,madridMonth:madridMonth,madridToday:madridToday,
   ledgerEntry:ledgerEntry,sortLedger:sortLedger,summarizeLedger:summarizeLedger,verifyLedger:verifyLedger,compareLedgers:compareLedgers,crossTombstoneConflicts:crossTombstoneConflicts,
-  rowId:rowId,compareCollections:compareCollections,fingerprint:fingerprint,findSuspiciousDuplicates:findSuspiciousDuplicates,findCrossModuleBankCollisions:findCrossModuleBankCollisions,
+  rowId:rowId,compareCollections:compareCollections,fingerprint:fingerprint,findSuspiciousDuplicates:findSuspiciousDuplicates,findCrossModuleBankCollisions:findCrossModuleBankCollisions,classifyBankRefGroups:classifyBankRefGroups,recordCreatedMs:recordCreatedMs,
   reconcileBank:reconcileBank,simulateDoubleSync:simulateDoubleSync,evaluateCertification:evaluateCertification,publicReport:publicReport,certificateHash:certificateHash,MODULE_ORDER:MODULE_ORDER};
  if(typeof module!=='undefined'&&module.exports)module.exports=api;
  if(root)root.FluxiaEliteReconciliation=api;

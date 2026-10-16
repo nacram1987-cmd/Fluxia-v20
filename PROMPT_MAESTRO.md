@@ -1277,3 +1277,8 @@ La respuesta y el error de **Bancos → Sincronizar bancos** deben mantenerse en
 ## Adenda Élite v2.0.28 · corrección del Disponible
 
 La LAB suma rescates temporales de hucha al Disponible y el HTML estable no. Corregir la LAB para que los rescates sigan visibles en su trazabilidad, con impacto contable cero. Mantener el cálculo de pensiones pendientes excluido hasta ingreso efectivo. No modificar el HTML estable (`index.html`) ni filas financieras de Supabase. Ejecutar la suite sintética de conciliación v2025 junto con gates existentes; la cifra real sigue provisional si duplicados de referencias bancarias o vínculos de rescates no están verificados por ID.
+
+
+## Adenda Élite v2.0.29 · `bancoRef` repetido y vínculos de hucha
+
+El HTML estable cuenta todas las filas de Variables con el mismo `bancoRef` (solo Ingresos se deduplican al leer; la fusión es manual) y atribuye los usos a las huchas por igualdad exacta de nombre, sin ID. La LAB conserva esa paridad contable y solo clasifica/bloquea la certificación. No fusionar, borrar ni marcar como pagado ningún registro; no declarar `VERIFICADO` sin exportación de nube + copia histórica del mismo perfil y corte. Usar `lab/tools/elite-reconcile-cli.cjs --history` para la evidencia.

@@ -50,6 +50,7 @@ jobs:
           node lab/qa/elite-reconciliation-v2025.cjs
           node lab/qa/elite-integration-v2026.cjs
           node lab/qa/elite-evidence-cut-guard-v2027.cjs
+          node lab/qa/elite-bankref-hucha-v2029.cjs
       - name: Verify current bank inbox and balance regressions
         run: node lab/qa/elite-banking-available-v2012.cjs
       - name: Verify Élite version header and release guards

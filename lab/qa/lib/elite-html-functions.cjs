@@ -68,6 +68,7 @@ function loadEliteFunctions(overrides = {}, htmlPath = DEFAULT_HTML) {
     between(html, 'function huchaMonthlyContributions(hucha){', '\n// Misma precedencia de iconoProvision'),
     between(html, 'function huchaContributionSnapshot(hucha,period){', '\nfunction huchaFinancialSnapshot('),
     between(html, 'function huchaFinancialSnapshot(hucha,period,uses,allHuchas){', '\nfunction appendHuchaFinancialSummary('),
+    between(html, 'function certMoney(cents){', '\nfunction certGateActionButton('),
     between(html, 'function availableCertificationReport(){', '\nfunction renderAvailableCertification('),
     between(html, 'const recordAmount=obj=>{', '\nconst datedRows='),
     between(html, 'function validatePrivateBackup(backup,profile){', '\nfunction latestWalletMovementDate('),

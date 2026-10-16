@@ -177,3 +177,10 @@ Entradas:
 - Paridad del Disponible con el HTML estable: los rescates temporales de hucha conservan trazabilidad, con impacto contable cero.
 - La pensión pendiente sigue excluida del saldo disponible.
 - Sin cambios al HTML estable ni a datos financieros en Supabase.
+
+
+## v2.0.29-LAB · 16/10/2026
+
+- `bancoRef` repetido en gastos: se cuentan todas las filas (paridad con el HTML estable) pero se clasifican con evidencia, se muestra el importe en juego y bloquean `VERIFICADO`; no admiten «transacciones distintas».
+- Rescates de hucha: se distingue nombre exacto (regla del HTML), solo normalizado (el HTML no lo atribuiría) y ambiguo; ninguno se certifica sin ID.
+- Herramienta local con `--history` para fechar filas repetidas. Sin cambios en HTML estable, Disponible ni Supabase.

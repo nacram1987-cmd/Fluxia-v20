@@ -10,6 +10,9 @@
  *  --html    copia «fluxia-perfil-v1» exportada por el HTML estable.
  *  --month   periodo contable AAAA-MM.   --cutoff  instante común de corte (ISO con zona).
  *  --bank-scope none   declara explícitamente que el perfil no usa movimientos bancarios en el periodo (criterio [d]).
+ *  --history copia histórica del mismo perfil para rastrear cuándo apareció cada fila con bancoRef repetido. Repetible:
+ *            --history «copia 7 oct=./nube-2026-10-07.json» --history «html 9 oct=./copia-html-09.json»
+ *            (exportación de la nube fluxia-elite-cloud-readonly-v1 o copia del HTML; el instante sale de su propio contenido).
  *  --out     carpeta de salida (se crea). Escribe: informe-privado.json (con IDs reales: NO subir a GitHub)
  *            e informe-publico.json (seudónimos y huellas; sin IDs ni importes por registro).
  *
@@ -62,6 +65,28 @@ if (backup) {
   } catch (e) { console.error('AVISO: copia del HTML rechazada (' + e.message + '). Se informa sin comparación HTML↔nube.'); }
 }
 
+// Copias históricas (solo para fechar filas con bancoRef repetido; no entran en el cálculo del Disponible).
+const historyArgs = process.argv.reduce((acc, a, i, all) => (a === '--history' && all[i + 1] ? acc.concat(all[i + 1]) : acc), []);
+ctx.extraBankRefHistory = [];
+for (const spec of historyArgs) {
+  const eq = spec.indexOf('=');
+  const label = eq > 0 ? spec.slice(0, eq) : path.basename(spec), file = eq > 0 ? spec.slice(eq + 1) : spec;
+  let raw; try { raw = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) { fail('Copia histórica ilegible (' + label + '): ' + e.message); }
+  const variablesKey = MODS.find((m) => m.id === 'variables').key;
+  if (raw && raw.format === 'fluxia-elite-cloud-readonly-v1') {
+    if (raw.user_id !== cloud.user_id || raw.profile_key !== cloud.profile_key) fail('La copia histórica «' + label + '» es de otro usuario o perfil: no se mezcla.');
+    const src = raw.sources && raw.sources[variablesKey];
+    if (!src || !src.available || !Array.isArray(src.records)) fail('La copia histórica «' + label + '» no contiene Variables.');
+    ctx.extraBankRefHistory.push({ label, takenAt: raw.exported_at, rows: src.records });
+  } else {
+    try {
+      const profile = cloud.profile_key.slice(2, -2);
+      const parsed = S.api.validatePrivateBackup(raw, profile);
+      const modules = S.api.readBackupFinancialModules(raw, profile);
+      ctx.extraBankRefHistory.push({ label, takenAt: parsed.when, rows: modules.variables.records });
+    } catch (e) { fail('Copia histórica «' + label + '» rechazada: ' + e.message); }
+  }
+}
 // Un certificado solo compara un periodo y corte común. La discrepancia ahora bloquea el informe.
 try { validateEvidenceCut({ month, cutoff, cloudMonth: cloud.accounting_month, cloudExportedAt: cloud.exported_at, htmlSnapshotAt: acceptedHtmlCut }); }
 catch (e) { fail('Corte de evidencia incompatible: ' + e.message); }
@@ -77,15 +102,21 @@ const priv = {
   blockers: cert.blockers || [], gates: cert.verdict ? cert.verdict.gates : [],
   flags: cert.verdict ? { dataSufficientToCalculate: cert.verdict.dataSufficientToCalculate, dataSufficientToCertify: cert.verdict.dataSufficientToCertify, bankSyncUpToDate: cert.verdict.bankSyncUpToDate } : {},
   comparison: ev.comparison || null, duplicates: { variables: ev.variableDuplicates || [], ingresos: ev.incomeDuplicates || [] },
+  bankRefGroups: ev.bankRefGroupsRaw || null, historySources: ctx.extraBankRefHistory.map((h) => ({ label: h.label, takenAt: h.takenAt, rows: h.rows.length })),
   checksums: ev.checksums || {}, ledgerChecksum: ev.ledgerChecksum || null, certificateHash: ev.certificateHash || null,
   missingCollections: missing, warning: 'PRIVADO: contiene importes e IDs. No subir a GitHub ni compartir.',
 };
 fs.mkdirSync(outDir, { recursive: true });
 fs.writeFileSync(path.join(outDir, 'informe-privado.json'), JSON.stringify(priv, replacer, 1));
 const pub = Rec.publicReport({ generatedAt: priv.generatedAt, period: month, cutoff, ownerId: cloud.user_id, profileId: cloud.profile_key, status: cert.status, availableCents: cert.calculation && cert.calculation.ok ? cert.calculation.cents : null,
-  flags: priv.flags, gates: priv.gates, checksums: priv.checksums, certificateHash: priv.certificateHash, diffCount: ev.comparison && ev.comparison.diffs ? ev.comparison.diffs.length : 0, modules: ev.comparison && ev.comparison.modules ? ev.comparison.modules : {} });
+  flags: priv.flags, gates: priv.gates, checksums: priv.checksums, certificateHash: priv.certificateHash, diffCount: ev.comparison && ev.comparison.diffs ? ev.comparison.diffs.length : 0, modules: ev.comparison && ev.comparison.modules ? ev.comparison.modules : {}, bankRefSummary: ev.bankRefGroups ? ev.bankRefGroups.summary : null });
 fs.writeFileSync(path.join(outDir, 'informe-publico.json'), JSON.stringify(pub, replacer, 1));
 console.log('Estado: ' + priv.status + (priv.availableFormatted ? ' · Disponible ' + priv.availableFormatted : '') + ' · bloqueos: ' + priv.blockers.length);
 for (const b of priv.blockers.slice(0, 12)) console.log(' - ' + b);
+if (priv.bankRefGroups && priv.bankRefGroups.groups.length) {
+  const g = priv.bankRefGroups;
+  console.log('bancoRef repetido: ' + g.summary.groups + ' grupo(s) · ' + g.summary.reimportacion + ' reimportación (' + g.summary.reimportacionConfirmada + ' con evidencia independiente) · ' + g.summary.identidadInsuficiente + ' identidad insuficiente · importe en juego ' + Rec.formatCents(g.summary.surplusCents));
+  for (const x of g.groups) console.log('  · ' + x.key + ' (' + x.count + ' filas, ' + x.date + ', ' + Rec.formatCents(x.centsEach) + ') → ' + x.class + (x.confidence ? ' [' + x.confidence + ']' : ''));
+}
 console.log('Informes escritos en ' + path.resolve(outDir));
 process.exit(cert.certified ? 0 : 1);
