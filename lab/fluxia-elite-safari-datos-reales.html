@@ -965,7 +965,8 @@ async function loadCanonicalProfile(prefix,{preserveView=false}={}){
   csvAudit=previousSources.csvAudit
  }
  if((!backupFinance||backupFinance.profile!==prefix)&&typeof stageSameOriginHtmlAsAuthority==='function')stageSameOriginHtmlAsAuthority(prefix);
- rawSources={movimientos:Array.isArray(nextExtra.v2_movimientos)?nextExtra.v2_movimientos:Array.isArray(next.planRescate_v2_movimientos)?next.planRescate_v2_movimientos:[],fijos:Array.isArray(nextExtra.v2_fijos)?nextExtra.v2_fijos:[]};
+ // Never select stale legacy mirrors for operational bank and fixed-item matching.
+ rawSources={movimientos:Array.isArray(next.planRescate_v2_movimientos)?next.planRescate_v2_movimientos:[],fijos:Array.isArray(next.planRescate_v2_fijos)?next.planRescate_v2_fijos:[]};
  // Validated HTML remains a separate read-only source; cloud arrays are never overwritten.
  if(backupFinance?.owner===owner&&backupFinance?.profile===prefix)listSourceMode='html';
  // The read-only sourceMonthAudit runs during rendering, not at profile initialization.
