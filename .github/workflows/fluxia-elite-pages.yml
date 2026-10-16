@@ -51,6 +51,7 @@ jobs:
           node lab/qa/elite-rescue-link-bigint-v2049.cjs
           node lab/qa/elite-hucha-month-provisions-v2050.cjs
           node lab/qa/elite-bank-sign-convention-v2051.cjs
+          node lab/qa/elite-home-breakdown-v2052.cjs
           node lab/qa/elite-reconciliation-v2025.cjs
           node lab/qa/elite-integration-v2026.cjs
           node lab/qa/elite-evidence-cut-guard-v2027.cjs
