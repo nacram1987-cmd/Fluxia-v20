@@ -2773,8 +2773,8 @@ function renderAvailableCertification(){
  panel.append(el('p','periodHint','Solo lectura: un candidato por nombre no equivale a un ID de hucha almacenado en el uso. No se corrige ni certifica automáticamente.'));
  const rescueIssues=el('div','legacySettingList');
  const sourceNames=new Map();
- for(const h of auditHuchas){if(h&&typeof h.nombre==='string'){const name=h.nombre.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().trim();sourceNames.set(name,(sourceNames.get(name)||0)+1)}}
- const ambiguous=tempUses.filter(u=>{const name=String(u.provision||'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().trim();return (sourceNames.get(name)||0)!==1}).length;
+ for(const h of auditHuchas){if(h&&typeof h.nombre==='string'){const name=h.nombre.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();sourceNames.set(name,(sourceNames.get(name)||0)+1)}}
+ const ambiguous=tempUses.filter(u=>{const name=String(u.provision||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();return (sourceNames.get(name)||0)!==1}).length;
  if(ambiguous)rescueIssues.append(el('p','integrityWarning',ambiguous+' rescate(s) sin nombre de hucha único. Se requiere revisión manual, sin alta automática.'));
  const withoutId=tempUses.filter(u=>!String(u.id||'').trim()).length;
  if(withoutId)rescueIssues.append(el('p','integrityWarning',withoutId+' operación(es) sin ID propio. Se bloquea la asociación.'));
