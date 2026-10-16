@@ -111,3 +111,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: python3 AUDITORIA_ELITE/smoke-pages.py --attempts 6
+
+# QA rerun after v2.0.36 immutable Safari snapshot was restored; accounting records are unchanged.
