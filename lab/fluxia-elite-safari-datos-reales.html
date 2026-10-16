@@ -2811,7 +2811,8 @@ function availableCalculationReport(options={}){
  const engine=window.FluxiaEliteFinancialEngine,modsById=Object.fromEntries(mods.map(x=>[x.id,x]));
  const cloudComplete=typeof cloudFinanceSnapshot!=='undefined'&&cloudFinanceSnapshot?.owner===owner&&cloudFinanceSnapshot?.profile===activeProfile&&cloudFinanceSnapshot.complete;
  const snap=htmlSnapshotState();
- const useBackup=options.force==='html_backup'?true:options.force==='supabase'?false:snap.fresh&&snap.complete&&(!cloudComplete||backupFinance.sameOriginHtml===true||(typeof cloudReadAt==='string'&&Date.parse(backupFinance.when)>=Date.parse(cloudReadAt)));
+ // Live canonical Supabase collections win over cached HTML snapshots; explicit comparison may still select HTML.
+ const useBackup=options.force==='html_backup'?true:options.force==='supabase'?false:(!cloudComplete&&snap.fresh&&snap.complete);
  if(options.force==='html_backup'&&!(snap.fresh&&snap.complete))return {ok:false,blockers:['Falta una copia HTML reciente y completa del mismo perfil'],source:'blocked',ledger:[],issues:[],stats:{}};
  if(options.force==='supabase'&&!cloudComplete)return {ok:false,blockers:['Faltan colecciones actuales del mismo perfil en Supabase'],source:'blocked',ledger:[],issues:[],stats:{}};
  if(!cloudComplete&&!useBackup)return {ok:false,blockers:['Faltan colecciones actuales del mismo perfil. Actualiza los datos desde la nube o carga una copia reciente del HTML del mismo perfil.'],source:'blocked',ledger:[],issues:[],stats:{}};
