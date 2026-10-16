@@ -35,6 +35,17 @@
  function statusStorageKey(owner,profile){return 'fluxia_elite_bank_status_v1:'+encodeURIComponent(String(owner||''))+':'+encodeURIComponent(String(profile||''))}
  function readStatus(owner,profile,storage){try{const value=JSON.parse((storage||globalThis.localStorage).getItem(statusStorageKey(owner,profile))||'null');return value&&typeof value==='object'?value:null}catch{return null}}
  function saveStatus(owner,profile,status,storage){const target=storage||globalThis.localStorage,clean={message:String(status?.message||''),action:String(status?.action||''),checkedAt:String(status?.checkedAt||''),ok:!!status?.ok};target.setItem(statusStorageKey(owner,profile),JSON.stringify(clean));return clean}
+ function normalizeConnectionStatus(row,now=Date.now()){
+  const bank=String(row?.banco||row?.bank||'');
+  const expires=row?.valido_hasta||row?.validUntil||null;
+  const until=expires?Date.parse(expires):NaN;
+  const expired=row?.caducado===true||(Number.isFinite(until)&&until<=now);
+  const hub046=!!(row?.limite_diario||/HUB046|Allowed number of accesses|límite de consultas/i.test(String(row?.ultimo_error||row?.error||'')));
+  const hasAccounts=(Array.isArray(row?.cuentas)&&row.cuentas.length>0)||(Array.isArray(row?.account_uids)&&row.account_uids.length>0);
+  const connected=!expired&&(row?.permiso_valido===true||(Number.isFinite(until)&&until>now&&hasAccounts));
+  return {bank,connected,limited:connected&&hub046,canRefresh:connected&&!hub046&&row?.operativo!==false,expired,accounts:Array.isArray(row?.cuentas)?row.cuentas.length:0,lastSync:row?.ultima_sync_fondo||null,warning:hub046?'Límite temporal de consultas; la conexión sigue vigente y los datos previamente obtenidos permanecen disponibles.':String(row?.ultimo_error||'')};
+ }
+ function normalizeConnectionStatuses(rows,now=Date.now()){return (Array.isArray(rows)?rows:[]).map(row=>normalizeConnectionStatus(row,now))}
  function maskIban(value){const raw=String(value||'').replace(/\s/g,'');return raw?('•••• '+raw.slice(-4)):''}
  function normalizeBalances(rows,checkedAt){
   return (Array.isArray(rows)?rows:[]).map(row=>{
@@ -56,6 +67,6 @@
   for(const row of normalizeBalances(rows))if(row.disponible&&!row.desactualizado){const currency=row.moneda;totals[currency]=Math.round(((totals[currency]||0)+row.importe)*100)/100}
   return totals
  }
- const api={version:'1.4.0',source:'Fluxia-banco',configure,call,normalizeRows,mergeRows,bankIdentity,inboxStorageKey,readInbox,saveInbox,statusStorageKey,readStatus,saveStatus,maskIban,normalizeBalances,balancesStorageKey,readBalances,saveBalances,availableBalanceTotals};
+ const api={version:'1.4.0',source:'Fluxia-banco',configure,call,normalizeRows,mergeRows,bankIdentity,normalizeConnectionStatus,normalizeConnectionStatuses,inboxStorageKey,readInbox,saveInbox,statusStorageKey,readStatus,saveStatus,maskIban,normalizeBalances,balancesStorageKey,readBalances,saveBalances,availableBalanceTotals};
  if(typeof module!=='undefined'&&module.exports)module.exports=api;if(root)root.FluxiaEliteBankConnector=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
