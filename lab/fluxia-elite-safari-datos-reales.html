@@ -944,6 +944,7 @@ async function loadCanonicalProfile(prefix,{preserveView=false}={}){
   motherAudit=previousSources.motherAudit;
   csvAudit=previousSources.csvAudit
  }
+ if(!backupFinance||backupFinance.profile!==prefix)stageSameOriginHtmlAsAuthority(prefix);
  rawSources={movimientos:Array.isArray(nextExtra.v2_movimientos)?nextExtra.v2_movimientos:Array.isArray(next.planRescate_v2_movimientos)?next.planRescate_v2_movimientos:[],fijos:Array.isArray(nextExtra.v2_fijos)?nextExtra.v2_fijos:[]};
  // The read-only sourceMonthAudit runs during rendering, not at profile initialization.
  if(preserveView){page=previousView.page;search=previousView.search;period=previousView.period}
@@ -1688,6 +1689,35 @@ async function auditMotherFile(file){
  listSourceMode='html';
  fullProfileAudit={ownerId:owner,profile:activeProfile,ranAt:new Date().toISOString(),modules:stagedReport};
  compareMotherRows(parsed.rows,'archivo privado exportado del HTML')
+}
+function stageSameOriginHtmlAsAuthority(profilePrefix){
+ // Same-origin Safari localStorage is read-only from Elite. Production HTML is untouched.
+ if(!owner||!token||!/^p_usr-[a-f0-9-]{36}__$/.test(profilePrefix))return false;
+ const id=profilePrefix.slice(2,-2),stem='fluxia_user_'+id+'__';
+ const keys={};const required=['ingresos','fijos','movimientos','provisiones','compartidos','financiaciones','usos'];
+ try{
+  for(const item of required){
+   const k=stem+'v2_'+item,raw=localStorage.getItem(k);
+   if(typeof raw!=='string')return false;
+   const parsed=JSON.parse(raw);
+   if(!Array.isArray(parsed)||parsed.length>100000||parsed.some(r=>!r||typeof r!=='object'||Array.isArray(r)))return false;
+   keys[k]=raw;
+  }
+  for(const item of ['efectivo','presupuestos','categorias']){
+   const k=stem+'v2_'+item,raw=localStorage.getItem(k);
+   if(raw!==null)keys[k]=raw;
+  }
+ }catch{return false}
+ const backup={v:'fluxia-perfil-v1',when:new Date().toISOString(),profile:{id},keys};
+ try{
+  const validated=validatePrivateBackup(backup,id);
+  const stagedModules=readBackupFinancialModules(backup,id);
+  const stagedSources=readPrivateBackupSources(backup,id);
+  if(!['ingresos','fijos','variables','huchas','compartidos','financiaciones'].every(k=>Array.isArray(stagedModules[k]?.records))||!Array.isArray(stagedSources.v2_usos?.value))return false;
+  backupFinance={owner,profile:profilePrefix,when:validated.when,sources:stagedSources,modules:stagedModules,cloudSnapshot:financialCloudSnapshot(),sameOriginHtml:true};
+  fullProfileAudit={ownerId:owner,profile:profilePrefix,ranAt:new Date().toISOString(),modules:summarizeProfileBackup(backup,id),sameOriginHtml:true};
+  return true
+ }catch{return false}
 }
 function renderMotherComparison(){
  const box=el('section','integrityPanel');box.append(el('h3',null,'🧬 Comparación con el HTML madre del mismo perfil'));
