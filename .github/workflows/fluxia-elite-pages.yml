@@ -117,3 +117,5 @@ jobs:
 # Run v2.0.41 QA after immutable snapshot commit; release is verified only after full suite passes.
 
 # Post-snapshot QA verification for v2.0.42 parity audit; no financial data changes.
+
+# Validate v2.0.43 parity fix after its immutable HTML snapshot was committed.
