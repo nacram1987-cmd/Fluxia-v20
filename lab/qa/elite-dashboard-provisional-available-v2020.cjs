@@ -37,7 +37,7 @@ assert.equal(snapshot.provisionalLinks,1);
 assert.equal(snapshot.history[0].estado,'provisional');
 const moneyToCents=value=>BigInt(Math.round(Number(value)*100));
 const calcSource=between('function availableAccountingMonth(row,ym,assumedYear){','\nfunction renderAvailableCertification()');
-const certSource=between('function availableCertificationReport(){','\nfunction availableCalculationReport()');
+const certSource=between('function availableCertificationReport(){','\nfunction availableCalculationReport(options={})');
 const rows={
  ingresos:[{id:'income',fecha:'2026-10-01',importe:1000}],
  fijos:[{id:'fixed',mes:'octubre',importe:200},{id:'old-fixed',mes:'septiembre',importe:9000}],
