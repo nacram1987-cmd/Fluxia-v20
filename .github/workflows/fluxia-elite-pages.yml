@@ -123,3 +123,5 @@ jobs:
 # Revalidate v2.0.44 after immutable snapshot and bank alias matching were committed.
 
 # Verify v2.0.45 HTML-first financial calculation after immutable snapshot commit.
+
+# Verify Elite v2.0.45 with its synchronized HTML authority snapshot; production HTML stays untouched.
