@@ -1295,3 +1295,8 @@ La respuesta y el error de **Bancos → Sincronizar bancos** deben mantenerse en
 ## Adenda Élite v2.0.27 — corte común obligatorio en conciliación privada (16/10/2026)
 
 La CLI privada `lab/tools/elite-reconcile-cli.cjs` debe bloquear la salida si el mes `accounting_month` de la exportación nube difiere de `--month`, si `--cutoff` o las fechas de exportación no son ISO con zona horaria, o si el corte declarado y las exportaciones HTML/nube difieren en más de una hora. La discrepancia se detecta antes de crear informes; no basta con un aviso. Esto protege el certificado frente a copias de meses/cortes diferentes. No cambia reglas contables, no escribe a Supabase y no permite certificar sin los demás criterios existentes. Ejecutar `node lab/qa/elite-evidence-cut-guard-v2027.cjs` en local y CI.
+
+
+## Adenda 16/10/2026 · Disponible y rescates de hucha en Élite LAB v2.0.28
+
+La fórmula autoritativa del Disponible coincide con el HTML estable: ingresos contabilizables − gastos reales (fijos, financiación y variables) − provisiones mensuales previstas − exceso de aportaciones + impacto de Compartidos. Los rescates y reposiciones entre cuenta y hucha son traspasos internos; nunca se suman como ingresos ni incrementan Disponible. Se conservan en el historial financiero de la hucha con impacto Disponible de cero. Una pensión pendiente de cobro no se anticipa. No modificar movimientos reales de Supabase para forzar paridad; una conciliación permanece pendiente si faltan la copia HTML del mismo perfil/corte, IDs verificables de hucha o conciliación de movimientos repetidos.

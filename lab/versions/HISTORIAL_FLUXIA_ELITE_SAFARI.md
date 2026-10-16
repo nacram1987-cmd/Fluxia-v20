@@ -4,6 +4,14 @@ Fecha: 2026-10-15
 # Fluxia Élite BETA · Historial Safari (independiente de PWA HTML y SwiftUI)
 Fecha: 2026-10-15
 
+## v2.0.28 · conciliación del Disponible con rescates internos (16/10/2026)
+
+- Se alinea el Disponible LAB con la regla del HTML estable: un rescate o reposición de hucha se mantiene en su historial y no se contabiliza como ingreso ni aumenta el Disponible.
+- La pensión no cobrada sigue excluida del Disponible.
+- Se actualiza el libro mayor para mostrar impacto cero de los rescates internos, con el importe y estado conservados para auditar la hucha.
+- HTML estable y registros financieros de Supabase sin cambios. La conciliación real se mantiene pendiente hasta resolver evidencias de movimientos repetidos y vínculos de huchas no verificables; no se fuerza ningún asiento.
+- Regresión de octubre: el rescate de 150 € deja de sumar al Disponible; el efecto de gastos e ingresos es idéntico con o sin rescate.
+
 ## v2.0.06 · cotejo de Dinero en mano y aislamiento de fuentes (15/10/2026)
 
 **Qué cambia y dónde verlo**

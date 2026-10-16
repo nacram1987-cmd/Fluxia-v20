@@ -118,23 +118,25 @@ t('regresion', '06c aportación inferior: genera pendiente pero NO aumenta el Di
   assert.equal(pending.impactCents, 0n);
 });
 const rescue = (over = {}) => ({ id: 'u1', tipo: 'temporal', fecha: '2026-10-15', importe: 150, repuesto: 0, provisionId: 'h1', ...over });
-t('regresion', '07 rescate temporal pendiente: suma su saldo pendiente (no es ingreso nuevo)', () => {
+t('regresion', '07 rescate temporal pendiente: se conserva en huchas y no aumenta el Disponible', () => {
   const r = calc({ huchas: [hucha()], uses: [rescue()] });
-  assert.equal(r.cents, -10000n + 15000n);
+  assert.equal(r.cents, -10000n, 'el traspaso interno no se suma al Disponible');
   assert.equal(r.trace.incomeCents, 0n, 'transferencia interna, no ingreso');
+  assert.equal(r.trace.pendingHuchaRescuesCents, 15000n, 'el saldo pendiente queda trazado como informativo');
   assert.equal(r.ledger.find((e) => e.module === 'usos').status, 'pendiente-de-reponer');
+  assert.equal(r.ledger.find((e) => e.module === 'usos').impactCents, 0n);
 });
-t('regresion', '07b reposición parcial reduce el efecto; reposición completa lo anula', () => {
+t('regresion', '07b las reposiciones parciales y completas no cambian el Disponible', () => {
   const partial = calc({ huchas: [hucha()], uses: [rescue({ repuesto: 60, reposiciones: [{ id: 'r1', fecha: '2026-10-20', importe: 60 }] })] });
-  assert.equal(partial.cents, -10000n + 9000n);
+  assert.equal(partial.cents, -10000n);
   assert.equal(partial.ledger.find((e) => e.module === 'usos').status, 'reposicion-parcial');
   const full = calc({ huchas: [hucha()], uses: [rescue({ repuesto: 150, reposiciones: [{ id: 'r1', fecha: '2026-10-20', importe: 150 }] })] });
   assert.equal(full.cents, -10000n);
   assert.equal(full.ledger.find((e) => e.module === 'usos').status, 'reposicion-completa');
 });
 t('regresion', '07c rescate parcial y total de la hucha (40 € y 100 € de 100 €) siguen la misma regla', () => {
-  assert.equal(calc({ huchas: [hucha()], uses: [rescue({ importe: 40 })] }).cents, -10000n + 4000n);
-  assert.equal(calc({ huchas: [hucha()], uses: [rescue({ importe: 100 })] }).cents, -10000n + 10000n);
+  assert.equal(calc({ huchas: [hucha()], uses: [rescue({ importe: 40 })] }).cents, -10000n);
+  assert.equal(calc({ huchas: [hucha()], uses: [rescue({ importe: 100 })] }).cents, -10000n);
 });
 t('regresion', '07d uso definitivo no aumenta el Disponible', () => {
   assert.equal(calc({ huchas: [hucha()], uses: [rescue({ tipo: 'definitivo', importe: 80 })] }).cents, -10000n);
@@ -163,7 +165,7 @@ t('regresion', '10 gasto o rescate retroactivo afecta a su mes histórico y no a
   const retro = { ...base, variableRows: [...base.variableRows, { id: 'v-sep', mes: '2026-09', fecha: '2026-09-20', importe: 99 }], uses: [rescue({ id: 'u-sep', fecha: '2026-09-10', mes: 'septiembre' })] };
   assert.equal(calc(retro).cents, octBefore, 'octubre intacto');
   const sepWith = calc(retro, '2026-09').cents, sepWithout = calc({ huchas: [hucha()] }, '2026-09').cents;
-  assert.equal(sepWith - sepWithout, -9900n + 15000n, 'septiembre recoge el gasto y el rescate retroactivos');
+  assert.equal(sepWith - sepWithout, -9900n, 'septiembre recoge el gasto; el rescate retroactivo no altera el Disponible');
 });
 t('regresion', '11 Compartidos: el pago total adelantado cuenta una sola vez por gastoId', () => {
   const r = calc({ sharedRows: [

@@ -2,7 +2,7 @@ name: Fluxia Elite - QA and verified Pages deployment
 # Keep LAB and immutable source verification on each release repair.
 on:
   push:
-    branches: [pages-v9731-real-final, lab/elite-v2.0.27-code]
+    branches: [pages-v9731-real-final, lab/elite-v2.0.27-code, lab/elite-v2.0.28-code]
     paths:
       - '.github/workflows/fluxia-elite-pages.yml'
       - 'lab/index.html'
