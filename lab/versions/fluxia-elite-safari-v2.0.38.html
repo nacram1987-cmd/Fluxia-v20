@@ -2117,7 +2117,7 @@ function availableRescueHuchaLink(use,huchas,uses){
  if(direct.kind!=='unverified')return direct;
  // A separate RLS-protected Supabase identity link is valid only if all immutable
  // operation fields and the currently active provision agree. Never mutate usages.
- const record=rescueIdentityLinks.get(String(use?.id??'').trim());
+ const record=typeof rescueIdentityLinks!=='undefined'&&rescueIdentityLinks instanceof Map?rescueIdentityLinks.get(String(use?.id??'').trim()):null;
  if(record&&Array.isArray(uses)&&uses.filter(row=>String(row?.id??'').trim()===String(use?.id??'').trim()).length===1){
   const normalize=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
   const matches=huchas.filter(h=>String(h?.id??'').trim()===record.hucha_id);
