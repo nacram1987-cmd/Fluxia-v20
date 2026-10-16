@@ -114,4 +114,4 @@ jobs:
 
 # QA rerun on v2.0.38 with identical immutable snapshot; financial records unchanged.
 
-# Run v2.0.40 QA after immutable snapshot commit; do not run QA on intermediate HTML-only commits.
+# Run v2.0.41 QA after immutable snapshot commit; release is verified only after full suite passes.
