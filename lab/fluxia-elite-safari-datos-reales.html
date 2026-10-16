@@ -1219,8 +1219,30 @@ function showBanksAudit(){
  d.append(el('p','legacySuccess','✓ Élite reutiliza el conector bancario original Fluxia-banco. La conexión se consulta con tu sesión actual y nunca se abre una segunda cuenta bancaria.'));
  d.append(el('p','editIntro','Pulsa «Sincronizar bancos» para actualizar la bandeja privada de este usuario/perfil. Verás los cargos reales recibidos; aquí quedan conciliados como nuevos, ya contabilizados, excluidos o por revisar. No se cargan al Disponible hasta validar la misma identidad en el libro.'));
  const source=el('a','motherLink','Abrir HTML original ↗');source.href='https://nacram1987-cmd.github.io/Fluxia-v20/';source.target='_blank';source.rel='noopener noreferrer';d.append(source);
- const actions=el('div','editActions'),check=el('button','legacyPrimary','Comprobar conexión bancaria'),sync=el('button','monthApply','Sincronizar bancos'),balances=el('button','monthApply','Actualizar saldos');check.type='button';sync.type='button';balances.type='button';
  const connector=window.FluxiaEliteBankConnector;
+ const connectionsPanel=el('section','integrityPanel');connectionsPanel.id='eliteBankConnectionPanel';
+ connectionsPanel.append(el('h3',null,'☁️ Nube y conexiones bancarias'));
+ const cloudState=el('p','legacySuccess',token&&owner?'✓ Nube: sesión autenticada · '+String(owner).slice(0,8)+'…':'Nube: inicia sesión para comprobar la conexión');
+ connectionsPanel.append(cloudState);
+ const bankStates=el('div','bankConnectionStates');bankStates.append(el('p','periodHint','Consultando el estado de CaixaBank y Revolut…'));
+ connectionsPanel.append(bankStates);d.append(connectionsPanel);
+ const drawConnections=(rows)=>{
+  bankStates.replaceChildren();
+  const normalized=connector?.normalizeConnectionStatuses?.(rows)||[];
+  if(!normalized.length){bankStates.append(el('p','periodHint','No se han devuelto conexiones bancarias para esta sesión.'));return}
+  normalized.forEach(bank=>{
+   const status=bank.connected?(bank.limited?'Conectado · consultas limitadas':'Conectado'):'No conectado';
+   const line=el('p',bank.connected?'legacySuccess':'periodHint',(bank.connected?'✓ ':'○ ')+bank.bank+' — '+status+' · '+bank.accounts+' cuenta(s)');
+   bankStates.append(line);
+   if(bank.lastSync)bankStates.append(el('p','periodHint','Última sincronización registrada: '+new Date(bank.lastSync).toLocaleString('es-ES',{dateStyle:'short',timeStyle:'short',timeZone:'Europe/Madrid'})));
+  });
+ };
+ if(token&&owner&&connector){
+  Promise.resolve().then(async()=>{await ensureFreshToken();connector.configure({base:BASE,key:KEY,token});return connector.call('estado',{perfil:activeProfile})})
+   .then(result=>drawConnections(result.conexiones||[]))
+   .catch(err=>{bankStates.replaceChildren(el('p','periodHint','No se pudo comprobar el estado en vivo: '+String(err?.message||err)))});
+ }
+ const actions=el('div','editActions'),check=el('button','legacyPrimary','Comprobar conexión bancaria'),sync=el('button','monthApply','Sincronizar bancos'),balances=el('button','monthApply','Actualizar saldos');check.type='button';sync.type='button';balances.type='button';
  const saved=connector&&owner?connector.readStatus(owner,activeProfile):null;
  const status=saved?.message||extraFinance?.bankConnectorUiStatus||'Aún no se ha consultado el conector en esta sesión.';
  const checkedAt=saved?.checkedAt?new Date(saved.checkedAt).toLocaleString('es-ES',{dateStyle:'short',timeStyle:'short',timeZone:'Europe/Madrid'}):'';
@@ -1252,7 +1274,7 @@ async function runBankConnector(action,body,button,state){
   }
   const result=await connector.call(action,payload);let responseMessage='';
   if(action==='estado'){
-   const active=(result.conexiones||[]).filter(row=>row.permiso_valido||row.operativo);
+   const active=connector.normalizeConnectionStatuses(result.conexiones||[]).filter(row=>row.connected);
    responseMessage='✓ Conexión consultada: '+active.length+' banco(s) con permiso operativo de '+(result.nBancos||0)+'. '+(result.version||'');
   }else if(action==='saldos'){
    const checkedAt=new Date().toISOString(),errors=Array.isArray(result.avisos)?result.avisos.map(String):result.avisos?[String(result.avisos)]:[];
