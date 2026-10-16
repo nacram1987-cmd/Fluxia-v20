@@ -1,3 +1,11 @@
+# Élite v2.0.48 — carga ejecutable y separación de fuentes (16/10/2026)
+
+- La carga asíncrona debe compilar y ejecutarse en QA. Probar también el camino sin almacenamiento HTML.
+- `canon` devuelve únicamente la colección nube; las copias HTML se consultan por su adaptador explícito. Nunca sustituir la referencia nube con HTML antes de comparar ni fabricar coincidencia comparando HTML consigo mismo.
+- Un único adaptador valida conjuntamente las seis colecciones y usos HTML del perfil. Conserva efectivo y presupuestos. No escribe en HTML ni en Supabase.
+- La copia HTML del mismo origen validada es referencia operativa; una exportación anterior no desplaza automáticamente una nube completa más reciente. Los cotejos forzados conservan ambas fuentes.
+- Las diferencias actuales entre copia exportada y nube no autorizan borrados ni importaciones masivas. Estado provisional hasta verificar el mismo corte. Esta reparación no certifica conciliación completa ni Safari físico.
+
 # Corrección prioritaria · Élite v2.0.21 · 15/10/2026
 
 Sustituye el bloqueo obligatorio por copia HTML de la adenda v2.0.20. Se verificó que existen colecciones actuales en `profile:<id>:v2_*`; `updated_at` puede reflejar inserción antigua y `t` la revisión del contenido. No afirmar que faltan datos actuales por consultar solo espejos legacy.

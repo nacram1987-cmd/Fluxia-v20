@@ -47,6 +47,7 @@ jobs:
         run: |
           node lab/qa/elite-dashboard-provisional-available-v2020.cjs
           node lab/qa/elite-modern-cloud-v2021.cjs
+          node lab/qa/elite-load-source-v2048.cjs
           node lab/qa/elite-reconciliation-v2025.cjs
           node lab/qa/elite-integration-v2026.cjs
           node lab/qa/elite-evidence-cut-guard-v2027.cjs
