@@ -36,7 +36,7 @@ assert(html.includes('name="fluxia-elite-version" content="'+actualVersion+'"'))
 assert(html.includes('lab/versions/fluxia-elite-safari-v2.0.14.html')===false);
 assert(html.includes('function renderBankInboxRows()'));
 assert(html.includes("const rows=canon(mods.find(module=>module.id==='variables'))||[];"));
-assert(html.includes('function availableCalculationReport()'));
+assert(html.includes('function availableCalculationReport(options={})'));
 assert(html.includes("money(Number(calculation.cents)/100)"));
 assert(html.includes('sharedImpactCents:sharedImpact,pendingHuchaRescuesCents:pendingRescues'));
 assert(html.includes('Impacto de Compartidos'));
