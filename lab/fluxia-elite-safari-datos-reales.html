@@ -2743,7 +2743,7 @@ function renderAvailableCertification(){
  // v2.0.31: expose candidate rescue identities without certifying name-only links.
  panel.append(el('h4','certSub','Rescates temporales · identidades'));
  const auditHuchas=canon(mods.find(m=>m.id==='huchas'))||[];
- const auditUses=canon(mods.find(m=>m.id==='usos'))||[];
+ const auditUses=Array.isArray(extraFinance.planRescate_v2_usos)?extraFinance.planRescate_v2_usos:Array.isArray(extraFinance.v2_usos)?extraFinance.v2_usos:[];
  const tempUses=auditUses.filter(u=>u&&u.tipo==='temporal'&&String(u.fecha||'').slice(0,7)===selectedMonth);
  if(!tempUses.length)panel.append(el('p','periodHint','No hay rescates temporales del mes en la fuente activa.'));
  for(const use of tempUses){
