@@ -19,6 +19,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { loadEliteFunctions, MODS } = require('../qa/lib/elite-html-functions.cjs');
+const { validateEvidenceCut } = require('./elite-evidence-cut-guard.cjs');
 
 function arg(name, fallback) {
   const i = process.argv.indexOf('--' + name);
@@ -51,18 +52,19 @@ for (const [key, src] of Object.entries(cloud.sources)) if (src && src.available
 ctx.sourceUpdated = cloud.source_updated || {};
 ctx.cloudReadAt = typeof cloud.exported_at === 'string' ? cloud.exported_at : '';
 ctx.cloudFinanceSnapshot = { owner: cloud.user_id, profile: cloud.profile_key, complete: missing.length === 0 && Array.isArray(ctx.extraFinance.planRescate_v2_usos) };
+let acceptedHtmlCut = null;
 if (backup) {
   try {
     const profile = cloud.profile_key.slice(2, -2);
     const parsed = S.api.validatePrivateBackup(backup, profile);
+    acceptedHtmlCut = parsed.when;
     ctx.backupFinance = { owner: cloud.user_id, profile: cloud.profile_key, when: parsed.when, sources: S.api.readPrivateBackupSources(backup, profile), modules: S.api.readBackupFinancialModules(backup, profile) };
   } catch (e) { console.error('AVISO: copia del HTML rechazada (' + e.message + '). Se informa sin comparación HTML↔nube.'); }
 }
 
-// El corte real de la evidencia lo fijan las propias copias (fecha de la copia HTML o lectura de la nube), no el reloj.
-// --cutoff solo se contrasta: si difiere más de 1 h de la evidencia, se avisa y queda registrado.
-const evidenceCut = Date.parse(backup && backup.when ? backup.when : (cloud.exported_at || ''));
-if (Number.isFinite(evidenceCut) && Math.abs(evidenceCut - Date.parse(cutoff)) > 3600000) console.error('AVISO: --cutoff difiere más de 1 h de la fecha de las copias; el corte de la evidencia es el de las copias.');
+// Un certificado solo compara un periodo y corte común. La discrepancia ahora bloquea el informe.
+try { validateEvidenceCut({ month, cutoff, cloudMonth: cloud.accounting_month, cloudExportedAt: cloud.exported_at, htmlSnapshotAt: acceptedHtmlCut }); }
+catch (e) { fail('Corte de evidencia incompatible: ' + e.message); }
 if (arg('bank-scope') === 'none') S.storage.setItem('fluxia_elite_recon_bankscope_v1:' + encodeURIComponent(cloud.user_id) + ':' + encodeURIComponent(cloud.profile_key), JSON.stringify({ scope: 'none', month }));
 const cert = S.api.availableCertificationReport();
 const Rec = S.reconciliation;
@@ -80,10 +82,4 @@ const priv = {
 };
 fs.mkdirSync(outDir, { recursive: true });
 fs.writeFileSync(path.join(outDir, 'informe-privado.json'), JSON.stringify(priv, replacer, 1));
-const pub = Rec.publicReport({ generatedAt: priv.generatedAt, period: month, cutoff, ownerId: cloud.user_id, profileId: cloud.profile_key, status: cert.status, availableCents: cert.calculation && cert.calculation.ok ? cert.calculation.cents : null,
-  flags: priv.flags, gates: priv.gates, checksums: priv.checksums, certificateHash: priv.certificateHash, diffCount: ev.comparison && ev.comparison.diffs ? ev.comparison.diffs.length : 0, modules: ev.comparison && ev.comparison.modules ? ev.comparison.modules : {} });
-fs.writeFileSync(path.join(outDir, 'informe-publico.json'), JSON.stringify(pub, replacer, 1));
-console.log('Estado: ' + priv.status + (priv.availableFormatted ? ' · Disponible ' + priv.availableFormatted : '') + ' · bloqueos: ' + priv.blockers.length);
-for (const b of priv.blockers.slice(0, 12)) console.log(' - ' + b);
-console.log('Informes escritos en ' + path.resolve(outDir));
-process.exit(cert.certified ? 0 : 1);
+const pub = Rec.publicRepo

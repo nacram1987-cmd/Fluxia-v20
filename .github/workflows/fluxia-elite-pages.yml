@@ -1,7 +1,7 @@
 name: Fluxia Elite - QA and verified Pages deployment
 on:
   push:
-    branches: [pages-v9731-real-final]
+    branches: [pages-v9731-real-final, lab/elite-v2.0.27-code]
     paths:
       - '.github/workflows/fluxia-elite-pages.yml'
       - 'lab/index.html'
@@ -57,6 +57,8 @@ jobs:
         run: node lab/qa/elite-banking-available-v2012.cjs
       - name: Verify Élite version header and release guards
         run: node lab/qa/elite-header-actions-v1994.cjs
+      - name: Verify v2.0.27 same-cutoff reconciliation guard
+        run: node lab/qa/elite-evidence-cut-guard-v2027.cjs
       - run: node lab/qa/elite-release-guard-v1998.cjs
       - name: Preserve v97.66 historical artifacts and current stable independently
         run: |

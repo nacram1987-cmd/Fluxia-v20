@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - pages-v9731-real-final
+      - 'lab/**'
     paths:
       - 'lab/fluxia-elite-safari-datos-reales.html'
       - 'lab/js/fluxia-espejo-csv-v1.js'
@@ -72,6 +73,8 @@ jobs:
         run: node lab/qa/elite-reconciliation-v2025.cjs
       - name: Integración v2.0.26 y huecos de corte (offline, fixtures sintéticas)
         run: node lab/qa/elite-integration-v2026.cjs
+      - name: Evidencia de mismo periodo y corte (offline, fixtures sintéticas)
+        run: node lab/qa/elite-evidence-cut-guard-v2027.cjs
       - name: Motor Disponible HTML completo (offline)
         run: node lab/qa/elite-financial-engine-v1977.cjs
       - name: Huchas por fuente y regresiones recientes (offline)
