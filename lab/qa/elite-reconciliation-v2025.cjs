@@ -291,7 +291,7 @@ t('libro', 'el libro mayor explica el total al céntimo en un escenario compuest
   const check = R.verifyLedger(r.ledger, r.cents);
   assert.equal(check.ok, true);
   assert.equal(check.deltaCents, 0n);
-  assert.equal(r.cents, 200000n - 70000n - 4137n + 310n - 12050n - 10000n - 1000n - 6000n + 15000n);
+  assert.equal(r.cents, 200000n - 70000n - 4137n + 310n - 12050n - 10000n - 1000n - 6000n, 'rescate interno preservado en el ledger con impacto Disponible cero');
 });
 t('libro', 'propiedad: 200 escenarios aleatorios, el libro siempre suma exactamente el resultado', () => {
   let seed = 20261015;
