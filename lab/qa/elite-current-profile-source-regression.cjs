@@ -1,0 +1,11 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'..','fluxia-elite-safari-datos-reales.html'),'utf8');
+assert.match(html,/const cloudAliases=cloudProfileAliases\(prefix\),modernKeys=Object\.keys\(cloudAliases\)/);
+assert.match(html,/const modernTargets=new Set\(modernKeys\.filter/);
+assert.match(html,/if\(!cloudAliases\[row\.clave\]&&supersededLegacyCloudKey\(key,modernTargets\)\)continue/);
+assert.match(html,/rawSources=\{movimientos:Array\.isArray\(next\.planRescate_v2_movimientos\)\?next\.planRescate_v2_movimientos:\[\],fijos:Array\.isArray\(next\.planRescate_v2_fijos\)\?next\.planRescate_v2_fijos:\[\]\}/);
+assert.doesNotMatch(html,/rawSources=\{movimientos:Array\.isArray\(nextExtra\.v2_movimientos\)/);
+console.log('PASS: Elite operational bank/fixed sources follow current authenticated profile data, not stale mirrors');
