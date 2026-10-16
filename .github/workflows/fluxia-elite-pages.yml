@@ -113,3 +113,5 @@ jobs:
       - run: python3 AUDITORIA_ELITE/smoke-pages.py --attempts 6
 
 # QA rerun on v2.0.38 with identical immutable snapshot; financial records unchanged.
+
+# Recheck v2.0.39 only after immutable LAB snapshot has been committed.
