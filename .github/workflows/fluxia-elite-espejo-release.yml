@@ -1,11 +1,11 @@
 name: Fluxia Élite · ZIP Safari completo
 on:
   push:
-    branches: [pages-v9731-real-final]
+    branches: [pages-v9731-real-final, lab/elite-v2.0.28-code]
     paths:
       - 'lab/fluxia-elite-safari-datos-reales.html'
       - 'lab/versions/fluxia-elite-safari-v*.html'
-      - 'CHECKLIST_ELITE_v2.0.21.md'
+      - 'CHECKLIST_ELITE_v2.0.28.md'
       - 'lab/js/**'
       - 'lab/qa/**'
       - '.github/workflows/fluxia-elite-espejo-release.yml'
@@ -35,7 +35,9 @@ jobs:
           cp -a lab/qa "$ROOT/lab/"
           cp fluxia-icon.png "$ROOT/"
           cp AGENTS.md PROMPT_MAESTRO.md "$ROOT/"
-          cp CHECKLIST_ELITE_v2.0.21.md "$ROOT/"
+          cp CHECKLIST_ELITE_v2.0.28.md "$ROOT/"
+          cp README_ELITE_v2.0.28.md CHANGELOG_ELITE_v2.0.28.md INFORME_PRUEBAS_v2.0.28.md "$ROOT/"
+          cp AUDITORIA_CONCILIACION_v2.0.28.md "$ROOT/AUDITORIA/"
           cp AUDITORIA_ELITE/CONTRATO_PARIDAD_HTML_MADRE_2026-10-14.md "$ROOT/AUDITORIA/"
           cat > "$ROOT/README.txt" <<EOF
           FLUXIA ÉLITE BETA Safari v$VERSION — PAQUETE LAB DE AUDITORÍA
