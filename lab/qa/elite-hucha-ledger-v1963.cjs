@@ -63,7 +63,8 @@ assert.deepEqual({...ctx.cloudProfileAliases('invalid')},{});
 assert.equal(aliases['profile:usr-068a982d-9638-40cc-8b8c-a595534ab36d:v2_efectivo'],'v2_efectivo');
 assert.equal(aliases['profile:usr-068a982d-9638-40cc-8b8c-a595534ab36d:v2_movimientos'],'planRescate_v2_movimientos');
 assert.equal(ctx.supersededLegacyCloudKey('planRescate_v2_movimientos',new Set(['planRescate_v2_movimientos'])),true);
-assert.match(html,/rawSources=\{movimientos:Array\.isArray\(nextExtra\.v2_movimientos\).*next\.planRescate_v2_movimientos/);
+assert.match(html,/rawSources=\{movimientos:Array\.isArray\(next\.planRescate_v2_movimientos\)\?next\.planRescate_v2_movimientos:\[\],fijos:Array\.isArray\(next\.planRescate_v2_fijos\)/);
+assert(!/rawSources=\{movimientos:Array\.isArray\(nextExtra\.v2_movimientos\)/.test(html),"rawSources no vuelve a usar espejos antiguos");
 assert.match(html,/renderWalletLinkAudit\(wallet,variableRows,useRows\.present\?useRows\.value:null\)/);
 
 assert.equal(ctx.supersededLegacyCloudKey('planRescate_v2_efectivo',new Set(['v2_efectivo'])),true);
