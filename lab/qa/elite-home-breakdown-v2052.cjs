@@ -10,9 +10,7 @@ const loadUmd = require('./load-umd.cjs');
 const html = fs.readFileSync(path.join(__dirname, '../fluxia-elite-safari-datos-reales.html'), 'utf8');
 const engine = loadUmd('../js/fluxia-elite-financial-engine-v1.js');
 
-// versión visible, constante y novedades coherentes
-assert(html.includes('ÉLITE BETA · v2.0.52'));
-assert(html.includes("const ELITE_SAFARI_VERSION='2.0.52';"));
+// la novedad 2.0.52 sigue registrada en el historial (la versión visible la comprueban las pruebas de cada release)
 assert(html.includes(" ['2.0.52','Inicio: nueva tarjeta «Así sale tu Disponible»"));
 
 // se muestra en Inicio, justo después de la barra de fuente
