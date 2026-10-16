@@ -1220,6 +1220,7 @@ function showBanksAudit(){
  d.append(el('p','legacySuccess','✓ Élite reutiliza el conector bancario original Fluxia-banco. La conexión se consulta con tu sesión actual y nunca se abre una segunda cuenta bancaria.'));
  d.append(el('p','editIntro','Pulsa «Sincronizar bancos» para actualizar la bandeja privada de este usuario/perfil. Verás los cargos reales recibidos; aquí quedan conciliados como nuevos, ya contabilizados, excluidos o por revisar. No se cargan al Disponible hasta validar la misma identidad en el libro.'));
  const source=el('a','motherLink','Abrir HTML original ↗');source.href='https://nacram1987-cmd.github.io/Fluxia-v20/';source.target='_blank';source.rel='noopener noreferrer';d.append(source);
+ const connector=window.FluxiaEliteBankConnector;
  const connectionsPanel=el('section','integrityPanel');connectionsPanel.id='eliteBankConnectionPanel';
  connectionsPanel.append(el('h3',null,'☁️ Nube y conexiones bancarias'));
  const cloudState=el('p','legacySuccess',token&&owner?'✓ Nube: sesión autenticada · '+String(owner).slice(0,8)+'…':'Nube: inicia sesión para comprobar la conexión');
@@ -1243,7 +1244,6 @@ function showBanksAudit(){
    .catch(err=>{bankStates.replaceChildren(el('p','periodHint','No se pudo comprobar el estado en vivo: '+String(err?.message||err)))});
  }
  const actions=el('div','editActions'),check=el('button','legacyPrimary','Comprobar conexión bancaria'),sync=el('button','monthApply','Sincronizar bancos'),balances=el('button','monthApply','Actualizar saldos');check.type='button';sync.type='button';balances.type='button';
- const connector=window.FluxiaEliteBankConnector;
  const saved=connector&&owner?connector.readStatus(owner,activeProfile):null;
  const status=saved?.message||extraFinance?.bankConnectorUiStatus||'Aún no se ha consultado el conector en esta sesión.';
  const checkedAt=saved?.checkedAt?new Date(saved.checkedAt).toLocaleString('es-ES',{dateStyle:'short',timeStyle:'short',timeZone:'Europe/Madrid'}):'';
