@@ -29,7 +29,7 @@
  function available(input){
   var required=['incomeCents','realExpensesCents','plannedProvisionsCents','excessContributionsCents','sharedImpactCents','pendingHuchaRescuesCents'];
   if(!input||required.some(function(key){return typeof input[key]!=='bigint'}))return {ok:false,reason:'INCOMPLETE_INPUT'};
-  var result=input.incomeCents-input.realExpensesCents-input.plannedProvisionsCents-input.excessContributionsCents+input.sharedImpactCents+input.pendingHuchaRescuesCents;
+  var result=input.incomeCents-input.realExpensesCents-input.plannedProvisionsCents-input.excessContributionsCents+input.sharedImpactCents;
   return {ok:true,cents:result,trace:{incomeCents:input.incomeCents,realExpensesCents:input.realExpensesCents,plannedProvisionsCents:input.plannedProvisionsCents,excessContributionsCents:input.excessContributionsCents,sharedImpactCents:input.sharedImpactCents,pendingHuchaRescuesCents:input.pendingHuchaRescuesCents}};
  }
  function hucha(input){

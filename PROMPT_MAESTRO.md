@@ -1272,3 +1272,8 @@ La respuesta y el error de **Bancos → Sincronizar bancos** deben mantenerse en
 - «Sincronizar bancos» consulta movimientos y saldos reales por cuenta en `Fluxia-banco`, conserva resultado por usuario/perfil y muestra un total actual por moneda separado del Disponible mensual del libro.
 - Saldos en caché cuando un proveedor bloquea por HUB046 se muestran con fecha y no se suman como actuales.
 - La Edge Function prioriza `ITAV`/`CLAV`/`FWAV` sobre balances contables para identificar los importes disponibles.
+
+
+## Adenda Élite v2.0.28 · corrección del Disponible
+
+La LAB suma rescates temporales de hucha al Disponible y el HTML estable no. Corregir la LAB para que los rescates sigan visibles en su trazabilidad, con impacto contable cero. Mantener el cálculo de pensiones pendientes excluido hasta ingreso efectivo. No modificar el HTML estable (`index.html`) ni filas financieras de Supabase. Ejecutar la suite sintética de conciliación v2025 junto con gates existentes; la cifra real sigue provisional si duplicados de referencias bancarias o vínculos de rescates no están verificados por ID.

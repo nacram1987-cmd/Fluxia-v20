@@ -47,6 +47,7 @@ jobs:
         run: |
           node lab/qa/elite-dashboard-provisional-available-v2020.cjs
           node lab/qa/elite-modern-cloud-v2021.cjs
+          node lab/qa/elite-reconciliation-v2025.cjs
       - name: Verify current bank inbox and balance regressions
         run: node lab/qa/elite-banking-available-v2012.cjs
       - name: Verify Élite version header and release guards

@@ -170,3 +170,10 @@ Entradas:
 - Regresión añadida para una referencia sintética, una real, una fila sin ID y dos movimientos ambiguos idénticos.
 - El cambio solo afecta la auditoría LAB de Élite; no modifica HTML estable/PWA ni escribe en Supabase.
 - Regresión local superada. Workflow de Pages, smoke HTTP y prueba Safari/iPhone quedan pendientes de ejecución.
+
+
+## v2.0.28-LAB · 16/10/2026
+
+- Paridad del Disponible con el HTML estable: los rescates temporales de hucha conservan trazabilidad, con impacto contable cero.
+- La pensión pendiente sigue excluida del saldo disponible.
+- Sin cambios al HTML estable ni a datos financieros en Supabase.
