@@ -8,7 +8,7 @@ assert.equal(engine.role({cuentaComoFijo:true}),'fixed-linked');
 assert.equal(engine.role({origen:'efectivo'}),'cash');
 assert.equal(engine.available({incomeCents:250000n,realExpensesCents:100000n,plannedProvisionsCents:35000n,excessContributionsCents:500n}).ok,false,'No certify Available without Shared and hucha inputs');
 const available=engine.available({incomeCents:250000n,realExpensesCents:100000n,plannedProvisionsCents:35000n,excessContributionsCents:500n,sharedImpactCents:-12000n,pendingHuchaRescuesCents:10000n});
-assert.equal(available.ok,true);assert.equal(available.cents,112500n);
+assert.equal(available.ok,true);assert.equal(available.cents,102500n);
 assert.equal(available.trace.sharedImpactCents,-12000n);assert.equal(available.trace.pendingHuchaRescuesCents,10000n);
 const hucha=engine.hucha({contributions:[{importe:35},{importe:35}],uses:[{tipo:'temporal',importe:10,repuesto:4},{tipo:'definitivo',importe:5}]});
 assert.equal(hucha.ok,true);assert.equal(hucha.availableCents,59n*100n);

@@ -41,7 +41,7 @@ assert(html.includes('function availableComputeFrom(input)'),'v2.0.25: the Avail
 assert(html.includes("money(Number(calculation.cents)/100)"));
 assert(html.includes('sharedImpactCents:sharedImpact,pendingHuchaRescuesCents:pendingRescues'));
 assert(html.includes('Impacto de Compartidos'));
-assert(html.includes('Rescates temporales pendientes'));
+assert(html.includes('Rescates temporales (informativo; no suma)'));
 assert(html.includes('La bandeja se conserva entre recargas'));
 assert(html.includes('bankConnectorUiStatus:responseMessage'));
 assert(html.includes('bankConnectorUiStatus:message'));
@@ -54,6 +54,6 @@ assert(!html.includes("cert.certified?'—':'—'"));
 const engineSource=fs.readFileSync(path.join(root,'js/fluxia-elite-financial-engine-v1.js'),'utf8');
 const engineBox={};vm.runInNewContext(engineSource,engineBox);
 const result=engineBox.FluxiaEliteFinancialEngine.available({incomeCents:250000n,realExpensesCents:100000n,plannedProvisionsCents:35000n,excessContributionsCents:500n,sharedImpactCents:-12000n,pendingHuchaRescuesCents:10000n});
-assert.equal(result.ok,true);assert.equal(result.cents,112500n);
+assert.equal(result.ok,true);assert.equal(result.cents,102500n);
 assert.equal(result.trace.sharedImpactCents,-12000n);assert.equal(result.trace.pendingHuchaRescuesCents,10000n);
 console.log('PASS v2.0.21 bank inbox profile isolation, stable provider identity, repeated sync idempotence, and cent-exact available engine');

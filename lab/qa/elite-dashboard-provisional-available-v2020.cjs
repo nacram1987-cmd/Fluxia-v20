@@ -48,7 +48,7 @@ const rows={
  financiaciones:[{id:'finance',mes:'octubre',cuota:100},{id:'ended-finance',inicio:'enero',fin:'septiembre',cuota:5000}],
  huchas:[{...hucha,mes:undefined,inicio:'julio'},{id:'ended-hucha',nombre:'Hucha cerrada',inicio:'enero',fin:'septiembre',importeMensual:9000,aportaciones:{octubre:[]}}]
 };
-const integration={...context,cloudReadAt:'',remotePreflightResult:null,items:{},extraFinance:{},cloudFinanceSnapshot:null,window:{FluxiaEliteReconciliation:Reconciliation,FluxiaEliteFinancialEngine:{cents:moneyToCents,available(input){const cents=input.incomeCents-input.realExpensesCents-input.plannedProvisionsCents-input.excessContributionsCents+input.sharedImpactCents+input.pendingHuchaRescuesCents;return {ok:true,cents,trace:input}}}},
+const integration={...context,cloudReadAt:'',remotePreflightResult:null,items:{},extraFinance:{},cloudFinanceSnapshot:null,window:{FluxiaEliteReconciliation:Reconciliation,FluxiaEliteFinancialEngine:{cents:moneyToCents,available(input){const cents=input.incomeCents-input.realExpensesCents-input.plannedProvisionsCents-input.excessContributionsCents+input.sharedImpactCents;return {ok:true,cents,trace:input}}}},
  mods:Object.entries(rows).map(([id,data])=>({id,rows:data})),selectedMonth:'2026-10',canon:mod=>Array.isArray(mod?.rows)?mod.rows:null,
  preferredHuchaUses:()=>({rows:[rescue],origin:'Supabase'}),backupFinance:null,sourceUpdated:{},monthStatus:row=>String(row?.fecha||row?.mes||'').startsWith('2026-10')||row?.mes==='octubre'?'match':'other',
  financialRecordRole:()=> 'variable-real',backupFinance:null,owner:'owner',activeProfile:'profile',csvAudit:null};
@@ -56,14 +56,14 @@ vm.runInNewContext(sources.join('\n')+'\n'+certSource+'\n'+calcSource,integratio
 integration.backupFinance={owner:'owner',profile:'profile',when:new Date().toISOString(),sources:{v2_usos:{value:[rescue]}},modules:Object.fromEntries(Object.entries(rows).map(([id,data])=>[id,{records:id==='variables'?data.map(row=>({...row,importe:350})):data}]))};
 const report=integration.availableCalculationReport();
 assert.equal(report.ok,true,'A fresh same-profile HTML backup enables a provisional current-month calculation');
-assert.equal(report.cents,20000n,'The current-month result uses the local HTML snapshot, not stale cloud rows');
+assert.equal(report.cents,5000n,'The current-month result uses the local HTML snapshot, not stale cloud rows');
 assert.equal(report.provisional,true);
 assert.equal(report.source,'html_backup');
-assert(html.includes("if(amount>repaid&&(link.provisional||snapshot.provisionalLinks))"),'Only an outstanding rescue receives the provisional-added note');
+assert(html.includes("vinculado provisionalmente por nombre único"),'A name-only rescue link stays provisional without adding it to Available');
 assert.match(report.provisionalNotes[0],/Tributos.*nombre único/);
 const certification=integration.availableCertificationReport();
 assert.equal(certification.certified,false,'A provisional figure never passes the full certification gate');
-assert.equal(certification.calculation.cents,20000n);
+assert.equal(certification.calculation.cents,5000n);
 const freshBackup=integration.backupFinance;
 integration.backupFinance=null;
 const blocked=integration.availableCalculationReport();
@@ -84,10 +84,10 @@ integration.cloudFinanceSnapshot={owner:'owner',profile:'profile',complete:true}
 integration.extraFinance={planRescate_v2_usos:[rescue]};
 const modern=integration.availableCalculationReport();
 assert.equal(modern.ok,true,'Complete modern collections calculate without HTML upload');
-assert.equal(modern.cents,25000n);
+assert.equal(modern.cents,10000n);
 assert.equal(modern.source,'supabase');
 integration.backupFinance=freshBackup;
-assert.equal(integration.availableCalculationReport().cents,25000n,'Complete modern cloud wins over an older backup');
+assert.equal(integration.availableCalculationReport().cents,10000n,'Complete modern cloud wins over an older backup');
 integration.backupFinance=null;
 integration.cloudFinanceSnapshot.profile='other-profile';
 assert.equal(integration.availableCalculationReport().ok,false,'Modern cloud is profile isolated');
@@ -96,12 +96,12 @@ rows.ingresos.push({id:'pension',mes:'octubre',concepto:'Pensión',importe:300})
 rows.ingresos.push({id:'transfer',mes:'octubre',tipo:'puente',bancoRef:'same-bank',importe:9});
 rows.ingresos.push({id:'duplicate',mes:'octubre',bancoRef:'same-bank',importe:9});
 rows.ingresos.push({id:'cycle',mes:'octubre',cicloDe:'other',importe:99});
-assert.equal(integration.availableCalculationReport().cents,25000n,'Pending pension, bridge, duplicate bank reference and cycles do not inflate income');
+assert.equal(integration.availableCalculationReport().cents,10000n,'Pending pension, bridge, duplicate bank reference and cycles do not inflate income');
 rows.variables.push({id:'cash',mes:'octubre',origen:'efectivo',importe:20});
 rows.variables.push({id:'atm',mes:'octubre',origen:'banco',concepto:'ATM withdrawal',importe:90});
 rows.variables.push({id:'fixed-charge',mes:'octubre',fecha:'2026-09-30',cuentaComoFijo:true,vinculoFijoId:'fixed',importe:210});
 rows.variables.push({id:'refund',mes:'octubre',importe:-5});
-assert.equal(integration.availableCalculationReport().cents,22500n,'Cash and signed refund count, ATM does not, linked actual fixed replaces plan exactly once');
+assert.equal(integration.availableCalculationReport().cents,7500n,'Cash and signed refund count, ATM does not, linked actual fixed replaces plan exactly once');
 assert.equal(integration.availableAccountingMonth({mes:'octubre',fecha:'2026-09-30'},'2026-10',2026),true,'Accounting month precedes payment date');
 assert.equal(integration.availableAccountingMonth({mes:'octubre'},'2025-10',2026),false,'Unqualified plan month does not leak into previous years');
 assert.equal(integration.availableAccountingMonth({mes:'octubre'},'2026-10',2026),true,'Month-name-only record uses the common cut-off year, not the device clock');
