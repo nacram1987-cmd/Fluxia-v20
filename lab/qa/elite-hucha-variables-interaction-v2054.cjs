@@ -6,8 +6,7 @@ const vm = require('node:vm');
 const assert = require('node:assert/strict');
 const html = fs.readFileSync(path.join(__dirname, '../fluxia-elite-safari-datos-reales.html'), 'utf8');
 
-assert(html.includes('ÉLITE BETA · v2.0.54') && html.includes("const ELITE_SAFARI_VERSION='2.0.54';"));
-assert(html.includes('<title>Fluxia Élite BETA v2.0.54 · Safari</title>') && html.includes('<meta name="fluxia-elite-version" content="2.0.54">'));
+// la novedad 2.0.54 sigue registrada en el historial (la versión visible la comprueban las pruebas de cada release)
 assert(html.includes(" ['2.0.54','Huchas y Variables como en el HTML original."));
 
 // --- Huchas: ya no se repite la lista de planes vigentes bajo las tarjetas, y la auditoría queda plegada ---
@@ -45,8 +44,8 @@ const vctx = { el: node, money: (v) => v.toFixed(2).replace('.', ',') + ' €', 
   chargeMark: () => node('span', 'chargeEmoji'), openDetail: (...a) => opened.push(a) };
 vm.createContext(vctx); vm.runInContext(cut('function variableRowMadre(', 'function renderList('), vctx);
 const row = (d, amount) => vctx.variableRowMadre(d, 3, 'planRescate_v2_movimientos', d.concepto, amount);
-let r = row({ concepto: 'Bizum Ana María', fecha: '2026-10-16', categoria: 'Bizum', origen: 'manual' }, 19.4), t = flat(r);
-assert(t.includes('16/10 · Bizum · Manual') && t.includes('− 19,40 €') && t.includes('movExpense'), t);
+let r = row({ concepto: 'Bizum contacto prueba', fecha: '2026-10-16', categoria: 'Bizum', origen: 'manual' }, 12.3), t = flat(r);
+assert(t.includes('16/10 · Bizum · Manual') && t.includes('− 12,30 €') && t.includes('movExpense'), t);
 r = row({ concepto: 'Devolución Amazon', fecha: '2026-10-06', categoria: 'Otros', origen: 'manual' }, -67.03); t = flat(r);
 assert(t.includes('+ 67,03 €') && t.includes('movRefund') && !t.includes('− 67,03'), 'la devolución sale en verde con +');
 r = row({ concepto: 'Seguro', fecha: '2026-10-05', cuentaComoFijo: true, origen: 'banco' }, 50); t = flat(r);

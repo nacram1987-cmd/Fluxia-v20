@@ -25,6 +25,9 @@ on:
       - 'lab/v97.73/**'
       - 'lab/v97.77.html'
       - 'lab/qa/cls-rules-*.cjs'
+      - 'lab/qa/conciliacion-*.cjs'
+      - 'lab/tools/**'
+      - 'lab/versions/**'
       - 'AUDITORIA_ELITE/**'
   workflow_dispatch:
 permissions:
@@ -61,6 +64,8 @@ jobs:
           node lab/qa/elite-reconciliation-v2025.cjs
           node lab/qa/elite-integration-v2026.cjs
           node lab/qa/elite-evidence-cut-guard-v2027.cjs
+          node lab/qa/conciliacion-tres-vias-v2060.cjs
+          node lab/qa/elite-cli-rescue-links-v2060.cjs
       - name: Verify current bank inbox and balance regressions
         run: node lab/qa/elite-banking-available-v2012.cjs
       - name: Verify Élite version header and release guards

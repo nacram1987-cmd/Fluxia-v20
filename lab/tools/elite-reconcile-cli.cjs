@@ -10,6 +10,8 @@
  *  --html    copia «fluxia-perfil-v1» exportada por el HTML estable.
  *  --month   periodo contable AAAA-MM.   --cutoff  instante común de corte (ISO con zona).
  *  --bank-scope none   declara explícitamente que el perfil no usa movimientos bancarios en el periodo (criterio [d]).
+ *  --rescue-links  JSON con las filas de public.fluxia_rescue_links del mismo perfil (operation_id, hucha_id, operation_name,
+ *            amount_cents, operation_date). La app los carga de Supabase; sin ellos la CLI no reproduce el criterio [c].
  *  --out     carpeta de salida (se crea). Escribe: informe-privado.json (con IDs reales: NO subir a GitHub)
  *            e informe-publico.json (seudónimos y huellas; sin IDs ni importes por registro).
  *
@@ -28,7 +30,7 @@ function arg(name, fallback) {
 function fail(message) { console.error('ERROR: ' + message); process.exit(2); }
 const replacer = (k, v) => (typeof v === 'bigint' ? v.toString() : v);
 
-const cloudPath = arg('cloud'), htmlPath = arg('html'), month = arg('month'), cutoff = arg('cutoff'), outDir = arg('out', './informe-conciliacion');
+const cloudPath = arg('cloud'), htmlPath = arg('html'), month = arg('month'), cutoff = arg('cutoff'), outDir = arg('out', './informe-conciliacion'), linksPath = arg('rescue-links');
 if (!cloudPath || !month || !cutoff) fail('Uso: --cloud <export.json> [--html <copia.json>] --month AAAA-MM --cutoff <ISO con zona> [--out carpeta]');
 if (!/^\d{4}-\d{2}$/.test(month)) fail('--month debe ser AAAA-MM');
 if (!Number.isFinite(Date.parse(cutoff)) || !/(Z|[+-]\d{2}:\d{2})$/.test(cutoff)) fail('--cutoff debe ser ISO con zona horaria (p. ej. 2026-10-15T10:00:00+02:00)');
@@ -38,7 +40,18 @@ if (cloud.format !== 'fluxia-elite-cloud-readonly-v1' || !cloud.sources || !clou
 let backup = null;
 if (htmlPath) { try { backup = JSON.parse(fs.readFileSync(htmlPath, 'utf8')); } catch (e) { fail('Copia del HTML ilegible: ' + e.message); } }
 
-const S = loadEliteFunctions({ owner: cloud.user_id, activeProfile: cloud.profile_key, selectedMonth: month });
+// Vínculos persistentes de rescate (misma estructura y misma regla de primera aparición que la app al leer fluxia_rescue_links).
+const rescueIdentityLinks = new Map();
+if (linksPath) {
+  let links; try { links = JSON.parse(fs.readFileSync(linksPath, 'utf8')); } catch (e) { fail('Vínculos de rescate ilegibles: ' + e.message); }
+  if (!Array.isArray(links)) fail('--rescue-links debe ser un array de filas de fluxia_rescue_links');
+  const profileId = String(cloud.profile_key).slice(2, -2);
+  for (const link of links) {
+    if (link && link.profile_id && link.profile_id !== profileId) fail('Un vínculo de rescate pertenece a otro perfil; no se mezclan perfiles');
+    if (link && typeof link.operation_id === 'string' && !rescueIdentityLinks.has(link.operation_id)) rescueIdentityLinks.set(link.operation_id, link);
+  }
+}
+const S = loadEliteFunctions({ owner: cloud.user_id, activeProfile: cloud.profile_key, selectedMonth: month, rescueIdentityLinks });
 const ctx = S.context;
 const missing = [];
 ctx.items = {};
