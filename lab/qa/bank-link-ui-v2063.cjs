@@ -15,5 +15,5 @@ const body = html.slice(start, end);
 for (const forbidden of ['fetch(', 'Supabase', 'localStorage', 'setItem', 'upsert', 'insert', 'update(']) {
   assert(!body.includes(forbidden), 'el panel no escribe ni persiste: ' + forbidden);
 }
-assert(html.includes("const ELITE_SAFARI_VERSION='2.0.65';"));
+assert(html.includes("const ELITE_SAFARI_VERSION='2.0.66';"));
 console.log('PASS v2.0.65: bandeja con vinculación en sesión, sin escritura en la nube ni persistencia');

@@ -1285,3 +1285,7 @@ La respuesta y el error de **Bancos → Sincronizar bancos** deben mantenerse en
 ## Adenda Élite v2.0.28 · corrección del Disponible
 
 La LAB suma rescates temporales de hucha al Disponible y el HTML estable no. Corregir la LAB para que los rescates sigan visibles en su trazabilidad, con impacto contable cero. Mantener el cálculo de pensiones pendientes excluido hasta ingreso efectivo. No modificar el HTML estable (`index.html`) ni filas financieras de Supabase. Ejecutar la suite sintética de conciliación v2025 junto con gates existentes; la cifra real sigue provisional si duplicados de referencias bancarias o vínculos de rescates no están verificados por ID.
+
+
+## Referencia visual confirmada · Élite v2.0.66 · 17/10/2026
+Conservar botones, menú, cabecera y navegación de Élite. El interior de TODAS las pestañas debe seguir el HTML madre: tarjetas, filas, importes, iconos, estados e históricos. Fijos y Financiaciones compactos; Huchas azul pendiente y oro al día. Esta entrega cambia presentación, no contabilidad, bancos, sincronización ni datos. No declarar paridad funcional por parecido visual.
