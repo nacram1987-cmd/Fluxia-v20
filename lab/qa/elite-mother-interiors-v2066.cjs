@@ -16,7 +16,8 @@ for(const moduleId of ['fijos','financiaciones']){
   else assert(!card.textContent.includes('✓ Pagado'));
  }
 }
-assert(html.includes("onOpen:()=>openPrivateHTMLRecord(row,mod.id)"),'HTML huchas open their own source');
+assert(html.includes("history:eliteHuchaInlineHistory(row,canon(mods.find(m=>m.id==='huchas'))||[],huchaUsesFromSource(false))"),'huchas: historial propio dentro de cada tarjeta');
+assert(html.includes("rescates:rescates.items"),'huchas: rescates pendientes dentro de cada tarjeta');
 assert(html.includes('#content .pv-card.pv-pend{--pv-acc:var(--mother-blue)'));
 assert(html.includes('#content .pv-card.pv-ok{--pv-acc:var(--mother-gold)'));
 console.log('PASS v2.0.66: fixed/financing amounts, source payment states, detail actions, no record mutation, HTML-source routing');

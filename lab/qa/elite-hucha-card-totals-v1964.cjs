@@ -16,8 +16,9 @@ assert.equal(ok.monthCents,3500);assert.equal(ok.lifetimeCents,8000);assert.equa
 assert.equal(f({aportaciones:{octubre:[{id:'1',importe:10}]}},'2026-10').monthComplete,false);
 assert.equal(f({aportaciones:{octubre:[{id:'1',importe:10,fecha:'2026-10-01'},{id:'1',importe:10,fecha:'2026-10-02'}]}},'2026-10').lifetimeComplete,false);
 assert.match(html,/ELITE_SAFARI_VERSION='[0-9]+[.][0-9]+[.][0-9]+'/);
-assert(html.includes('appendHuchaFinancialSummary(card,row,selectedMonth,huchaLedger)'));
+// v2.0.74: el detalle financiero ya no va dentro de la tarjeta de la lista (solo en la lista de nube y en la auditoría)
+assert(html.includes('function appendHuchaFinancialSummary('));
 assert(html.includes('appendHuchaFinancialSummary(card,data,selectedMonth,cloudHuchaLedger)'));
-assert(html.includes("const face=mod.id==='huchas'?el('button','entry'):card"));
+assert(!html.includes("const face=mod.id==='huchas'"));
 for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))if(m[1])new vm.Script(m[1]);
 console.log('PASS v1.9.64 hucha monthly/year isolation, lifetime sums, duplicates, source cards and JS parse');
