@@ -36,7 +36,7 @@ assert(flat(slot).includes('Vista previa · Aportar') && flat(slot).includes('no
 const nc = ctx.huchaMadreCard(hucha, 'Seguro sintético', { ...snap, status: 'con conflicto', conflicts: 1 }, true, { period: '2026-10', rescates: [] });
 assert(!flat(nc).includes('12,35') && flat(nc).includes('Guardado no mostrado'), 'sin cifra de guardado no conciliado');
 // v2.0.75: en modo nube (el normal) las tarjetas salen del resumen; sin esto la pestaña quedaba vacía y una provisión nueva no aparecía
-assert(html.includes('list.append(huchaMadreCard(hucha,name,snap,ok,{period,ambiguo:rescates.ambiguo,rescates:rescates.items,history:eliteHuchaInlineHistory(hucha,huchas,uses)}))'), 'el resumen pinta una tarjeta por provisión de la nube');
+assert(html.includes('history:eliteHuchaHistoryDetails(hucha,huchas,uses),historyPanel:()=>eliteHuchaHistoryPanel(hucha,huchas,uses)'), 'historial HTML dentro de la tarjeta y en la ventana');
 assert(html.includes('card.append(balanceHeader,list);') && !html.includes('provisiones en Supabase'), 'resumen limpio: lista de tarjetas sin línea de diagnóstico');
 assert(!html.includes("if(page==='huchas')$('#content').append(renderHuchaActions())") && !html.includes("if(mod.id==='huchas')$('#content').append(renderHuchaActions())"), 'sin bloque superior de gestión en Huchas');
 // v2.0.81: Huchas muestra solo la nube; la copia HTML no se pinta en la pestaña (evita provisiones duplicadas)
