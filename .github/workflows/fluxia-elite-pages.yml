@@ -23,6 +23,8 @@ on:
       - 'lab/v97.72/**'
       - 'lab/v97.73.html'
       - 'lab/v97.73/**'
+      - 'lab/v97.77.html'
+      - 'lab/qa/cls-rules-*.cjs'
       - 'AUDITORIA_ELITE/**'
   workflow_dispatch:
 permissions:
@@ -54,6 +56,8 @@ jobs:
           node lab/qa/elite-home-breakdown-v2052.cjs
           node lab/qa/elite-hucha-cards-v2053.cjs
           node lab/qa/elite-hucha-variables-interaction-v2054.cjs
+          node lab/qa/cls-rules-v9777.cjs
+          node lab/qa/cls-rules-browser-v9777.cjs
           node lab/qa/elite-reconciliation-v2025.cjs
           node lab/qa/elite-integration-v2026.cjs
           node lab/qa/elite-evidence-cut-guard-v2027.cjs
