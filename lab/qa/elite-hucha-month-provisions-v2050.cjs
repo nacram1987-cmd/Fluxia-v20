@@ -19,12 +19,12 @@ c.huchaRescatesPendientes = () => ({ ambiguo: false, items: [] }); // v2.0.74: l
 vm.runInContext(html.slice(html.indexOf('function huchaMadreCard('), html.indexOf('function huchaMonthProvisionSummary(')), c);
 vm.runInContext(html.slice(a, b), c);
 const card = c.huchaMonthProvisionSummary(huchas, [], '2026-10');
-const lines = card.children.filter((x) => x.cls === 'eliteHuchaBalanceLine').map((x) => x.children.map((y) => y.txt).join(' → '));
-const text = lines.join('\n');
-assert(/Provisión prevista del mes → 281\.05 €/.test(text), text);
-assert(/Aportado en el mes → 224\.05 €/.test(text), text);
-assert(/Pendiente de aportar → 67\.00 €/.test(text), text);
-assert(/Exceso sobre lo previsto → 10\.00 €/.test(text), text);
+// v2.0.86: totales en tres tarjetas y píldoras de cabecera (mismas cifras)
+const tiles = card.children.find((x) => x.cls === 'eliteHuchaTiles').children.map((x) => x.children[1].txt);
+assert.deepEqual(tiles, ['67.00 €', '0.00 €', '2 / 3'], 'por aportar, por reponer y huchas al día');
+const hero = card.children.find((x) => x.cls === 'eliteHuchaHero');
+assert(hero.children.find((x) => x.cls === 'eliteHuchaChips').children[0].txt.includes('224.05 € de 281.05 €'), 'aportado del mes frente a lo previsto');
+const text = tiles.join(' ');
 // por hucha (v2.0.53: tarjetas): mismas cifras que antes, ahora en nombre, aportado/previsto y estado
 const flat = (n) => [n.cls, n.txt, ...(n.children || []).map(flat)].join(' | ');
 const cards = card.children.find((x) => x.cls === 'pvList').children.map(flat);
