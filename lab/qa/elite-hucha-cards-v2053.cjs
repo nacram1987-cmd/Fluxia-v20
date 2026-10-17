@@ -8,7 +8,7 @@ const html = fs.readFileSync(path.join(__dirname, '../fluxia-elite-safari-datos-
 
 // la novedad 2.0.53 sigue en el historial; la versión visible la fija cada release
 assert(html.includes(" ['2.0.53','Huchas: cada hucha vigente se muestra como en el HTML original"));
-assert(html.includes("list.append(huchaMadreCard(hucha,name,snap,ok,"));
+assert(html.includes("list.append(huchaMadreCard(row,field(row,['nombre','concepto','descripcion'])||'Hucha',"));
 
 const cut = (from, to) => { const a = html.indexOf(from), b = html.indexOf(to, a); assert(a > 0 && b > a, from); return html.slice(a, b); };
 const src = cut('const ELITE_HUCHA_ICONS=', 'function huchaContributionSnapshot') + cut('function huchaMadreCard(', 'function huchaMonthProvisionSummary(');
