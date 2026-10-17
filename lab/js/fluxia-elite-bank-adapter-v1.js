@@ -68,9 +68,34 @@
   var keys=['bankRef','bancoIdentity','bancoRef','bancoStableRef','bancoLegacyId'];
   return keys.map(function(k){return row&&row[k]?canonicalRef(row[k]):''}).filter(Boolean);
  }
- function planImport(existing,incoming,tombstones,resolutions){
+ // Reglas de clasificación del HTML (guardadas en la nube por el propio usuario). Sin nombres fijos en el código:
+ // una regla casa si todas sus palabras aparecen en el concepto; gana la más larga; la más nueva sustituye a la igual;
+ // «olvidar» anula. Solo «propio» y «puente» son traspasos: no cuentan como gasto ni como ingreso.
+ function ruleWords(text){
+  return String(text||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').split(/[^a-z0-9]+/).filter(Boolean);
+ }
+ function classifyTransfer(concept,amountCents,rules){
+  if(!Array.isArray(rules)||!rules.length||amountCents===null||amountCents===undefined)return null;
+  var words=ruleWords(concept), direction=amountCents<0n?'out':'in', latest=new Map();
+  rules.forEach(function(rule){
+   if(!rule||!Array.isArray(rule.t)||!rule.t.length)return;
+   var need=rule.t.map(function(w){return String(w).toLowerCase()}).sort(), key=need.join(' ');
+   var previous=latest.get(key);
+   if(!previous||Number(rule.ts||0)>Number(previous.rule.ts||0))latest.set(key,{rule:rule,need:need});
+  });
+  var best=null;
+  latest.forEach(function(entry){
+   if(!entry.need.every(function(w){return words.indexOf(w)>=0}))return;
+   var dir=entry.rule.dir||'*';
+   if(dir!=='*'&&dir!==direction)return;
+   if(!best||entry.need.length>best.need.length)best=entry;
+  });
+  if(!best||best.rule.tipo==='olvidar')return null;
+  return best.rule.tipo==='propio'||best.rule.tipo==='puente'?best.rule.tipo:null;
+ }
+ function planImport(existing,incoming,tombstones,resolutions,rules){
   var existingRows=Array.isArray(existing)?existing:[], incomingRows=Array.isArray(incoming)?incoming:[], choices=resolutions&&typeof resolutions==='object'?resolutions:{};
-  var existingMap=new Map(), additions=[], duplicates=[], blocked=[], conflicts=[], invalid=[], resolved=[];
+  var existingMap=new Map(), additions=[], duplicates=[], blocked=[], conflicts=[], invalid=[], resolved=[], classified=[];
   existingRows.forEach(function(row){
    var item=normalize(row);
    if(!item.ok)return;
@@ -92,11 +117,13 @@
     conflicts.push({bankRef:record.bankRef,existing:previous,incoming:record});return
    }
    if(additions.some(function(row){return row.bankRef===record.bankRef})){duplicates.push(record.bankRef);return}
+   var kind=classifyTransfer(record.concept,record.amountCents,rules);
+   if(kind){classified.push({bankRef:record.bankRef,kind:kind,record:record});return}
    additions.push(record);
   });
-  return {ok:invalid.length===0&&conflicts.length===0,additions:additions,duplicates:[...new Set(duplicates)],blocked:blocked,conflicts:conflicts,invalid:invalid,resolved:resolved,stableIds:additions.map(function(row){return row.bankRef})};
+  return {ok:invalid.length===0&&conflicts.length===0,additions:additions,duplicates:[...new Set(duplicates)],blocked:blocked,conflicts:conflicts,invalid:invalid,resolved:resolved,classified:classified,stableIds:additions.map(function(row){return row.bankRef})};
  }
- var api={version:'1.2.0',source:'original-bank-connector',cents:cents,isSyntheticBankRef:isSyntheticBankRef,stableId:stableId,canonicalRef:canonicalRef,normalize:normalize,planImport:planImport};
+ var api={version:'1.3.0',source:'original-bank-connector',cents:cents,isSyntheticBankRef:isSyntheticBankRef,stableId:stableId,canonicalRef:canonicalRef,normalize:normalize,planImport:planImport,classifyTransfer:classifyTransfer};
  if(typeof module!=='undefined'&&module.exports)module.exports=api;
  if(root)root.FluxiaEliteBankAdapter=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
