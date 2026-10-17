@@ -24,37 +24,37 @@ function load(html, store) {
 }
 const KEY = lab.match(/const CLS_KEY="([^"]+)"/)[1];
 const REGLAS = [{ t: ['automocon', 'aljarafe'], tipo: 'real', dir: 'out', ts: 1792072855310 }, { t: ['amortizacion', 'cuenta'], tipo: 'propio', dir: '*', ts: 1791054251809 },
-  { t: ['jose', 'ignacio', 'ramos', 'ramirez'], tipo: 'puente', dir: '*', ts: 1791130518460 }, { t: ['ana', 'maria', 'sanchez'], tipo: 'puente', dir: '*', ts: 1791130515045 },
-  { t: ['enrique', 'javier', 'sanchez', 'can'], tipo: 'puente', dir: '*', ts: 1791297789552 }];
-const pago = { concepto: 'Anduriña', contraparte: 'Ana María❤️', importe: -19.4 };
+  { t: ['luis', 'mario', 'perez', 'gil'], tipo: 'puente', dir: '*', ts: 1791130518460 }, { t: ['pepa', 'rosa', 'ruiz'], tipo: 'puente', dir: '*', ts: 1791130515045 },
+  { t: ['tomas', 'carlos', 'vidal', 'sol'], tipo: 'puente', dir: '*', ts: 1791297789552 }];
+const pago = { concepto: 'Cafetería prueba', contraparte: 'Pepa Rosa❤️', importe: -12.3 };
 const regla = (ctx, m, d) => ctx.clsRegla(m, d);
 const set = (store, r) => { store[KEY] = JSON.stringify(r); };
 
 // 1. sin tocar nada, el comportamiento antiguo se conserva (compatibilidad con los datos actuales)
 let store = {}; set(store, REGLAS); let c = load(lab, store);
 assert.equal(regla(c, pago, 'out'), 'puente', 'sin regla nueva sigue como antes');
-assert.equal(regla(c, { contraparte: 'Ana María Sánchez de la Torre', concepto: 'Transferencia' }, 'in'), 'puente');
+assert.equal(regla(c, { contraparte: 'Pepa Rosa Ruiz de la Torre', concepto: 'Transferencia' }, 'in'), 'puente');
 assert.equal(regla(c, { contraparte: 'Mercadona', concepto: 'Mercadona' }, 'out'), null);
 // idéntico a la base v97.73 con las mismas reglas (misma función original)
 store = {}; set(store, REGLAS); const p = load(prod, store);
-for (const m of [pago, { contraparte: 'Enrique Javier Sánchez Can' }, { contraparte: 'José Ignacio Ramos Ramírez' }, { concepto: 'ITV Gelves', contraparte: '' }])
+for (const m of [pago, { contraparte: 'Tomás Carlos Vidal Sol' }, { contraparte: 'Luis Mario Pérez Gil' }, { concepto: 'ITV prueba', contraparte: '' }])
   for (const d of ['in', 'out']) assert.equal(regla(c, m, d), regla(p, m, d), 'paridad con la base v97.73 sin reglas nuevas');
 
 // 2. la regla nueva «solo entradas» sustituye a la antigua: el pago deja de ser puente, la entrada sigue siéndolo
-store = {}; set(store, [{ t: ['ana', 'maria', 'sanchez'], tipo: 'puente', dir: 'in', ts: 1792300000000, sup: true }, ...REGLAS]); c = load(lab, store);
-assert.equal(regla(c, pago, 'out'), null, 'el pago de 19,40 € ya no es puente');
-assert.equal(regla(c, pago, 'in'), 'puente', 'las entradas de Ana María siguen siendo puente');
-assert.equal(c.clsReglasEfectivas().filter((r) => r.t.join(' ') === 'ana maria sanchez').length, 1, 'solo queda una regla efectiva con esas palabras');
-assert.equal(regla(c, { contraparte: 'José Ignacio Ramos Ramírez' }, 'out'), 'puente', 'otras reglas no cambian');
+store = {}; set(store, [{ t: ['pepa', 'rosa', 'ruiz'], tipo: 'puente', dir: 'in', ts: 1792300000000, sup: true }, ...REGLAS]); c = load(lab, store);
+assert.equal(regla(c, pago, 'out'), null, 'el pago de 12,30 € ya no es puente');
+assert.equal(regla(c, pago, 'in'), 'puente', 'las entradas de Pepa Rosa siguen siendo puente');
+assert.equal(c.clsReglasEfectivas().filter((r) => r.t.join(' ') === 'pepa rosa ruiz').length, 1, 'solo queda una regla efectiva con esas palabras');
+assert.equal(regla(c, { contraparte: 'Luis Mario Pérez Gil' }, 'out'), 'puente', 'otras reglas no cambian');
 
 // 3. orden en el array irrelevante (la fusión con la nube concatena listas): gana siempre la más nueva
-store = {}; set(store, [...REGLAS, { t: ['ana', 'maria', 'sanchez'], tipo: 'puente', dir: 'in', ts: 1792300000000, sup: true }]); c = load(lab, store);
+store = {}; set(store, [...REGLAS, { t: ['pepa', 'rosa', 'ruiz'], tipo: 'puente', dir: 'in', ts: 1792300000000, sup: true }]); c = load(lab, store);
 assert.equal(regla(c, pago, 'out'), null);
 
 // 4. «Quitar» = regla olvidar; una regla posterior con las mismas palabras vuelve a valer
-store = {}; set(store, [{ t: ['ana', 'maria', 'sanchez'], tipo: 'olvidar', dir: '*', ts: 1792300000000, sup: true }, ...REGLAS]); c = load(lab, store);
+store = {}; set(store, [{ t: ['pepa', 'rosa', 'ruiz'], tipo: 'olvidar', dir: '*', ts: 1792300000000, sup: true }, ...REGLAS]); c = load(lab, store);
 assert.equal(regla(c, pago, 'out'), null); assert.equal(regla(c, pago, 'in'), null);
-set(store, [{ t: ['ana', 'maria', 'sanchez'], tipo: 'puente', dir: '*', ts: 1792400000000 }, { t: ['ana', 'maria', 'sanchez'], tipo: 'olvidar', dir: '*', ts: 1792300000000, sup: true }, ...REGLAS]);
+set(store, [{ t: ['pepa', 'rosa', 'ruiz'], tipo: 'puente', dir: '*', ts: 1792400000000 }, { t: ['pepa', 'rosa', 'ruiz'], tipo: 'olvidar', dir: '*', ts: 1792300000000, sup: true }, ...REGLAS]);
 assert.equal(regla(load(lab, store), pago, 'out'), 'puente', 'una regla más nueva que la lápida vuelve a aplicarse');
 
 // 4b. reglas «real» con las mismas palabras y distinta dirección conviven (sin sup no se sustituyen)
@@ -66,7 +66,7 @@ assert(lab.includes('tipo:tipo,dir:tipo==="propio"?"*":g.dir,ts:Date.now()}'), '
 const respSrc = cut(lab, 'function clsResponder(', 'const clsDetAbiertos');
 for (const [grupoDir, tipo, esperado] of [['in', 'puente', 'in'], ['out', 'puente', 'out'], ['in', 'propio', '*'], ['out', 'propio', '*'], ['out', 'real', 'out'], ['in', 'real', 'in']]) {
   const guardadas = [];
-  const rctx = { clsGrupos: () => [{ dir: grupoDir, tk: ['ana', 'maria'], nombre: 'Ana María' }], clsGrupoKey: () => 'k', clsLeer: () => [], clsGuardar: (a) => guardadas.push(a),
+  const rctx = { clsGrupos: () => [{ dir: grupoDir, tk: ['pepa', 'rosa'], nombre: 'Pepa Rosa' }], clsGrupoKey: () => 'k', clsLeer: () => [], clsGuardar: (a) => guardadas.push(a),
     clsResolverPendientes: () => 0, clsTokens: (x) => String(x).split(' '), clsRefrescar: () => {}, window: {}, Date, JSON };
   vm.createContext(rctx); vm.runInContext(respSrc, rctx);
   assert.equal(rctx.clsResponder('k', tipo), 0);

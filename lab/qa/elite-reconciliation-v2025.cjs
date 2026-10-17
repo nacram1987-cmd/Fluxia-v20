@@ -701,7 +701,9 @@ t('entrega', 'versión consistente en título, metadatos, cabecera, changelog y 
   assert(html.includes("['" + v + "',"));
   const snap = path.join(__dirname, '../versions/fluxia-elite-safari-v' + v + '.html');
   assert(fs.existsSync(snap), 'snapshot inmutable de la versión');
-  assert.equal(fs.readFileSync(snap, 'utf8'), html, 'el snapshot es idéntico al HTML');
+  // desde v2.0.55 el snapshot vive en lab/versions/ y sus recursos apuntan a ../ (solo cambian esas rutas)
+  const relocated = (s) => s.replace(/(src|href)="\.\.\/(js\/|fluxia-)/g, '$1="$2');
+  assert.equal(relocated(fs.readFileSync(snap, 'utf8')), relocated(html), 'el snapshot es idéntico al HTML salvo rutas de recursos');
 });
 t('entrega', 'el módulo de conciliación se carga y se publica con el HTML', () => {
   assert(html.includes('<script src="js/fluxia-elite-reconciliation-v1.js"></script>'));

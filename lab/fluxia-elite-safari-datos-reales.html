@@ -372,9 +372,9 @@ function setEliteHeaderAuthenticated(visible){setupEliteHeader();const bell=docu
 if(typeof document!=='undefined')setupEliteHeader();
 const ELITE_CHANGELOG=[
  ['2.0.59','Corrección de rutas del snapshot y pruebas locales de dependencias sin alterar el motor financiero.'],
- ['2.0.59','Publicación LAB: checklist de auditoría de conciliación, sin escrituras ni modificaciones de reglas contables.'],
- ['2.0.59','Publicación LAB con diagnóstico de integridad de recursos y trazabilidad de versión; sin cambios en los cálculos ni escrituras financieras.'],
- ['2.0.59','Huchas y Variables como en el HTML original. Huchas: cada hucha aparece una sola vez y se abre al tocarla (resumen financiero, aportaciones e historial); las aportaciones del mes se despliegan en la propia tarjeta y los paneles de auditoría quedan plegados. Variables: resumen del mes y filas con logo, concepto, dd/mm · categoría e importe con signo (las devoluciones en verde). Inicio: las filas de «Así sale tu Disponible» llevan a su pestaña. Solo presentación: no cambia datos, saldos ni el Disponible.'],
+ ['2.0.57','Publicación LAB: checklist de auditoría de conciliación, sin escrituras ni modificaciones de reglas contables.'],
+ ['2.0.56','Publicación LAB con diagnóstico de integridad de recursos y trazabilidad de versión; sin cambios en los cálculos ni escrituras financieras.'],
+ ['2.0.54','Huchas y Variables como en el HTML original. Huchas: cada hucha aparece una sola vez y se abre al tocarla (resumen financiero, aportaciones e historial); las aportaciones del mes se despliegan en la propia tarjeta y los paneles de auditoría quedan plegados. Variables: resumen del mes y filas con logo, concepto, dd/mm · categoría e importe con signo (las devoluciones en verde). Inicio: las filas de «Así sale tu Disponible» llevan a su pestaña. Solo presentación: no cambia datos, saldos ni el Disponible.'],
  ['2.0.53','Huchas: cada hucha vigente se muestra como en el HTML original: icono, nombre, estado («✓ Al día», «Faltan X» o «Sin aportar»), «Guardado» en grande, aportado del mes sobre lo previsto y barra de progreso. El «Guardado» solo aparece si la hucha está conciliada; si no, se indica. Solo presentación: no cambia aportaciones, rescates, saldos ni el Disponible.'],
  ['2.0.52','Inicio: nueva tarjeta «Así sale tu Disponible» que muestra de dónde sale la cifra: ingresos, gastos reales, provisiones, exceso de aportaciones y Compartidos, con barras proporcionales y la suma comprobada contra el Disponible. Solo presentación: no cambia la fórmula, el Disponible ni ningún dato.'],
  ['2.0.51','Bancos: un cargo ya contabilizado ya no se marca como «conflicto» solo porque el libro guarda el gasto en positivo y el banco en negativo, o porque editaste el concepto o lo vinculaste a un fijo. Pasan a «ya existentes». Importe o fecha distintos siguen siendo conflicto. No escribe nada ni cambia el Disponible.'],
@@ -4160,7 +4160,7 @@ function moduleListSummary(moduleId,rows,context={}){
  return [{value:records.length,label:'Registros del mes'}, {value:money(total/100),label:'Importe documentado'}, {value:rows.filter(x=>x.monthStatus==='legacy').length,label:'Históricos sin año'}]
 }
 function variableRowMadre(data,index,key,name,amount){
- // v2.0.59: solo presentación, fila como la del HTML original (logo, concepto, dd/mm · categoría, importe con signo). Toda la fila abre el detalle.
+ // v2.0.54: solo presentación, fila como la del HTML original (logo, concepto, dd/mm · categoría, importe con signo). Toda la fila abre el detalle.
  const role=financialRecordRole(data),fixed=role==='fixed-linked',refund=typeof amount==='number'&&amount<0;
  const when=actualChargeDate(data),dd=when?String(when.sort%100).padStart(2,'0'):'',mm=when?String(Math.floor(when.sort/100)%100).padStart(2,'0'):'';
  const category=field(data,['categoria','tipo'])||'',origin=data.origen==='banco'||data.bancoRef?'Banco':data.origen==='efectivo'?'Efectivo':data.origen==='manual'?'Manual':'';
@@ -4287,7 +4287,7 @@ function renderList(){
    }
    if(rows.length>visibleLimit){const more=el('button','monthApply','Mostrar más registros ('+Math.min(80,rows.length-visibleLimit)+' de '+(rows.length-visibleLimit)+' restantes)');more.type='button';more.onclick=()=>{visibleLimit+=80;draw()};list.append(more)}
   };
-  // v2.0.59: las huchas vigentes ya se muestran como tarjetas interactivas arriba; no se repite su nombre aquí.
+  // v2.0.54: las huchas vigentes ya se muestran como tarjetas interactivas arriba; no se repite su nombre aquí.
   if(page!=='huchas')addGroup((page==='financiaciones'?'📂 Planes vigentes · ':'📅 Registros del periodo · ')+monthTitle(selectedMonth),exact);
   addGroup(page==='huchas'||page==='financiaciones'?'⚠️ Planes sin vigencia fechada · revisar':'⚠️ Históricos: mes sin año · no contabilizados',historical);
   if(!selected.length)list.append(el('p','empty','No hay registros en este filtro para '+monthTitle(selectedMonth)+'. Prueba Todos o cambia el periodo.'));
