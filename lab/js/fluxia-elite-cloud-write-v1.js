@@ -32,12 +32,21 @@
   }
 
   // Fusiona lo que Élite quiere guardar con lo que hay en la nube, usando el motor del HTML.
-  function mergeWithRemote(sync, key, intendedArray, remoteArray) {
-    const raw = sync.mergeCloudValue(key, JSON.stringify(intendedArray), JSON.stringify(remoteArray), null, null, null, null, null, null);
+  function tombstonesOf(aux, key) {
+    try { const all = JSON.parse(aux?.tRemote || '{}') || {}; return all[key] || {}; } catch (e) { return {}; }
+  }
+  function explicitOf(aux, key) {
+    try { const all = JSON.parse(aux?.eRemote || '{}') || {}; return all[key] || {}; } catch (e) { return {}; }
+  }
+  function mergeWithRemote(sync, key, intendedArray, remoteArray, aux = {}) {
+    // Los borrados de la nube viajan al motor: un registro borrado en el HTML no vuelve a aparecer.
+    const raw = sync.mergeCloudValue(key, JSON.stringify(intendedArray), JSON.stringify(remoteArray), null, aux.tRemote ?? null, null, aux.rRemote ?? null, null, aux.eRemote ?? null);
     const merged = JSON.parse(raw);
     if (!Array.isArray(merged)) throw new Error('El motor de fusión no devolvió una lista');
     const ids = new Set(merged.map((x) => String(x?.id ?? '')));
-    const missing = intendedArray.filter((x) => !ids.has(String(x?.id ?? '')));
+    const tomb = tombstonesOf(aux, key), expl = explicitOf(aux, key);
+    const borrado = (id) => Boolean(tomb['i:' + id] || expl['i:' + id]);
+    const missing = intendedArray.filter((x) => !ids.has(String(x?.id ?? '')) && !borrado(String(x?.id ?? '')));
     if (missing.length) throw new Error('La fusión descartaría ' + missing.length + ' registro(s); no se escribe nada');
     return merged;
   }
@@ -50,7 +59,8 @@
       const row = await transport.read(profileKey);
       const remote = Array.isArray(row?.v) ? row.v : [];
       const intended = build(remote);
-      const merged = mergeWithRemote(sync, shortKey, intended, remote);
+      const aux = transport.readAux ? await transport.readAux(profileKey) : {};
+      const merged = mergeWithRemote(sync, shortKey, intended, remote, aux);
       if (row) await transport.backup(profileKey, row);
       const ok = await transport.patch(profileKey, row ? row.t : 0, merged);
       if (ok) return { attempt, count: merged.length };
@@ -74,6 +84,15 @@
         const v = typeof rows[0].v === 'string' ? JSON.parse(rows[0].v) : rows[0].v;
         return { v, t: Number(rows[0].t) || 0 };
       },
+      async readAux(profileKey) {
+        const prefix = profileKey.slice(0, profileKey.lastIndexOf(':') + 1);
+        const keys = ['v2_sync_tombstones', 'v2_sync_restores', 'v2_explicit_deletions'].map((k) => prefix + k);
+        const res = await f(base + '/rest/v1/fluxia_datos?select=clave,v&user_id=eq.' + enc(owner) + '&clave=in.(' + keys.map(enc).join(',') + ')', { headers, cache: 'no-store', credentials: 'omit' });
+        if (!res.ok) throw new Error('Lectura de borrados fallida: ' + res.status);
+        const rows = await res.json();
+        const get = (k) => { const r = rows.find((x) => x.clave === prefix + k); return r ? (typeof r.v === 'string' ? r.v : JSON.stringify(r.v)) : null; };
+        return { tRemote: get('v2_sync_tombstones'), rRemote: get('v2_sync_restores'), eRemote: get('v2_explicit_deletions') };
+      },
       async backup(profileKey, row) {
         const body = { user_id: owner, clave: 'backup:' + profileKey + ':' + new Date().toISOString(), v: JSON.stringify(row.v), t: row.t };
         const res = await f(base + '/rest/v1/fluxia_datos', { method: 'POST', headers, body: JSON.stringify(body), credentials: 'omit' });
@@ -90,6 +109,10 @@
     };
   }
 
+  if (typeof Almacen === 'undefined') {
+    // Élite no guarda borrados locales: el motor recibe los de la nube en cada fusión.
+    root.Almacen = { getItem: function () { return null; }, setItem: function () {}, removeItem: function () {} };
+  }
   const api = { MESES, importeCents, validateProvision, mergeWithRemote, writeCollection, supabaseTransport };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.FluxiaEliteCloudWrite = api;
