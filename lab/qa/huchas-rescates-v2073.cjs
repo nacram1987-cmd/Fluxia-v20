@@ -6,7 +6,7 @@ const vm = require('node:vm');
 const assert = require('node:assert/strict');
 const { loadEliteFunctions, between, line } = require('./lib/elite-html-functions.cjs');
 const { html, context } = loadEliteFunctions({});
-const slice = between(html, 'function huchaRescatesPendientes(hucha){', '\nfunction huchaRescatesPanel(');
+const slice = between(html, 'function huchaRescatesPendientes(hucha){', '\nfunction huchaActionPreview(');
 assert(slice.length > 100, 'función de rescates presente');
 assert(!slice.includes('fetch(') && !slice.includes('setItem') && !slice.includes('.insert('), 'sin escritura');
 const huchasFict = [{ id: 'h1', nombre: 'Agua' }, { id: 'h2', nombre: 'Renta' }, { id: 'h3', nombre: 'Renta' }];

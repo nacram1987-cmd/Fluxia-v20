@@ -17,26 +17,35 @@ assert(html.includes("addGroup(page==='huchas'||page==='financiaciones'?'⚠️ 
 
 const cut = (from, to) => { const a = html.indexOf(from), b = html.indexOf(to, a); assert(a > 0 && b > a, from); return html.slice(a, b); };
 const node = (tag, cls, text) => ({ tag, cls: cls || '', text: text == null ? '' : String(text), children: [], style: {}, attrs: {}, classList: { add(c) { this._c.push(c); }, _c: [] },
-  setAttribute(k, v) { this.attrs[k] = v; }, append(...k) { this.children.push(...k); } });
+  setAttribute(k, v) { this.attrs[k] = v; }, replaceChildren(...k) { this.children = k; }, append(...k) { this.children.push(...k); } });
 const flat = (n) => [n.cls, n.text, ...(n.children || []).map(flat)].join(' | ');
 
-// --- tarjeta de hucha interactiva ---
+// --- tarjeta de hucha (v2.0.74: estructura del HTML; la interacción está en sus botones y en su propio historial) ---
 const opened = [];
 const hctx = { el: node, money: (v) => v.toFixed(2).replace('.', ',') + ' €', monthTitle: () => 'octubre 2026', selectedMonth: '2026-10', openDetail: (...a) => opened.push(a) };
 vm.createContext(hctx);
-vm.runInContext(cut('const ELITE_HUCHA_ICONS=', 'function huchaContributionSnapshot') + cut('function huchaMonthlyContributions(', 'const ELITE_HUCHA_ICONS=') + cut('function huchaMadreCard(', 'function huchaMonthProvisionSummary('), hctx);
+vm.runInContext(cut('const ELITE_HUCHA_ICONS=', 'function huchaContributionSnapshot') + cut('function huchaMonthlyContributions(', 'const ELITE_HUCHA_ICONS=') + cut('function huchaMadreCard(', 'function huchaMonthProvisionSummary(') + cut('function huchaActionPreview(', '// Vinculación de cargos nuevos'), hctx);
 const base = { plannedCents: 5000, monthCents: 5000, status: 'conciliada por registros verificables', lifetimeComplete: true, issues: 0, conflicts: 0, timelineIncomplete: false, asOfBalanceCents: 12345 };
 const hucha = { id: 'h1', nombre: 'Renta', aportaciones: { octubre: [{ id: 'a1', fecha: '2026-10-01', importe: 30 }, { id: 'a2', fecha: '2026-10-15', importe: 20 }], septiembre: [{ id: 'a0', fecha: '2026-09-02', importe: 50 }] } };
-let c = hctx.huchaMadreCard(hucha, 'Renta', base, true, { index: 7, period: '2026-10' });
-assert(c.attrs.role === 'button' && c.attrs.tabindex === '0' && /Abrir detalle de Renta/.test(c.attrs['aria-label']), 'accesible');
-c.onclick(); assert.deepEqual([opened[0][1], opened[0][2]], [7, 'planRescate_v2_provisiones'], 'tocar abre el detalle de ESA hucha');
-let prevented = false; c.onkeydown({ key: 'Enter', preventDefault() { prevented = true; } }); assert(prevented && opened.length === 2, 'Enter también abre');
+const find = (n, pred) => (pred(n) ? n : (n.children || []).map((k) => find(k, pred)).find(Boolean));
+const histPanel = { open: false, scrollIntoView() {} };
+const rescates = [{ id: 'r1', importe: 40, falta: 25, fecha: '2026-09-20', devolver: '2026-10-30' }];
+const c = hctx.huchaMadreCard(hucha, 'Renta', base, true, { period: '2026-10', history: histPanel, rescates });
+const tc = flat(c);
+assert(c.cls.includes('pv-ok') && tc.includes('✓ Al día') && tc.includes('🔄 Rescatado 40,00 €') && tc.includes('Faltan 25,00 €'), 'estructura HTML: pill, rescate y lo que falta');
+assert(tc.includes('Era un pago') && tc.includes('Reponer') && tc.includes('Borrar') && tc.includes('Usar dinero') && tc.includes('＋ Aportar') && tc.includes('✎ Editar'), 'acciones del HTML');
+const hist = find(c, (n) => n.attrs && n.attrs['aria-label'] === 'Historial de Renta');
+assert(hist, 'botón 🕘 dentro de la propia tarjeta');
+hist.onclick(); assert.equal(histPanel.open, true, 'el historial se abre dentro de la tarjeta');
 const det = c.children.find((x) => x.tag === 'details');
-assert(det && /2 aportaciones en octubre 2026/.test(flat(det)) && flat(det).includes('+30,00 €') && flat(det).includes('+20,00 €'), 'aportaciones del mes desplegables');
+assert(det && /2 aportaciones en octubre/.test(flat(det)) && flat(det).includes('+30,00 €') && flat(det).includes('+20,00 €'), 'aportaciones del mes desplegables');
 assert(!flat(det).includes('50,00'), 'solo las del mes');
-det.onclick({ stopPropagation() { prevented = 'stop'; } }); assert.equal(prevented, 'stop', 'desplegar no abre el detalle');
-// sin índice no es interactiva (nunca un botón que no lleva a ningún sitio)
-c = hctx.huchaMadreCard(hucha, 'Renta', base, true); assert(!c.attrs.role && !c.onclick);
+// ninguna escritura se ejecuta: cada acción solo abre una vista previa
+find(c, (n) => n.tag === 'button' && n.text === '＋ Aportar').onclick();
+assert(opened.length === 0 && flat(c).includes('Vista previa · Aportar') && flat(c).includes('no guarda nada'), 'Aportar muestra vista previa y no guarda');
+// sin plan verificable: no es una tarjeta interactiva con cifras inventadas
+const na = hctx.huchaMadreCard(hucha, 'Renta', { ...base, plannedCents: null, monthCents: 0 }, false, { period: '2026-10', history: histPanel });
+assert(na.cls.includes('pv-na') && flat(na).includes('No verificable'), 'sin plan: no verificable');
 
 // --- fila de Variables al estilo HTML ---
 const vctx = { el: node, money: (v) => v.toFixed(2).replace('.', ',') + ' €', field: (o, ks) => { for (const k of ks) if (o[k] != null && o[k] !== '') return o[k]; return null; },

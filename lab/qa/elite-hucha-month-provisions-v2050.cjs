@@ -24,11 +24,6 @@ assert(/Provisión prevista del mes → 281\.05 €/.test(text), text);
 assert(/Aportado en el mes → 224\.05 €/.test(text), text);
 assert(/Pendiente de aportar → 67\.00 €/.test(text), text);
 assert(/Exceso sobre lo previsto → 10\.00 €/.test(text), text);
-// por hucha (v2.0.53: tarjetas): mismas cifras que antes, ahora en nombre, aportado/previsto y estado
-const flat = (n) => [n.cls, n.txt, ...(n.children || []).map(flat)].join(' | ');
-const cards = card.children.find((x) => x.cls === 'pvList').children.map(flat);
-const byName = (n) => cards.find((t) => t.includes(' | ' + n + ' | '));
-assert(/Agua/.test(byName('Agua')) && byName('Agua').includes('0.00 € / 67.00 €') && byName('Agua').includes('Faltan 67.00 €') === false && byName('Agua').includes('Sin aportar'), byName('Agua'));
-assert(byName('Renta').includes('164.05 € / 164.05 €') && byName('Renta').includes('✓ Al día'), byName('Renta'));
-assert(byName('Seguro').includes('60.00 € / 50.00 €') && byName('Seguro').includes('✓ Al día'), byName('Seguro'));
+// v2.0.74: cada provisión aparece una sola vez, en la lista de tarjetas del HTML; el resumen solo lleva totales
+assert(!card.children.some((x) => x.cls === 'pvList'), 'sin tarjetas duplicadas en el resumen');
 console.log('PASS v2.0.50: provisiones reales del mes (previsto, aportado, pendiente y exceso) por hucha y total');
