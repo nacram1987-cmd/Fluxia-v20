@@ -16,7 +16,7 @@ for(const moduleId of ['fijos','financiaciones']){
   else assert(!card.textContent.includes('✓ Pagado'));
  }
 }
-assert(html.includes("history:eliteHuchaInlineHistory(row,canon(mods.find(m=>m.id==='huchas'))||[],huchaUsesFromSource(false))"),'huchas: historial propio dentro de cada tarjeta');
+assert(html.includes("history:eliteHuchaHistoryDetails(hucha,huchas,uses),historyPanel:()=>eliteHuchaHistoryPanel(hucha,huchas,uses)"),'huchas: historial propio dentro de cada tarjeta');
 assert(html.includes("rescates:rescates.items"),'huchas: rescates pendientes dentro de cada tarjeta');
 assert(html.includes('#content .pv-card.pv-pend{--pv-acc:var(--mother-blue)'));
 assert(html.includes('#content .pv-card.pv-ok{--pv-acc:var(--mother-gold)'));
