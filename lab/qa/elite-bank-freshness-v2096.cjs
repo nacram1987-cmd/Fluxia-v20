@@ -1,44 +1,39 @@
 'use strict';
-// v2.0.96: Élite no lee el banco al abrir. Muestra la antigüedad del estado bancario que guarda el HTML en la nube.
+// v2.0.96/v2.0.97: Bancos muestra el estado bancario de la nube sin inventar la última consulta del HTML.
 const fs = require('node:fs');
 const path = require('node:path');
 const assert = require('node:assert/strict');
 const html = fs.readFileSync(path.join(__dirname, '..', 'fluxia-elite-safari-datos-reales.html'), 'utf8');
 
 assert(html.includes("'v2_espejo__fluxia_banco_estado',"), 'el estado bancario de la nube se carga en modo solo lectura');
-assert(html.includes("d.append(actions,state,bankFreshnessLine());"), 'la pantalla de bancos muestra la antigüedad');
+assert(html.includes("d.append(actions,state,bankFreshnessLine());"), 'la pantalla de bancos muestra el estado de la nube');
 
-// ejecutar la función real con datos sintéticos
 const start = html.indexOf('function bankFreshnessLine(){');
 const end = html.indexOf('function showBanksAudit(){');
 assert(start > 0 && end > start, 'función localizada');
-const sandbox = {
-  sourceUpdated: {}, extraFinance: {},
-  el: (tag, cls, text) => ({ tag, cls, text }),
-  Date,
-};
+const sandbox = { sourceUpdated: {}, extraFinance: {}, el: (tag, cls, text) => ({ tag, cls, text }), Date };
 new Function('sandbox', 'with(sandbox){' + html.slice(start, end) + ';sandbox.bankFreshnessLine=bankFreshnessLine}')(sandbox);
-const now = Date.now();
-const iso = (minsAgo) => new Date(now - minsAgo * 60000).toISOString();
+const iso = (minsAgo) => new Date(Date.now() - minsAgo * 60000).toISOString();
 
 sandbox.sourceUpdated = {};
-assert.match(sandbox.bankFreshnessLine().text, /Sin estado bancario del HTML/, 'sin dato: aviso, no cifras inventadas');
-
-sandbox.sourceUpdated = { v2_espejo__fluxia_banco_estado: iso(3) };
-sandbox.extraFinance = { v2_espejo__fluxia_banco_estado: { conectado: true, error: '' } };
-let line = sandbox.bankFreshnessLine();
-assert.equal(line.cls, 'periodHint bankFreshness', 'reciente: aviso neutro');
-assert.match(line.text, /hace 3 min/);
+assert.match(sandbox.bankFreshnessLine().text, /Sin estado bancario guardado/, 'sin dato: no se inventan cifras');
 
 sandbox.sourceUpdated = { v2_espejo__fluxia_banco_estado: iso(47) };
-line = sandbox.bankFreshnessLine();
-assert.equal(line.cls, 'notice bankFreshness', 'vencido: aviso destacado');
-assert.match(line.text, /Élite puede estar desactualizada/);
+sandbox.extraFinance = { v2_espejo__fluxia_banco_estado: { conectado: true, error: '' } };
+let line = sandbox.bankFreshnessLine();
+assert.equal(line.cls, 'periodHint bankFreshness', 'una hora sin cambios no es alarma');
+assert.match(line.text, /no indica cuándo consultó el HTML/, 'el texto aclara qué mide');
 
-sandbox.sourceUpdated = { v2_espejo__fluxia_banco_estado: iso(2) };
+sandbox.sourceUpdated = { v2_espejo__fluxia_banco_estado: iso(60 * 24 * 12) };
+assert.match(sandbox.bankFreshnessLine().text, /hace 12 días/, 'antigüedad en días');
+
 sandbox.extraFinance = { v2_espejo__fluxia_banco_estado: { conectado: true, errorFondo: 'CaixaBank: HUB046: límite de consultas de hoy' } };
 line = sandbox.bankFreshnessLine();
-assert.match(line.text, /límite diario de consultas/, 'límite HUB046 se explica');
-assert.equal(line.cls, 'notice bankFreshness');
+assert.equal(line.cls, 'notice bankFreshness', 'límite diario: aviso destacado');
+assert.match(line.text, /límite diario de consultas/);
 
-console.log('PASS v2.0.96: antigüedad del estado bancario del HTML, con aviso de vencido y de límite');
+sandbox.extraFinance = { v2_espejo__fluxia_banco_estado: { conectado: false, error: 'sin conexión con el banco' } };
+line = sandbox.bankFreshnessLine();
+assert.equal(line.cls, 'notice bankFreshness', 'error: aviso destacado');
+
+console.log('PASS v2.0.97: estado bancario de la nube sin falsa alarma por antigüedad; avisos solo por error o límite');
