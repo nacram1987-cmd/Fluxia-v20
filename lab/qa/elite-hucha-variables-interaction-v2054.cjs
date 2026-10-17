@@ -63,7 +63,7 @@ r = row({ concepto: 'Sin fecha' }, null); assert(flat(r).includes('Sin fecha') &
 const before = opened.length; r.onclick(); assert.deepEqual([opened[before][1], opened[before][2]], [3, 'planRescate_v2_movimientos'], 'toda la fila abre su detalle');
 assert(r.attrs['aria-label'] === 'Abrir detalle de Sin fecha');
 // el resumen del mes usa la misma cifra que ya mostraba la pestaña
-assert(html.includes("el('strong','varHeroAmount',money(expenseFigures.totalCents/100))"));
+assert(html.includes("el('div','varHeroAmount',money(expenseFigures.totalCents/100))"));
 assert(html.includes("if(page==='variables'){list.append(variableRowMadre(data,index,m.key,name,amount));continue}"));
 // la evidencia sale en el detalle (no se pierde)
 assert(html.includes("{const ev=financialRecordEvidence(entry,page);d.append(el('p','eliteEvidence eliteEvidence-'+ev.tone,ev.label))}"));

@@ -79,6 +79,7 @@ jobs:
           node lab/qa/elite-hucha-history-v2085.cjs
           node lab/qa/elite-mother-interiors-v2066.cjs
           node lab/qa/elite-own-icons-v2094.cjs
+          node lab/qa/elite-fijos-legacy-var-hero-v2095.cjs
       - name: Verify current bank inbox and balance regressions
         run: node lab/qa/elite-banking-available-v2012.cjs
       - name: Verify Élite version header and release guards
