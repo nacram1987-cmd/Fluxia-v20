@@ -1,14 +1,25 @@
 (function(root){
  'use strict';
  const ACTION='/functions/v1/Fluxia-banco';
+ // v1.5.0: los movimientos se leen con la misma función que el HTML v97.77 (identidad fxbank9770 completa: cuenta y referencia
+ // estable); estado y saldos siguen en Fluxia-banco. Las dos usan la misma sesión bancaria (fluxia_banco_sesiones).
+ const ACTIONS={bandeja:'/functions/v1/Fluxia-banco-lab9770',movimientos:'/functions/v1/Fluxia-banco-lab9770'};
+ function endpoint(action){return ACTIONS[action]||ACTION}
  let config={base:'',key:'',token:''};
  function configure(next){config={...config,...next};return {configured:!!(config.base&&config.key&&config.token)}}
  async function call(action,body={}){
   if(!config.base||!config.key||!config.token)throw Error('La sesión de nube no está preparada para consultar Bancos.');
-  const res=await fetch(config.base+ACTION,{method:'POST',headers:{apikey:config.key,Authorization:'Bearer '+config.token,'Content-Type':'application/json'},body:JSON.stringify({accion:action,...body}),credentials:'omit',cache:'no-store',redirect:'error'});
-  let data={};try{data=await res.json()}catch{}
-  if(!res.ok||data?.success===false)throw Error(data?.error||'El conector bancario devolvió HTTP '+res.status+'.');
-  return data;
+  const ctrl=typeof AbortController==='function'?new AbortController():null,limit=ACTIONS[action]?45000:20000;
+  const timer=ctrl?setTimeout(()=>ctrl.abort(),limit):null;
+  try{
+   const res=await fetch(config.base+endpoint(action),{method:'POST',headers:{apikey:config.key,Authorization:'Bearer '+config.token,'Content-Type':'application/json'},body:JSON.stringify({accion:action,...body}),credentials:'omit',cache:'no-store',redirect:'error',signal:ctrl?ctrl.signal:undefined});
+   let data={};try{data=await res.json()}catch{}
+   if(!res.ok||data?.success===false)throw Error(data?.error||'El conector bancario devolvió HTTP '+res.status+'.');
+   return data;
+  }catch(error){
+   if(error&&error.name==='AbortError')throw Error('El banco no ha respondido en '+Math.round(limit/1000)+' s. Inténtalo de nuevo.');
+   throw error;
+  }finally{if(timer)clearTimeout(timer)}
  }
  function bankIdentity(row){
   if(row?.bankRef)return String(row.bankRef).trim();
@@ -29,9 +40,19 @@
   });
   return {rows,duplicates:[...new Set(duplicates)]};
  }
- function inboxStorageKey(owner,profile){return 'fluxia_elite_bank_inbox_v2:'+encodeURIComponent(String(owner||''))+':'+encodeURIComponent(String(profile||''))}
- function readInbox(owner,profile,storage){try{const value=JSON.parse((storage||globalThis.localStorage).getItem(inboxStorageKey(owner,profile))||'[]');return Array.isArray(value)?value:[]}catch{return []}}
- function saveInbox(owner,profile,rows,storage){const target=storage||globalThis.localStorage,clean=Array.isArray(rows)?rows:[];target.setItem(inboxStorageKey(owner,profile),JSON.stringify(clean));return clean}
+ // v1.5.0: bandeja v3 con filas de identidad completa, fecha de lectura por banco y cortes del servidor. La v2 (filas sin cuenta)
+ // se deja intacta en el dispositivo y ya no se usa: mezclarla duplicaría cargos con otra identidad.
+ function inboxStorageKey(owner,profile){return 'fluxia_elite_bank_inbox_v3:'+encodeURIComponent(String(owner||''))+':'+encodeURIComponent(String(profile||''))}
+ function readInboxState(owner,profile,storage){
+  try{const value=JSON.parse((storage||globalThis.localStorage).getItem(inboxStorageKey(owner,profile))||'null');
+   if(Array.isArray(value))return {rows:value,fetchedAt:{},cortes:{},errors:[]};
+   if(value&&typeof value==='object')return {rows:Array.isArray(value.rows)?value.rows:[],fetchedAt:value.fetchedAt&&typeof value.fetchedAt==='object'?value.fetchedAt:{},cortes:value.cortes&&typeof value.cortes==='object'?value.cortes:{},errors:Array.isArray(value.errors)?value.errors:[]};
+  }catch{}
+  return {rows:[],fetchedAt:{},cortes:{},errors:[]};
+ }
+ function saveInboxState(owner,profile,state,storage){const target=storage||globalThis.localStorage,clean={rows:Array.isArray(state?.rows)?state.rows:[],fetchedAt:state?.fetchedAt||{},cortes:state?.cortes||{},errors:Array.isArray(state?.errors)?state.errors:[]};target.setItem(inboxStorageKey(owner,profile),JSON.stringify(clean));return clean}
+ function readInbox(owner,profile,storage){return readInboxState(owner,profile,storage).rows}
+ function saveInbox(owner,profile,rows,storage){const previous=readInboxState(owner,profile,storage);return saveInboxState(owner,profile,{...previous,rows:Array.isArray(rows)?rows:[]},storage).rows}
  function statusStorageKey(owner,profile){return 'fluxia_elite_bank_status_v1:'+encodeURIComponent(String(owner||''))+':'+encodeURIComponent(String(profile||''))}
  function readStatus(owner,profile,storage){try{const value=JSON.parse((storage||globalThis.localStorage).getItem(statusStorageKey(owner,profile))||'null');return value&&typeof value==='object'?value:null}catch{return null}}
  function saveStatus(owner,profile,status,storage){const target=storage||globalThis.localStorage,clean={message:String(status?.message||''),action:String(status?.action||''),checkedAt:String(status?.checkedAt||''),ok:!!status?.ok};target.setItem(statusStorageKey(owner,profile),JSON.stringify(clean));return clean}
@@ -67,6 +88,6 @@
   for(const row of normalizeBalances(rows))if(row.disponible&&!row.desactualizado){const currency=row.moneda;totals[currency]=Math.round(((totals[currency]||0)+row.importe)*100)/100}
   return totals
  }
- const api={version:'1.4.0',source:'Fluxia-banco',configure,call,normalizeRows,mergeRows,bankIdentity,normalizeConnectionStatus,normalizeConnectionStatuses,inboxStorageKey,readInbox,saveInbox,statusStorageKey,readStatus,saveStatus,maskIban,normalizeBalances,balancesStorageKey,readBalances,saveBalances,availableBalanceTotals};
+ const api={version:'1.5.0',source:'Fluxia-banco',endpoint,configure,call,normalizeRows,mergeRows,bankIdentity,normalizeConnectionStatus,normalizeConnectionStatuses,inboxStorageKey,readInbox,saveInbox,readInboxState,saveInboxState,statusStorageKey,readStatus,saveStatus,maskIban,normalizeBalances,balancesStorageKey,readBalances,saveBalances,availableBalanceTotals};
  if(typeof module!=='undefined'&&module.exports)module.exports=api;if(root)root.FluxiaEliteBankConnector=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
