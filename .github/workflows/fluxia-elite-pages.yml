@@ -81,6 +81,8 @@ jobs:
           node lab/qa/elite-own-icons-v2094.cjs
           node lab/qa/elite-fijos-legacy-var-hero-v2095.cjs
           node lab/qa/elite-bank-freshness-v2096.cjs
+          node lab/tools/build-bank-html-core.cjs --check
+          node lab/qa/elite-bank-sync-v2098.cjs
       - name: Verify current bank inbox and balance regressions
         run: node lab/qa/elite-banking-available-v2012.cjs
       - name: Verify Élite version header and release guards
