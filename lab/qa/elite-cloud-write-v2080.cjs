@@ -141,3 +141,31 @@ function memory(initial, { beforePatch } = {}) {
   assert.equal(JSON.parse(rowsStore.v)[0].id, 'z', 'la nube conserva la última escritura válida');
   console.log('PASS v2.0.80 (transporte): lectura, copia y escritura condicionada contra fluxia_datos (simulado)');
 })().catch((e) => { console.error(e); process.exit(1); });
+
+// 10. borrados de la nube: un registro borrado en el HTML no vuelve al escribir desde Élite
+(async () => {
+  const PREFIX = PK.slice(0, PK.lastIndexOf(':') + 1);
+  const borrado = { id: 'hz', nombre: 'Borrada en HTML', importeMensual: 10, inicio: 'julio', fin: null, _fxUpdatedAt: 50, aportaciones: {} };
+  const remoto = [...base, borrado];
+  const tomb = { v2_provisiones: { 'i:hz': NOW } };
+  const nueva = W.validateProvision({ nombre: 'Nueva', importeMensual: 20, mes: 10, seq: 9 }, NOW).item;
+  const m = memory(remoto);
+  // el HTML escribe el tombstone y el registro de borrado explícito; el motor solo aplica un borrado con ambos
+  const explicito = { v2_provisiones: { 'i:hz': { t: NOW, explicit: true } } };
+  m.readAux = async () => ({ tRemote: JSON.stringify(tomb), rRemote: null, eRemote: JSON.stringify(explicito) });
+  await W.writeCollection({ sync, transport: m, profileKey: PK, shortKey: SK, build: (r) => [...r, nueva] });
+  const ids = plain(m.row.v).map((x) => x.id);
+  assert.equal(ids.includes('hz'), false, 'el borrado en el HTML se respeta');
+  assert.equal(ids.includes(nueva.id), true, 'la alta nueva sí se escribe');
+
+  // transporte: lee los tres registros de borrados del mismo perfil en una sola petición
+  const seen = [];
+  const T = W.supabaseTransport({ base: 'https://x.supabase.co', anonKey: 'anon', token: 'user-jwt', owner: 'b0a89b51-ee34-4b3d-8931-61004550eeaf',
+    fetchFn: async (url) => { seen.push(url); return { ok: true, status: 200, json: async () => [{ clave: PREFIX + 'v2_sync_tombstones', v: '{"v2_provisiones":{"i:hz":1}}' }] }; } });
+  const aux = await T.readAux(PK);
+  assert.equal(seen.length, 1, 'una sola petición');
+  for (const k of ['v2_sync_tombstones', 'v2_sync_restores', 'v2_explicit_deletions']) assert(decodeURIComponent(seen[0]).includes(PREFIX + k), 'lee ' + k);
+  assert.equal(JSON.parse(aux.tRemote).v2_provisiones['i:hz'], 1);
+  assert.equal(aux.rRemote, null, 'sin restauraciones: null');
+  console.log('PASS v2.0.80 (borrados): los registros borrados en la nube no vuelven; lectura de borrados en una sola petición');
+})().catch((e) => { console.error(e); process.exit(1); });
