@@ -38,4 +38,6 @@ assert(!flat(nc).includes('12,35') && flat(nc).includes('Guardado no mostrado'),
 // v2.0.75: en modo nube (el normal) las tarjetas salen del resumen; sin esto la pestaña quedaba vacía y una provisión nueva no aparecía
 assert(html.includes('list.append(huchaMadreCard(hucha,name,snap,ok,{period,ambiguo:rescates.ambiguo,rescates:rescates.items,history:eliteHuchaInlineHistory(hucha,huchas,uses)}))'), 'el resumen pinta una tarjeta por provisión de la nube');
 assert(html.includes('provisiones en Supabase')&&html.includes(',list);'), 'la lista de tarjetas y su línea de lectura se montan en el resumen');
+// v2.0.77: en modo HTML original Huchas también pinta las provisiones de Supabase
+assert(html.includes("if(m.id==='huchas'&&arr)$('#content').append(huchaMonthProvisionSummary(arr,huchaUsesFromSource(false),selectedMonth));"), 'modo HTML original: provisiones de Supabase visibles');
 console.log('PASS v2.0.74: tarjeta de provisión con la estructura del HTML, rescates por tarjeta y acciones solo en vista previa');
