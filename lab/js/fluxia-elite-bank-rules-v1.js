@@ -36,7 +36,37 @@
   kept.push(rule);
   return kept;
  }
- var api={version:'1.0.0',words:words,ruleFromDecision:ruleFromDecision,validateAccount:validateAccount,mergeRules:mergeRules,DECISIONS:DECISIONS};
+ // Vinculación automática de un cargo a un fijo o cuota del mes.
+ // «auto»: importe exacto, único candidato, fijo fijo (no variable) y no pagado todavía.
+ // «ask»: importe parecido, varios candidatos o un fijo de importe variable (margen configurable por el usuario).
+ // «none»: traspasos, cargos ya ligados o fijos ya pagados. Nunca se paga dos veces.
+ var DEFAULT_VARIABLE_MARGIN_PCT=10, DEFAULT_FIXED_MARGIN_PCT=5;
+ function suggestFixedLink(charge,candidates,options){
+  var opts=options||{}, varPct=Number(opts.variableMarginPct??DEFAULT_VARIABLE_MARGIN_PCT), fixPct=Number(opts.fixedMarginPct??DEFAULT_FIXED_MARGIN_PCT);
+  if(!charge||!Number.isFinite(Number(charge.importeCents))||Number(charge.importeCents)===0)return {action:'none',reason:'CARGO_NO_VALIDO',options:[]};
+  if(charge.tipo==='traspaso'||charge.tipo==='puente'||charge.yaLigado)return {action:'none',reason:'NO_ES_GASTO_FIJO',options:[]};
+  var amount=Math.abs(Number(charge.importeCents));
+  var eligible=(Array.isArray(candidates)?candidates:[]).filter(function(c){return c&&!c.pagado&&Number.isFinite(Number(c.importeCents))});
+  if(!eligible.length)return {action:'none',reason:'SIN_FIJOS_PENDIENTES',options:[]};
+  var scored=eligible.map(function(c){
+   var target=Math.abs(Number(c.importeCents)), diff=Math.abs(target-amount), pct=target?diff/target*100:Infinity;
+   return {id:c.id,nombre:c.nombre,importeCents:target,variable:c.variable===true,diff:diff,pct:pct};
+  });
+  var exact=scored.filter(function(c){return !c.variable&&c.diff===0});
+  if(exact.length===1&&scored.filter(function(c){return c.diff===0}).length===1){
+   return {action:'auto',fijoId:exact[0].id,reason:'IMPORTE_EXACTO_UNICO',options:[exact[0]]};
+  }
+  var near=scored.filter(function(c){
+   if(c.variable)return c.pct<=varPct;
+   return c.diff>0&&c.pct<=fixPct;
+  });
+  var exactAll=scored.filter(function(c){return c.diff===0});
+  if(exactAll.length>1)return {action:'ask',reason:'VARIOS_CON_MISMO_IMPORTE',options:exactAll};
+  if(exactAll.length===1&&exactAll[0].variable)return {action:'ask',reason:'FIJO_VARIABLE',options:exactAll};
+  if(near.length)return {action:'ask',reason:near.some(function(c){return c.variable})?'FIJO_VARIABLE_MARGEN':'IMPORTE_PARECIDO',options:near};
+  return {action:'none',reason:'SIN_COINCIDENCIA',options:[]};
+ }
+ var api={version:'1.1.0',words:words,ruleFromDecision:ruleFromDecision,validateAccount:validateAccount,mergeRules:mergeRules,suggestFixedLink:suggestFixedLink,DECISIONS:DECISIONS};
  if(typeof module!=='undefined'&&module.exports)module.exports=api;
  if(root)root.FluxiaEliteBankRules=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
