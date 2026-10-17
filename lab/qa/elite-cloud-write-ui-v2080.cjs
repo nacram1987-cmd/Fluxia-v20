@@ -16,5 +16,7 @@ for (const frag of ['W.validateProvision(', 'await ensureFreshToken()', 'W.supab
   assert(btn.includes(frag), 'flujo de escritura: ' + frag);
 }
 // en Huchas el formulario se monta antes del resumen, y solo en esa pestaña
-assert(html.includes("const nueva=eliteNewProvisionCard();if(nueva)$('#content').append(nueva);"), 'formulario montado en Huchas');
+assert(html.includes("const nueva=eliteNewProvisionButton();if(nueva)$('#content').append(nueva);"), 'botón montado en Huchas');
+assert(html.includes("b.onclick=()=>{$('#detailTitle').textContent='Nueva provisión';$('#detailContent').replaceChildren(eliteNewProvisionForm());openDetailSheet()};"), 'el botón abre la ventana con el formulario');
+assert(!html.includes("'Provisiones reales · '"), 'título del resumen sin «reales»');
 console.log('PASS v2.0.80 (paso 3): formulario de alta con interruptor apagado y flujo de escritura cableado');
