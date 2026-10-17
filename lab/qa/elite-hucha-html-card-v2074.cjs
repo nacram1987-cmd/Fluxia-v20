@@ -35,4 +35,7 @@ assert(flat(slot).includes('Vista previa · Aportar') && flat(slot).includes('no
 // pendiente de conciliar: sin Guardado inventado
 const nc = ctx.huchaMadreCard(hucha, 'Seguro sintético', { ...snap, status: 'con conflicto', conflicts: 1 }, true, { period: '2026-10', rescates: [] });
 assert(!flat(nc).includes('12,35') && flat(nc).includes('Guardado no mostrado'), 'sin cifra de guardado no conciliado');
+// v2.0.75: en modo nube (el normal) las tarjetas salen del resumen; sin esto la pestaña quedaba vacía y una provisión nueva no aparecía
+assert(html.includes('list.append(huchaMadreCard(hucha,name,snap,ok,{period,ambiguo:rescates.ambiguo,rescates:rescates.items,history:eliteHuchaInlineHistory(hucha,huchas,uses)}))'), 'el resumen pinta una tarjeta por provisión de la nube');
+assert(html.includes('card.append(balanceHeader,list);'), 'la lista de tarjetas se monta en el resumen');
 console.log('PASS v2.0.74: tarjeta de provisión con la estructura del HTML, rescates por tarjeta y acciones solo en vista previa');
