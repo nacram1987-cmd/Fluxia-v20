@@ -67,6 +67,7 @@ jobs:
           node lab/qa/conciliacion-tres-vias-v2060.cjs
           node lab/qa/elite-cli-rescue-links-v2060.cjs
           node lab/qa/efectivo-variables-v2060.cjs
+          node lab/qa/bank-identity-v2061.cjs
       - name: Verify current bank inbox and balance regressions
         run: node lab/qa/elite-banking-available-v2012.cjs
       - name: Verify Élite version header and release guards

@@ -52,17 +52,38 @@
  // Identidad = referencia bancaria estable + fecha + importe en valor absoluto. El libro guarda los gastos en positivo y el banco
  // los envía en negativo; el concepto, el rol y el vínculo a fijo son clasificación del usuario y no son un conflicto contable.
  function same(a,b){return !!(a&&b&&abs(a.amountCents)===abs(b.amountCents)&&a.date===b.date)}
+ // La misma transacción puede llegar como identidad del conector («fxbank9770:[proveedor,banco,cuenta,ref]») o como UUID
+ // antigua de la ref estable. Se compara siempre por la ref estable del proveedor, para no duplicar cargos ya contabilizados.
+ function canonicalRef(value){
+  var text=String(value||'').trim();
+  if(text.indexOf('fxbank9770:')===0){try{var parts=JSON.parse(text.slice('fxbank9770:'.length));if(Array.isArray(parts)&&parts.length)return String(parts[parts.length-1]).trim()}catch(_e){}}
+  return text;
+ }
+ function canonicalSet(values){
+  var set=new Set();
+  setOf(values).forEach(function(value){set.add(canonicalRef(value))});
+  return set;
+ }
+ function identitiesOf(row){
+  var keys=['bankRef','bancoIdentity','bancoRef','bancoStableRef','bancoLegacyId'];
+  return keys.map(function(k){return row&&row[k]?canonicalRef(row[k]):''}).filter(Boolean);
+ }
  function planImport(existing,incoming,tombstones,resolutions){
   var existingRows=Array.isArray(existing)?existing:[], incomingRows=Array.isArray(incoming)?incoming:[], choices=resolutions&&typeof resolutions==='object'?resolutions:{};
   var existingMap=new Map(), additions=[], duplicates=[], blocked=[], conflicts=[], invalid=[], resolved=[];
-  existingRows.forEach(function(row){var item=normalize(row);if(item.ok&&!existingMap.has(item.record.bankRef))existingMap.set(item.record.bankRef,item.record)});
-  var deleted=setOf(tombstones&&tombstones.deletedBankRefs), excluded=setOf(tombstones&&tombstones.excludedBankRefs);
+  existingRows.forEach(function(row){
+   var item=normalize(row);
+   if(!item.ok)return;
+   identitiesOf(row).concat([canonicalRef(item.record.bankRef)]).forEach(function(key){if(!existingMap.has(key))existingMap.set(key,item.record)});
+  });
+  var deleted=canonicalSet(tombstones&&tombstones.deletedBankRefs), excluded=canonicalSet(tombstones&&tombstones.excludedBankRefs);
   incomingRows.forEach(function(row){
    var item=normalize(row);
    if(!item.ok){invalid.push(item);return}
    var record=item.record;
-   if(deleted.has(record.bankRef)||excluded.has(record.bankRef)){blocked.push({bankRef:record.bankRef,reason:deleted.has(record.bankRef)?'TOMBSTONE':'EXCLUDED'});return}
-   var previous=existingMap.get(record.bankRef);
+   var key=canonicalRef(record.bankRef);
+   if(deleted.has(key)||excluded.has(key)){blocked.push({bankRef:record.bankRef,reason:deleted.has(key)?'TOMBSTONE':'EXCLUDED'});return}
+   var previous=existingMap.get(canonicalRef(record.bankRef));
    if(previous){
     if(same(previous,record)){duplicates.push(record.bankRef);return}
     var choice=choices[record.bankRef];
@@ -75,7 +96,7 @@
   });
   return {ok:invalid.length===0&&conflicts.length===0,additions:additions,duplicates:[...new Set(duplicates)],blocked:blocked,conflicts:conflicts,invalid:invalid,resolved:resolved,stableIds:additions.map(function(row){return row.bankRef})};
  }
- var api={version:'1.1.0',source:'original-bank-connector',cents:cents,isSyntheticBankRef:isSyntheticBankRef,stableId:stableId,normalize:normalize,planImport:planImport};
+ var api={version:'1.2.0',source:'original-bank-connector',cents:cents,isSyntheticBankRef:isSyntheticBankRef,stableId:stableId,canonicalRef:canonicalRef,normalize:normalize,planImport:planImport};
  if(typeof module!=='undefined'&&module.exports)module.exports=api;
  if(root)root.FluxiaEliteBankAdapter=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
