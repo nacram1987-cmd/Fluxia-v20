@@ -6,7 +6,7 @@ const assert = require('node:assert/strict');
 const html = fs.readFileSync(path.join(__dirname, '..', 'fluxia-elite-safari-datos-reales.html'), 'utf8');
 
 // interruptor apagado: el botón no aparece hasta una orden explícita
-assert(html.includes('const ELITE_CLOUD_WRITE_ENABLED=false;'), 'interruptor apagado por defecto');
+assert(html.includes('const ELITE_CLOUD_WRITE_ENABLED=true;'), 'interruptor activado desde la 2.0.81');
 assert(html.includes("if(!ELITE_CLOUD_WRITE_ENABLED||!window.FluxiaEliteCloudWrite||!window.FluxiaSync954)return null;"), 'sin interruptor no hay formulario');
 // scripts del motor y del escritor, antes del principal
 assert(html.indexOf('js/fluxia-sync-engine-v1.js') > 0 && html.indexOf('js/fluxia-sync-engine-v1.js') < html.indexOf('js/fluxia-elite-cloud-write-v1.js'), 'orden de carga: motor, luego escritor');
